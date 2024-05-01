@@ -143,7 +143,7 @@ class _CheckPointHomeScreenState extends State<CheckPointHomeScreen>
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: SafeArea(
-            child: GestureDetector(
+            child: InkWell(
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
                 BlocProvider.of<BottomNavBarCubit>(context).emitShow();
@@ -217,7 +217,7 @@ class _CheckPointHomeScreenState extends State<CheckPointHomeScreen>
                       const Divider(
                         color: Colors.white,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () async {
                           if (AppLocalizations.of(context)!.isEnLocale!) {
                             BlocProvider.of<LocaleCubit>(context).toArabic();
@@ -336,7 +336,7 @@ class _CheckPointHomeScreenState extends State<CheckPointHomeScreen>
                       const Divider(
                         color: Colors.white,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           showDialog<void>(
                             context: context,

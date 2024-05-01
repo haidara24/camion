@@ -30,7 +30,7 @@
 
     "select_truck_type":"اختر نوع الشاحنة",
     "select_truck_type_error":"الرجاء اختيار نوع الشاحنة",
-    "choose_shippment_path":"اختر مسار الشحنة",
+    "choose_shippment_path":"اختر مسار الشاحنة",
     "pickup_address":"عنوان التحميل",
     "enter_pickup_address":"ادخل عنوان التحميل",
     "delivery_address":"عنوان التوصيل",
@@ -48,6 +48,8 @@
     "total_co2":"اجمالي انبعاثات الكربون",
     "energy_consumption":"كمية الطاقة المستهلكة",
     "location_service_diabled":"خدمة تحديد الموقع متوقفة. الرجاء تفعيلالخدمة.",
+    "add_station":"أضف محطة",
+    "station_no":"محطة رقم",
 
     "loading_time":"موعد التحميل",
     "time":"وقت",

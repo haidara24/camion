@@ -12,7 +12,7 @@ final class OwnerActiveShipmentsInitial extends OwnerActiveShipmentsState {}
 class OwnerActiveShipmentsLoadingProgress extends OwnerActiveShipmentsState {}
 
 class OwnerActiveShipmentsLoadedSuccess extends OwnerActiveShipmentsState {
-  final List<KShipment> shipments;
+  final List<Shipmentv2> shipments;
 
   const OwnerActiveShipmentsLoadedSuccess(this.shipments);
 }

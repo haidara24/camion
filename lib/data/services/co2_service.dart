@@ -41,4 +41,24 @@ class Co2Service {
 
     return result;
   }
+
+  static Future<Co2Report2?> getCo2Report(
+      LatLng origin, LatLng distination) async {
+    Co2Report2? result;
+
+    var distanceurl =
+        "https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin.latitude}, ${origin.longitude}&destinations=${distination.latitude}, ${distination.longitude}&key=AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c&mode=DRIVING&";
+    var distanceresponse = await http.get(Uri.parse(distanceurl));
+    DistanceReport? distanceresult;
+    if (distanceresponse.statusCode == 200) {
+      var res = jsonDecode(distanceresponse.body);
+      distanceresult = DistanceReport.fromJson(res);
+      result!.distance = distanceresult!.rows![0].elements![0].distance!.text!;
+      result.duration = distanceresult!.rows![0].elements![0].duration!.text!;
+    }
+    var emission = ((double.parse(result!.distance!) * 1700) / 1000000);
+    result.et = emission;
+
+    return result;
+  }
 }

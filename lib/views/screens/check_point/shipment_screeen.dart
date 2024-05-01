@@ -46,7 +46,7 @@ class _ShipmentOpsScreenState extends State<ShipmentOpsScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         Navigator.push(
                           context,
@@ -94,7 +94,7 @@ class _ShipmentOpsScreenState extends State<ShipmentOpsScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         if (widget.shipment.passpermession == null) {
                           BlocProvider.of<ChargeTypesListBloc>(context)
@@ -151,7 +151,7 @@ class _ShipmentOpsScreenState extends State<ShipmentOpsScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    GestureDetector(
+                    InkWell(
                       onTap: () {
                         if (widget.shipment.passcharges == null) {
                           BlocProvider.of<ChargeTypesListBloc>(context)

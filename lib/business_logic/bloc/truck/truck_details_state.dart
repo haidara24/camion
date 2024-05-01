@@ -12,7 +12,7 @@ final class TruckDetailsInitial extends TruckDetailsState {}
 class TruckDetailsLoadingProgress extends TruckDetailsState {}
 
 class TruckDetailsLoadedSuccess extends TruckDetailsState {
-  final Truck truck;
+  final KTruck truck;
 
   const TruckDetailsLoadedSuccess(this.truck);
 }

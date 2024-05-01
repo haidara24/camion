@@ -351,7 +351,7 @@ class _SearchShipmentDetailsScreenState
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
                                                             children: [
-                                                              GestureDetector(
+                                                              InkWell(
                                                                 onTap: () {
                                                                   Navigator.pop(
                                                                       context);
@@ -417,7 +417,7 @@ class _SearchShipmentDetailsScreenState
                                                                           itemBuilder: (context,
                                                                               index) {
                                                                             return index != 0
-                                                                                ? GestureDetector(
+                                                                                ? InkWell(
                                                                                     onTap: () {
                                                                                       BlocProvider.of<OrderTruckBloc>(context).add(OrderTruckButtonPressed(widget.shipment.id!, state.trucks[index].truckuser!.id!));
                                                                                       Navigator.pop(context);

@@ -59,7 +59,7 @@ class _ChargesLogScreenState extends State<ChargesLogScreen> {
                                   // DateTime now = DateTime.now();
                                   // Duration diff = now
                                   //     .difference(state.offers[index].createdDate!);
-                                  return GestureDetector(
+                                  return InkWell(
                                     onTap: () {},
                                     child: Card(
                                       shape: const RoundedRectangleBorder(

@@ -282,7 +282,7 @@ class _ActiveShipmentDetailsFromNotificationScreenState
         body: BlocConsumer<ShipmentDetailsBloc, ShipmentDetailsState>(
           listener: (context, shipmentstate) {
             if (shipmentstate is ShipmentDetailsLoadedSuccess) {
-              getpolylineCoordinates(shipmentstate.shipment);
+              // getpolylineCoordinates(shipmentstate.shipment);
             }
           },
           builder: (context, shipmentstate) {
@@ -305,18 +305,18 @@ class _ActiveShipmentDetailsFromNotificationScreenState
 
                         if (!snapshot.data!.docs.singleWhere((element) =>
                             element.id == widget.user_id)['reach_pickup']) {
-                          gettruckpolylineCoordinates(
-                            LatLng(
-                              shipmentstate.shipment.pickupCityLat!,
-                              shipmentstate.shipment.pickupCityLang!,
-                            ),
-                            LatLng(
-                              snapshot.data!.docs.singleWhere((element) =>
-                                  element.id == widget.user_id)['latitude'],
-                              snapshot.data!.docs.singleWhere((element) =>
-                                  element.id == widget.user_id)['longitude'],
-                            ),
-                          );
+                          // gettruckpolylineCoordinates(
+                          //   LatLng(
+                          //     shipmentstate.shipment.pickupCityLat!,
+                          //     shipmentstate.shipment.pickupCityLang!,
+                          //   ),
+                          //   LatLng(
+                          //     snapshot.data!.docs.singleWhere((element) =>
+                          //         element.id == widget.user_id)['latitude'],
+                          //     snapshot.data!.docs.singleWhere((element) =>
+                          //         element.id == widget.user_id)['longitude'],
+                          //   ),
+                          // );
                         }
 
                         print("asd");
@@ -349,20 +349,20 @@ class _ActiveShipmentDetailsFromNotificationScreenState
                                   markerId: const MarkerId('truck'),
                                   icon: truckicon,
                                 ),
-                                Marker(
-                                  markerId: const MarkerId("pickup"),
-                                  position: LatLng(
-                                      shipmentstate.shipment.pickupCityLat!,
-                                      shipmentstate.shipment.pickupCityLang!),
-                                  icon: pickupicon,
-                                ),
-                                Marker(
-                                  markerId: const MarkerId("delivery"),
-                                  position: LatLng(
-                                      shipmentstate.shipment.deliveryCityLat!,
-                                      shipmentstate.shipment.deliveryCityLang!),
-                                  icon: deliveryicon,
-                                ),
+                                // Marker(
+                                //   markerId: const MarkerId("pickup"),
+                                //   position: LatLng(
+                                //       shipmentstate.shipment.pickupCityLat!,
+                                //       shipmentstate.shipment.pickupCityLang!),
+                                //   icon: pickupicon,
+                                // ),
+                                // Marker(
+                                //   markerId: const MarkerId("delivery"),
+                                //   position: LatLng(
+                                //       shipmentstate.shipment.deliveryCityLat!,
+                                //       shipmentstate.shipment.deliveryCityLang!),
+                                //   icon: deliveryicon,
+                                // ),
                               },
                               initialCameraPosition: CameraPosition(
                                   target: LatLng(
@@ -397,23 +397,23 @@ class _ActiveShipmentDetailsFromNotificationScreenState
                                 ),
                               },
                             ),
-                            AnimatedPositioned(
-                              duration: panelTransation,
-                              curve: Curves.decelerate,
-                              left: 0,
-                              right: 0,
-                              bottom: _getTopForPanel(),
-                              child: GestureDetector(
-                                onVerticalDragUpdate: _onVerticalGesture,
-                                child: _buildExpandedPanelWidget(
-                                    context, shipmentstate.shipment),
-                                // child: AnimatedSwitcher(
-                                //   duration: panelTransation,
-                                //   child: _buildPanelOption(
-                                //       context, shipmentstate.shipment),
-                                // ),
-                              ),
-                            ),
+                            // AnimatedPositioned(
+                            //   duration: panelTransation,
+                            //   curve: Curves.decelerate,
+                            //   left: 0,
+                            //   right: 0,
+                            //   bottom: _getTopForPanel(),
+                            //   child: InkWell(
+                            //     onVerticalDragUpdate: _onVerticalGesture,
+                            //     child: _buildExpandedPanelWidget(
+                            //         context, shipmentstate.shipment),
+                            //     // child: AnimatedSwitcher(
+                            //     //   duration: panelTransation,
+                            //     //   child: _buildPanelOption(
+                            //     //       context, shipmentstate.shipment),
+                            //     // ),
+                            //   ),
+                            // ),
                           ],
                         );
                       },
@@ -509,7 +509,7 @@ class _ActiveShipmentDetailsFromNotificationScreenState
               ),
               child: Column(
                 children: [
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       changeToHidden();
                     },
@@ -686,7 +686,7 @@ class _ActiveShipmentDetailsFromNotificationScreenState
                   top: -20,
                   right: MediaQuery.of(context).size.width * .45,
                   child: panelState == PanelState.hidden
-                      ? GestureDetector(
+                      ? InkWell(
                           onTap: () {
                             changeToOpen();
                           },
@@ -718,7 +718,7 @@ class _ActiveShipmentDetailsFromNotificationScreenState
                             ),
                           ),
                         )
-                      : GestureDetector(
+                      : InkWell(
                           onTap: () {
                             changeToHidden();
                           },
@@ -760,7 +760,7 @@ class _ActiveShipmentDetailsFromNotificationScreenState
   }
 
   Widget _buildPanelWidget(BuildContext context, Shipment shipment) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         changeToOpen();
       },
@@ -880,7 +880,7 @@ class _ActiveShipmentDetailsFromNotificationScreenState
                 top: -20,
                 right: MediaQuery.of(context).size.width * .45,
                 child: panelState == PanelState.hidden
-                    ? GestureDetector(
+                    ? InkWell(
                         onTap: () {
                           changeToOpen();
                         },
@@ -912,7 +912,7 @@ class _ActiveShipmentDetailsFromNotificationScreenState
                           ),
                         ),
                       )
-                    : GestureDetector(
+                    : InkWell(
                         onTap: () {
                           changeToHidden();
                         },

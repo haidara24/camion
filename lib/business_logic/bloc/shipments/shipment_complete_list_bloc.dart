@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:camion/data/models/kshipment_model.dart';
-import 'package:camion/data/models/shipment_model.dart';
+import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/repositories/shipmment_repository.dart';
 import 'package:equatable/equatable.dart';
 

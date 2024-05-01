@@ -12,7 +12,7 @@ final class ShipmentDetailsInitial extends ShipmentDetailsState {}
 class ShipmentDetailsLoadingProgress extends ShipmentDetailsState {}
 
 class ShipmentDetailsLoadedSuccess extends ShipmentDetailsState {
-  final Shipment shipment;
+  final Shipmentv2 shipment;
 
   const ShipmentDetailsLoadedSuccess(this.shipment);
 }

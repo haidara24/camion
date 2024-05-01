@@ -58,7 +58,7 @@ class ActiveShippmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  getpolylineCoordinates(List<KShipment> shipments) async {
+  getpolylineCoordinates(List<Shipment> shipments) async {
     List<LatLng> _polyline = [];
     _polylineCoordinates = [];
     for (var i = 0; i < shipments.length; i++) {
@@ -67,28 +67,9 @@ class ActiveShippmentProvider extends ChangeNotifier {
 
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+        PointLatLng(shipments[i].pickupCityLat!, shipments[i].pickupCityLang!),
         PointLatLng(
-            double.parse(shipments[i]
-                .pathPoints!
-                .singleWhere((element) => element.pointType == "P")
-                .location!
-                .split(",")[0]),
-            double.parse(shipments[i]
-                .pathPoints!
-                .singleWhere((element) => element.pointType == "P")
-                .location!
-                .split(",")[1])),
-        PointLatLng(
-            double.parse(shipments[i]
-                .pathPoints!
-                .singleWhere((element) => element.pointType == "D")
-                .location!
-                .split(",")[0]),
-            double.parse(shipments[i]
-                .pathPoints!
-                .singleWhere((element) => element.pointType == "D")
-                .location!
-                .split(",")[1])),
+            shipments[i].deliveryCityLat!, shipments[i].deliveryCityLang!),
       );
       _polyline = [];
       if (result.points.isNotEmpty) {
@@ -108,33 +89,15 @@ class ActiveShippmentProvider extends ChangeNotifier {
       markers.add(
         Marker(
           markerId: MarkerId("pickup"),
-          position: LatLng(
-              double.parse(shipments[i]
-                  .pathPoints!
-                  .singleWhere((element) => element.pointType == "P")
-                  .location!
-                  .split(",")[0]),
-              double.parse(shipments[i]
-                  .pathPoints!
-                  .singleWhere((element) => element.pointType == "P")
-                  .location!
-                  .split(",")[1])),
+          position:
+              LatLng(shipments[i].pickupCityLat!, shipments[i].pickupCityLang!),
         ),
       );
       markers.add(
         Marker(
           markerId: MarkerId("delivery"),
           position: LatLng(
-              double.parse(shipments[i]
-                  .pathPoints!
-                  .singleWhere((element) => element.pointType == "D")
-                  .location!
-                  .split(",")[0]),
-              double.parse(shipments[i]
-                  .pathPoints!
-                  .singleWhere((element) => element.pointType == "D")
-                  .location!
-                  .split(",")[1])),
+              shipments[i].deliveryCityLat!, shipments[i].deliveryCityLang!),
         ),
       );
       getBounds(markers, _maps[i]!);

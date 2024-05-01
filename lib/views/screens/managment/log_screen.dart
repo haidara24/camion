@@ -198,7 +198,7 @@ class _ManagmentLogScreenState extends State<ManagmentLogScreen>
                                           // DateTime now = DateTime.now();
                                           // Duration diff = now
                                           //     .difference(state.offers[index].createdDate!);
-                                          return GestureDetector(
+                                          return InkWell(
                                             onTap: () {
                                               Navigator.push(
                                                   context,
@@ -420,7 +420,7 @@ class _ManagmentLogScreenState extends State<ManagmentLogScreen>
                                           // DateTime now = DateTime.now();
                                           // Duration diff = now
                                           //     .difference(state.offers[index].createdDate!);
-                                          return GestureDetector(
+                                          return InkWell(
                                             onTap: () {
                                               Navigator.push(
                                                   context,

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -20,7 +22,7 @@ class ShippmentRerository {
   List<KCommodityCategory> kcommodityCategories = [];
   List<KCategory> kCategories = [];
   List<Shipment> shipments = [];
-  List<KShipment> kshipments = [];
+  List<Shipmentv2> kshipments = [];
   List<ManagmentShipment> mshipments = [];
 
   Future<bool> updateKShipmentStatus(String state, int shipmentId) async {
@@ -92,44 +94,44 @@ class ShippmentRerository {
     return kcommodityCategories;
   }
 
-  Future<List<Shipment>> getShipmentList(String status) async {
-    shipments = [];
-    var prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
-    var merchant = prefs.getInt("merchant") ?? 0;
-
-    var response = await HttpHelper.get(
-      "$SHIPPMENTS_ENDPOINT?shipment_status=$status&merchant=$merchant&driver=",
-      apiToken: jwt,
-    );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
-    if (response.statusCode == 200) {
-      for (var element in json) {
-        shipments.add(Shipment.fromJson(element));
-      }
-
-      return shipments.reversed.toList();
-    } else {
-      return shipments;
-    }
-  }
-
-  Future<List<KShipment>> getKShipmentList(String status) async {
+  Future<List<Shipmentv2>> getShipmentList(String status) async {
     kshipments = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var merchant = prefs.getInt("merchant") ?? 0;
 
     var response = await HttpHelper.get(
-      "$KSHIPPMENTS_ENDPOINT?shipment_status=$status&merchant=$merchant",
+      "$SHIPPMENTSV2_ENDPOINT?shipment_status=$status&merchant=$merchant&driver=",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        kshipments.add(KShipment.fromJson(element));
+        kshipments.add(Shipmentv2.fromJson(element));
+      }
+
+      return kshipments.reversed.toList();
+    } else {
+      return kshipments;
+    }
+  }
+
+  Future<List<Shipmentv2>> getKShipmentList(String status) async {
+    kshipments = [];
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var merchant = prefs.getInt("merchant") ?? 0;
+
+    var response = await HttpHelper.get(
+      "$SHIPPMENTSV2_ENDPOINT?shipment_status=$status&merchant=$merchant",
+      apiToken: jwt,
+    );
+    var myDataString = utf8.decode(response.bodyBytes);
+    var json = jsonDecode(myDataString);
+    if (response.statusCode == 200) {
+      for (var element in json) {
+        kshipments.add(Shipmentv2.fromJson(element));
         print(response.statusCode);
       }
 
@@ -255,7 +257,7 @@ class ShippmentRerository {
     }
   }
 
-  Future<List<KShipment>> getOwnerKShipmentList(String status) async {
+  Future<List<Shipmentv2>> getOwnerKShipmentList(String status) async {
     kshipments = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
@@ -269,7 +271,7 @@ class ShippmentRerository {
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        kshipments.add(KShipment.fromJson(element));
+        kshipments.add(Shipmentv2.fromJson(element));
       }
 
       return kshipments.reversed.toList();
@@ -333,7 +335,7 @@ class ShippmentRerository {
     return packageTypes;
   }
 
-  Future<int?> createShipmentv2(
+  Future<Shipmentv2?> createShipmentv2(
     Shipmentv2 shipment,
   ) async {
     prefs = await SharedPreferences.getInstance();
@@ -356,15 +358,17 @@ class ShippmentRerository {
     request.fields['merchant'] = userModel.merchant!.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);
     // print(jsonEncode(sub_shipments));
-    print(userModel.merchant!.toString());
+    // print(userModel.merchant!.toString());
 
     // print(jsonEncode(request.fields));
     var response = await request.send();
     print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
-      var res = jsonDecode(respStr);
-      return res['id'];
+      var resString = jsonDecode(respStr);
+      print(resString);
+      var res = Shipmentv2.fromJson(resString);
+      return res;
     } else {
       final respStr = await response.stream.bytesToString();
       print(respStr);
@@ -465,73 +469,6 @@ class ShippmentRerository {
     }
   }
 
-  Future<int?> createShipmentInstruction(Shipmentinstruction shipment) async {
-    prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
-    var request = http.MultipartRequest(
-        'POST', Uri.parse(SHIPPMENTS_INSTRUCTION_ENDPOINT));
-    request.headers.addAll({
-      HttpHeaders.authorizationHeader: "JWT $token",
-      HttpHeaders.contentTypeHeader: "multipart/form-data"
-    });
-
-    List<Map<String, dynamic>> commodity_items = [];
-    for (var element in shipment.commodityItems!) {
-      var item = element.toJson();
-      commodity_items.add(item);
-    }
-
-    request.fields['shipment'] = shipment.shipment!.toString();
-    request.fields['user_type'] = shipment.userType!;
-    request.fields['charger_name'] = shipment.chargerName!;
-    request.fields['charger_address'] = shipment.chargerAddress!;
-    request.fields['charger_phone'] = shipment.chargerPhone!;
-    request.fields['reciever_name'] = shipment.recieverName!;
-    request.fields['reciever_address'] = shipment.recieverAddress!;
-    request.fields['reciever_phone'] = shipment.recieverPhone!;
-    request.fields['total_weight'] = shipment.totalWeight.toString();
-    request.fields['net_weight'] = shipment.netWeight.toString();
-    request.fields['truck_weight'] = shipment.truckWeight.toString();
-    request.fields['final_weight'] = shipment.finalWeight.toString();
-    request.fields['commodity_items'] = jsonEncode(commodity_items);
-    var response = await request.send();
-    print(jsonEncode(commodity_items));
-    print(response.statusCode);
-    if (response.statusCode == 201) {
-      final respStr = await response.stream.bytesToString();
-      return 1;
-    } else {
-      final respStr = await response.stream.bytesToString();
-      return 0;
-    }
-  }
-
-  Future<int?> createShipmentPayment(ShipmentPayment shipment) async {
-    prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
-    var request =
-        http.MultipartRequest('POST', Uri.parse(SHIPPMENTS_PAYMENT_ENDPOINT));
-    request.headers.addAll({
-      HttpHeaders.authorizationHeader: "JWT $token",
-      HttpHeaders.contentTypeHeader: "multipart/form-data"
-    });
-    request.fields['shipment'] = shipment.shipment!.toString();
-
-    request.fields['amount'] = shipment.amount!.toString();
-    request.fields['fees'] = shipment.fees!.toString();
-    request.fields['extra_fees'] = shipment.extraFees!.toString();
-    request.fields['payment_method'] = shipment.paymentMethod!.toString();
-
-    var response = await request.send();
-    if (response.statusCode == 201) {
-      final respStr = await response.stream.bytesToString();
-      return 1;
-    } else {
-      final respStr = await response.stream.bytesToString();
-      return 0;
-    }
-  }
-
   Future<bool> assignShipment(int shipmentId, int driver) async {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
@@ -563,18 +500,18 @@ class ShippmentRerository {
     }
   }
 
-  Future<Shipment?> getShipment(int id) async {
+  Future<Shipmentv2?> getShipment(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
-    var rs = await HttpHelper.get('$SHIPPMENTS_ENDPOINT$id/', apiToken: jwt);
+    var rs = await HttpHelper.get('$SHIPPMENTSV2_ENDPOINT$id/', apiToken: jwt);
 
     print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
-      return Shipment.fromJson(result);
+      return Shipmentv2.fromJson(result);
     }
     return null;
   }

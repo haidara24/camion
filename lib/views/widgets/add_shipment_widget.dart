@@ -13,7 +13,7 @@
 //                                               crossAxisAlignment:
 //                                                   CrossAxisAlignment.start,
 //                                               children: [
-//                                                 GestureDetector(
+//                                                 InkWell(
 //                                                   onTap: () {
 //                                                     showModalBottomSheet(
 //                                                       context: context,
@@ -42,7 +42,7 @@
 //                                                                     MainAxisAlignment
 //                                                                         .spaceBetween,
 //                                                                 children: [
-//                                                                   GestureDetector(
+//                                                                   InkWell(
 //                                                                     onTap: () {
 //                                                                       Navigator.pop(
 //                                                                           context);
@@ -107,7 +107,7 @@
 //                                                                                       padding: EdgeInsets.symmetric(
 //                                                                                         horizontal: 5.w,
 //                                                                                       ),
-//                                                                                       child: GestureDetector(
+//                                                                                       child: InkWell(
 //                                                                                         onTap: () {
 //                                                                                           FocusManager.instance.primaryFocus?.unfocus();
 //                                                                                           setState(() {
@@ -182,7 +182,7 @@
 //                                                                                                     child: Row(
 //                                                                                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                                                                                                       children: [
-//                                                                                                         GestureDetector(
+//                                                                                                         InkWell(
 //                                                                                                           onTap: () {
 //                                                                                                             if (truckType == state.truckTypes[index].id!) {
 //                                                                                                               setState(() {
@@ -250,7 +250,7 @@
 //                                                                                                         SizedBox(
 //                                                                                                           width: 7.h,
 //                                                                                                         ),
-//                                                                                                         GestureDetector(
+//                                                                                                         InkWell(
 //                                                                                                           onTap: () {
 //                                                                                                             // if (truckType == state.truckTypes[index].id!) {
 //                                                                                                             //   setState(() {
@@ -391,7 +391,7 @@
 //                                                                       vertical:
 //                                                                           15.h),
 //                                                                   child:
-//                                                                       GestureDetector(
+//                                                                       InkWell(
 //                                                                     onTap: () {
 //                                                                       FocusManager
 //                                                                           .instance
@@ -480,7 +480,7 @@
 //                                                                                 child: Row(
 //                                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
 //                                                                                   children: [
-//                                                                                     GestureDetector(
+//                                                                                     InkWell(
 //                                                                                       onTap: () {
 //                                                                                         if (truckType == state.truckTypes[index].id!) {
 //                                                                                           setState(() {
@@ -542,7 +542,7 @@
 //                                                                                     //   tabalehNum.toString(),
 //                                                                                     //   style: const TextStyle(fontSize: 30),
 //                                                                                     // ),
-//                                                                                     GestureDetector(
+//                                                                                     InkWell(
 //                                                                                       onTap: () {
 //                                                                                         if (truckType == state.truckTypes[index].id!) {
 //                                                                                           setState(() {

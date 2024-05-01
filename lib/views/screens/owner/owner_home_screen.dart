@@ -19,7 +19,7 @@ import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/owner/all_incoming_shipment_screen.dart';
 import 'package:camion/views/screens/owner/driver_active_shipment_screen.dart';
 import 'package:camion/views/screens/owner/owner_search_shipment_screen.dart';
-import 'package:camion/views/screens/shippment_log_screen.dart';
+import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
 import 'package:camion/views/screens/driver/tracking_shippment_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
@@ -161,7 +161,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: SafeArea(
-            child: GestureDetector(
+            child: InkWell(
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
                 BlocProvider.of<BottomNavBarCubit>(context).emitShow();
@@ -235,7 +235,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                       const Divider(
                         color: Colors.white,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () async {
                           if (AppLocalizations.of(context)!.isEnLocale!) {
                             BlocProvider.of<LocaleCubit>(context).toArabic();
@@ -354,7 +354,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                       const Divider(
                         color: Colors.white,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           showDialog<void>(
                             context: context,

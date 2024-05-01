@@ -30,7 +30,7 @@
     
     "select_truck_type":"Select Truck Type",
     "select_truck_type_error":"please select truck type",
-    "choose_shippment_path":"Choose Shippment Route",
+    "choose_shippment_path":"Choose Truck Route",
     "pickup_address":"Pick Up Address",
     "enter_pickup_address":"Enter Pick Up Address",
     "delivery_address":"Delivery Address",
@@ -47,6 +47,8 @@
     "shipment_created_success":"shipment has been created successfully",
     "total_co2":"Total CO2 Emission",
     "energy_consumption":"Total energy consumption",
+    "add_station":"Add Station",
+    "station_no":"Station No",
     
     "loading_time":"Pick Up Time",
     "time":"Time",

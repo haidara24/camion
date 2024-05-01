@@ -2,7 +2,6 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/data/models/shipment_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_instruction_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_payment_screen.dart';
@@ -67,8 +66,9 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                 child: BlocConsumer<ShipmentDetailsBloc, ShipmentDetailsState>(
                   listener: (context, state) {
                     if (state is ShipmentDetailsLoadedSuccess) {
-                      hasinstruction =
-                          state.shipment.shipmentinstruction != null;
+                      hasinstruction = state.shipment.subshipments![0]
+                              .shipmentinstructionv2 !=
+                          null;
                     }
                   },
                   builder: (context, state) {
@@ -83,7 +83,7 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                GestureDetector(
+                                InkWell(
                                   onTap: () {
                                     setState(() {
                                       instructionSelect = true;
@@ -92,9 +92,9 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                                   child: Container(
                                     width:
                                         MediaQuery.of(context).size.width * .47,
-                                    margin: EdgeInsets.all(1),
+                                    margin: const EdgeInsets.all(1),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(10),
                                       ),
                                       color: Colors.white,
@@ -117,8 +117,8 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                state.shipment
-                                                            .shipmentinstruction ==
+                                                state.shipment.subshipments![0]
+                                                            .shipmentinstructionv2 ==
                                                         null
                                                     ? const Icon(
                                                         Icons
@@ -171,8 +171,10 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                                                     .size
                                                     .width *
                                                 .4,
-                                            child: state.shipment
-                                                        .shipmentinstruction ==
+                                            child: state
+                                                        .shipment
+                                                        .subshipments![0]
+                                                        .shipmentinstructionv2 ==
                                                     null
                                                 ? Text(
                                                     AppLocalizations.of(
@@ -194,11 +196,11 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                                     ),
                                   ),
                                 ),
-                                GestureDetector(
+                                InkWell(
                                   onTap: () {
-                                    BlocProvider.of<TruckDetailsBloc>(context)
-                                        .add(TruckDetailsLoadEvent(
-                                            state.shipment.driver!.truck!));
+                                    // BlocProvider.of<TruckDetailsBloc>(context)
+                                    //     .add(TruckDetailsLoadEvent(
+                                    //         state.shipment.driver!.truck!));
                                     setState(() {
                                       instructionSelect = false;
                                     });
@@ -206,9 +208,9 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                                   child: Container(
                                     width:
                                         MediaQuery.of(context).size.width * .47,
-                                    margin: EdgeInsets.all(1),
+                                    margin: const EdgeInsets.all(1),
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(10),
                                       ),
                                       color: Colors.white,
@@ -231,8 +233,8 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                                               mainAxisAlignment:
                                                   MainAxisAlignment.end,
                                               children: [
-                                                state.shipment
-                                                            .shipmentpayment ==
+                                                state.shipment.subshipments![0]
+                                                            .shipmentpaymentv2 ==
                                                         null
                                                     ? const Icon(
                                                         Icons
@@ -285,8 +287,10 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                                                     .size
                                                     .width *
                                                 .4,
-                                            child: state.shipment
-                                                        .shipmentpayment ==
+                                            child: state
+                                                        .shipment
+                                                        .subshipments![0]
+                                                        .shipmentpaymentv2 ==
                                                     null
                                                 ? Text(
                                                     AppLocalizations.of(
@@ -313,10 +317,14 @@ class _ShipmentTaskDetailsFromNotificationScreenState
                           ),
                           instructionSelect
                               ? ShipmentInstructionScreen(
-                                  shipment: state.shipment,
-                                  hasinstruction: hasinstruction,
+                                  shipment: state.shipment.subshipments![0],
+                                  subshipmentIndex: 0,
+                                  // hasinstruction: hasinstruction,
                                 )
-                              : ShipmentPaymentScreen(shipment: state.shipment),
+                              : ShipmentPaymentScreen(
+                                  shipment: state.shipment.subshipments![0],
+                                  subshipmentIndex: 0,
+                                ),
                         ],
                       );
                     } else {

@@ -85,7 +85,7 @@ class _PermissionLogScreenState extends State<PermissionLogScreen> {
                                   // DateTime now = DateTime.now();
                                   // Duration diff = now
                                   //     .difference(state.offers[index].createdDate!);
-                                  return GestureDetector(
+                                  return InkWell(
                                     onTap: () {
                                       // Navigator.push(context, MaterialPageRoute(builder: (context) => PermissionDetailsScreen(shipment: state.perm),))
                                     },

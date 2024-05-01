@@ -225,7 +225,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                       ],
                     )
                   : const SizedBox.shrink(),
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   addShipmentProvider!
                       .setCommodityCategory(subCategories[index3], index);
@@ -513,7 +513,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                           const SizedBox(
                                                             height: 7,
                                                           ),
-                                                          GestureDetector(
+                                                          InkWell(
                                                             onTap: () {
                                                               showModalBottomSheet(
                                                                 context:
@@ -592,7 +592,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                                                         itemBuilder: (context, index4) {
                                                                                                           return Column(
                                                                                                             children: [
-                                                                                                              GestureDetector(
+                                                                                                              InkWell(
                                                                                                                 onTap: () {
                                                                                                                   addShipmentProvider!.setCommodityCategory(state.commodityCategories[index4], index);
                                                                                                                   addShipmentProvider!.calculateCosts();
@@ -664,7 +664,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                                               );
                                                                                             } else {
                                                                                               return Center(
-                                                                                                child: GestureDetector(
+                                                                                                child: InkWell(
                                                                                                   onTap: () {
                                                                                                     // BlocProvider.of<SectionBloc>(context)
                                                                                                     //     .add(SectionLoadEvent());
@@ -820,7 +820,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                                 ),
                                                                                 Row(
                                                                                   children: [
-                                                                                    GestureDetector(
+                                                                                    InkWell(
                                                                                       onTap: () {
                                                                                         Navigator.pop(context);
                                                                                       },
@@ -831,7 +831,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                                     ),
                                                                                     const Text('اختر نوع البضاعة', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                                                                                     const Spacer(),
-                                                                                    GestureDetector(
+                                                                                    InkWell(
                                                                                       onTap: () {
                                                                                         Navigator.pop(context);
                                                                                         showDialog(
@@ -1246,8 +1246,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                           (index != 0)
                                                       ? Positioned(
                                                           right: 0,
-                                                          child:
-                                                              GestureDetector(
+                                                          child: InkWell(
                                                             onTap: () {
                                                               shipmentProvider
                                                                   .removeitem(
@@ -1285,7 +1284,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                     Positioned(
                                       bottom: -18,
                                       left: 0,
-                                      child: GestureDetector(
+                                      child: InkWell(
                                         onTap: shipmentProvider.additem,
                                         child: AbsorbPointer(
                                           absorbing: true,
@@ -1324,7 +1323,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    GestureDetector(
+                                    InkWell(
                                       onTap: () {
                                         // BlocProvider.of<TrucksListBloc>(context)
                                         //     .add(TrucksListLoadEvent(1));
@@ -1504,7 +1503,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  GestureDetector(
+                                  InkWell(
                                     onTap: () {
                                       showModalBottomSheet(
                                         context: context,
@@ -1577,8 +1576,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                             horizontal: 9.0,
                                                             vertical: 11.0,
                                                           ),
-                                                          suffixIcon:
-                                                              GestureDetector(
+                                                          suffixIcon: InkWell(
                                                             onTap: () {
                                                               Navigator.push(
                                                                 context,
@@ -1729,7 +1727,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                             "E",
                                                     child: !valueProvider
                                                             .pickupLoading
-                                                        ? GestureDetector(
+                                                        ? InkWell(
                                                             onTap: () {
                                                               // _(() {
                                                               //   pickupPosition = true;
@@ -1869,7 +1867,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                                 horizontal: 9.0,
                                                                                 vertical: 11.0,
                                                                               ),
-                                                                              suffixIcon: GestureDetector(
+                                                                              suffixIcon: InkWell(
                                                                                 onTap: () {
                                                                                   Navigator.push(
                                                                                     context,
@@ -1985,7 +1983,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                           },
                                                                         ),
                                                                       ),
-                                                                      GestureDetector(
+                                                                      InkWell(
                                                                         onTap:
                                                                             () {
                                                                           valueProvider
@@ -2020,7 +2018,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                   const SizedBox(
                                                                     height: 5,
                                                                   ),
-                                                                  GestureDetector(
+                                                                  InkWell(
                                                                     onTap: () {
                                                                       valueProvider.setStopPointLoading(
                                                                           true,
@@ -2064,7 +2062,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                               );
                                                             },
                                                           ),
-                                                          GestureDetector(
+                                                          InkWell(
                                                             onTap: () {
                                                               valueProvider
                                                                   .addstoppoint();
@@ -2170,7 +2168,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                 vertical: 11.0,
                                                               ),
                                                               suffixIcon:
-                                                                  GestureDetector(
+                                                                  InkWell(
                                                                 onTap: () {
                                                                   Navigator
                                                                       .push(
@@ -2337,7 +2335,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                               .pickupPosition,
                                                           child: !valueProvider
                                                                   .deliveryLoading
-                                                              ? GestureDetector(
+                                                              ? InkWell(
                                                                   onTap: () {
                                                                     valueProvider
                                                                         .setDeliveryLoading(
@@ -2695,7 +2693,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                             height: 50,
                             child: Row(
                               children: [
-                                GestureDetector(
+                                InkWell(
                                   onTap: () {
                                     print("normal");
                                     shipmentProvider.setMapMode(MapType.normal);
@@ -2716,7 +2714,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                     ),
                                   ),
                                 ),
-                                GestureDetector(
+                                InkWell(
                                   onTap: () {
                                     print("dark");
                                     shipmentProvider.setMapMode(MapType.normal);
@@ -2737,7 +2735,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                     ),
                                   ),
                                 ),
-                                GestureDetector(
+                                InkWell(
                                   onTap: () {
                                     shipmentProvider.setMapMode(MapType.hybrid);
                                   },
@@ -2761,7 +2759,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                             .isNotEmpty &&
                                         shipmentProvider.delivery_controller
                                             .text.isNotEmpty)
-                                    ? GestureDetector(
+                                    ? InkWell(
                                         onTap: () {
                                           Navigator.push(
                                             context,
@@ -3178,8 +3176,6 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                             shipment.shipmentItems = items;
                                             shipment.pathPoints = points;
                                             // shipment.pickupDate = DateTime.now();
-
-                                            print("sdf");
                                             BlocProvider.of<
                                                         ShippmentCreateBloc>(
                                                     context)
@@ -3234,7 +3230,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                 ),
                 Visibility(
                   visible: !shipmentProvider.isThereARoute,
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       shipmentProvider.setIsThereRout(true);
                     },
@@ -3269,7 +3265,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      GestureDetector(
+                                      InkWell(
                                         onTap: () {
                                           shipmentProvider.setIsThereRout(true);
                                         },

@@ -1,5 +1,3 @@
-import 'package:camion/data/models/truck_type_model.dart';
-
 class Shipmentinstruction {
   int? id;
   int? shipment;
@@ -11,26 +9,21 @@ class Shipmentinstruction {
   String? recieverAddress;
   String? recieverPhone;
   int? totalWeight;
-  int? netWeight;
-  int? truckWeight;
-  int? finalWeight;
-  List<CommodityItems>? commodityItems;
+  List<SubShipmentInstruction?>? subinstrucations;
 
-  Shipmentinstruction(
-      {this.id,
-      this.shipment,
-      this.userType,
-      this.chargerName,
-      this.chargerAddress,
-      this.chargerPhone,
-      this.recieverName,
-      this.recieverAddress,
-      this.recieverPhone,
-      this.totalWeight,
-      this.netWeight,
-      this.truckWeight,
-      this.finalWeight,
-      this.commodityItems});
+  Shipmentinstruction({
+    this.id,
+    this.shipment,
+    this.userType,
+    this.chargerName,
+    this.chargerAddress,
+    this.chargerPhone,
+    this.recieverName,
+    this.recieverAddress,
+    this.recieverPhone,
+    this.totalWeight,
+    this.subinstrucations,
+  });
 
   Shipmentinstruction.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -42,36 +35,83 @@ class Shipmentinstruction {
     recieverName = json['reciever_name'];
     recieverAddress = json['reciever_address'];
     recieverPhone = json['reciever_phone'];
-    totalWeight = json['total_weight'];
+    totalWeight = json['total_weight'] ?? 0;
+    if (json['sub_instructions'] != null) {
+      subinstrucations = <SubShipmentInstruction>[];
+      json['sub_instructions'].forEach((v) {
+        subinstrucations!.add(SubShipmentInstruction.fromJson(v));
+      });
+    } else {
+      subinstrucations = <SubShipmentInstruction>[];
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['shipment'] = shipment;
+    data['user_type'] = userType;
+    data['charger_name'] = chargerName;
+    data['charger_address'] = chargerAddress;
+    data['charger_phone'] = chargerPhone;
+    data['reciever_name'] = recieverName;
+    data['reciever_address'] = recieverAddress;
+    data['reciever_phone'] = recieverPhone;
+    data['total_weight'] = totalWeight;
+    if (subinstrucations != null) {
+      data['sub_instructions'] =
+          subinstrucations!.map((v) => v!.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class SubShipmentInstruction {
+  int? id;
+  int? truck;
+  int? instruction;
+  int? netWeight;
+  int? truckWeight;
+  int? finalWeight;
+  List<CommodityItems>? commodityItems;
+
+  SubShipmentInstruction({
+    this.id,
+    this.truck,
+    this.instruction,
+    this.netWeight,
+    this.truckWeight,
+    this.finalWeight,
+    this.commodityItems,
+  });
+
+  SubShipmentInstruction.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    truck = json['truck'];
+    instruction = json['instruction'];
     netWeight = json['net_weight'];
     truckWeight = json['truck_weight'];
     finalWeight = json['final_weight'];
     if (json['commodity_items'] != null) {
       commodityItems = <CommodityItems>[];
       json['commodity_items'].forEach((v) {
-        commodityItems!.add(new CommodityItems.fromJson(v));
+        commodityItems!.add(CommodityItems.fromJson(v));
       });
+    } else {
+      commodityItems = <CommodityItems>[];
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['shipment'] = this.shipment;
-    data['user_type'] = this.userType;
-    data['charger_name'] = this.chargerName;
-    data['charger_address'] = this.chargerAddress;
-    data['charger_phone'] = this.chargerPhone;
-    data['reciever_name'] = this.recieverName;
-    data['reciever_address'] = this.recieverAddress;
-    data['reciever_phone'] = this.recieverPhone;
-    data['total_weight'] = this.totalWeight;
-    data['net_weight'] = this.netWeight;
-    data['truck_weight'] = this.truckWeight;
-    data['final_weight'] = this.finalWeight;
-    if (this.commodityItems != null) {
-      data['commodity_items'] =
-          this.commodityItems!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['id'] = id;
+    data['truck'] = truck;
+    data['instruction'] = instruction;
+    data['net_weight'] = netWeight;
+    data['truck_weight'] = truckWeight;
+    data['final_weight'] = finalWeight;
+    if (commodityItems != null) {
+      data['commodity_items'] = commodityItems!.map((v) => v.toJson()).toList();
     }
     return data;
   }

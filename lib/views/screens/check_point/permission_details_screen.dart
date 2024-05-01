@@ -343,7 +343,7 @@ class _PermissionDetailsScreenState extends State<PermissionDetailsScreen> {
                                           children: [
                                             SizedBox(
                                               // width: 350.w,
-                                              child: GestureDetector(
+                                              child: InkWell(
                                                 onTap: _showDatePicker,
                                                 child: TextFormField(
                                                   controller:
@@ -379,7 +379,7 @@ class _PermissionDetailsScreenState extends State<PermissionDetailsScreen> {
                                             ),
                                             SizedBox(
                                               // width: 350.w,
-                                              child: GestureDetector(
+                                              child: InkWell(
                                                 onTap: _showDatePicker,
                                                 child: TextFormField(
                                                   controller:
@@ -518,7 +518,7 @@ class _PermissionDetailsScreenState extends State<PermissionDetailsScreen> {
                                 ),
                                 SizedBox(
                                   // width: 350.w,
-                                  child: GestureDetector(
+                                  child: InkWell(
                                     onTap: _showDatePicker,
                                     child: TextFormField(
                                       controller: _dateController,

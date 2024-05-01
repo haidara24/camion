@@ -13,23 +13,25 @@ class TruckRepository {
   List<TruckExpense> truckExpenses = [];
   late SharedPreferences prefs;
 
-  Future<List<Truck>> getTrucks(int type) async {
+  Future<List<KTruck>> getTrucks(List<int> types) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    String truckTypeParams = types.map((type) => 'truck_type=$type').join('&');
 
-    var rs = await HttpHelper.get('$TRUCKS_ENDPOINT?truck_type=$type',
+    var rs = await HttpHelper.get('$TRUCKS_ENDPOINT?$truckTypeParams',
         apiToken: jwt);
-    trucks = [];
+    ktrucks = [];
     print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
-        trucks.add(Truck.fromJson(element));
+        ktrucks.add(KTruck.fromJson(element));
       }
     }
-    return trucks;
+    print(ktrucks);
+    return ktrucks;
   }
 
   Future<List<KTruck>> getKTrucks(int type) async {
@@ -97,7 +99,7 @@ class TruckRepository {
     return trucks;
   }
 
-  Future<Truck?> getTruck(int id) async {
+  Future<KTruck?> getTruck(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
@@ -108,7 +110,7 @@ class TruckRepository {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
-      return Truck.fromJson(result);
+      return KTruck.fromJson(result);
     }
     return null;
   }

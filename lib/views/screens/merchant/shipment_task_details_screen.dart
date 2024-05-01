@@ -1,7 +1,8 @@
 import 'package:camion/Localization/app_localizations.dart';
-import 'package:camion/business_logic/bloc/truck/truck_details_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/data/models/shipment_model.dart';
+import 'package:camion/data/models/shipmentv2_model.dart';
+import 'package:camion/data/providers/shipment_instructions_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_instruction_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_payment_screen.dart';
@@ -10,14 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class ShipmentTaskDetailsScreen extends StatefulWidget {
-  final Shipment shipment;
-  final bool hasinstruction;
+  final Shipmentv2 shipment;
+  // final bool hasinstruction;
   ShipmentTaskDetailsScreen({
     Key? key,
     required this.shipment,
-    required this.hasinstruction,
+    // required this.hasinstruction,
   }) : super(key: key);
 
   @override
@@ -29,17 +31,79 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int tabIndex = 0;
-
+  int selectedIndex = 0;
   bool instructionSelect = true;
 
-  final FocusNode _orderTypenode = FocusNode();
   var key1 = GlobalKey();
   String selectedRadioTile = "";
+  ShipmentInstructionsProvider? instructionsProvider;
+
+  Widget pathList() {
+    return SizedBox(
+      height: 60.h,
+      child: ListView.builder(
+        itemCount: widget.shipment.subshipments!.length,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              setState(() {
+                selectedIndex = index;
+              });
+
+              instructionsProvider!
+                  .setSubShipment(widget.shipment.subshipments![index], index);
+            },
+            child: Container(
+              width: 130.w,
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: selectedIndex == index
+                    ? AppColor.lightYellow
+                    : Colors.white,
+                borderRadius: BorderRadius.circular(11),
+                border: Border.all(
+                  color: selectedIndex == index
+                      ? AppColor.deepYellow
+                      : Colors.grey[400]!,
+                ),
+              ),
+              child: Center(
+                child: Text(
+                  "المسار رقم ${index + 1}",
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: selectedIndex == index
+                        ? AppColor.deepYellow
+                        : Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      instructionsProvider =
+          Provider.of<ShipmentInstructionsProvider>(context, listen: false);
+      instructionsProvider!.setSubShipment(widget.shipment.subshipments![0], 0);
+      if (instructionsProvider!.subShipment!.shipmentinstructionv2 != null) {
+        BlocProvider.of<ReadInstructionBloc>(context).add(
+            ReadInstructionLoadEvent(
+                instructionsProvider!.subShipment!.shipmentinstructionv2!.id!));
+      }
+    });
   }
 
   @override
@@ -69,12 +133,16 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                     SizedBox(
                       height: 5.h,
                     ),
+                    pathList(),
+                    SizedBox(
+                      height: 5.h,
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
                               setState(() {
                                 instructionSelect = true;
@@ -82,9 +150,9 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .47,
-                              margin: EdgeInsets.all(1),
+                              margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(10),
                                 ),
                                 color: Colors.white,
@@ -105,7 +173,11 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
-                                          widget.shipment.shipmentinstruction ==
+                                          widget
+                                                      .shipment
+                                                      .subshipments![
+                                                          selectedIndex]
+                                                      .shipmentinstructionv2 ==
                                                   null
                                               ? const Icon(
                                                   Icons.warning_amber_rounded,
@@ -152,41 +224,43 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           .4,
-                                      child:
-                                          widget.shipment.shipmentinstruction ==
-                                                  null
-                                              ? Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'instruction_not_complete'),
-                                                  maxLines: 2,
-                                                )
-                                              : Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'instruction_complete'),
-                                                  maxLines: 2,
-                                                ),
+                                      child: widget
+                                                  .shipment
+                                                  .subshipments![selectedIndex]
+                                                  .shipmentinstructionv2 ==
+                                              null
+                                          ? Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'instruction_not_complete'),
+                                              maxLines: 2,
+                                            )
+                                          : Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'instruction_complete'),
+                                              maxLines: 2,
+                                            ),
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
-                          GestureDetector(
+                          InkWell(
                             onTap: () {
-                              BlocProvider.of<TruckDetailsBloc>(context).add(
-                                  TruckDetailsLoadEvent(
-                                      widget.shipment.driver!.truck!));
+                              // BlocProvider.of<TruckDetailsBloc>(context).add(
+                              //     TruckDetailsLoadEvent(
+                              //         widget.shipment.driver!.truck!));
                               setState(() {
                                 instructionSelect = false;
                               });
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width * .47,
-                              margin: EdgeInsets.all(1),
+                              margin: const EdgeInsets.all(1),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(10),
                                 ),
                                 color: Colors.white,
@@ -207,7 +281,11 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
-                                          widget.shipment.shipmentpayment ==
+                                          widget
+                                                      .shipment
+                                                      .subshipments![
+                                                          selectedIndex]
+                                                      .shipmentpaymentv2 ==
                                                   null
                                               ? const Icon(
                                                   Icons.warning_amber_rounded,
@@ -254,7 +332,10 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                     SizedBox(
                                       width: MediaQuery.of(context).size.width *
                                           .4,
-                                      child: widget.shipment.shipmentpayment ==
+                                      child: widget
+                                                  .shipment
+                                                  .subshipments![selectedIndex]
+                                                  .shipmentpaymentv2 ==
                                               null
                                           ? Text(
                                               AppLocalizations.of(context)!
@@ -279,10 +360,16 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                     ),
                     instructionSelect
                         ? ShipmentInstructionScreen(
-                            shipment: widget.shipment,
-                            hasinstruction: widget.hasinstruction,
+                            shipment:
+                                widget.shipment.subshipments![selectedIndex],
+                            subshipmentIndex: selectedIndex,
+                            // hasinstruction: widget.hasinstruction,
                           )
-                        : ShipmentPaymentScreen(shipment: widget.shipment),
+                        : ShipmentPaymentScreen(
+                            shipment:
+                                widget.shipment.subshipments![selectedIndex],
+                            subshipmentIndex: selectedIndex,
+                          ),
                   ],
                 ),
               ),

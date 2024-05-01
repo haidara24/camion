@@ -99,7 +99,7 @@ class SelectTruckScreen extends StatelessWidget {
                                       // DateTime now = DateTime.now();
                                       // Duration diff = now
                                       //     .difference(state.offers[index].createdDate!);
-                                      return GestureDetector(
+                                      return InkWell(
                                         onTap: () {
                                           // Navigator.push(
                                           //   context,

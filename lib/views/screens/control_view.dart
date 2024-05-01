@@ -96,7 +96,7 @@ class _ControlViewState extends State<ControlView> {
                     child: LoadingIndicator(),
                   );
                 } else {
-                  return SelectUserTypeScreen();
+                  return SelectUserType();
                 }
               },
             );

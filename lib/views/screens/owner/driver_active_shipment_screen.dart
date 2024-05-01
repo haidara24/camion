@@ -274,7 +274,7 @@
 //                             );
 //                           } else if (state is OwnerTrucksLoadedFailed) {
 //                             return Center(
-//                               child: GestureDetector(
+//                               child: InkWell(
 //                                 onTap: () {
 //                                   // BlocProvider.of<
 //                                   //             OwnerTrucksBloc>(
@@ -381,7 +381,7 @@
 //                                                       vertical: 5.h),
 //                                                   child: Column(
 //                                                     children: [
-//                                                       GestureDetector(
+//                                                       InkWell(
 //                                                         onTap: () {
 //                                                           print(
 //                                                               'driver${state.shipments[index].driver!.user!.id!}');

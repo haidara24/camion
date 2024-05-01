@@ -13,7 +13,7 @@ class TrucksListBloc extends Bloc<TrucksListEvent, TrucksListState> {
     on<TrucksListLoadEvent>((event, emit) async {
       emit(TrucksListLoadingProgress());
       try {
-        var result = await truckRepository.getKTrucks(event.truckType);
+        var result = await truckRepository.getTrucks(event.truckType);
         emit(TrucksListLoadedSuccess(result));
       } catch (e) {
         emit(TrucksListLoadedFailed(e.toString()));

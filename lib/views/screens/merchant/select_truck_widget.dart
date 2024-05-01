@@ -132,7 +132,7 @@ class SelectTruckWidget extends StatelessWidget {
                                   onChanged: (TruckType? value) {
                                     shipmentProvider.setTruckType(value!);
                                     BlocProvider.of<TrucksListBloc>(context)
-                                        .add(TrucksListLoadEvent(value.id!));
+                                        .add(TrucksListLoadEvent([value.id!]));
                                   },
                                   buttonStyleData: ButtonStyleData(
                                     height: 50,
@@ -180,7 +180,7 @@ class SelectTruckWidget extends StatelessWidget {
                               );
                             } else if (state2 is TruckTypeLoadedFailed) {
                               return Center(
-                                child: GestureDetector(
+                                child: InkWell(
                                   onTap: () {
                                     BlocProvider.of<TruckTypeBloc>(context)
                                         .add(TruckTypeLoadEvent());
@@ -241,7 +241,7 @@ class SelectTruckWidget extends StatelessWidget {
                                           const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) {
-                                        return GestureDetector(
+                                        return InkWell(
                                           onTap: () {
                                             shipmentProvider
                                                 .setTruck(state.trucks[index]);

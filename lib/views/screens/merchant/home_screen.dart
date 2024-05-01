@@ -21,7 +21,7 @@ import 'package:camion/views/screens/merchant/add_multi_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/add_shippment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_task_screen.dart';
-import 'package:camion/views/screens/shippment_log_screen.dart';
+import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _tabController = TabController(
       initialIndex: 0,
-      length: 4,
+      length: 5,
       vsync: this,
     );
 
@@ -119,11 +119,11 @@ class _HomeScreenState extends State<HomeScreen>
         }
       case 1:
         {
-          BlocProvider.of<ManagmentShipmentListBloc>(context)
-              .add(ManagmentShipmentListLoadEvent("P"));
+          BlocProvider.of<ShipmentListBloc>(context)
+              .add(ShipmentListLoadEvent("P"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('shippment_log');
-            currentScreen = ManagmentLogScreen();
+            currentScreen = ShippmentLogScreen();
           });
           break;
         }
@@ -132,32 +132,31 @@ class _HomeScreenState extends State<HomeScreen>
           addShippmentProvider!.initShipment();
           setState(() {
             title = AppLocalizations.of(context)!.translate('order_shippment');
-            currentScreen = AddShippmentScreen();
+            currentScreen = AddMultiShipmentScreen();
           });
           break;
         }
       case 3:
         {
-          // BlocProvider.of<ShipmentListBloc>(context)
-          //     .add(ShipmentListLoadEvent("R"));
+          BlocProvider.of<ActiveShipmentListBloc>(context)
+              .add(ActiveShipmentListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('tracking');
-
-            currentScreen = ActiveShipmentScreen();
+            currentScreen = ShipmentTaskScreen();
           });
           break;
         }
-      // case 4:
-      //   {
-      //     BlocProvider.of<ActiveShipmentListBloc>(context)
-      //         .add(ActiveShipmentListLoadEvent());
-      //     setState(() {
-      //       title = AppLocalizations.of(context)!.translate('tasks');
+      case 4:
+        {
+          BlocProvider.of<ActiveShipmentListBloc>(context)
+              .add(ActiveShipmentListLoadEvent());
+          setState(() {
+            title = AppLocalizations.of(context)!.translate('tasks');
 
-      //       currentScreen = ShipmentTaskScreen();
-      //     });
-      //     break;
-      //   }
+            currentScreen = ShipmentTaskScreen();
+          });
+          break;
+        }
     }
   }
 
@@ -170,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen>
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: SafeArea(
-            child: GestureDetector(
+            child: InkWell(
               onTap: () {
                 FocusManager.instance.primaryFocus?.unfocus();
                 BlocProvider.of<BottomNavBarCubit>(context).emitShow();
@@ -244,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen>
                       const Divider(
                         color: Colors.white,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () async {
                           if (AppLocalizations.of(context)!.isEnLocale!) {
                             BlocProvider.of<LocaleCubit>(context).toArabic();
@@ -328,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen>
                       const Divider(
                         color: Colors.white,
                       ),
-                      GestureDetector(
+                      InkWell(
                         onTap: () {
                           showDialog<void>(
                             context: context,
@@ -622,116 +621,116 @@ class _HomeScreenState extends State<HomeScreen>
                                         ],
                                       ),
                               ),
-                              // Tab(
-                              //   height: 66.h,
-                              //   icon: Consumer<TaskNumProvider>(
-                              //     builder: (context, value, child) {
-                              //       return BlocListener<ActiveShipmentListBloc,
-                              //           ActiveShipmentListState>(
-                              //         listener: (context, state) {
-                              //           if (state
-                              //               is ActiveShipmentListLoadedSuccess) {
-                              //             var taskNum = 0;
-                              //             // for (var element in state.shipments) {
-                              //             //   if (element.shipmentinstruction ==
-                              //             //       null) {
-                              //             //     taskNum++;
-                              //             //   }
-                              //             //   if (element.shipmentpayment ==
-                              //             //       null) {
-                              //             //     taskNum++;
-                              //             //   }
-                              //             // }
-                              //             value.setTaskNum(taskNum);
-                              //           }
-                              //         },
-                              //         child: Stack(
-                              //           children: [
-                              //             navigationValue == 4
-                              //                 ? Column(
-                              //                     mainAxisAlignment:
-                              //                         MainAxisAlignment.end,
-                              //                     children: [
-                              //                       SvgPicture.asset(
-                              //                         "assets/icons/task_selected.svg",
-                              //                         width: 36.w,
-                              //                         height: 36.h,
-                              //                       ),
-                              //                       localeState.value
-                              //                                   .languageCode ==
-                              //                               'en'
-                              //                           ? const SizedBox(
-                              //                               height: 4,
-                              //                             )
-                              //                           : const SizedBox
-                              //                               .shrink(),
-                              //                       Text(
-                              //                         AppLocalizations.of(
-                              //                                 context)!
-                              //                             .translate('tasks'),
-                              //                         style: TextStyle(
-                              //                             color: AppColor
-                              //                                 .deepYellow,
-                              //                             fontSize: 15.sp),
-                              //                       )
-                              //                     ],
-                              //                   )
-                              //                 : Column(
-                              //                     mainAxisAlignment:
-                              //                         MainAxisAlignment.end,
-                              //                     children: [
-                              //                       SvgPicture.asset(
-                              //                         "assets/icons/tasks.svg",
-                              //                         width: 30.w,
-                              //                         height: 30.h,
-                              //                       ),
-                              //                       localeState.value
-                              //                                   .languageCode ==
-                              //                               'en'
-                              //                           ? const SizedBox(
-                              //                               height: 4,
-                              //                             )
-                              //                           : const SizedBox
-                              //                               .shrink(),
-                              //                       Text(
-                              //                         AppLocalizations.of(
-                              //                                 context)!
-                              //                             .translate('tasks'),
-                              //                         style: TextStyle(
-                              //                             color: Colors.white,
-                              //                             fontSize: 15.sp),
-                              //                       )
-                              //                     ],
-                              //                   ),
-                              //             value.taskNum > 0
-                              //                 ? Positioned(
-                              //                     child: Container(
-                              //                       height: 25,
-                              //                       width: 25,
-                              //                       decoration: BoxDecoration(
-                              //                         color: Colors.red,
-                              //                         borderRadius:
-                              //                             BorderRadius.circular(
-                              //                                 45),
-                              //                       ),
-                              //                       child: Center(
-                              //                         child: Text(
-                              //                             value.taskNum
-                              //                                 .toString(),
-                              //                             style:
-                              //                                 const TextStyle(
-                              //                               color: Colors.white,
-                              //                             )),
-                              //                       ),
-                              //                     ),
-                              //                   )
-                              //                 : const SizedBox.shrink(),
-                              //           ],
-                              //         ),
-                              //       );
-                              //     },
-                              //   ),
-                              // ),
+                              Tab(
+                                height: 66.h,
+                                icon: Consumer<TaskNumProvider>(
+                                  builder: (context, value, child) {
+                                    return BlocListener<ActiveShipmentListBloc,
+                                        ActiveShipmentListState>(
+                                      listener: (context, state) {
+                                        if (state
+                                            is ActiveShipmentListLoadedSuccess) {
+                                          var taskNum = 0;
+                                          // for (var element in state.shipments) {
+                                          //   if (element.shipmentinstruction ==
+                                          //       null) {
+                                          //     taskNum++;
+                                          //   }
+                                          //   if (element.shipmentpayment ==
+                                          //       null) {
+                                          //     taskNum++;
+                                          //   }
+                                          // }
+                                          value.setTaskNum(taskNum);
+                                        }
+                                      },
+                                      child: Stack(
+                                        children: [
+                                          navigationValue == 4
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/task_selected.svg",
+                                                      width: 36.w,
+                                                      height: 36.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate('tasks'),
+                                                      style: TextStyle(
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                          fontSize: 15.sp),
+                                                    )
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/tasks.svg",
+                                                      width: 30.w,
+                                                      height: 30.h,
+                                                    ),
+                                                    localeState.value
+                                                                .languageCode ==
+                                                            'en'
+                                                        ? const SizedBox(
+                                                            height: 4,
+                                                          )
+                                                        : const SizedBox
+                                                            .shrink(),
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate('tasks'),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 15.sp),
+                                                    )
+                                                  ],
+                                                ),
+                                          value.taskNum > 0
+                                              ? Positioned(
+                                                  child: Container(
+                                                    height: 25,
+                                                    width: 25,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              45),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                          value.taskNum
+                                                              .toString(),
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.white,
+                                                          )),
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox.shrink(),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         );

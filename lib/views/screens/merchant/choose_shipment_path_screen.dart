@@ -247,7 +247,7 @@
 //                                 horizontal: 9.0,
 //                                 vertical: 11.0,
 //                               ),
-//                               suffixIcon: GestureDetector(
+//                               suffixIcon: InkWell(
 //                                 onTap: () {
 //                                   Navigator.push(
 //                                     context,
@@ -358,7 +358,7 @@
 //                         Visibility(
 //                           visible: !deliveryPosition,
 //                           child: !pickupLoading
-//                               ? GestureDetector(
+//                               ? InkWell(
 //                                   onTap: () {
 //                                     setState(() {
 //                                       pickupLoading = true;
@@ -440,7 +440,7 @@
 //                                       horizontal: 9.0,
 //                                       vertical: 11.0,
 //                                     ),
-//                                     suffixIcon: GestureDetector(
+//                                     suffixIcon: InkWell(
 //                                       onTap: () {
 //                                         Navigator.push(
 //                                           context,
@@ -561,7 +561,7 @@
 //                               Visibility(
 //                                 visible: !pickupPosition,
 //                                 child: !deliveryLoading
-//                                     ? GestureDetector(
+//                                     ? InkWell(
 //                                         onTap: () {
 //                                           setState(() {
 //                                             deliveryLoading = true;

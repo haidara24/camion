@@ -12,7 +12,7 @@ final class InstructionCreateInitial extends InstructionCreateState {}
 class InstructionLoadingProgressState extends InstructionCreateState {}
 
 class InstructionCreateSuccessState extends InstructionCreateState {
-  final int shipment;
+  final Shipmentinstruction shipment;
 
   InstructionCreateSuccessState(this.shipment);
 }

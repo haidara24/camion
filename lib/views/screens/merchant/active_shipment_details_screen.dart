@@ -5,7 +5,7 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/co2_report.dart';
-import 'package:camion/data/models/kshipment_model.dart';
+import 'package:camion/data/models/shipment_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/data/services/co2_service.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -25,7 +25,7 @@ import 'package:intl/intl.dart' as intel;
 
 class ActiveShipmentDetailsScreen extends StatefulWidget {
   final String user_id;
-  final KShipment shipment;
+  final Shipment shipment;
   final int index;
   ActiveShipmentDetailsScreen(
       {Key? key,
@@ -74,22 +74,10 @@ class _ActiveShipmentDetailsScreenState
     Origin destination = Origin();
     leg.destination = destination;
 
-    leg.origin!.latitude = double.parse(widget.shipment!.pathPoints!
-        .singleWhere((element) => element.pointType == "P")
-        .location!
-        .split(",")[0]);
-    leg.origin!.longitude = double.parse(widget.shipment!.pathPoints!
-        .singleWhere((element) => element.pointType == "P")
-        .location!
-        .split(",")[1]);
-    leg.destination!.latitude = double.parse(widget.shipment!.pathPoints!
-        .singleWhere((element) => element.pointType == "D")
-        .location!
-        .split(",")[0]);
-    leg.destination!.longitude = double.parse(widget.shipment!.pathPoints!
-        .singleWhere((element) => element.pointType == "D")
-        .location!
-        .split(",")[1]);
+    leg.origin!.latitude = widget.shipment!.pickupCityLat!;
+    leg.origin!.longitude = widget.shipment!.pickupCityLang!;
+    leg.destination!.latitude = widget.shipment!.deliveryCityLat!;
+    leg.destination!.longitude = widget.shipment!.deliveryCityLang!;
 
     detail.legs!.add(leg);
 
@@ -103,24 +91,10 @@ class _ActiveShipmentDetailsScreenState
 
     Co2Service.getCo2Calculate(
             detail,
-            LatLng(
-                double.parse(widget.shipment!.pathPoints!
-                    .singleWhere((element) => element.pointType == "P")
-                    .location!
-                    .split(",")[0]),
-                double.parse(widget.shipment!.pathPoints!
-                    .singleWhere((element) => element.pointType == "P")
-                    .location!
-                    .split(",")[1])),
-            LatLng(
-                double.parse(widget.shipment!.pathPoints!
-                    .singleWhere((element) => element.pointType == "D")
-                    .location!
-                    .split(",")[0]),
-                double.parse(widget.shipment!.pathPoints!
-                    .singleWhere((element) => element.pointType == "D")
-                    .location!
-                    .split(",")[1])))
+            LatLng(widget.shipment!.pickupCityLat!,
+                widget.shipment!.pickupCityLang!),
+            LatLng(widget.shipment!.deliveryCityLat!,
+                widget.shipment!.deliveryCityLang!))
         .then((value) {
       setState(() {
         _report = value!;
@@ -237,37 +211,9 @@ class _ActiveShipmentDetailsScreenState
                 FirebaseFirestore.instance.collection('location').snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (_added && !_printed) {
-                print("asd");
-                // if (!truckLocationassign) {
-                //   setState(() {
-                //     truckLocation = LatLng(
-                //       snapshot.data!.docs.singleWhere((element) =>
-                //           element.id == widget.user_id)['latitude'],
-                //       snapshot.data!.docs.singleWhere((element) =>
-                //           element.id == widget.user_id)['longitude'],
-                //     );
-                //     truckLocationassign = true;
-                //   });
-                // }
                 _printed =
                     true; // Set the flag to true to prevent starting multiple timers
                 timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-                  // if (!snapshot.data!.docs.singleWhere((element) =>
-                  //     element.id == widget.user_id)['reach_pickup']) {
-                  //   gettruckpolylineCoordinates(
-                  //     LatLng(
-                  //       widget.shipment.pickupCityLat!,
-                  //       widget.shipment.pickupCityLang!,
-                  //     ),
-                  //     LatLng(
-                  //       snapshot.data!.docs.singleWhere((element) =>
-                  //           element.id == widget.user_id)['latitude'],
-                  //       snapshot.data!.docs.singleWhere((element) =>
-                  //           element.id == widget.user_id)['longitude'],
-                  //     ),
-                  //   );
-                  // }
-
                   print("asd");
                 });
 
@@ -276,33 +222,6 @@ class _ActiveShipmentDetailsScreenState
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
-              // if (count < 0) {
-              //   if (snapshot.data!.docs.singleWhere((element) =>
-              //           element.id == widget.user_id)['reach_pickup'] ??
-              //       false) {
-              //     shipmentProvider.getTruckPolylineCoordinates(
-              //         LatLng(
-              //           snapshot.data!.docs.singleWhere((element) =>
-              //               element.id == widget.user_id)['latitude'],
-              //           snapshot.data!.docs.singleWhere((element) =>
-              //               element.id == widget.user_id)['longitude'],
-              //         ),
-              //         LatLng(widget.shipment.deliveryCityLat!,
-              //             widget.shipment.deliveryCityLang!));
-              //   } else {
-              //     shipmentProvider.getTruckPolylineCoordinates(
-              //         LatLng(
-              //           snapshot.data!.docs.singleWhere((element) =>
-              //               element.id == widget.user_id)['latitude'],
-              //           snapshot.data!.docs.singleWhere((element) =>
-              //               element.id == widget.user_id)['longitude'],
-              //         ),
-              //         LatLng(widget.shipment.pickupCityLat!,
-              //             widget.shipment.pickupCityLang!));
-              //   }
-              // } else {
-              //   count--;
-              // }
               return AnimatedBuilder(
                 animation: _animationController,
                 builder: (context, child) {
@@ -329,32 +248,14 @@ class _ActiveShipmentDetailsScreenState
                           ),
                           Marker(
                             markerId: const MarkerId("pickup"),
-                            position: LatLng(
-                                double.parse(widget.shipment!.pathPoints!
-                                    .singleWhere(
-                                        (element) => element.pointType == "P")
-                                    .location!
-                                    .split(",")[0]),
-                                double.parse(widget.shipment!.pathPoints!
-                                    .singleWhere(
-                                        (element) => element.pointType == "P")
-                                    .location!
-                                    .split(",")[1])),
+                            position: LatLng(widget.shipment!.pickupCityLat!,
+                                widget.shipment!.pickupCityLang!),
                             icon: pickupicon,
                           ),
                           Marker(
                             markerId: const MarkerId("delivery"),
-                            position: LatLng(
-                                double.parse(widget.shipment!.pathPoints!
-                                    .singleWhere(
-                                        (element) => element.pointType == "D")
-                                    .location!
-                                    .split(",")[0]),
-                                double.parse(widget.shipment!.pathPoints!
-                                    .singleWhere(
-                                        (element) => element.pointType == "D")
-                                    .location!
-                                    .split(",")[1])),
+                            position: LatLng(widget.shipment!.deliveryCityLat!,
+                                widget.shipment!.deliveryCityLang!),
                             icon: deliveryicon,
                           ),
                         },
@@ -413,35 +314,20 @@ class _ActiveShipmentDetailsScreenState
     );
   }
 
-  getpolylineCoordinates(KShipment shipment) async {
+  getpolylineCoordinates(Shipment shipment) async {
     print("asd");
     List<Marker> markers = [];
     markers.add(
       Marker(
         markerId: const MarkerId("pickup"),
-        position: LatLng(
-            double.parse(shipment!.pathPoints!
-                .singleWhere((element) => element.pointType == "P")
-                .location!
-                .split(",")[0]),
-            double.parse(shipment!.pathPoints!
-                .singleWhere((element) => element.pointType == "P")
-                .location!
-                .split(",")[1])),
+        position: LatLng(shipment!.pickupCityLat!, shipment!.pickupCityLang!),
       ),
     );
     markers.add(
       Marker(
         markerId: const MarkerId("delivery"),
-        position: LatLng(
-            double.parse(shipment!.pathPoints!
-                .singleWhere((element) => element.pointType == "D")
-                .location!
-                .split(",")[0]),
-            double.parse(shipment!.pathPoints!
-                .singleWhere((element) => element.pointType == "D")
-                .location!
-                .split(",")[1])),
+        position:
+            LatLng(shipment!.deliveryCityLat!, shipment!.deliveryCityLang!),
       ),
     );
     calculateCo2Report();
@@ -507,7 +393,7 @@ class _ActiveShipmentDetailsScreenState
               ),
               child: Column(
                 children: [
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       changeToHidden();
                     },
@@ -563,7 +449,7 @@ class _ActiveShipmentDetailsScreenState
                           contents: SizedBox(
                             width: MediaQuery.of(context).size.width * .18,
                             child: Text(
-                              'Pickup: ${widget.shipment!.pathPoints!.singleWhere((element) => element.pointType == "P").name!}',
+                              'Pickup: ${widget.shipment!.pickupCityLocation!}',
                               style: const TextStyle(),
                               maxLines: 2,
                             ),
@@ -597,7 +483,7 @@ class _ActiveShipmentDetailsScreenState
                           contents: SizedBox(
                             width: MediaQuery.of(context).size.width * .18,
                             child: Text(
-                              'Delivery:${widget.shipment!.pathPoints!.singleWhere((element) => element.pointType == "D").name!}',
+                              'Delivery:${widget.shipment!.pickupCityLocation!}',
                               style: const TextStyle(),
                               maxLines: 2,
                             ),
@@ -678,7 +564,7 @@ class _ActiveShipmentDetailsScreenState
                   top: -20,
                   right: MediaQuery.of(context).size.width * .45,
                   child: panelState == PanelState.hidden
-                      ? GestureDetector(
+                      ? InkWell(
                           onTap: () {
                             changeToOpen();
                           },
@@ -710,7 +596,7 @@ class _ActiveShipmentDetailsScreenState
                             ),
                           ),
                         )
-                      : GestureDetector(
+                      : InkWell(
                           onTap: () {
                             changeToHidden();
                           },
@@ -752,7 +638,7 @@ class _ActiveShipmentDetailsScreenState
   }
 
   Widget _buildPanelWidget(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
         changeToOpen();
       },
@@ -797,7 +683,7 @@ class _ActiveShipmentDetailsScreenState
                             height: 5,
                           ),
                           Text(
-                            "${AppLocalizations.of(context)!.translate('commodity_name')}: ${widget.shipment.shipmentItems![0].commodityCategory!}",
+                            "${AppLocalizations.of(context)!.translate('commodity_name')}: ${widget.shipment.shipmentItems![0].commodityName!}",
                             style: TextStyle(
                               fontSize: 18.sp,
                             ),
@@ -856,7 +742,7 @@ class _ActiveShipmentDetailsScreenState
                     ),
                   ),
                   Text(
-                    "${widget.shipment.truck!.truckuser!.usertruck!.firstName!} ${widget.shipment.truck!.truckuser!.usertruck!.lastName!}",
+                    "${widget.shipment.driver!.user!.firstName!} ${widget.shipment.driver!.user!.lastName!}",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: AppColor.deepYellow,
@@ -871,7 +757,7 @@ class _ActiveShipmentDetailsScreenState
               return Positioned(
                 top: -20,
                 right: MediaQuery.of(context).size.width * .45,
-                child: GestureDetector(
+                child: InkWell(
                   onTap: () {
                     changeToOpen();
                   },
@@ -911,7 +797,7 @@ class _ActiveShipmentDetailsScreenState
     );
   }
 
-  int getunfinishedTasks(KShipment shipment) {
+  int getunfinishedTasks(Shipment shipment) {
     var count = 0;
     // if (shipment.shipmentinstruction == null) {
     //   count++;
@@ -1011,7 +897,7 @@ class _ActiveShipmentDetailsScreenState
                               height: 5,
                             ),
                             Text(
-                              "${AppLocalizations.of(context)!.translate('commodity_name')}: ${widget.shipment.shipmentItems![index].commodityCategory!}",
+                              "${AppLocalizations.of(context)!.translate('commodity_name')}: ${widget.shipment.shipmentItems![index].commodityName!}",
                               style: TextStyle(
                                 fontSize: 17.sp,
                               ),

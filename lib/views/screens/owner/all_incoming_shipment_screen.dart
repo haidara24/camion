@@ -370,7 +370,7 @@ class _AllIncomingShippmentLogScreenState
                             );
                           } else if (state is OwnerTrucksLoadedFailed) {
                             return Center(
-                              child: GestureDetector(
+                              child: InkWell(
                                 onTap: () {
                                   // BlocProvider.of<
                                   //             OwnerTrucksBloc>(

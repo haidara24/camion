@@ -10,8 +10,6 @@ import 'package:camion/data/models/shipment_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/data/services/co2_service.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/merchant/shipment_task_details_screen.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +22,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
-import 'package:timelines/timelines.dart';
 import 'package:intl/intl.dart' as intel;
 
 class DriverActiveShipmentDetailsScreen extends StatefulWidget {
@@ -73,25 +70,25 @@ class _DriverActiveShipmentDetailsScreenState
     Origin destination = Origin();
     leg.destination = destination;
 
-    leg.origin!.latitude = shipment!.pickupCityLat;
-    leg.origin!.longitude = shipment!.pickupCityLang;
-    leg.destination!.latitude = shipment!.deliveryCityLat;
-    leg.destination!.longitude = shipment!.deliveryCityLang;
+    leg.origin!.latitude = shipment.pickupCityLat;
+    leg.origin!.longitude = shipment.pickupCityLang;
+    leg.destination!.latitude = shipment.deliveryCityLat;
+    leg.destination!.longitude = shipment.deliveryCityLang;
 
     detail.legs!.add(leg);
 
-    for (var i = 0; i < shipment!.shipmentItems!.length; i++) {
+    for (var i = 0; i < shipment.shipmentItems!.length; i++) {
       Load load = Load();
       load.unitWeightKg =
-          shipment!.shipmentItems![i].commodityWeight!.toDouble();
+          shipment.shipmentItems![i].commodityWeight!.toDouble();
       load.unitType = "pallets";
       detail.load!.add(load);
     }
 
     Co2Service.getCo2Calculate(
             detail,
-            LatLng(shipment!.pickupCityLat!, shipment!.pickupCityLang!),
-            LatLng(shipment!.deliveryCityLat!, shipment!.deliveryCityLang!))
+            LatLng(shipment.pickupCityLat!, shipment.pickupCityLang!),
+            LatLng(shipment.deliveryCityLat!, shipment.deliveryCityLang!))
         .then((value) {
       setState(() {
         _report = value!;
@@ -158,14 +155,6 @@ class _DriverActiveShipmentDetailsScreenState
     });
   }
 
-  double? _getSizeForPanel(PanelState state, Size size) {
-    if (state == PanelState.open) {
-      return size.height;
-    } else if (state == PanelState.hidden) {
-      return (size.height * 0.5);
-    }
-  }
-
   List<LatLng> _truckpolyline = [];
   bool _printed = false;
 
@@ -194,8 +183,6 @@ class _DriverActiveShipmentDetailsScreenState
   var count = 25;
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: Scaffold(
         body: BlocBuilder<DriverActiveShipmentBloc, DriverActiveShipmentState>(
@@ -436,7 +423,7 @@ class _DriverActiveShipmentDetailsScreenState
                   top: -20,
                   right: MediaQuery.of(context).size.width * .45,
                   child: panelState == PanelState.hidden
-                      ? GestureDetector(
+                      ? InkWell(
                           onTap: () {
                             changeToOpen();
                           },
@@ -468,7 +455,7 @@ class _DriverActiveShipmentDetailsScreenState
                             ),
                           ),
                         )
-                      : GestureDetector(
+                      : InkWell(
                           onTap: () {
                             changeToHidden();
                           },
@@ -525,8 +512,8 @@ class _DriverActiveShipmentDetailsScreenState
     print("werwer");
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-      PointLatLng(driver.latitude!, driver.longitude!),
-      PointLatLng(distination.latitude!, distination.longitude!),
+      PointLatLng(driver.latitude, driver.longitude),
+      PointLatLng(distination.latitude, distination.longitude),
     );
     _truckpolyline = [];
     if (result.points.isNotEmpty) {
@@ -654,7 +641,7 @@ class _DriverActiveShipmentDetailsScreenState
                 return SizedBox(
                   width: MediaQuery.of(context).size.width * .7,
                   child: Text(
-                    "${AppLocalizations.of(context)!.translate('total_co2')}: ${f.format(_report!.et!.toInt())} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
+                    "${AppLocalizations.of(context)!.translate('total_co2')}: ${f.format(_report.et!.toInt())} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
                     style: const TextStyle(
                       // color: Colors.white,
                       fontSize: 17,

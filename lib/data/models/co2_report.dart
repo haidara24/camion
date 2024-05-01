@@ -151,6 +151,36 @@ class Co2Report {
   }
 }
 
+class Co2Report2 {
+  String? title;
+  double? et;
+  double? gt;
+  String? duration;
+  String? distance;
+
+  Co2Report2({
+    this.title,
+    this.et,
+    this.gt,
+    this.duration,
+    this.distance,
+  });
+
+  Co2Report2.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    et = json['Et'];
+    gt = json['Gt'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['Et'] = et;
+    data['Gt'] = gt;
+    return data;
+  }
+}
+
 class LegsData {
   String? title;
   double? ew;

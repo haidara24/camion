@@ -134,25 +134,3 @@ class ShipmentItems {
     return data;
   }
 }
-
-class PackageType {
-  int? id;
-  String? name;
-
-  PackageType({
-    this.id,
-    this.name,
-  });
-
-  PackageType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['name'] = name;
-    return data;
-  }
-}

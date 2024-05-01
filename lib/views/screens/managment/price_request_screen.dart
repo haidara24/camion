@@ -59,7 +59,7 @@ class _PriceRequestLogScreenState extends State<PriceRequestLogScreen> {
                                   // DateTime now = DateTime.now();
                                   // Duration diff = now
                                   //     .difference(state.offers[index].createdDate!);
-                                  return GestureDetector(
+                                  return InkWell(
                                     onTap: () {
                                       Navigator.push(
                                         context,

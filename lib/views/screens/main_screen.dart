@@ -223,7 +223,7 @@ class _MainScreenState extends State<MainScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: [
-                                              GestureDetector(
+                                              InkWell(
                                                 onTap: () {
                                                   setState(() {
                                                     if (isvisivle ==
@@ -273,7 +273,7 @@ class _MainScreenState extends State<MainScreen> {
                         );
                       } else if (state is PostLoadedFailed) {
                         return Center(
-                          child: GestureDetector(
+                          child: InkWell(
                             onTap: () {
                               BlocProvider.of<PostBloc>(context)
                                   .add(PostLoadEvent());

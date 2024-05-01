@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:camion/data/models/shipment_model.dart';
+import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/repositories/shipmment_repository.dart';
 import 'package:equatable/equatable.dart';
 
@@ -16,7 +17,7 @@ class ShipmentDetailsBloc
       try {
         var result = await shippmentRerository.getShipment(event.id);
         if (result != null) {
-          emit(ShipmentDetailsLoadedSuccess(result!));
+          emit(ShipmentDetailsLoadedSuccess(result));
         } else {
           emit(ShipmentDetailsLoadedFailed("error"));
         }

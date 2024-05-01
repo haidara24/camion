@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:camion/data/models/instruction_model.dart';
-import 'package:camion/data/repositories/shipmment_repository.dart';
+import 'package:camion/data/repositories/instruction_repository.dart';
 import 'package:equatable/equatable.dart';
 
 part 'instruction_create_event.dart';
@@ -8,13 +8,13 @@ part 'instruction_create_state.dart';
 
 class InstructionCreateBloc
     extends Bloc<InstructionCreateEvent, InstructionCreateState> {
-  late ShippmentRerository shippmentRerository;
-  InstructionCreateBloc({required this.shippmentRerository})
+  late InstructionRepository instructionRepository;
+  InstructionCreateBloc({required this.instructionRepository})
       : super(InstructionCreateInitial()) {
     on<InstructionCreateButtonPressed>((event, emit) async {
       emit(InstructionLoadingProgressState());
       try {
-        var result = await shippmentRerository
+        var result = await instructionRepository
             .createShipmentInstruction(event.instruction);
 
         emit(InstructionCreateSuccessState(result!));

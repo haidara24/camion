@@ -16,6 +16,9 @@ import 'package:camion/business_logic/bloc/driver_shipments/inprogress_shipments
 import 'package:camion/business_logic/bloc/instructions/instruction_create_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/payment_create_bloc.dart';
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_sub_instruction_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/sub_instruction_create_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/complete_managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/create_category_bloc.dart';
 import 'package:camion/business_logic/bloc/check_point/create_pass_charges_bloc.dart';
@@ -55,11 +58,13 @@ import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/data/providers/notification_provider.dart';
+import 'package:camion/data/providers/shipment_instructions_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/data/providers/truck_provider.dart';
 import 'package:camion/data/repositories/auth_repository.dart';
 import 'package:camion/data/repositories/category_repository.dart';
 import 'package:camion/data/repositories/check_point_repository.dart';
+import 'package:camion/data/repositories/instruction_repository.dart';
 import 'package:camion/data/repositories/notification_repository.dart';
 import 'package:camion/data/repositories/post_repository.dart';
 import 'package:camion/data/repositories/price_request_repository.dart';
@@ -146,6 +151,9 @@ class MyApp extends StatelessWidget {
                 ),
                 RepositoryProvider(
                   create: (context) => ShippmentRerository(),
+                ),
+                RepositoryProvider(
+                  create: (context) => InstructionRepository(),
                 ),
                 RepositoryProvider(
                   create: (context) => TruckRepository(),
@@ -327,14 +335,32 @@ class MyApp extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => InstructionCreateBloc(
-                        shippmentRerository:
-                            RepositoryProvider.of<ShippmentRerository>(
+                        instructionRepository:
+                            RepositoryProvider.of<InstructionRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => SubInstructionCreateBloc(
+                        instructionRepository:
+                            RepositoryProvider.of<InstructionRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => ReadSubInstructionBloc(
+                        instructionRepository:
+                            RepositoryProvider.of<InstructionRepository>(
+                                context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => ReadInstructionBloc(
+                        instructionRepository:
+                            RepositoryProvider.of<InstructionRepository>(
                                 context)),
                   ),
                   BlocProvider(
                     create: (context) => PaymentCreateBloc(
-                        shippmentRerository:
-                            RepositoryProvider.of<ShippmentRerository>(
+                        instructionRepository:
+                            RepositoryProvider.of<InstructionRepository>(
                                 context)),
                   ),
                   BlocProvider(
@@ -438,6 +464,8 @@ class MyApp extends StatelessWidget {
                   providers: [
                     ChangeNotifierProvider(create: (_) => TaskNumProvider()),
                     ChangeNotifierProvider(
+                        create: (_) => ShipmentInstructionsProvider()),
+                    ChangeNotifierProvider(
                         create: (_) => NotificationProvider()),
                     ChangeNotifierProvider(
                         create: (_) => AddShippmentProvider()),
@@ -473,6 +501,11 @@ class MyApp extends StatelessWidget {
                           cardTheme: const CardTheme(
                             surfaceTintColor: Colors.white,
                             clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                            ),
                           ),
                           inputDecorationTheme: InputDecorationTheme(
                             labelStyle: TextStyle(

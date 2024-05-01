@@ -8,7 +8,7 @@ sealed class TrucksListEvent extends Equatable {
 }
 
 class TrucksListLoadEvent extends TrucksListEvent {
-  final int truckType;
+  final List<int> truckType;
 
   TrucksListLoadEvent(this.truckType);
 }
