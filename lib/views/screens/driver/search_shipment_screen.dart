@@ -3,6 +3,7 @@ import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/search_shipment_details_screen.dart';
+import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -119,173 +120,72 @@ class SearchShippmentScreen extends StatelessWidget {
                                     //     .difference(state.offers[index].createdDate!);
                                     return InkWell(
                                       onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SearchShipmentDetailsScreen(
-                                                      shipment: state
-                                                          .shipments[index]),
-                                            ));
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           SearchShipmentDetailsScreen(
+                                        //               shipment: state
+                                        //                   .shipments[index]),
+                                        //     ));
                                       },
-                                      child: Card(
-                                        shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(10),
+                                      child: AbsorbPointer(
+                                        absorbing: false,
+                                        child: Card(
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(10),
+                                            ),
                                           ),
-                                        ),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 5.h),
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 11),
-                                                child: Text(
-                                                  '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
-                                                  style: TextStyle(
-                                                      // color: AppColor.lightBlue,
-                                                      fontSize: 18.sp,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ),
-                                              ListTile(
-                                                contentPadding: EdgeInsets.zero,
-                                                enabled: false,
-                                                leading: Container(
-                                                  height: 75.h,
-                                                  width: 75.w,
-                                                  decoration: BoxDecoration(
-                                                      // color: AppColor.lightGoldenYellow,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5)),
-                                                  child: Center(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8.0),
-                                                      child: localeState.value
-                                                                  .languageCode ==
-                                                              'en'
-                                                          ? SvgPicture.asset(
-                                                              "assets/icons/truck_en.svg",
-                                                              height: 55.h,
-                                                              width: 55.w,
-                                                              fit: BoxFit.fill,
-                                                            )
-                                                              .animate(
-                                                                  delay: 600.ms)
-                                                              .shimmer(
-                                                                  duration:
-                                                                      playDuration -
-                                                                          200
-                                                                              .ms)
-                                                              .flip()
-                                                          : SvgPicture.asset(
-                                                              "assets/icons/truck_ar.svg",
-                                                              height: 55.h,
-                                                              width: 55.w,
-                                                              fit: BoxFit.fill,
-                                                            )
-                                                              .animate(
-                                                                  delay: 600.ms)
-                                                              .shimmer(
-                                                                  duration:
-                                                                      playDuration -
-                                                                          200.ms)
-                                                              .flip(),
-                                                    ),
-                                                  ),
-                                                ),
-                                                title: Row(
+                                              Container(
+                                                width: double.infinity,
+                                                height: 48.h,
+                                                color: AppColor.deepYellow,
+                                                child: Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        ShipmentPathWidget(
-                                                          loadDate: setLoadDate(
-                                                              state
-                                                                  .shipments[
-                                                                      index]
-                                                                  .pickupDate!),
-                                                          pickupName: state
-                                                              .shipments[index]
-                                                              .pickupCityLocation!,
-                                                          deliveryName: state
-                                                              .shipments[index]
-                                                              .deliveryCityLocation!,
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .66,
-                                                          pathwidth:
-                                                              MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  .56,
-                                                        ).animate().slideX(
-                                                            duration: 300.ms,
-                                                            delay: 0.ms,
-                                                            begin: 1,
-                                                            end: 0,
-                                                            curve: Curves
-                                                                .easeInOutSine),
-                                                        SizedBox(
-                                                          height: 7.h,
-                                                        ),
-                                                        Text(
-                                                          '${AppLocalizations.of(context)!.translate('commodity_type')}: ${state.shipments[index].shipmentItems![0].commodityName!}',
-                                                          style: TextStyle(
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 11),
+                                                      child: Text(
+                                                        '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
+                                                        style: TextStyle(
                                                             // color: AppColor.lightBlue,
-                                                            fontSize: 17.sp,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 7.h,
-                                                        ),
-                                                        Text(
-                                                          '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${f.format(state.shipments[index].shipmentItems![0].commodityWeight!)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
-                                                          style: TextStyle(
-                                                            // color: AppColor.lightBlue,
-                                                            fontSize: 17.sp,
-                                                          ),
-                                                        ),
-
-                                                        // // Text(
-                                                        //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
-                                                      ],
+                                                            fontSize: 18.sp,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
                                                     ),
                                                   ],
                                                 ),
-                                                dense: false,
+                                              ),
+                                              ShipmentPathVerticalWidget(
+                                                pathpoints: state
+                                                    .shipments[index]
+                                                    .pathpoints!,
+                                                pickupDate: state
+                                                    .shipments[index]
+                                                    .pickupDate!,
+                                                deliveryDate: state
+                                                    .shipments[index]
+                                                    .pickupDate!,
+                                                langCode: localeState
+                                                    .value.languageCode,
                                               ),
                                             ],
                                           ),
                                         ),
-                                      ).animate().slideX(
-                                          duration: 350.ms,
-                                          delay: 0.ms,
-                                          begin: 1,
-                                          end: 0,
-                                          curve: Curves.easeInOutSine),
+                                      ),
                                     );
                                   },
                                 );

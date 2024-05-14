@@ -119,15 +119,15 @@ class OwnerSearchShippmentScreen extends StatelessWidget {
                                     //     .difference(state.offers[index].createdDate!);
                                     return InkWell(
                                       onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SearchShipmentDetailsScreen(
-                                                      shipment: state
-                                                          .shipments[index],
-                                                      isOwner: true),
-                                            ));
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           SearchShipmentDetailsScreen(
+                                        //               shipment: state
+                                        //                   .shipments[index],
+                                        //               isOwner: true),
+                                        //     ));
                                       },
                                       child: Card(
                                         shape: const RoundedRectangleBorder(
@@ -219,36 +219,6 @@ class OwnerSearchShippmentScreen extends StatelessWidget {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        ShipmentPathWidget(
-                                                          loadDate: setLoadDate(
-                                                              state
-                                                                  .shipments[
-                                                                      index]
-                                                                  .pickupDate!),
-                                                          pickupName: state
-                                                              .shipments[index]
-                                                              .pickupCityLocation!,
-                                                          deliveryName: state
-                                                              .shipments[index]
-                                                              .deliveryCityLocation!,
-                                                          width: MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width *
-                                                              .66,
-                                                          pathwidth:
-                                                              MediaQuery.of(
-                                                                          context)
-                                                                      .size
-                                                                      .width *
-                                                                  .56,
-                                                        ).animate().slideX(
-                                                            duration: 300.ms,
-                                                            delay: 0.ms,
-                                                            begin: 1,
-                                                            end: 0,
-                                                            curve: Curves
-                                                                .easeInOutSine),
                                                         SizedBox(
                                                           height: 7.h,
                                                         ),

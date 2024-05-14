@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/data/models/commodity_category_model.dart';
-import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/kshipment_model.dart';
 import 'package:camion/data/models/shipment_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -14,7 +13,7 @@ import 'package:camion/data/models/truck_type_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class ShippmentRerository {
+class ShipmentRepository {
   late SharedPreferences prefs;
   List<TruckType> truckTypes = [];
   List<PackageType> packageTypes = [];
@@ -22,6 +21,7 @@ class ShippmentRerository {
   List<KCommodityCategory> kcommodityCategories = [];
   List<KCategory> kCategories = [];
   List<Shipment> shipments = [];
+  List<SubShipment> subshipments = [];
   List<Shipmentv2> kshipments = [];
   List<ManagmentShipment> mshipments = [];
 
@@ -280,24 +280,24 @@ class ShippmentRerository {
     }
   }
 
-  Future<List<Shipment>> getUnAssignedShipmentList() async {
-    shipments = [];
+  Future<List<SubShipment>> getUnAssignedShipmentList() async {
+    subshipments = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.get(
-      "${SHIPPMENTS_ENDPOINT}no_driver_shipments/",
+      "${SUB_SHIPPMENTSV2_ENDPOINT}no_driver_shipments/",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        shipments.add(Shipment.fromJson(element));
+        subshipments.add(SubShipment.fromJson(element));
       }
 
-      return shipments.reversed.toList();
+      return subshipments.reversed.toList();
     } else {
-      return shipments;
+      return subshipments;
     }
   }
 
@@ -349,6 +349,7 @@ class ShippmentRerository {
 
     List<Map<String, dynamic>> sub_shipments = [];
     for (var element in shipment.subshipments!) {
+      // print(jsonEncode(element.toJson()));
       var item = element.toJson();
       sub_shipments.add(item);
     }
@@ -357,7 +358,6 @@ class ShippmentRerository {
 
     request.fields['merchant'] = userModel.merchant!.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);
-    // print(jsonEncode(sub_shipments));
     // print(userModel.merchant!.toString());
 
     // print(jsonEncode(request.fields));
@@ -512,6 +512,23 @@ class ShippmentRerository {
 
       var result = jsonDecode(myDataString);
       return Shipmentv2.fromJson(result);
+    }
+    return null;
+  }
+
+  Future<SubShipment?> getSubShipment(int id) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs =
+        await HttpHelper.get('$SUB_SHIPPMENTSV2_ENDPOINT$id/', apiToken: jwt);
+
+    print(rs.statusCode);
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+
+      var result = jsonDecode(myDataString);
+      return SubShipment.fromJson(result);
     }
     return null;
   }

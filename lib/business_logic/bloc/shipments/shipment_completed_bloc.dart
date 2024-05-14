@@ -8,13 +8,13 @@ part 'shipment_completed_state.dart';
 
 class ShipmentCompletedBloc
     extends Bloc<ShipmentCompletedEvent, ShipmentCompletedState> {
-  late ShippmentRerository shippmentRerository;
-  ShipmentCompletedBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ShipmentCompletedBloc({required this.shipmentRepository})
       : super(ShipmentCompletedInitial()) {
     on<ShipmentCompletedLoadEvent>((event, emit) async {
       emit(ShipmentCompletedLoadingProgress());
       try {
-        var result = await shippmentRerository.getShipmentList(event.state);
+        var result = await shipmentRepository.getShipmentList(event.state);
         emit(ShipmentCompletedLoadedSuccess(result));
       } catch (e) {
         emit(ShipmentCompletedLoadedFailed(e.toString()));

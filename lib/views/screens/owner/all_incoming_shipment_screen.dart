@@ -438,15 +438,7 @@ class _AllIncomingShippmentLogScreenState
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              IncomingShipmentDetailsScreen(
-                                                                  shipment: state
-                                                                          .shipments[
-                                                                      index],
-                                                                  driverId: state
-                                                                      .shipments[
-                                                                          index]
-                                                                      .driver!
-                                                                      .id!),
+                                                              IncomingShipmentDetailsScreen(),
                                                         ),
                                                       ),
                                                     );
@@ -976,15 +968,7 @@ class _AllIncomingShippmentLogScreenState
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              IncomingShipmentDetailsScreen(
-                                                                  shipment: state
-                                                                          .shipments[
-                                                                      index],
-                                                                  driverId: state
-                                                                      .shipments[
-                                                                          index]
-                                                                      .driver!
-                                                                      .id!),
+                                                              IncomingShipmentDetailsScreen(),
                                                         ),
                                                       ),
                                                     );

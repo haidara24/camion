@@ -8,13 +8,13 @@ part 'commodity_category_state.dart';
 
 class CommodityCategoryBloc
     extends Bloc<CommodityCategoryEvent, CommodityCategoryState> {
-  late ShippmentRerository shippmentRerository;
-  CommodityCategoryBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  CommodityCategoryBloc({required this.shipmentRepository})
       : super(CommodityCategoryInitial()) {
     on<CommodityCategoryLoadEvent>((event, emit) async {
       emit(CommodityCategoryLoadingProgress());
       try {
-        var categories = await shippmentRerository.getCommodityCategories();
+        var categories = await shipmentRepository.getCommodityCategories();
         emit(CommodityCategoryLoadedSuccess(categories));
         // ignore: empty_catches
       } catch (e) {}

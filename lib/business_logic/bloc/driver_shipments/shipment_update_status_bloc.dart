@@ -7,14 +7,14 @@ part 'shipment_update_status_state.dart';
 
 class DriverShipmentUpdateStatusBloc
     extends Bloc<ShipmentUpdateStatusEvent, ShipmentUpdateStatusState> {
-  late ShippmentRerository shippmentRepository;
-  DriverShipmentUpdateStatusBloc({required this.shippmentRepository})
+  late ShipmentRepository shipmentRepository;
+  DriverShipmentUpdateStatusBloc({required this.shipmentRepository})
       : super(ShipmentUpdateStatusInitial()) {
     on<UpdateShipmentStatusEvent>(
       (event, emit) async {
         emit(ShipmentUpdateStatusLoadingProgress());
         try {
-          var data = await shippmentRepository.updateShipmentStatus(
+          var data = await shipmentRepository.updateShipmentStatus(
               event.shipmentId, event.state);
           if (data) {
             emit(const ShipmentUpdateStatusLoadedSuccess());

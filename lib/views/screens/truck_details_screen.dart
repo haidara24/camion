@@ -2,13 +2,13 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
-import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class TruckDetailsScreen extends StatefulWidget {
@@ -25,7 +25,10 @@ class TruckDetailsScreen extends StatefulWidget {
 }
 
 class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
-  bool _loading = false;
+  late GoogleMapController _controller;
+
+  String _mapStyle = "";
+
   String getTruckType(int type) {
     switch (type) {
       case 1:
@@ -65,6 +68,12 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
@@ -80,340 +89,379 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                 title: AppLocalizations.of(context)!.translate('search_result'),
               ),
               body: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height - 122.h,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10.h,
-                        ),
-                        Card(
-                          elevation: 1,
-                          clipBehavior: Clip.antiAlias,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
-                          ),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 15),
-                          color: Colors.white,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.network(
-                                widget.truck.images![0].image!,
-                                height: 250.h,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    height: 250.h,
-                                    width: double.infinity,
-                                    color: Colors.grey[300],
-                                    child: const Center(
-                                      child: Text("error on loading "),
-                                    ),
-                                  );
-                                },
-                                loadingBuilder:
-                                    (context, child, loadingProgress) {
-                                  if (loadingProgress == null) {
-                                    return child;
-                                  }
-
-                                  return SizedBox(
-                                    height: 250.h,
-                                    child: Center(
-                                      child: CircularProgressIndicator(
-                                        value: loadingProgress
-                                                    .expectedTotalBytes !=
-                                                null
-                                            ? loadingProgress
-                                                    .cumulativeBytesLoaded /
-                                                loadingProgress
-                                                    .expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                              SizedBox(
-                                height: 7.h,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == 'en' ? widget.truck.truckType!.name! : widget.truck.truckType!.nameAr!}',
-                                      style: TextStyle(
-                                          // color: AppColor.lightBlue,
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    SizedBox(
-                                      height: 7.h,
-                                    ),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .4,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.translate('truck_location')}: ${widget.truck.location!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40.h,
-                                          child: VerticalDivider(
-                                            color: Colors.grey[300],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .4,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .4,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.translate('empty_weight')}: ${widget.truck.emptyWeight!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40.h,
-                                          child: VerticalDivider(
-                                            color: Colors.grey[300],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .4,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.translate('empty_weight')}: ${widget.truck.emptyWeight!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(),
-                                    Row(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .25,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.translate('long')}: ${widget.truck.long!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40.h,
-                                          child: VerticalDivider(
-                                            color: Colors.grey[300],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .25,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.translate('height')}: ${widget.truck.height!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 40.h,
-                                          child: VerticalDivider(
-                                            color: Colors.grey[300],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .25,
-                                          child: Text(
-                                            '${AppLocalizations.of(context)!.translate('width')}: ${widget.truck.width!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Divider(),
-
-                                    SizedBox(
-                                      height: 7.h,
-                                    ),
-
-                                    SizedBox(
-                                      height: 7.h,
-                                    ),
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.spaceAround,
-                                    //   children: [
-
-                                    //   ],),
-                                    SizedBox(
-                                      height: 7.h,
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          .5,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          widget.truck.rating! >= 1
-                                              ? Icon(
-                                                  Icons.star,
-                                                  color: AppColor.deepYellow,
-                                                )
-                                              : Icon(
-                                                  Icons.star_border,
-                                                  color: AppColor.deepYellow,
-                                                ),
-                                          widget.truck.rating! >= 2
-                                              ? Icon(
-                                                  Icons.star,
-                                                  color: AppColor.deepYellow,
-                                                )
-                                              : Icon(
-                                                  Icons.star_border,
-                                                  color: AppColor.deepYellow,
-                                                ),
-                                          widget.truck.rating! >= 3
-                                              ? Icon(
-                                                  Icons.star,
-                                                  color: AppColor.deepYellow,
-                                                )
-                                              : Icon(
-                                                  Icons.star_border,
-                                                  color: AppColor.deepYellow,
-                                                ),
-                                          widget.truck.rating! >= 4
-                                              ? Icon(
-                                                  Icons.star,
-                                                  color: AppColor.deepYellow,
-                                                )
-                                              : Icon(
-                                                  Icons.star_border,
-                                                  color: AppColor.deepYellow,
-                                                ),
-                                          widget.truck.rating! == 5
-                                              ? Icon(
-                                                  Icons.star,
-                                                  color: AppColor.deepYellow,
-                                                )
-                                              : Icon(
-                                                  Icons.star_border,
-                                                  color: AppColor.deepYellow,
-                                                ),
-                                          // Text(
-                                          //   '(${widget.truck.rating!.toString()})',
-                                          //   style: TextStyle(
-                                          //     color: AppColor.deepYellow,
-                                          //     fontSize: 19,
-                                          //     fontWeight: FontWeight.bold,
-                                          //   ),
-                                          // ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 7.h,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height - 20.h,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10.h,
+                      ),
+                      Card(
+                        elevation: 1,
+                        clipBehavior: Clip.antiAlias,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
                           ),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * .9,
-                              child: Consumer<AddMultiShipmentProvider>(
-                                  builder: (context, shipmentProvider, child) {
-                                return CustomButton(
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('order_truck'),
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
+                            Image.network(
+                              widget.truck.images![0].image!,
+                              height: 250.h,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 250.h,
+                                  width: double.infinity,
+                                  color: Colors.grey[300],
+                                  child: const Center(
+                                    child: Text("error on loading "),
+                                  ),
+                                );
+                              },
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+
+                                return SizedBox(
+                                  height: 250.h,
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
                                     ),
                                   ),
-                                  onTap: () {
-                                    shipmentProvider.setTruck(
-                                        widget.truck, widget.index);
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
                                 );
-                              }),
+                              },
                             ),
+                            SizedBox(
+                              height: 7.h,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == 'en' ? widget.truck.truckType!.name! : widget.truck.truckType!.nameAr!}',
+                                    style: TextStyle(
+                                        // color: AppColor.lightBlue,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  SizedBox(
+                                    height: 200.h,
+                                    child: GoogleMap(
+                                      onMapCreated: (GoogleMapController
+                                          controller) async {
+                                        setState(() {
+                                          _controller = controller;
+                                          _controller.setMapStyle(_mapStyle);
+                                        });
+                                      },
+                                      myLocationButtonEnabled: false,
+                                      zoomGesturesEnabled: false,
+                                      scrollGesturesEnabled: false,
+                                      tiltGesturesEnabled: false,
+                                      rotateGesturesEnabled: false,
+                                      zoomControlsEnabled: false,
+                                      initialCameraPosition: CameraPosition(
+                                          target: LatLng(
+                                            double.parse(widget
+                                                .truck.locationLat!
+                                                .split(',')[0]),
+                                            double.parse(widget
+                                                .truck.locationLat!
+                                                .split(',')[0]),
+                                          ),
+                                          zoom: 14.47),
+                                      gestureRecognizers: {},
+                                      markers: {
+                                        Marker(
+                                          markerId: MarkerId("truck"),
+                                          position: LatLng(
+                                            double.parse(widget
+                                                .truck.locationLat!
+                                                .split(',')[0]),
+                                            double.parse(widget
+                                                .truck.locationLat!
+                                                .split(',')[0]),
+                                          ),
+                                        )
+                                      },
+
+                                      // mapType: shipmentProvider.mapType,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!.translate('truck_location')}: ${widget.truck.location!}',
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 17.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 40.h,
+                                        child: VerticalDivider(
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 17.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!.translate('empty_weight')}: ${widget.truck.emptyWeight!}',
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 17.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 40.h,
+                                        child: VerticalDivider(
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!.translate('empty_weight')}: ${widget.truck.emptyWeight!}',
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 17.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .25,
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!.translate('long')}: ${widget.truck.long!}',
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 17.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 40.h,
+                                        child: VerticalDivider(
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .25,
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!.translate('height')}: ${widget.truck.height!}',
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 17.sp,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 40.h,
+                                        child: VerticalDivider(
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .25,
+                                        child: Text(
+                                          '${AppLocalizations.of(context)!.translate('width')}: ${widget.truck.width!}',
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 17.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Divider(),
+
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  // Row(
+                                  //   mainAxisAlignment:
+                                  //       MainAxisAlignment.spaceAround,
+                                  //   children: [
+
+                                  //   ],),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * .5,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        widget.truck.rating! >= 1
+                                            ? Icon(
+                                                Icons.star,
+                                                color: AppColor.deepYellow,
+                                              )
+                                            : Icon(
+                                                Icons.star_border,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                        widget.truck.rating! >= 2
+                                            ? Icon(
+                                                Icons.star,
+                                                color: AppColor.deepYellow,
+                                              )
+                                            : Icon(
+                                                Icons.star_border,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                        widget.truck.rating! >= 3
+                                            ? Icon(
+                                                Icons.star,
+                                                color: AppColor.deepYellow,
+                                              )
+                                            : Icon(
+                                                Icons.star_border,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                        widget.truck.rating! >= 4
+                                            ? Icon(
+                                                Icons.star,
+                                                color: AppColor.deepYellow,
+                                              )
+                                            : Icon(
+                                                Icons.star_border,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                        widget.truck.rating! == 5
+                                            ? Icon(
+                                                Icons.star,
+                                                color: AppColor.deepYellow,
+                                              )
+                                            : Icon(
+                                                Icons.star_border,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                        // Text(
+                                        //   '(${widget.truck.rating!.toString()})',
+                                        //   style: TextStyle(
+                                        //     color: AppColor.deepYellow,
+                                        //     fontSize: 19,
+                                        //     fontWeight: FontWeight.bold,
+                                        //   ),
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
                         ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * .9,
+                            child: Consumer<AddMultiShipmentProvider>(
+                                builder: (context, shipmentProvider, child) {
+                              return CustomButton(
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('order_truck'),
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                  ),
+                                ),
+                                onTap: () {
+                                  shipmentProvider.setTruck(
+                                      widget.truck, widget.index);
+                                  shipmentProvider
+                                      .addSelectedTruck(widget.truck.id!);
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              );
+                            }),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 5.h,
+                      ),
+                    ],
                   ),
                 ),
               ),

@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:flutter/material.dart';
 
@@ -18,17 +15,6 @@ class ShipmentInstructionsProvider extends ChangeNotifier {
   }
 
   setSubShipmentIndex(int value) {
-    notifyListeners();
-  }
-
-  addSubInstruction(SubShipmentInstruction value) {
-    _subShipment!.shipmentinstructionv2!.subinstrucations!.add(value);
-    notifyListeners();
-  }
-
-  addInstruction(Shipmentinstruction value) {
-    _subShipment!.shipmentinstructionv2 = value;
-    print(_subShipment!.shipmentinstructionv2);
     notifyListeners();
   }
 }

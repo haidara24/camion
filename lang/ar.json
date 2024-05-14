@@ -28,8 +28,10 @@
     "package_type":"نوع الطرد",
     "insert_value_validate":"الرجاء ادخال قيمة",
 
-    "select_truck_type":"اختر نوع الشاحنة",
-    "select_truck_type_error":"الرجاء اختيار نوع الشاحنة",
+    "select_truck":"اختر شاحنة",
+    "select_truck_error":"الرجاء اختيار شاحنة",
+    "search_with_truck_number":"بحث عن طريق رقم الشاحنة",
+    "search_for_truck":"ابحث عن شاحنة",
     "choose_shippment_path":"اختر مسار الشاحنة",
     "pickup_address":"عنوان التحميل",
     "enter_pickup_address":"ادخل عنوان التحميل",
@@ -46,6 +48,8 @@
     "shipment_load_complete_error":"الرجاء اكمال معلومات الشحن",
     "shipment_created_success":"تم انشاء الشحنة بنجاح",
     "total_co2":"اجمالي انبعاثات الكربون",
+    "distance":"المسافة",
+    "period":"المدة الزمنية",
     "energy_consumption":"كمية الطاقة المستهلكة",
     "location_service_diabled":"خدمة تحديد الموقع متوقفة. الرجاء تفعيلالخدمة.",
     "add_station":"أضف محطة",
@@ -67,8 +71,8 @@
 
     "list_error":"حدث خطأ أثناء تحميل القائمة...",
     
-    "pending":"المعلقة",
-    "inprogress":"المنتظرة",
+    "pending":"الحالية",
+    "inprogress":"قيد المعالجة",
     "running":"الجارية",
     "completed":"المكتملة",
     "no_shipments":"لا يوجد شحنات لعرضها",
@@ -108,6 +112,8 @@
     "shipment_instruction":"تعليمات الشحن",
     "instruction_complete":"تم اكمال تعليمات الشحن",
     "instruction_not_complete":"لم يتم اكمال تعليمات الشحن",
+
+    "merchant_name":"اسم التاجر",
 
     "shipment_path_info":"معلومات موقع التحميل/التفريغ للشحنة",
     "select_your_identity":"اختر هويتك",

@@ -6,13 +6,13 @@ part 'order_truck_event.dart';
 part 'order_truck_state.dart';
 
 class OrderTruckBloc extends Bloc<OrderTruckEvent, OrderTruckState> {
-  late ShippmentRerository shippmentRerository;
-  OrderTruckBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  OrderTruckBloc({required this.shipmentRepository})
       : super(OrderTruckInitial()) {
     on<OrderTruckButtonPressed>((event, emit) async {
       emit(OrderTruckLoadingProgressState());
       try {
-        await shippmentRerository.assignShipment(event.shipment, event.driver);
+        await shipmentRepository.assignShipment(event.shipment, event.driver);
 
         emit(OrderTruckSuccessState());
       } catch (e) {

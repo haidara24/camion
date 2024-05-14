@@ -9,13 +9,13 @@ part 'shippment_create_state.dart';
 
 class ShippmentCreateBloc
     extends Bloc<ShippmentCreateEvent, ShippmentCreateState> {
-  late ShippmentRerository shippmentRerository;
-  ShippmentCreateBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ShippmentCreateBloc({required this.shipmentRepository})
       : super(ShippmentCreateInitial()) {
     on<ShippmentCreateButtonPressed>((event, emit) async {
       emit(ShippmentLoadingProgressState());
       try {
-        var result = await shippmentRerository.createKShipment(event.shipment);
+        var result = await shipmentRepository.createKShipment(event.shipment);
 
         emit(ShippmentCreateSuccessState(result!));
       } catch (e) {

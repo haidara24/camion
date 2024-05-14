@@ -1,5 +1,4 @@
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
-import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,7 +21,7 @@ class MultiShippmentPickUpMapScreen extends StatefulWidget {
 
 class _MultiShippmentPickUpMapScreenState
     extends State<MultiShippmentPickUpMapScreen> {
-  static CameraPosition _initialCameraPosition = CameraPosition(
+  static CameraPosition _initialCameraPosition = const CameraPosition(
     target: LatLng(35.363149, 35.932120),
     zoom: 9,
   );

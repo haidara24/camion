@@ -13,7 +13,7 @@ class UnassignedShipmentListLoadingProgress
     extends UnassignedShipmentListState {}
 
 class UnassignedShipmentListLoadedSuccess extends UnassignedShipmentListState {
-  final List<Shipment> shipments;
+  final List<SubShipment> shipments;
 
   const UnassignedShipmentListLoadedSuccess(this.shipments);
 }

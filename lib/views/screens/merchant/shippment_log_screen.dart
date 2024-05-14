@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:math';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
@@ -41,9 +42,19 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
 
   List<GoogleMapController?> _maps = [];
 
+  List<Color> colors = [
+    Colors.yellow[200]!,
+    Colors.yellow[400]!,
+    Colors.yellow,
+    Colors.yellow[700]!,
+    Colors.yellow[800]!,
+  ];
+
   createMarkerIcons() async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location1.png");
+      const ImageConfiguration(),
+      "assets/icons/location1.png",
+    );
     deliveryicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/location2.png");
     print("sssssssssssssssssssssssssss");
@@ -66,6 +77,10 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   void dispose() {
     super.dispose();
     _tabController.dispose();
+  }
+
+  Color getColorByIndex(int index) {
+    return colors[index % colors.length];
   }
 
   String setLoadDate(DateTime? date) {
@@ -150,29 +165,31 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   }
 
   Set<Polyline> getRoutes(List<SubShipment> items) {
-    Set<Polyline> routes = new Set<Polyline>();
+    Set<Polyline> routes = <Polyline>{};
     for (var i = 0; i < items.length; i++) {
       routes.add(Polyline(
         polylineId: PolylineId("route$i"),
         points: deserializeLatLng(items[i].paths!),
-        color: AppColor.deepYellow,
-        width: 7,
+        color: getColorByIndex(i),
+        width: 4,
       ));
     }
     return routes;
   }
 
   Set<Marker> getMarkers(Shipmentv2 shipments) {
-    Set<Marker> _marker = Set<Marker>();
-
+    Set<Marker> _marker = <Marker>{};
+    print("asdasdadasdasda");
     for (var i = 0; i < shipments.subshipments!.length; i++) {
-      if (shipments.subshipments![i].pathpoints!.singleWhere(
-            (element) => element.pointType == "P",
-            orElse: () => PathPoint(id: 0),
-          ) ==
-          PathPoint(id: 0)) {
+      if (shipments.subshipments![i].pathpoints!
+              .singleWhere(
+                (element) => element.pointType == "P",
+                orElse: () => PathPoint(id: 0),
+              )
+              .id !=
+          0) {
         _marker.add(Marker(
-          markerId: MarkerId("marker$i"),
+          markerId: MarkerId("pickupmarker$i"),
           position: LatLng(
               double.parse(shipments.subshipments![i].pathpoints!
                   .singleWhere((element) => element.pointType == "P")
@@ -182,16 +199,18 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                   .singleWhere((element) => element.pointType == "P")
                   .location!
                   .split(",")[1])),
-
-          // icon: pickupicon,
+          icon: pickupicon,
         ));
-      } else if (shipments.subshipments![i].pathpoints!.singleWhere(
-            (element) => element.pointType == "D",
-            orElse: () => PathPoint(id: 0),
-          ) ==
-          PathPoint(id: 0)) {
+      }
+      if (shipments.subshipments![i].pathpoints!
+              .singleWhere(
+                (element) => element.pointType == "D",
+                orElse: () => PathPoint(id: 0),
+              )
+              .id !=
+          0) {
         _marker.add(Marker(
-          markerId: MarkerId("marker$i"),
+          markerId: MarkerId("deliverymarker$i"),
           position: LatLng(
               double.parse(shipments.subshipments![i].pathpoints!
                   .singleWhere((element) => element.pointType == "D")
@@ -201,7 +220,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                   .singleWhere((element) => element.pointType == "D")
                   .location!
                   .split(",")[1])),
-          // icon: deliveryicon,
+          icon: deliveryicon,
         ));
       }
     }
@@ -276,7 +295,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
       northeast: LatLng(maxLat, maxLng),
     );
 
-    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 20.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     _maps[index]!.animateCamera(cameraUpdate);
     // notifyListeners();
   }
@@ -345,11 +364,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                     padding: const EdgeInsets.all(8.0),
                     child: tabIndex == 0
                         ? BlocConsumer<ShipmentListBloc, ShipmentListState>(
-                            listener: (context, state) {
-                              // if (state is ShipmentListLoadedSuccess) {
-                              //   getMarkers(state.shipments);
-                              // }
-                            },
+                            listener: (context, state) {},
                             builder: (context, state) {
                               if (state is ShipmentListLoadedSuccess) {
                                 return state.shipments.isEmpty
@@ -364,9 +379,6 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                             const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
-                                          // DateTime now = DateTime.now();
-                                          // Duration diff = now
-                                          //     .difference(state.offers[index].createdDate!);
                                           return InkWell(
                                             onTap: () {
                                               BlocProvider.of<
@@ -499,8 +511,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                     ),
                                                     SizedBox(
                                                       height: 190.h,
-                                                      child: AbsorbPointer(
-                                                        absorbing: false,
+                                                      child: IgnorePointer(
+                                                        ignoring: true,
                                                         child: GoogleMap(
                                                           onMapCreated:
                                                               (GoogleMapController

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
@@ -166,13 +167,25 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                       //     .difference(state.offers[index].createdDate!);
                                       return InkWell(
                                         onTap: () {
-                                          var hasinstruction = false;
                                           if (state
                                                   .shipments[index]
                                                   .subshipments![0]
                                                   .shipmentinstructionv2 !=
                                               null) {
-                                            hasinstruction = true;
+                                            BlocProvider.of<
+                                                        ReadInstructionBloc>(
+                                                    context)
+                                                .add(ReadInstructionLoadEvent(
+                                                    state
+                                                        .shipments[index]
+                                                        .subshipments![0]
+                                                        .shipmentinstructionv2!));
+
+                                            print(state
+                                                .shipments[index]
+                                                .subshipments![0]
+                                                .shipmentinstructionv2!
+                                                .toString());
                                           }
                                           Navigator.push(
                                             context,

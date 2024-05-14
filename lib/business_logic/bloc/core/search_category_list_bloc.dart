@@ -8,14 +8,14 @@ part 'search_category_list_state.dart';
 
 class SearchCategoryListBloc
     extends Bloc<SearchCategoryListEvent, SearchCategoryListState> {
-  late ShippmentRerository shippmentRerository;
-  SearchCategoryListBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  SearchCategoryListBloc({required this.shipmentRepository})
       : super(SearchCategoryListInitial()) {
     on<SearchKCommodityCategoryEvent>((event, emit) async {
       emit(SearchCategoryListLoadingProgress());
       try {
         var categories =
-            await shippmentRerository.searchKCommodityCategories(event.query);
+            await shipmentRepository.searchKCommodityCategories(event.query);
         emit(SearchCategoryListLoadedSuccess(categories));
         // ignore: empty_catches
       } catch (e) {}

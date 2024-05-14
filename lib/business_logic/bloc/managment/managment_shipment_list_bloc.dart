@@ -8,14 +8,14 @@ part 'managment_shipment_list_state.dart';
 
 class ManagmentShipmentListBloc
     extends Bloc<ManagmentShipmentListEvent, ManagmentShipmentListState> {
-  late ShippmentRerository shippmentRerository;
-  ManagmentShipmentListBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ManagmentShipmentListBloc({required this.shipmentRepository})
       : super(ManagmentShipmentListInitial()) {
     on<ManagmentShipmentListLoadEvent>((event, emit) async {
       emit(ManagmentShipmentListLoadingProgress());
       try {
         var result =
-            await shippmentRerository.getManagmentKShipmentList(event.state);
+            await shipmentRepository.getManagmentKShipmentList(event.state);
         emit(ManagmentShipmentListLoadedSuccess(result));
       } catch (e) {
         emit(ManagmentShipmentListLoadedFailed(e.toString()));

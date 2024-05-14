@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/payment_create_bloc.dart';
-import 'package:camion/business_logic/bloc/truck/truck_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -14,6 +12,8 @@ import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,6 +40,7 @@ class ShipmentPaymentScreen extends StatefulWidget {
 class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
   bool _loading = false;
   int selectedTruck = 0;
+  String selectedPaymentType = "B";
 
   String getTruckType(int type) {
     switch (type) {
@@ -100,82 +101,6 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
     paymentDate = '${date.year}-$month-${date.day}';
     return paymentDate;
   }
-
-  // Widget truckList() {
-  //   return SizedBox(
-  //     height: 115.h,
-  //     child: ListView.builder(
-  //       itemCount: widget.shipment.trucks!.length,
-  //       shrinkWrap: true,
-  //       scrollDirection: Axis.horizontal,
-  //       itemBuilder: (context, index) {
-  //         return InkWell(
-  //           onTap: () async {
-  //             setState(() {
-  //               selectedTruck = index;
-  //             });
-  //           },
-  //           child: Container(
-  //             width: 180.w,
-  //             margin: const EdgeInsets.all(5),
-  //             padding: const EdgeInsets.all(5),
-  //             decoration: BoxDecoration(
-  //               borderRadius: BorderRadius.circular(11),
-  //               border: Border.all(
-  //                 color: selectedTruck == index
-  //                     ? AppColor.deepYellow
-  //                     : Colors.grey[400]!,
-  //               ),
-  //             ),
-  //             child: Column(
-  //               children: [
-  //                 SizedBox(
-  //                   height: 50.h,
-  //                   width: 175.w,
-  //                   child: CachedNetworkImage(
-  //                     imageUrl:
-  //                         widget.shipment.trucks![index].truck_type!.image!,
-  //                     progressIndicatorBuilder:
-  //                         (context, url, downloadProgress) =>
-  //                             Shimmer.fromColors(
-  //                       baseColor: (Colors.grey[300])!,
-  //                       highlightColor: (Colors.grey[100])!,
-  //                       enabled: true,
-  //                       child: Container(
-  //                         height: 50.h,
-  //                         width: 175.w,
-  //                         color: Colors.white,
-  //                       ),
-  //                     ),
-  //                     errorWidget: (context, url, error) => Container(
-  //                       height: 50.h,
-  //                       width: 175.w,
-  //                       color: Colors.grey[300],
-  //                       child: Center(
-  //                         child: Text(AppLocalizations.of(context)!
-  //                             .translate('image_load_error')),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 SizedBox(
-  //                   height: 7.h,
-  //                 ),
-  //                 Text(
-  //                   "${widget.shipment.trucks![index].truckuser!.user!.firstName!} ${widget.shipment.trucks![index].truckuser!.user!.lastName!}",
-  //                   style: TextStyle(
-  //                     fontSize: 17.sp,
-  //                     color: AppColor.deepBlack,
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -313,7 +238,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                         height: 7.h,
                                       ),
                                       Text(
-                                        '${AppLocalizations.of(context)!.translate('total_amount')}: ${(widget.shipment.shipmentpaymentv2!.amount! + widget.shipment.shipmentpaymentv2!.fees! + widget.shipment.shipmentpaymentv2!.extraFees!)}',
+                                        '${AppLocalizations.of(context)!.translate('total_amount')}: ${(widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2!)}',
                                         style: TextStyle(
                                           // color: AppColor.lightBlue,
                                           fontSize: 17.sp,
@@ -323,7 +248,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                         height: 7.h,
                                       ),
                                       Text(
-                                        '${AppLocalizations.of(context)!.translate('payment_date')}: ${setLoadDate(widget.shipment.shipmentpaymentv2!.created_date!)}',
+                                        '${AppLocalizations.of(context)!.translate('payment_date')}: }',
                                         style: TextStyle(
                                           // color: AppColor.lightBlue,
                                           fontSize: 17.sp,
@@ -347,11 +272,132 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                       ),
                                     ],
                                   )
-                                : SizedBox.shrink(),
+                                : const SizedBox.shrink(),
                           ],
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Card(
+                      elevation: 1,
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                width: double.infinity,
+                              ),
+                              Text(
+                                "اختر وسيلة الدفع",
+                                style: TextStyle(
+                                    // color: AppColor.lightBlue,
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(
+                                height: 8.h,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedPaymentType = "B";
+                                      });
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width *
+                                          .28,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: selectedPaymentType == "B"
+                                              ? AppColor.deepYellow
+                                              : Colors.grey[400]!,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Center(
+                                          child: Icon(Icons.payment)),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedPaymentType = "H";
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: selectedPaymentType == "H"
+                                              ? AppColor.deepYellow
+                                              : Colors.grey[400]!,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width *
+                                          .28,
+                                      child: const Center(
+                                          child: Icon(Icons.payment)),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedPaymentType = "E";
+                                      });
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: selectedPaymentType == "E"
+                                              ? AppColor.deepYellow
+                                              : Colors.grey[400]!,
+                                        ),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      height: 40,
+                                      width: MediaQuery.of(context).size.width *
+                                          .28,
+                                      child: const Center(
+                                          child: Icon(Icons.payment)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 8.h,
+                              ),
+                            ]),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Card(
+                        elevation: 1,
+                        clipBehavior: Clip.antiAlias,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
+                        color: Colors.white,
+                        child: paymentCard()),
                     SizedBox(
                       height: 5.h,
                     ),
@@ -498,5 +544,71 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
         );
       },
     );
+  }
+
+  paymentCard() {
+    switch (selectedPaymentType) {
+      case "B":
+        return const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SectionTitle(text: "بنك البركة"),
+                  Icon(Icons.payment),
+                ],
+              ),
+              Divider(),
+              SectionBody(text: "رقم الحساب:1117556556."),
+              SectionBody(text: "اسم الحساب : أكروس مينا"),
+              SectionBody(text: "أرفق الاشعار لمراجعته"),
+            ],
+          ),
+        );
+      case "H":
+        return const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SectionTitle(text: "الهرم"),
+                  Icon(Icons.payment),
+                ],
+              ),
+              Divider(),
+              SectionBody(text: "رقم الحساب:1117556556."),
+              SectionBody(text: "اسم الحساب : أكروس مينا"),
+              SectionBody(text: "أرفق الاشعار لمراجعته"),
+            ],
+          ),
+        );
+      case "E":
+        return const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SectionTitle(text: "فاتورة"),
+                  Icon(Icons.payment),
+                ],
+              ),
+              Divider(),
+              SectionBody(text: "رقم الحساب:1117556556."),
+              SectionBody(text: "اسم الحساب : أكروس مينا"),
+              SectionBody(text: "أرفق الاشعار لمراجعته"),
+            ],
+          ),
+        );
+      default:
+    }
   }
 }

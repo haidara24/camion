@@ -8,13 +8,13 @@ part 'active_shipment_list_state.dart';
 
 class ActiveShipmentListBloc
     extends Bloc<ActiveShipmentListEvent, ActiveShipmentListState> {
-  late ShippmentRerository shippmentRerository;
-  ActiveShipmentListBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ActiveShipmentListBloc({required this.shipmentRepository})
       : super(ActiveShipmentListInitial()) {
     on<ActiveShipmentListLoadEvent>((event, emit) async {
       emit(ActiveShipmentListLoadingProgress());
       try {
-        var result = await shippmentRerository.getShipmentList("R");
+        var result = await shipmentRepository.getShipmentList("R");
         emit(ActiveShipmentListLoadedSuccess(result));
       } catch (e) {
         emit(ActiveShipmentListLoadedFailed(e.toString()));

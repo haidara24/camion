@@ -8,14 +8,14 @@ part 'driver_active_shipment_state.dart';
 
 class DriverActiveShipmentBloc
     extends Bloc<DriverActiveShipmentEvent, DriverActiveShipmentState> {
-  late ShippmentRerository shippmentRerository;
-  DriverActiveShipmentBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  DriverActiveShipmentBloc({required this.shipmentRepository})
       : super(DriverActiveShipmentInitial()) {
     on<DriverActiveShipmentLoadEvent>((event, emit) async {
       emit(DriverActiveShipmentLoadingProgress());
       try {
         var result =
-            await shippmentRerository.getDriverShipmentList(event.state);
+            await shipmentRepository.getDriverShipmentList(event.state);
         emit(DriverActiveShipmentLoadedSuccess(result));
       } catch (e) {
         emit(DriverActiveShipmentLoadedFailed(e.toString()));
@@ -25,7 +25,7 @@ class DriverActiveShipmentBloc
     on<DriverActiveShipmentForOwnerLoadEvent>((event, emit) async {
       emit(DriverActiveShipmentLoadingProgress());
       try {
-        var result = await shippmentRerository.getActiveDriverShipmentForOwner(
+        var result = await shipmentRepository.getActiveDriverShipmentForOwner(
             event.state, event.driver);
         emit(DriverActiveShipmentLoadedSuccess(result));
       } catch (e) {

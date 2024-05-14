@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 
@@ -58,15 +57,16 @@ class SubShipment {
   int? id;
   String? shipmentStatus;
   String? paths;
-  Shipmentinstruction? shipmentinstructionv2;
-  ShipmentPayment? shipmentpaymentv2;
+  int? shipmentinstructionv2;
+  int? shipmentpaymentv2;
   int? totalWeight;
   DateTime? pickupDate;
   DateTime? deliveryDate;
   List<ShipmentItems>? shipmentItems;
   List<PathPoint>? pathpoints;
   ShipmentTruck? truck;
-  int? distance;
+  double? distance;
+  String? period;
 
   SubShipment({
     this.id,
@@ -81,6 +81,7 @@ class SubShipment {
     this.pathpoints,
     this.truck,
     this.distance,
+    this.period,
   });
 
   SubShipment.fromJson(Map<String, dynamic> json) {
@@ -88,14 +89,11 @@ class SubShipment {
     shipmentStatus = json['shipment_status'];
     paths = json['path'];
     distance = json['distance'];
+    period = json['period'];
     truck =
         json['truck'] != null ? ShipmentTruck.fromJson(json['truck']) : null;
-    shipmentinstructionv2 = json['shipmentinstructionv2'] != null
-        ? Shipmentinstruction.fromJson(json['shipmentinstructionv2'])
-        : null;
-    shipmentpaymentv2 = json['shipmentpaymentv2'] != null
-        ? ShipmentPayment.fromJson(json['shipmentpaymentv2'])
-        : null;
+    shipmentinstructionv2 = json['shipmentinstructionv2'];
+    shipmentpaymentv2 = json['shipmentpaymentv2'];
     totalWeight = json['total_weight'];
     pickupDate = DateTime.parse(json['pickup_date']);
     deliveryDate = DateTime.parse(json['delivery_date']);
@@ -121,17 +119,14 @@ class SubShipment {
     data['shipment_status'] = shipmentStatus;
     data['path'] = paths;
     data['truck'] = truck!.id!;
-    data['distance'] = distance ?? 0;
+    data['distance'] = distance ?? 0.0;
+    data['period'] = period ?? "";
     data['total_weight'] = totalWeight;
     data['pickup_date'] = pickupDate?.toIso8601String();
     data['delivery_date'] = deliveryDate?.toIso8601String();
-    if (shipmentinstructionv2 != null) {
-      data['shipmentinstructionv2'] = shipmentinstructionv2!.toJson();
-    }
-    if (shipmentpaymentv2 != null) {
-      data['shipmentpaymentv2'] = shipmentpaymentv2!.toJson();
-    }
-
+    print("2");
+    // data['shipmentinstructionv2'] = shipmentinstructionv2!;
+    // data['shipmentpaymentv2'] = shipmentpaymentv2!;
     if (shipmentItems != null) {
       data['shipment_items'] = shipmentItems!.map((v) => v.toJson()).toList();
     }
@@ -191,27 +186,28 @@ class ShipmentItems {
   int? id;
   String? commodityName;
   int? commodityWeight;
-  int? packageType;
+  // int? commodityQuantity;
+  // int? packageType;
 
   ShipmentItems({
     this.id,
     this.commodityName,
     this.commodityWeight,
-    this.packageType,
+    // this.packageType,
   });
 
   ShipmentItems.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     commodityName = json['commodity_name'];
     commodityWeight = json['commodity_weight'];
-    packageType = json['package_type'];
+    // packageType = json['package_type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['commodity_name'] = commodityName;
     data['commodity_weight'] = commodityWeight;
-    data['package_type'] = packageType;
+    // data['package_type'] = packageType;
 
     return data;
   }
@@ -246,6 +242,7 @@ class SelectedTruckType {
 class PathPoint {
   int? id;
   String? name;
+  String? nameEn;
   int? city;
   int? number;
   String? pointType;
@@ -254,6 +251,7 @@ class PathPoint {
   PathPoint({
     this.id,
     this.name,
+    this.nameEn,
     this.city,
     this.number,
     this.pointType,
@@ -263,6 +261,7 @@ class PathPoint {
   PathPoint.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    nameEn = json['nameEn'];
     city = json['city'];
     number = json['number'];
     pointType = json['point_type'];
@@ -272,10 +271,12 @@ class PathPoint {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
+    data['nameEn'] = nameEn;
     data['city'] = city;
     data['number'] = number;
     data['point_type'] = pointType;
     data['location'] = location;
+    print("3");
 
     return data;
   }

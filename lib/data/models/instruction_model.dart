@@ -9,7 +9,10 @@ class Shipmentinstruction {
   String? recieverAddress;
   String? recieverPhone;
   int? totalWeight;
-  List<SubShipmentInstruction?>? subinstrucations;
+  int? netWeight;
+  int? truckWeight;
+  int? finalWeight;
+  List<CommodityItems>? commodityItems;
 
   Shipmentinstruction({
     this.id,
@@ -22,7 +25,10 @@ class Shipmentinstruction {
     this.recieverAddress,
     this.recieverPhone,
     this.totalWeight,
-    this.subinstrucations,
+    this.netWeight,
+    this.truckWeight,
+    this.finalWeight,
+    this.commodityItems,
   });
 
   Shipmentinstruction.fromJson(Map<String, dynamic> json) {
@@ -36,59 +42,6 @@ class Shipmentinstruction {
     recieverAddress = json['reciever_address'];
     recieverPhone = json['reciever_phone'];
     totalWeight = json['total_weight'] ?? 0;
-    if (json['sub_instructions'] != null) {
-      subinstrucations = <SubShipmentInstruction>[];
-      json['sub_instructions'].forEach((v) {
-        subinstrucations!.add(SubShipmentInstruction.fromJson(v));
-      });
-    } else {
-      subinstrucations = <SubShipmentInstruction>[];
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = id;
-    data['shipment'] = shipment;
-    data['user_type'] = userType;
-    data['charger_name'] = chargerName;
-    data['charger_address'] = chargerAddress;
-    data['charger_phone'] = chargerPhone;
-    data['reciever_name'] = recieverName;
-    data['reciever_address'] = recieverAddress;
-    data['reciever_phone'] = recieverPhone;
-    data['total_weight'] = totalWeight;
-    if (subinstrucations != null) {
-      data['sub_instructions'] =
-          subinstrucations!.map((v) => v!.toJson()).toList();
-    }
-    return data;
-  }
-}
-
-class SubShipmentInstruction {
-  int? id;
-  int? truck;
-  int? instruction;
-  int? netWeight;
-  int? truckWeight;
-  int? finalWeight;
-  List<CommodityItems>? commodityItems;
-
-  SubShipmentInstruction({
-    this.id,
-    this.truck,
-    this.instruction,
-    this.netWeight,
-    this.truckWeight,
-    this.finalWeight,
-    this.commodityItems,
-  });
-
-  SubShipmentInstruction.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    truck = json['truck'];
-    instruction = json['instruction'];
     netWeight = json['net_weight'];
     truckWeight = json['truck_weight'];
     finalWeight = json['final_weight'];
@@ -105,8 +58,15 @@ class SubShipmentInstruction {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = id;
-    data['truck'] = truck;
-    data['instruction'] = instruction;
+    data['shipment'] = shipment;
+    data['user_type'] = userType;
+    data['charger_name'] = chargerName;
+    data['charger_address'] = chargerAddress;
+    data['charger_phone'] = chargerPhone;
+    data['reciever_name'] = recieverName;
+    data['reciever_address'] = recieverAddress;
+    data['reciever_phone'] = recieverPhone;
+    data['total_weight'] = totalWeight;
     data['net_weight'] = netWeight;
     data['truck_weight'] = truckWeight;
     data['final_weight'] = finalWeight;

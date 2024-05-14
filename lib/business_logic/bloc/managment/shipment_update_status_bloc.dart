@@ -7,14 +7,14 @@ part 'shipment_update_status_state.dart';
 
 class ShipmentUpdateStatusBloc
     extends Bloc<ShipmentUpdateStatusEvent, ShipmentUpdateStatusState> {
-  late ShippmentRerository shippmentRerository;
-  ShipmentUpdateStatusBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ShipmentUpdateStatusBloc({required this.shipmentRepository})
       : super(ShipmentUpdateStatusInitial()) {
     on<ShipmentStatusUpdateEvent>(
       (event, emit) async {
         emit(ShipmentUpdateStatusLoadingProgress());
         try {
-          var data = await shippmentRerository.updateKShipmentStatus(
+          var data = await shipmentRepository.updateKShipmentStatus(
               event.state, event.offerId);
           if (data) {
             emit(ShipmentUpdateStatusLoadedSuccess());

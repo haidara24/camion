@@ -9,6 +9,7 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/data/services/places_service.dart';
+import 'package:camion/helpers/http_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
@@ -130,6 +131,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<int> _count = [1];
   List<int> get count => _count;
 
+  List<int> _selectedTruck = [];
+  List<int> get selectedTruck => _selectedTruck;
+
   List<KTruck?> _trucks = [null];
   List<KTruck?> get trucks => _trucks;
 
@@ -169,6 +173,12 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<List<TextEditingController>> _truckNumController = [[]];
   List<List<TextEditingController>> get truckNumController =>
       _truckNumController;
+
+  List<double> _distance = [0];
+  List<double> get distance => _distance;
+
+  List<String> _period = [""];
+  List<String> get period => _period;
 
   List<DateTime> _loadDate = [DateTime.now()];
   List<DateTime> get loadDate => _loadDate;
@@ -274,6 +284,19 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         notifyListeners();
       },
     );
+
+    var response = await HttpHelper.get(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${_delivery_latlng[index]!.latitude},${_delivery_latlng[index]!.longitude}&origins=${_pickup_latlng[index]!.latitude},${_pickup_latlng[index]!.longitude}&key=AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c&mode=DRIVING');
+
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      _distance[index] = double.parse(result["rows"][0]['elements'][0]
+              ['distance']['text']
+          .replaceAll(" km", ""));
+      print(_distance[index]);
+      _period[index] = result["rows"][0]['elements'][0]['duration']['text'];
+      print(_period[index]);
+    }
     notifyListeners();
   }
 
@@ -290,9 +313,10 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               double.parse(pickuplocation[0]), double.parse(pickuplocation[1])),
         ),
       );
-
+      print(_stoppoints_location[index].length);
       for (var i = 0; i < _stoppoints_location[index].length; i++) {
         var stopLocation = _stoppoints_location[index][i].split(',');
+        print(stopLocation[0]);
         markers.add(
           Marker(
             markerId: MarkerId("stop$i"),
@@ -403,6 +427,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               [_selectedTruckType[index].indexWhere((item) => item == id)]
           .toString();
     }
+    notifyListeners();
+  }
+
+  addSelectedTruck(int id) {
+    _selectedTruck.add(id);
+    notifyListeners();
+  }
+
+  removeSelectedTruck(int id) {
+    _selectedTruck.remove(id);
     notifyListeners();
   }
 
@@ -901,6 +935,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _loadTime.add(DateTime.now());
 
     _count.add(0);
+    _distance.add(0);
+    _period.add("");
     _countpath++;
     _count[_countpath - 1]++;
     notifyListeners();
@@ -962,6 +998,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _loadDate.removeAt(index);
     _loadTime.removeAt(index);
 
+    _distance.removeAt(index);
+    _period.removeAt(index);
     _count.removeAt(index);
     _countpath--;
     _count.removeAt(index);

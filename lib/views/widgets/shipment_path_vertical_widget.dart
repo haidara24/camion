@@ -8,19 +8,21 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
   final List<PathPoint> pathpoints;
   final DateTime pickupDate;
   final DateTime deliveryDate;
+  final String langCode;
   const ShipmentPathVerticalWidget({
     Key? key,
     required this.pathpoints,
     required this.pickupDate,
     required this.deliveryDate,
+    required this.langCode,
   }) : super(key: key);
 
-  String setLoadDate(DateTime date) {
+  String setLoadDate(DateTime date, String lang) {
     List months = [
       'jan',
       'feb',
       'mar',
-      'نيسان',
+      'april',
       'may',
       'jun',
       'july',
@@ -30,8 +32,23 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
       'nov',
       'dec'
     ];
+
+    List monthsAr = [
+      'كانون الثاني',
+      'شباط',
+      'أذار',
+      'نيسان',
+      'أيار',
+      'حزيران',
+      'تموز',
+      'آب',
+      'أيلول',
+      'تشرين الأول',
+      'تشرين الثاني',
+      'كانون الأول'
+    ];
     var mon = date.month;
-    var month = months[mon - 1];
+    var month = lang == "en" ? months[mon - 1] : monthsAr[mon - 1];
     return '${date.day}-$month-${date.year}';
   }
 
@@ -58,10 +75,10 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
               alignment: TimelineAlign.manual,
               lineXY: .3,
               startChild: Text(
-                setLoadDate(pickupDate),
+                setLoadDate(pickupDate, langCode),
                 style: TextStyle(
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
@@ -69,7 +86,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 "  ${element.name!}",
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
@@ -109,7 +126,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 "  ${element.name!}",
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
@@ -139,10 +156,10 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
               alignment: TimelineAlign.manual,
               lineXY: .3,
               startChild: Text(
-                setLoadDate(deliveryDate),
+                setLoadDate(deliveryDate, langCode),
                 style: TextStyle(
                   fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
@@ -150,7 +167,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 "  ${element.name!}",
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  // fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),

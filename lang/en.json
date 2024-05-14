@@ -28,8 +28,10 @@
     "package_type":"Package Type",
     "insert_value_validate":"insert value validate",
     
-    "select_truck_type":"Select Truck Type",
-    "select_truck_type_error":"please select truck type",
+    "select_truck":"Select Truck",
+    "select_truck_error":"please select truck",
+    "search_with_truck_number":"search with truck number",
+    "search_for_truck":"Search For a Truck",
     "choose_shippment_path":"Choose Truck Route",
     "pickup_address":"Pick Up Address",
     "enter_pickup_address":"Enter Pick Up Address",
@@ -46,6 +48,8 @@
     "shipment_load_complete_error":"please complete shipment info",
     "shipment_created_success":"shipment has been created successfully",
     "total_co2":"Total CO2 Emission",
+    "distance":"distance",
+    "period":"period",
     "energy_consumption":"Total energy consumption",
     "add_station":"Add Station",
     "station_no":"Station No",
@@ -107,6 +111,8 @@
     "shipment_instruction":"Shipment Instruction",
     "instruction_complete":"Shipment instruction is completed",
     "instruction_not_complete":"Shipment instruction is not completed",
+
+    "merchant_name":"Merchant Name",
 
     "shipment_path_info":"Shipment Path Info",
     "select_your_identity":"Select Your Role",

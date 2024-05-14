@@ -8,13 +8,13 @@ part 'shipment_multi_create_state.dart';
 
 class ShipmentMultiCreateBloc
     extends Bloc<ShipmentMultiCreateEvent, ShipmentMultiCreateState> {
-  late ShippmentRerository shippmentRerository;
-  ShipmentMultiCreateBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ShipmentMultiCreateBloc({required this.shipmentRepository})
       : super(ShipmentMultiCreateInitial()) {
     on<ShipmentMultiCreateButtonPressed>((event, emit) async {
       emit(ShippmentLoadingProgressState());
       try {
-        var result = await shippmentRerository.createShipmentv2(event.shipment);
+        var result = await shipmentRepository.createShipmentv2(event.shipment);
 
         emit(ShipmentMultiCreateSuccessState(result!));
       } catch (e) {

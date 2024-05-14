@@ -9,13 +9,13 @@ part 'shipment_details_state.dart';
 
 class ShipmentDetailsBloc
     extends Bloc<ShipmentDetailsEvent, ShipmentDetailsState> {
-  late ShippmentRerository shippmentRerository;
-  ShipmentDetailsBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ShipmentDetailsBloc({required this.shipmentRepository})
       : super(ShipmentDetailsInitial()) {
     on<ShipmentDetailsLoadEvent>((event, emit) async {
       emit(ShipmentDetailsLoadingProgress());
       try {
-        var result = await shippmentRerository.getShipment(event.id);
+        var result = await shipmentRepository.getShipment(event.id);
         if (result != null) {
           emit(ShipmentDetailsLoadedSuccess(result));
         } else {

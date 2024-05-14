@@ -14,6 +14,7 @@ class ReadInstructionBloc
     on<ReadInstructionLoadEvent>((event, emit) async {
       emit(ReadInstructionLoadingProgress());
       try {
+        print("object0");
         var result =
             await instructionRepository.getShipmentInstruction(event.id);
         if (result != null) {

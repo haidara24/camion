@@ -8,13 +8,13 @@ part 'owner_incoming_shipments_state.dart';
 
 class OwnerIncomingShipmentsBloc
     extends Bloc<OwnerIncomingShipmentsEvent, OwnerIncomingShipmentsState> {
-  late ShippmentRerository shippmentRerository;
-  OwnerIncomingShipmentsBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  OwnerIncomingShipmentsBloc({required this.shipmentRepository})
       : super(OwnerIncomingShipmentsInitial()) {
     on<OwnerIncomingShipmentsLoadEvent>((event, emit) async {
       emit(OwnerIncomingShipmentsLoadingProgress());
       try {
-        var result = await shippmentRerository.getDriverShipmentListForOwner(
+        var result = await shipmentRepository.getDriverShipmentListForOwner(
             event.state, event.driverId);
         emit(OwnerIncomingShipmentsLoadedSuccess(result));
       } catch (e) {

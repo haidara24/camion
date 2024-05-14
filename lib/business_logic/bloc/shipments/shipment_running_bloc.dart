@@ -9,13 +9,13 @@ part 'shipment_running_state.dart';
 
 class ShipmentRunningBloc
     extends Bloc<ShipmentRunningEvent, ShipmentRunningState> {
-  late ShippmentRerository shippmentRerository;
-  ShipmentRunningBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  ShipmentRunningBloc({required this.shipmentRepository})
       : super(ShipmentRunningInitial()) {
     on<ShipmentRunningLoadEvent>((event, emit) async {
       emit(ShipmentRunningLoadingProgress());
       try {
-        var result = await shippmentRerository.getShipmentList(event.state);
+        var result = await shipmentRepository.getShipmentList(event.state);
         emit(ShipmentRunningLoadedSuccess(result));
       } catch (e) {
         emit(ShipmentRunningLoadedFailed(e.toString()));

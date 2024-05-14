@@ -8,14 +8,14 @@ part 'incoming_shipments_state.dart';
 
 class IncomingShipmentsBloc
     extends Bloc<IncomingShipmentsEvent, IncomingShipmentsState> {
-  late ShippmentRerository shippmentRerository;
-  IncomingShipmentsBloc({required this.shippmentRerository})
+  late ShipmentRepository shipmentRepository;
+  IncomingShipmentsBloc({required this.shipmentRepository})
       : super(IncomingShipmentsInitial()) {
     on<IncomingShipmentsLoadEvent>((event, emit) async {
       emit(IncomingShipmentsLoadingProgress());
       try {
         var result =
-            await shippmentRerository.getDriverShipmentList(event.state);
+            await shipmentRepository.getDriverShipmentList(event.state);
         emit(IncomingShipmentsLoadedSuccess(result));
       } catch (e) {
         emit(IncomingShipmentsLoadedFailed(e.toString()));

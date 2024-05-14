@@ -18,6 +18,7 @@ const TRUCK_TYPES_ENDPOINT = '${DOMAIN}camion/trucktypes/';
 const COMMODITY_CATEGORIES_ENDPOINT = '${DOMAIN}camion/commoditycategories/';
 const KCOMMODITY_CATEGORIES_ENDPOINT = '${DOMAIN}camion/kcommoditycategories/';
 const K_CATEGORIES_ENDPOINT = '${DOMAIN}camion/kcategories/';
+const APPROVAL_REQUESTS_ENDPOINT = '${DOMAIN}camion/approvalrequests/';
 const PERMISSIONS_ENDPOINT = '${DOMAIN}camion/permessions/';
 const PATHPOINTS_ENDPOINT = '${DOMAIN}camion/checkpathpoints/';
 const CHARGES_ENDPOINT = '${DOMAIN}camion/passcharges/';
@@ -31,6 +32,7 @@ const SHIPPMENTS_ENDPOINT = '${DOMAIN}camion/shippments/';
 const PRICEREQUEST_ENDPOINT = '${DOMAIN}camion/pricerequests/';
 const KSHIPPMENTS_ENDPOINT = '${DOMAIN}camion/shipments/';
 const SHIPPMENTSV2_ENDPOINT = '${DOMAIN}camion/shipmentV2s/';
+const SUB_SHIPPMENTSV2_ENDPOINT = '${DOMAIN}camion/subshippments/';
 const SHIPPMENTS_PAYMENT_ENDPOINT = '${DOMAIN}camion/shipmentpayment/';
 const SHIPPMENTS_INSTRUCTION_ENDPOINT =
     '${DOMAIN}camion/shippmentinstructions/';
