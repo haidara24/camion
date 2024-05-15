@@ -118,6 +118,7 @@ class ShipmentPayment {
   int? extraFees;
   String? paymentMethod;
   DateTime? created_date;
+  String? file;
 
   ShipmentPayment({
     this.id,
@@ -127,6 +128,7 @@ class ShipmentPayment {
     this.extraFees,
     this.paymentMethod,
     this.created_date,
+    this.file,
   });
 
   ShipmentPayment.fromJson(Map<String, dynamic> json) {
@@ -137,6 +139,7 @@ class ShipmentPayment {
     extraFees = json['extra_fees'];
     created_date = DateTime.parse(json['created_date']);
     paymentMethod = json['payment_method'];
+    file = json['file'];
   }
 
   Map<String, dynamic> toJson() {
@@ -147,6 +150,7 @@ class ShipmentPayment {
     data['extra_fees'] = extraFees;
     data['created_date'] = created_date;
     data['payment_method'] = paymentMethod;
+    data['file'] = file;
     return data;
   }
 }

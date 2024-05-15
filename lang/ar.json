@@ -114,6 +114,10 @@
     "instruction_not_complete":"لم يتم اكمال تعليمات الشحن",
 
     "merchant_name":"اسم التاجر",
+    "assigned_trucks":"الشاحنات التابعة لهذه الشحنة",
+    "shipment_status":"حالة الشحنة",
+    "shipment_route":"مسار الشحنة",
+    "shipment_route_statistics":"احصائيات مسار الشحنة",
 
     "shipment_path_info":"معلومات موقع التحميل/التفريغ للشحنة",
     "select_your_identity":"اختر هويتك",

@@ -6,6 +6,7 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -359,13 +360,12 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        "اختر المسار",
-                        style: TextStyle(
-                          // color: AppColor.lightBlue,
-                          fontSize: 19.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      SectionTitle(
+                        text: AppLocalizations.of(context)!
+                            .translate("assigned_trucks"),
+                      ),
+                      const SizedBox(
+                        height: 5,
                       ),
                       pathList(widget.shipment),
                       const SizedBox(

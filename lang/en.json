@@ -113,6 +113,10 @@
     "instruction_not_complete":"Shipment instruction is not completed",
 
     "merchant_name":"Merchant Name",
+    "assigned_trucks":"Trucks Assigned to this Shipment",
+    "shipment_status":"Shipment Status",
+    "shipment_route":"Shipment Route",
+    "shipment_route_statistics":"Shipment Route Statistics",
 
     "shipment_path_info":"Shipment Path Info",
     "select_your_identity":"Select Your Role",

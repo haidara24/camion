@@ -4,10 +4,10 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
@@ -15,10 +15,8 @@ import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/managment/log_screen.dart';
 import 'package:camion/views/screens/merchant/active_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/add_multi_shipment_screen.dart';
-import 'package:camion/views/screens/merchant/add_shippment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_task_screen.dart';
 import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
@@ -142,14 +140,14 @@ class _HomeScreenState extends State<HomeScreen>
               .add(ActiveShipmentListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('tracking');
-            currentScreen = ShipmentTaskScreen();
+            currentScreen = ActiveShipmentScreen();
           });
           break;
         }
       case 4:
         {
-          BlocProvider.of<ActiveShipmentListBloc>(context)
-              .add(ActiveShipmentListLoadEvent());
+          BlocProvider.of<ShipmentRunningBloc>(context)
+              .add(ShipmentRunningLoadEvent("R"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('tasks');
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipment_model.dart';
@@ -105,8 +106,8 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
   }
 
   Future<void> onRefresh() async {
-    BlocProvider.of<ActiveShipmentListBloc>(context)
-        .add(ActiveShipmentListLoadEvent());
+    BlocProvider.of<ShipmentRunningBloc>(context)
+        .add(ShipmentRunningLoadEvent("R"));
   }
 
   @override
@@ -134,10 +135,10 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                         vertical: 8.0,
                         horizontal: 10.0,
                       ),
-                      child: BlocBuilder<ActiveShipmentListBloc,
-                          ActiveShipmentListState>(
+                      child: BlocBuilder<ShipmentRunningBloc,
+                          ShipmentRunningState>(
                         builder: (context, state) {
-                          if (state is ActiveShipmentListLoadedSuccess) {
+                          if (state is ShipmentRunningLoadedSuccess) {
                             return state.shipments.isEmpty
                                 ? ListView(
                                     physics:

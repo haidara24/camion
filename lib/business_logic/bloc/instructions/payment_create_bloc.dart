@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/repositories/instruction_repository.dart';
@@ -13,8 +15,8 @@ class PaymentCreateBloc extends Bloc<PaymentCreateEvent, PaymentCreateState> {
     on<PaymentCreateButtonPressed>((event, emit) async {
       emit(PaymentLoadingProgressState());
       try {
-        var result =
-            await instructionRepository.createShipmentPayment(event.payment);
+        var result = await instructionRepository.createShipmentPayment(
+            event.payment, event.file);
 
         emit(PaymentCreateSuccessState(result!));
       } catch (e) {

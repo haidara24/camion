@@ -280,6 +280,27 @@ class ShipmentRepository {
     }
   }
 
+  Future<List<SubShipment>> getActiveTruckShipments() async {
+    subshipments = [];
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var response = await HttpHelper.get(
+      "${SUB_SHIPPMENTSV2_ENDPOINT}?shipment_status=R",
+      apiToken: jwt,
+    );
+    var myDataString = utf8.decode(response.bodyBytes);
+    var json = jsonDecode(myDataString);
+    if (response.statusCode == 200) {
+      for (var element in json) {
+        subshipments.add(SubShipment.fromJson(element));
+      }
+
+      return subshipments.reversed.toList();
+    } else {
+      return subshipments;
+    }
+  }
+
   Future<List<SubShipment>> getUnAssignedShipmentList() async {
     subshipments = [];
     var prefs = await SharedPreferences.getInstance();

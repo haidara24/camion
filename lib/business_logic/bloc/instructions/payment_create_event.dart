@@ -9,6 +9,6 @@ sealed class PaymentCreateEvent extends Equatable {
 
 class PaymentCreateButtonPressed extends PaymentCreateEvent {
   final ShipmentPayment payment;
-
-  PaymentCreateButtonPressed(this.payment);
+  final File? file;
+  PaymentCreateButtonPressed(this.payment, this.file);
 }

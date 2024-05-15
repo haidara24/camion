@@ -70,7 +70,8 @@ class InstructionRepository {
     return null;
   }
 
-  Future<int?> createShipmentPayment(ShipmentPayment shipment) async {
+  Future<int?> createShipmentPayment(
+      ShipmentPayment shipment, File? file) async {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var request =
@@ -79,12 +80,20 @@ class InstructionRepository {
       HttpHeaders.authorizationHeader: "JWT $token",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
     });
-    request.fields['shipment'] = shipment.shipment!.toString();
 
+    request.fields['shipment'] = shipment.shipment!.toString();
     request.fields['amount'] = shipment.amount!.toString();
     request.fields['fees'] = shipment.fees!.toString();
     request.fields['extra_fees'] = shipment.extraFees!.toString();
     request.fields['payment_method'] = shipment.paymentMethod!.toString();
+
+    var image = await http.MultipartFile.fromPath(
+      'file',
+      file!.path,
+      filename: file!.path.split('/').last,
+    );
+
+    request.files.add(image);
 
     var response = await request.send();
     if (response.statusCode == 201) {

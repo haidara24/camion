@@ -717,6 +717,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                             ),
                             Positioned(
                               bottom: 0,
+                              right: 4,
                               child: InkWell(
                                 onTap: () {
                                   Navigator.push(
@@ -780,14 +781,11 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                   const SizedBox(
                                     height: 5,
                                   ),
-                                  Text(
-                                    "الشاحنات التابعة لهذه الشحنة",
-                                    style: TextStyle(
-                                      // color: AppColor.lightBlue,
-                                      fontSize: 19.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("assigned_trucks"),
                                   ),
+                                  const SizedBox(height: 4),
                                   pathList(shipmentstate.shipment),
                                   const Divider(
                                     height: 12,
@@ -795,7 +793,9 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      SectionTitle(text: "حالة الشحنة: "),
+                                      SectionTitle(
+                                          text:
+                                              "${AppLocalizations.of(context)!.translate("shipment_status")}: "),
                                       SectionBody(
                                         text: getStatusName(
                                           shipmentstate
@@ -810,13 +810,9 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                   const Divider(
                                     height: 12,
                                   ),
-                                  Text(
-                                    "مسار الشحنة",
-                                    style: TextStyle(
-                                      // color: AppColor.lightBlue,
-                                      fontSize: 19.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("shipment_route"),
                                   ),
                                   ShipmentPathVerticalWidget(
                                     pathpoints: shipmentstate
@@ -834,27 +830,21 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                     langCode: localeState.value.languageCode,
                                   ),
                                   const Divider(),
-                                  Text(
-                                    "تفاصيل بضاعة الشاحنة",
-                                    style: TextStyle(
-                                      // color: AppColor.lightBlue,
-                                      fontSize: 19.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("commodity_info"),
                                   ),
+                                  const SizedBox(height: 4),
                                   _buildCommodityWidget(shipmentstate
                                       .shipment
                                       .subshipments![selectedIndex]
                                       .shipmentItems),
                                   const Divider(),
-                                  Text(
-                                    "احصائيات مسار الشاحنة",
-                                    style: TextStyle(
-                                      // color: AppColor.lightBlue,
-                                      fontSize: 19.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("shipment_route_statistics"),
                                   ),
+                                  const SizedBox(height: 4),
                                   _buildCo2Report(shipmentstate
                                       .shipment.subshipments![selectedIndex]),
                                 ],
