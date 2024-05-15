@@ -57,6 +57,7 @@ class SubShipment {
   int? id;
   String? shipmentStatus;
   String? paths;
+  int? shipment;
   int? shipmentinstructionv2;
   int? shipmentpaymentv2;
   int? totalWeight;
@@ -72,6 +73,7 @@ class SubShipment {
     this.id,
     this.shipmentStatus,
     this.paths,
+    this.shipment,
     this.shipmentinstructionv2,
     this.shipmentpaymentv2,
     this.totalWeight,
@@ -92,6 +94,7 @@ class SubShipment {
     period = json['period'];
     truck =
         json['truck'] != null ? ShipmentTruck.fromJson(json['truck']) : null;
+    shipment = json['shipment'];
     shipmentinstructionv2 = json['shipmentinstructionv2'];
     shipmentpaymentv2 = json['shipmentpaymentv2'];
     totalWeight = json['total_weight'];

@@ -15,7 +15,7 @@ class ShipmentRunningBloc
     on<ShipmentRunningLoadEvent>((event, emit) async {
       emit(ShipmentRunningLoadingProgress());
       try {
-        var result = await shipmentRepository.getShipmentList(event.state);
+        var result = await shipmentRepository.getSubShipmentList(event.state);
         emit(ShipmentRunningLoadedSuccess(result));
       } catch (e) {
         emit(ShipmentRunningLoadedFailed(e.toString()));

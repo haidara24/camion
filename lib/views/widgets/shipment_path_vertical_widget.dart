@@ -68,7 +68,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                  width: 30,
+                  width: 25,
                   color: AppColor.deepYellow,
                   iconStyle: IconStyle(
                       iconData: Icons.done, color: Colors.white, fontSize: 20)),
@@ -116,7 +116,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                  width: 30,
+                  width: 25,
                   color: AppColor.deepYellow,
                   iconStyle: IconStyle(
                       iconData: Icons.done, color: Colors.white, fontSize: 20)),
@@ -149,7 +149,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                  width: 30,
+                  width: 25,
                   color: AppColor.deepYellow,
                   iconStyle: IconStyle(
                       iconData: Icons.done, color: Colors.white, fontSize: 20)),

@@ -12,7 +12,7 @@ class ShipmentRunningInitial extends ShipmentRunningState {}
 class ShipmentRunningLoadingProgress extends ShipmentRunningState {}
 
 class ShipmentRunningLoadedSuccess extends ShipmentRunningState {
-  final List<Shipmentv2> shipments;
+  final List<SubShipment> shipments;
 
   const ShipmentRunningLoadedSuccess(this.shipments);
 }

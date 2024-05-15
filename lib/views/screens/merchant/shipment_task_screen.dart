@@ -168,23 +168,17 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                       //     .difference(state.offers[index].createdDate!);
                                       return InkWell(
                                         onTap: () {
-                                          if (state
-                                                  .shipments[index]
-                                                  .subshipments![0]
+                                          if (state.shipments[index]
                                                   .shipmentinstructionv2 !=
                                               null) {
                                             BlocProvider.of<
                                                         ReadInstructionBloc>(
                                                     context)
                                                 .add(ReadInstructionLoadEvent(
-                                                    state
-                                                        .shipments[index]
-                                                        .subshipments![0]
+                                                    state.shipments[index]
                                                         .shipmentinstructionv2!));
 
-                                            print(state
-                                                .shipments[index]
-                                                .subshipments![0]
+                                            print(state.shipments[index]
                                                 .shipmentinstructionv2!
                                                 .toString());
                                           }
@@ -199,9 +193,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                             ),
                                           );
                                           instructionsProvider!.setSubShipment(
-                                              state.shipments[index]
-                                                  .subshipments![0],
-                                              0);
+                                              state.shipments[index], 0);
                                         },
                                         child: Card(
                                           shape: const RoundedRectangleBorder(
@@ -222,7 +214,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
+                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
                                                     style: TextStyle(
                                                         // color: AppColor.lightBlue,
                                                         fontSize: 18.sp,
@@ -242,12 +234,9 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                             state
                                                                 .shipments[
                                                                     index]
-                                                                .subshipments![
-                                                                    0]
                                                                 .pickupDate!),
                                                         pickupName: state
                                                             .shipments[index]
-                                                            .subshipments![0]
                                                             .pathpoints!
                                                             .singleWhere(
                                                                 (element) =>
@@ -257,7 +246,6 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                             .name!,
                                                         deliveryName: state
                                                             .shipments[index]
-                                                            .subshipments![0]
                                                             .pathpoints!
                                                             .singleWhere(
                                                                 (element) =>
@@ -296,7 +284,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                       Column(
                                                         children: [
                                                           Text(
-                                                            '${AppLocalizations.of(context)!.translate('commodity_type')}: ${state.shipments[index].subshipments![0].shipmentItems![0].commodityName!}',
+                                                            '${AppLocalizations.of(context)!.translate('commodity_type')}: ${state.shipments[index].shipmentItems![0].commodityName!}',
                                                             style: TextStyle(
                                                               // color: AppColor.lightBlue,
                                                               fontSize: 17.sp,
@@ -306,7 +294,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                             height: 7.h,
                                                           ),
                                                           Text(
-                                                            '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${state.shipments[index].subshipments![0].shipmentItems![0].commodityWeight!} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
+                                                            '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${state.shipments[index].shipmentItems![0].commodityWeight!} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
                                                             style: TextStyle(
                                                               // color: AppColor.lightBlue,
                                                               fontSize: 17.sp,

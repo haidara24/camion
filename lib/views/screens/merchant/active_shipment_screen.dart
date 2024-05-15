@@ -91,7 +91,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
     return SizedBox(
       height: 90.h,
       child: ListView.builder(
-        itemCount: subshipments!.length,
+        itemCount: subshipments.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
@@ -108,12 +108,12 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
               var pickupMarker = Marker(
                 markerId: const MarkerId("pickup"),
                 position: LatLng(
-                    double.parse(subshipments![selectedIndex]
+                    double.parse(subshipments[selectedIndex]
                         .pathpoints!
                         .singleWhere((element) => element.pointType == "P")
                         .location!
                         .split(",")[0]),
-                    double.parse(subshipments![selectedIndex]
+                    double.parse(subshipments[selectedIndex]
                         .pathpoints!
                         .singleWhere((element) => element.pointType == "P")
                         .location!
@@ -124,12 +124,12 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
               var deliveryMarker = Marker(
                 markerId: const MarkerId("delivery"),
                 position: LatLng(
-                    double.parse(subshipments![selectedIndex]
+                    double.parse(subshipments[selectedIndex]
                         .pathpoints!
                         .singleWhere((element) => element.pointType == "D")
                         .location!
                         .split(",")[0]),
-                    double.parse(subshipments![selectedIndex]
+                    double.parse(subshipments[selectedIndex]
                         .pathpoints!
                         .singleWhere((element) => element.pointType == "D")
                         .location!
@@ -137,6 +137,20 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                 icon: deliveryicon,
               );
               markers.add(deliveryMarker);
+              var truckMarker = Marker(
+                markerId: const MarkerId("truck"),
+                position: LatLng(
+                    double.parse(subshipments[selectedIndex]
+                        .truck!
+                        .location_lat!
+                        .split(",")[0]),
+                    double.parse(subshipments[selectedIndex]
+                        .truck!
+                        .location_lat!
+                        .split(",")[1])),
+                icon: truckicon,
+              );
+              markers.add(truckMarker);
 
               setState(() {});
             },
@@ -162,7 +176,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                         height: 25.h,
                         width: 150.w,
                         child: CachedNetworkImage(
-                          imageUrl: subshipments![selectedIndex]
+                          imageUrl: subshipments[selectedIndex]
                               .truck!
                               .truck_type!
                               .image!,
@@ -193,7 +207,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                         height: 7.h,
                       ),
                       Text(
-                        "${subshipments![selectedIndex].truck!.truckuser!.user!.firstName!} ${subshipments![selectedIndex].truck!.truckuser!.user!.lastName!}",
+                        "${subshipments[selectedIndex].truck!.truckuser!.user!.firstName!} ${subshipments[selectedIndex].truck!.truckuser!.user!.lastName!}",
                         style: TextStyle(
                           fontSize: 17.sp,
                           color: AppColor.deepBlack,
@@ -225,6 +239,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
     );
     deliveryicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/location2.png");
+    truckicon = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(), "assets/icons/truck.png");
     print("sssssssssssssssssssssssssss");
     setState(() {});
   }
@@ -299,13 +315,13 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                                   markerId: const MarkerId("pickup"),
                                   position: LatLng(
                                       double.parse(state
-                                          .shipments![selectedIndex].pathpoints!
+                                          .shipments[selectedIndex].pathpoints!
                                           .singleWhere((element) =>
                                               element.pointType == "P")
                                           .location!
                                           .split(",")[0]),
                                       double.parse(state
-                                          .shipments![selectedIndex].pathpoints!
+                                          .shipments[selectedIndex].pathpoints!
                                           .singleWhere((element) =>
                                               element.pointType == "P")
                                           .location!
@@ -317,13 +333,13 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                                   markerId: const MarkerId("delivery"),
                                   position: LatLng(
                                       double.parse(state
-                                          .shipments![selectedIndex].pathpoints!
+                                          .shipments[selectedIndex].pathpoints!
                                           .singleWhere((element) =>
                                               element.pointType == "D")
                                           .location!
                                           .split(",")[0]),
                                       double.parse(state
-                                          .shipments![selectedIndex].pathpoints!
+                                          .shipments[selectedIndex].pathpoints!
                                           .singleWhere((element) =>
                                               element.pointType == "D")
                                           .location!
@@ -332,6 +348,22 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                                 );
                                 markers.add(deliveryMarker);
 
+                                var truckMarker = Marker(
+                                  markerId: const MarkerId("truck"),
+                                  position: LatLng(
+                                      double.parse(state
+                                          .shipments[selectedIndex]
+                                          .truck!
+                                          .location_lat!
+                                          .split(",")[0]),
+                                      double.parse(state
+                                          .shipments[selectedIndex]
+                                          .truck!
+                                          .location_lat!
+                                          .split(",")[1])),
+                                  icon: truckicon,
+                                );
+                                markers.add(truckMarker);
                                 setState(() {});
                               },
                               zoomControlsEnabled: false,

@@ -22,7 +22,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:camion/views/widgets/shipment_path_widget.dart';
 
@@ -139,7 +138,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${widget.shipment.id!}',
+                                  '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${widget.shipment.shipment!}',
                                   style: TextStyle(
                                       // color: AppColor.lightBlue,
                                       fontSize: 18.sp,
@@ -282,146 +281,162 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                     SizedBox(
                       height: 5.h,
                     ),
-                    Card(
-                      elevation: 1,
-                      clipBehavior: Clip.antiAlias,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                width: double.infinity,
+                    widget.shipment.shipmentpaymentv2 == null
+                        ? Card(
+                            elevation: 1,
+                            clipBehavior: Clip.antiAlias,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
                               ),
-                              Text(
-                                "اختر وسيلة الدفع",
-                                style: TextStyle(
-                                    // color: AppColor.lightBlue,
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 8.h,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPaymentType = "B";
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 65,
-                                      width: MediaQuery.of(context).size.width *
-                                          .28,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: selectedPaymentType == "B"
-                                              ? AppColor.deepYellow
-                                              : Colors.grey[400]!,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Center(
-                                        child: Image.asset(
-                                          "assets/images/albaraka.png",
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .25,
-                                        ),
-                                      ),
+                            ),
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      width: double.infinity,
                                     ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPaymentType = "H";
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: selectedPaymentType == "H"
-                                              ? AppColor.deepYellow
-                                              : Colors.grey[400]!,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      height: 65,
-                                      width: MediaQuery.of(context).size.width *
-                                          .28,
-                                      child: Center(
-                                        child: Image.asset(
-                                          "assets/images/alharam.png",
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .25,
-                                        ),
-                                      ),
+                                    Text(
+                                      "اختر وسيلة الدفع",
+                                      style: TextStyle(
+                                          // color: AppColor.lightBlue,
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                  InkWell(
-                                    onTap: () {
-                                      setState(() {
-                                        selectedPaymentType = "E";
-                                      });
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: selectedPaymentType == "E"
-                                              ? AppColor.deepYellow
-                                              : Colors.grey[400]!,
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      clipBehavior: Clip.hardEdge,
-                                      height: 65,
-                                      width: MediaQuery.of(context).size.width *
-                                          .28,
-                                      child: Center(
-                                        child: Image.asset(
-                                          "assets/images/fatora.png",
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .25,
-                                        ),
-                                      ),
+                                    SizedBox(
+                                      height: 8.h,
                                     ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 8.h,
-                              ),
-                            ]),
-                      ),
-                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPaymentType = "B";
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 65,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .28,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color:
+                                                    selectedPaymentType == "B"
+                                                        ? AppColor.deepYellow
+                                                        : Colors.grey[400]!,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Center(
+                                              child: Image.asset(
+                                                "assets/images/albaraka.png",
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .25,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPaymentType = "H";
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color:
+                                                    selectedPaymentType == "H"
+                                                        ? AppColor.deepYellow
+                                                        : Colors.grey[400]!,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            height: 65,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .28,
+                                            child: Center(
+                                              child: Image.asset(
+                                                "assets/images/alharam.png",
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .25,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPaymentType = "E";
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color:
+                                                    selectedPaymentType == "E"
+                                                        ? AppColor.deepYellow
+                                                        : Colors.grey[400]!,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
+                                            height: 65,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .28,
+                                            child: Center(
+                                              child: Image.asset(
+                                                "assets/images/fatora.png",
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .25,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                  ]),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
                     SizedBox(
                       height: 5.h,
                     ),
-                    Card(
-                        elevation: 1,
-                        clipBehavior: Clip.antiAlias,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                        ),
-                        color: Colors.white,
-                        child: paymentCard()),
+                    widget.shipment.shipmentpaymentv2 == null
+                        ? Card(
+                            elevation: 1,
+                            clipBehavior: Clip.antiAlias,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            color: Colors.white,
+                            child: paymentCard())
+                        : const SizedBox.shrink(),
                     SizedBox(
                       height: 5.h,
                     ),
@@ -490,31 +505,35 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
     switch (selectedPaymentType) {
       case "B":
         return Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SectionTitle(text: "بنك البركة"),
+                  const SectionTitle(text: "بنك البركة"),
                   Image.asset(
                     "assets/images/albaraka.png",
                     height: 30,
                   ),
                 ],
               ),
-              Divider(),
-              SectionBody(text: "رقم الحساب:1117556556."),
-              SectionBody(text: "اسم الحساب : أكروس مينا"),
-              SectionBody(text: "أرفق الاشعار لمراجعته"),
+              const Divider(),
+              const SectionBody(text: "رقم الحساب:1117556556."),
+              const SectionBody(text: "اسم الحساب : أكروس مينا"),
+              const SectionBody(text: "أرفق الاشعار لمراجعته"),
+              const SizedBox(height: 8),
               BlocConsumer<PaymentCreateBloc, PaymentCreateState>(
                 listener: (context, state) {
                   if (state is PaymentCreateSuccessState) {}
                 },
                 builder: (context, state) {
                   return CustomButton(
-                    title: Text(""),
+                    title: const Icon(
+                      Icons.cloud_upload_outlined,
+                      size: 35,
+                    ),
                     onTap: () async {
                       var pickedImage = await _picker.pickImage(
                         source: ImageSource.gallery,
@@ -539,26 +558,30 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
         );
       case "H":
         return Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SectionTitle(text: "الهرم"),
+                  const SectionTitle(text: "الهرم"),
                   Image.asset(
                     "assets/images/alharam.png",
                     height: 30,
                   ),
                 ],
               ),
-              Divider(),
-              SectionBody(text: "رقم الحساب:1117556556."),
-              SectionBody(text: "اسم الحساب : أكروس مينا"),
-              SectionBody(text: "أرفق الاشعار لمراجعته"),
+              const Divider(),
+              const SectionBody(text: "رقم الحساب:1117556556."),
+              const SectionBody(text: "اسم الحساب : أكروس مينا"),
+              const SectionBody(text: "أرفق الاشعار لمراجعته"),
+              const SizedBox(height: 8),
               CustomButton(
-                title: Text(""),
+                title: const Icon(
+                  Icons.cloud_upload_outlined,
+                  size: 35,
+                ),
                 onTap: () async {
                   var pickedImage = await _picker.pickImage(
                     source: ImageSource.gallery,
@@ -588,7 +611,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SectionTitle(text: "فاتورة"),
+                  const SectionTitle(text: "فاتورة"),
                   Image.asset(
                     "assets/images/fatora.png",
                     height: 30,
@@ -596,87 +619,87 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                 ],
               ),
               const Divider(),
-              const SectionBody(text: "رقم الحساب:1117556556."),
-              const SectionBody(text: "اسم الحساب : أكروس مينا"),
-              widget.shipment.shipmentpaymentv2 == null
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width * .9,
-                      child: CustomButton(
-                        title: _loading
-                            ? const LoadingIndicator()
-                            : Text(AppLocalizations.of(context)!
-                                .translate('pay_now')),
-                        onTap: () async {
-                          setState(() {
-                            _loading = true;
-                          });
-                          var prefs = await SharedPreferences.getInstance();
-                          var jwt = prefs.getString("token");
-                          var amount = (widget.shipment.truck!.fees! +
-                                  widget.shipment.truck!.extra_fees!) *
-                              100;
+              const SectionBody(text: "under development."),
+              // const SectionBody(text: "اسم الحساب : أكروس مينا"),
+              // widget.shipment.shipmentpaymentv2 == null
+              //     ? SizedBox(
+              //         width: MediaQuery.of(context).size.width * .9,
+              //         child: CustomButton(
+              //           title: _loading
+              //               ? const LoadingIndicator()
+              //               : Text(AppLocalizations.of(context)!
+              //                   .translate('pay_now')),
+              //           onTap: () async {
+              //             setState(() {
+              //               _loading = true;
+              //             });
+              //             var prefs = await SharedPreferences.getInstance();
+              //             var jwt = prefs.getString("token");
+              //             var amount = (widget.shipment.truck!.fees! +
+              //                     widget.shipment.truck!.extra_fees!) *
+              //                 100;
 
-                          final response = await HttpHelper.get(
-                              "https://matjari.app/make_payment/?amount=100",
-                              apiToken: jwt);
-                          print(response.body);
-                          print(response.statusCode);
-                          var jsonBody = jsonDecode(response.body);
+              //             final response = await HttpHelper.get(
+              //                 "https://matjari.app/make_payment/?amount=100",
+              //                 apiToken: jwt);
+              //             print(response.body);
+              //             print(response.statusCode);
+              //             var jsonBody = jsonDecode(response.body);
 
-                          StripeModel stripeModel =
-                              StripeModel.fromJson(jsonBody);
-                          if (stripeModel.paymentIntent! != "" &&
-                              stripeModel.paymentIntent != null) {
-                            String _intent = stripeModel.paymentIntent!;
-                            await stripe.Stripe.instance.initPaymentSheet(
-                              paymentSheetParameters:
-                                  stripe.SetupPaymentSheetParameters(
-                                customFlow: false,
-                                merchantDisplayName: 'Camion',
-                                paymentIntentClientSecret:
-                                    stripeModel.paymentIntent,
-                                customerEphemeralKeySecret:
-                                    stripeModel.ephemeralKey,
-                                customerId: stripeModel.customer,
-                                applePay: const stripe.PaymentSheetApplePay(
-                                  merchantCountryCode: 'US',
-                                ),
-                                googlePay: const stripe.PaymentSheetGooglePay(
-                                  merchantCountryCode: 'US',
-                                  testEnv: true,
-                                ),
-                                style: ThemeMode.light,
-                              ),
-                            );
-                            setState(() {
-                              _loading = false;
-                            });
-                            stripe.Stripe.instance
-                                .presentPaymentSheet()
-                                .onError((error, stackTrace) {
-                              print(error);
-                            });
-                            stripe.Stripe.instance
-                                .confirmPaymentSheetPayment()
-                                .then((value) {
-                              var amount = (widget.shipment.truck!.fees! +
-                                  widget.shipment.truck!.extra_fees!);
-                              ShipmentPayment payment = ShipmentPayment();
-                              payment.shipment = widget.shipment.id!;
-                              payment.amount = widget.shipment.truck!.fees;
-                              payment.paymentMethod = "S";
-                              payment.fees = widget.shipment.truck!.fees;
-                              payment.extraFees =
-                                  widget.shipment.truck!.extra_fees;
+              //             StripeModel stripeModel =
+              //                 StripeModel.fromJson(jsonBody);
+              //             if (stripeModel.paymentIntent! != "" &&
+              //                 stripeModel.paymentIntent != null) {
+              //               String _intent = stripeModel.paymentIntent!;
+              //               await stripe.Stripe.instance.initPaymentSheet(
+              //                 paymentSheetParameters:
+              //                     stripe.SetupPaymentSheetParameters(
+              //                   customFlow: false,
+              //                   merchantDisplayName: 'Camion',
+              //                   paymentIntentClientSecret:
+              //                       stripeModel.paymentIntent,
+              //                   customerEphemeralKeySecret:
+              //                       stripeModel.ephemeralKey,
+              //                   customerId: stripeModel.customer,
+              //                   applePay: const stripe.PaymentSheetApplePay(
+              //                     merchantCountryCode: 'US',
+              //                   ),
+              //                   googlePay: const stripe.PaymentSheetGooglePay(
+              //                     merchantCountryCode: 'US',
+              //                     testEnv: true,
+              //                   ),
+              //                   style: ThemeMode.light,
+              //                 ),
+              //               );
+              //               setState(() {
+              //                 _loading = false;
+              //               });
+              //               stripe.Stripe.instance
+              //                   .presentPaymentSheet()
+              //                   .onError((error, stackTrace) {
+              //                 print(error);
+              //               });
+              //               stripe.Stripe.instance
+              //                   .confirmPaymentSheetPayment()
+              //                   .then((value) {
+              //                 var amount = (widget.shipment.truck!.fees! +
+              //                     widget.shipment.truck!.extra_fees!);
+              //                 ShipmentPayment payment = ShipmentPayment();
+              //                 payment.shipment = widget.shipment.id!;
+              //                 payment.amount = widget.shipment.truck!.fees;
+              //                 payment.paymentMethod = "S";
+              //                 payment.fees = widget.shipment.truck!.fees;
+              //                 payment.extraFees =
+              //                     widget.shipment.truck!.extra_fees;
 
-                              // BlocProvider.of<PaymentCreateBloc>(context)
-                              //     .add(PaymentCreateButtonPressed(payment,));
-                            });
-                          }
-                        },
-                      ),
-                    )
-                  : const SizedBox.shrink()
+              //                 // BlocProvider.of<PaymentCreateBloc>(context)
+              //                 //     .add(PaymentCreateButtonPressed(payment,));
+              //               });
+              //             }
+              //           },
+              //         ),
+              //       )
+              //     : const SizedBox.shrink()
             ],
           ),
         );
