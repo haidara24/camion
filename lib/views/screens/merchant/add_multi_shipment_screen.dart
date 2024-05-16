@@ -2783,6 +2783,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                       .translate('shipment_created_success')),
                                   duration: const Duration(seconds: 3),
                                 ));
+                                shipmentProvider.initForm();
 
                                 Navigator.pushAndRemoveUntil(
                                   context,
@@ -2885,6 +2886,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   name: shipmentProvider
                                                       .pickup_controller[i]
                                                       .text,
+                                                  nameEn: shipmentProvider
+                                                      .pickup_eng_string[i],
                                                   number: 0,
                                                   city: 1,
                                                 ),
@@ -2897,6 +2900,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   name: shipmentProvider
                                                       .delivery_controller[i]
                                                       .text,
+                                                  nameEn: shipmentProvider
+                                                      .delivery_eng_string[i],
                                                   number: 0,
                                                   city: 1,
                                                 ),
@@ -2918,6 +2923,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         .stoppoints_controller[
                                                             i][s]
                                                         .text,
+                                                    nameEn: shipmentProvider
+                                                            .stoppoints_eng_string[
+                                                        i][s],
                                                     number: s,
                                                     city: 1,
                                                   ),

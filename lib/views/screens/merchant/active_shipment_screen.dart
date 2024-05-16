@@ -176,10 +176,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                         height: 25.h,
                         width: 150.w,
                         child: CachedNetworkImage(
-                          imageUrl: subshipments[selectedIndex]
-                              .truck!
-                              .truck_type!
-                              .image!,
+                          imageUrl:
+                              subshipments[index].truck!.truck_type!.image!,
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) =>
                                   Shimmer.fromColors(
@@ -207,7 +205,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
                         height: 7.h,
                       ),
                       Text(
-                        "${subshipments[selectedIndex].truck!.truckuser!.user!.firstName!} ${subshipments[selectedIndex].truck!.truckuser!.user!.lastName!}",
+                        "${subshipments[index].truck!.truckuser!.user!.firstName!} ${subshipments[index].truck!.truckuser!.user!.lastName!}",
                         style: TextStyle(
                           fontSize: 17.sp,
                           color: AppColor.deepBlack,

@@ -68,12 +68,21 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<TextEditingController> _pickup_controller = [TextEditingController()];
   List<TextEditingController> get pickup_controller => _pickup_controller;
 
+  List<String> _pickup_eng_string = [""];
+  List<String> get pickup_eng_string => _pickup_eng_string;
+
   List<List<TextEditingController>> _stoppoints_controller = [[]];
   List<List<TextEditingController>> get stoppoints_controller =>
       _stoppoints_controller;
 
+  List<List<String>> _stoppoints_eng_string = [[]];
+  List<List<String>> get stoppoints_eng_string => _stoppoints_eng_string;
+
   List<TextEditingController> _delivery_controller = [TextEditingController()];
   List<TextEditingController> get delivery_controller => _delivery_controller;
+
+  List<String> _delivery_eng_string = [""];
+  List<String> get delivery_eng_string => _delivery_eng_string;
 
   List<String> _pickup_location = [""];
   List<String> get pickup_location => _pickup_location;
@@ -198,6 +207,121 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
       notifyListeners();
     }
+  }
+
+  initForm() {
+    _center = const LatLng(35.363149, 35.932120);
+
+    _zoom = 13.0;
+
+    _scrollController = [ScrollController()];
+
+    _commodityWeight_controllers = [
+      [TextEditingController()]
+    ];
+
+    _commodityName_controllers = [
+      [TextEditingController()]
+    ];
+
+    _pathes = [[]];
+
+    _commodityCategory_controller = [
+      [null]
+    ];
+
+    _commodityCategories = [
+      [0]
+    ];
+
+    _addShipmentformKey = [GlobalKey<FormState>()];
+
+    _pickup_controller = [TextEditingController()];
+
+    _pickup_eng_string = [""];
+
+    _stoppoints_controller = [[]];
+
+    _stoppoints_eng_string = [[]];
+
+    _delivery_controller = [TextEditingController()];
+
+    _delivery_eng_string = [""];
+
+    _pickup_location = [""];
+
+    _delivery_location = [""];
+
+    _stoppoints_location = [[]];
+
+    _pickup_latlng = [null];
+
+    _stoppoints_latlng = [[]];
+
+    _delivery_latlng = [null];
+
+    _pickup_marker = [const Marker(markerId: MarkerId("pickup"))];
+
+    _stop_marker = [[]];
+
+    _truckType = null;
+
+    _delivery_marker = [const Marker(markerId: MarkerId("delivery"))];
+
+    _pickup_position = [null];
+
+    _stoppoints_position = [[]];
+
+    _delivery_position = [null];
+
+    _pickup_place = [null];
+
+    _stoppoints_place = [[]];
+
+    _delivery_place = [null];
+
+    _countpath = 1;
+
+    _count = [1];
+
+    _selectedTruck = [];
+
+    _trucks = [null];
+
+    _truckError = [false];
+
+    _pathError = [false];
+
+    _dateError = [false];
+
+    _pickupLoading = [false];
+
+    _deliveryLoading = [false];
+
+    _stoppointsLoading = [[]];
+
+    _pickupPosition = [false];
+
+    _deliveryPosition = [false];
+
+    _stoppointsPosition = [[]];
+
+    _selectedTruckType = [[]];
+
+    _truckNum = [[]];
+
+    _truckNumController = [[]];
+
+    _distance = [0];
+
+    _period = [""];
+
+    _loadDate = [DateTime.now()];
+
+    _loadTime = [DateTime.now()];
+    _time_controller = [TextEditingController()];
+
+    _date_controller = [TextEditingController()];
   }
 
   setTruckType(TruckType type) {
@@ -503,6 +627,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _pickup_controller[index].text =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
+    var responseEng = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (responseEng.statusCode == 200) {
+      var result = jsonDecode(responseEng.body);
+
+      _pickup_eng_string[index] =
+          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    }
 
     _pickup_location[index] =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
@@ -522,13 +656,22 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
       _pickup_latlng[index] = position;
       _pickup_controller[index].text =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
       _pickup_location[index] = "${position.latitude},${position.longitude}";
+    }
+    var responseEng = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (responseEng.statusCode == 200) {
+      var result = jsonDecode(responseEng.body);
+
+      _pickup_eng_string[index] =
+          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
     if (_delivery_controller[index].text.isNotEmpty &&
         _pickup_controller[index].text.isNotEmpty) {
@@ -578,6 +721,17 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
       _delivery_location[index] = "${position.latitude},${position.longitude}";
     }
+
+    var responseEng = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (responseEng.statusCode == 200) {
+      var result = jsonDecode(responseEng.body);
+
+      _delivery_eng_string[index] =
+          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    }
     if (_delivery_controller[index].text.isNotEmpty &&
         _pickup_controller[index].text.isNotEmpty) {
       getPolyPoints(index);
@@ -601,6 +755,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       var result = jsonDecode(response.body);
 
       _delivery_controller[index].text =
+          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    }
+    var responseEng = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (responseEng.statusCode == 200) {
+      var result = jsonDecode(responseEng.body);
+
+      _delivery_eng_string[index] =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
     _delivery_location[index] =
@@ -627,6 +791,17 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       var result = jsonDecode(response.body);
 
       _stoppoints_controller[index][index2].text =
+          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    }
+
+    var responseEng = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (responseEng.statusCode == 200) {
+      var result = jsonDecode(responseEng.body);
+
+      _stoppoints_eng_string[index][index2] =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
     _stoppoints_location[index][index2] =
@@ -798,6 +973,17 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _stoppoints_controller[index][index2].text =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
+
+    var responseEng = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (responseEng.statusCode == 200) {
+      var result = jsonDecode(responseEng.body);
+
+      _stoppoints_eng_string[index][index2] =
+          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    }
     _pickupLoading[index] = false;
 
     if (_delivery_controller[index].text.isNotEmpty &&
@@ -840,6 +1026,17 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _delivery_controller[index].text =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
+
+    var responseEng = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (responseEng.statusCode == 200) {
+      var result = jsonDecode(responseEng.body);
+
+      _delivery_eng_string[index] =
+          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    }
     _deliveryLoading[index] = false;
     if (_delivery_controller[index].text.isNotEmpty &&
         _pickup_controller[index].text.isNotEmpty) {
@@ -854,6 +1051,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     TextEditingController stoppoint_controller = TextEditingController();
     _stoppoints_controller[index].add(stoppoint_controller);
     _stoppoints_location[index].add("");
+    _stoppoints_eng_string[index].add("");
     _stoppoints_latlng[index].add(null);
     _stoppoints_position[index].add(null);
     _stoppoints_place[index].add(null);
@@ -866,6 +1064,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   void removestoppoint(int index, int index2) {
     _stoppoints_controller[index].removeAt(index2);
+    _stoppoints_eng_string[index].removeAt(index2);
     _stoppoints_location[index].removeAt(index2);
     _stoppoints_latlng[index].removeAt(index2);
     _stoppoints_position[index].removeAt(index2);
@@ -894,8 +1093,11 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _addShipmentformKey.add(GlobalKey<FormState>());
 
     _pickup_controller.add(TextEditingController());
+    _pickup_eng_string.add("");
     _delivery_controller.add(TextEditingController());
+    _delivery_eng_string.add("");
     _stoppoints_controller.add([]);
+    _stoppoints_eng_string.add([]);
 
     _pickup_location.add("");
     _delivery_location.add("");
@@ -958,8 +1160,11 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _addShipmentformKey.removeAt(index);
 
     _pickup_controller.removeAt(index);
+    _pickup_eng_string.removeAt(index);
     _delivery_controller.removeAt(index);
+    _delivery_eng_string.removeAt(index);
     _stoppoints_controller.removeAt(index);
+    _stoppoints_eng_string.removeAt(index);
 
     _pickup_location.removeAt(index);
     _delivery_location.removeAt(index);

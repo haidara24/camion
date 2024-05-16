@@ -308,7 +308,7 @@ class ShipmentRepository {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.get(
-      "${SUB_SHIPPMENTSV2_ENDPOINT}?shipment_status=R",
+      "${SUB_SHIPPMENTSV2_ENDPOINT}?shipment_status=A",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);

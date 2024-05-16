@@ -1211,30 +1211,18 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                       const SizedBox(
                                                         height: 10,
                                                       ),
-                                                      Container(
-                                                        child: Text(state
-                                                            .instruction
-                                                            .chargerName!),
-                                                      ),
+                                                      Text(state.instruction
+                                                          .chargerName!),
                                                       const SizedBox(
-                                                        height: 12,
+                                                        height: 8,
                                                       ),
-                                                      Container(
-                                                        child: Text(state
-                                                            .instruction
-                                                            .chargerAddress!),
-                                                      ),
+                                                      Text(state.instruction
+                                                          .chargerAddress!),
                                                       const SizedBox(
-                                                        height: 12,
+                                                        height: 8,
                                                       ),
-                                                      Container(
-                                                        child: Text(state
-                                                            .instruction
-                                                            .chargerPhone!),
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 12,
-                                                      ),
+                                                      Text(state.instruction
+                                                          .chargerPhone!),
                                                       const SizedBox(
                                                         height: 8,
                                                       ),
@@ -1267,27 +1255,21 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                       const SizedBox(
                                                         height: 10,
                                                       ),
-                                                      Container(
-                                                        child: SectionBody(
-                                                            text:
-                                                                '${AppLocalizations.of(context)!.translate('charger_name')}: ${state.instruction.recieverName!}'),
-                                                      ),
+                                                      SectionBody(
+                                                          text:
+                                                              '${AppLocalizations.of(context)!.translate('charger_name')}: ${state.instruction.recieverName!}'),
                                                       const SizedBox(
                                                         height: 8,
                                                       ),
-                                                      Container(
-                                                        child: SectionBody(
-                                                            text:
-                                                                '${AppLocalizations.of(context)!.translate('charger_address')}: ${state.instruction.recieverAddress!}'),
-                                                      ),
+                                                      SectionBody(
+                                                          text:
+                                                              '${AppLocalizations.of(context)!.translate('charger_address')}: ${state.instruction.recieverAddress!}'),
                                                       const SizedBox(
                                                         height: 8,
                                                       ),
-                                                      Container(
-                                                        child: SectionBody(
-                                                            text:
-                                                                '${AppLocalizations.of(context)!.translate('charger_phone')}: ${state.instruction.recieverPhone!}'),
-                                                      ),
+                                                      SectionBody(
+                                                          text:
+                                                              '${AppLocalizations.of(context)!.translate('charger_phone')}: ${state.instruction.recieverPhone!}'),
                                                       const SizedBox(
                                                         height: 8,
                                                       ),
@@ -2102,7 +2084,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                     text: AppLocalizations.of(
                                                             context)!
                                                         .translate(
-                                                            'commodity_info'),
+                                                            'other_info'),
                                                   ),
                                                 ]),
                                             Row(
@@ -2387,20 +2369,38 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    SectionTitle(
+                                                      text: AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'other_info'),
+                                                    ),
+                                                  ],
+                                                ),
                                                 const SizedBox(
                                                   height: 10,
                                                 ),
                                                 SectionBody(
                                                     text:
                                                         '${AppLocalizations.of(context)!.translate('net_weight')}: ${state.instruction.netWeight!.toString()}'),
+                                                const SizedBox(
+                                                  height: 8,
+                                                ),
                                                 SectionBody(
                                                     text:
                                                         '${AppLocalizations.of(context)!.translate('total_weight')}: ${state.instruction.truckWeight!.toString()}'),
+                                                const SizedBox(
+                                                  height: 8,
+                                                ),
                                                 SectionBody(
                                                     text:
                                                         '${AppLocalizations.of(context)!.translate('final_weight')}: ${state.instruction.finalWeight!.toString()}'),
                                                 const SizedBox(
-                                                  height: 12,
+                                                  height: 8,
                                                 ),
                                               ],
                                             ),
