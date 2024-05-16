@@ -81,7 +81,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
+// import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -107,10 +107,10 @@ void main() async {
   await localeCubit.initializeFromPreferences();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String lang = prefs.getString("language") ?? "en";
-  Stripe.publishableKey =
-      "pk_test_51IZr3HApYMiHRCEPfSdLaWzGSzImzW2kc61cSI4mYf3JptVXsfFj2SG1xcBLBgLVdvW8EXckH50FgzKZeNp454dK00xplc6hCI";
-  Stripe.merchantIdentifier = "AcrossMena";
-  await Stripe.instance.applySettings();
+  // Stripe.publishableKey =
+  //     "pk_test_51IZr3HApYMiHRCEPfSdLaWzGSzImzW2kc61cSI4mYf3JptVXsfFj2SG1xcBLBgLVdvW8EXckH50FgzKZeNp454dK00xplc6hCI";
+  // Stripe.merchantIdentifier = "AcrossMena";
+  // await Stripe.instance.applySettings();
   await Firebase.initializeApp(
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,

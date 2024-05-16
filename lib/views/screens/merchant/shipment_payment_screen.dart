@@ -22,7 +22,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
+// import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 import 'package:camion/views/widgets/shipment_path_widget.dart';
 
 class ShipmentPaymentScreen extends StatefulWidget {

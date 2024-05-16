@@ -38,13 +38,13 @@ dependencies:
   provider:
   percent_indicator: ^4.0.1
   easy_splash_screen: ^1.0.4
-  google_maps_flutter: ^2.5.3
+  google_maps_flutter: ^2.5.0
   flutter_typeahead: ^4.6.2
   geolocator: ^10.1.0
   geocoding: ^2.1.1
   flutter_polyline_points: ^2.0.0
   location: ^5.0.3
-  flutter_stripe: ^8.0.0
+  # flutter_stripe: ^8.0.0
   cloud_firestore: ^4.14.0
   timelines: ^0.1.0
   lottie: ^2.7.0
