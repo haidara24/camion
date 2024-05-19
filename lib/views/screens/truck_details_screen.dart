@@ -169,7 +169,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                     height: 7.h,
                                   ),
                                   SizedBox(
-                                    height: 200.h,
+                                    height: 175.h,
                                     child: GoogleMap(
                                       onMapCreated: (GoogleMapController
                                           controller) async {
@@ -191,7 +191,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                                 .split(',')[0]),
                                             double.parse(widget
                                                 .truck.locationLat!
-                                                .split(',')[0]),
+                                                .split(',')[1]),
                                           ),
                                           zoom: 14.47),
                                       gestureRecognizers: {},
@@ -204,7 +204,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                                 .split(',')[0]),
                                             double.parse(widget
                                                 .truck.locationLat!
-                                                .split(',')[0]),
+                                                .split(',')[1]),
                                           ),
                                         )
                                       },

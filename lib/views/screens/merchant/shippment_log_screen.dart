@@ -417,7 +417,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       width: double.infinity,
                                                       height: 48.h,
                                                       color:
-                                                          AppColor.deepYellow,
+                                                          Colors.white,
                                                       child: Row(
                                                         children: [
                                                           Container(

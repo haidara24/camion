@@ -29,7 +29,7 @@ class Place {
     return Place(
       geometry: Geometry.fromJson(json['geometry']),
       name: json['formatted_address'],
-      vicinity: json['vicinity'],
+      vicinity: json['vicinity'] ?? "",
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
     return '${date.day}-$month-${date.year}';
   }
 
-  List<Widget> stoppoints() {
+  List<Widget> stoppoints(BuildContext context) {
     List<Widget> list = [];
 
     for (var element in pathpoints) {
@@ -68,18 +69,25 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                  width: 25,
-                  color: AppColor.deepYellow,
-                  iconStyle: IconStyle(
-                      iconData: Icons.done, color: Colors.white, fontSize: 20)),
+                width: 25,
+                color: AppColor.deepYellow,
+                iconStyle: IconStyle(
+                  iconData: Icons.circle_sharp,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
               alignment: TimelineAlign.manual,
               lineXY: .3,
-              startChild: Text(
-                setLoadDate(pickupDate, langCode),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  // fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              startChild: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${AppLocalizations.of(context)!.translate('pickup_address')} \n${setLoadDate(deliveryDate, langCode)}',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    // fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               endChild: Text(
@@ -116,10 +124,14 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                  width: 25,
-                  color: AppColor.deepYellow,
-                  iconStyle: IconStyle(
-                      iconData: Icons.done, color: Colors.white, fontSize: 20)),
+                width: 25,
+                color: AppColor.deepYellow,
+                iconStyle: IconStyle(
+                  iconData: Icons.circle_sharp,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
               alignment: TimelineAlign.manual,
               lineXY: .3,
               endChild: Text(
@@ -149,18 +161,25 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                  width: 25,
-                  color: AppColor.deepYellow,
-                  iconStyle: IconStyle(
-                      iconData: Icons.done, color: Colors.white, fontSize: 20)),
+                width: 25,
+                color: AppColor.deepYellow,
+                iconStyle: IconStyle(
+                  iconData: Icons.circle_sharp,
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
+              ),
               alignment: TimelineAlign.manual,
               lineXY: .3,
-              startChild: Text(
-                setLoadDate(deliveryDate, langCode),
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  // fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              startChild: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '${AppLocalizations.of(context)!.translate('delivery_address')} ',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    // fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
               endChild: Text(
@@ -191,7 +210,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: stoppoints(),
+      children: stoppoints(context),
     );
   }
 }

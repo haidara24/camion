@@ -29,6 +29,7 @@
     "insert_value_validate":"الرجاء ادخال قيمة",
 
     "select_truck":"اختر شاحنة",
+    "select_truck_type":"اختر نوع الشاحنة",
     "select_truck_error":"الرجاء اختيار شاحنة",
     "search_with_truck_number":"بحث عن طريق رقم الشاحنة",
     "search_for_truck":"ابحث عن شاحنة",
@@ -59,7 +60,7 @@
     "time":"وقت",
     "date":"تاريخ",
     "search_truck":"ابحث عن شاحنة",
-    "create_shipment":"إنشاء شاحنة",
+    "create_shipment":"إنشاء شحنة",
     "pick_date_error":"الرجاء اختيار تاريخ التحميل",
     
     "read_more":"اقرأ المزيد",
@@ -155,6 +156,8 @@
     "select_driver":"اختر سائق",
 
     "order_truck":"اطلب الشاحنة",
+    "form_init":"تهيئة الفورم",
+    "form_init_confirm":"هل أنت متأكد من تهيئة الفورم؟",
 
     "incoming_orders":"الطلبات الواردة",
     "shipment_search":"بحث عن شحنة",

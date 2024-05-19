@@ -21,8 +21,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   Shipmentv2? get shipment => _shipment;
 
-  late GoogleMapController _mapController2;
-  GoogleMapController get mapController2 => _mapController2;
+  GoogleMapController? _mapController2;
+  GoogleMapController? get mapController2 => _mapController2;
 
   late GoogleMapController _mapController;
   GoogleMapController get mapController => _mapController;
@@ -164,6 +164,15 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<List<bool>> _stoppointsLoading = [[]];
   List<List<bool>> get stoppointsLoading => _stoppointsLoading;
 
+  List<bool> _pickuptextLoading = [false];
+  List<bool> get pickuptextLoading => _pickuptextLoading;
+
+  List<bool> _deliverytextLoading = [false];
+  List<bool> get deliverytextLoading => _deliverytextLoading;
+
+  List<List<bool>> _stoppointstextLoading = [[]];
+  List<List<bool>> get stoppointstextLoading => _stoppointstextLoading;
+
   List<bool> _pickupPosition = [false];
   List<bool> get pickupPosition => _pickupPosition;
 
@@ -300,6 +309,12 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _stoppointsLoading = [[]];
 
+    _pickuptextLoading = [false];
+
+    _deliverytextLoading = [false];
+
+    _stoppointstextLoading = [[]];
+
     _pickupPosition = [false];
 
     _deliveryPosition = [false];
@@ -337,7 +352,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   void onMap2Created(GoogleMapController controller, String style) {
     _mapController2 = controller;
-    _mapController2.setMapStyle(style);
+    _mapController2!.setMapStyle(style);
     notifyListeners();
   }
 
@@ -349,7 +364,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   }
 
   void setMapStyle2(String style) async {
-    await _mapController2
+    await _mapController2!
         .setMapStyle(style)
         .onError((error, stackTrace) => print(error));
     notifyListeners();
@@ -357,7 +372,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   void dispose() {
     _mapController.dispose();
-    _mapController2.dispose();
+    _mapController2!.dispose();
   }
 
   void getPolyPoints(int index) async {
@@ -487,7 +502,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
       var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
       _mapController.animateCamera(cameraUpdate);
-      _mapController2.animateCamera(cameraUpdate);
+      _mapController2!.animateCamera(cameraUpdate);
       // notifyListeners();
     } else {}
   }
@@ -587,6 +602,12 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setPickupTextLoading(bool value, int index) {
+    _pickuptextLoading[index] = value;
+    print(_pickuptextLoading[index]);
+    notifyListeners();
+  }
+
   setPickupPositionClick(bool value, int index) {
     _pickupPosition[index] = value;
     notifyListeners();
@@ -594,6 +615,11 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   setDeliveryLoading(bool value, int index) {
     _deliveryLoading[index] = value;
+    notifyListeners();
+  }
+
+  setDeliveryTextLoading(bool value, int index) {
+    _deliverytextLoading[index] = value;
     notifyListeners();
   }
 
@@ -607,47 +633,68 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  setStopPointTextLoading(bool value, int index, int index2) {
+    _stoppointstextLoading[index][index2] = value;
+    notifyListeners();
+  }
+
   setStopPointPositionClick(bool value, int index, int index2) {
     _stoppointsPosition[index][index2] = value;
     notifyListeners();
   }
 
   setPickupInfo(dynamic suggestion, int index) async {
+    print(_pickuptextLoading[index]);
     var sLocation = await PlaceService.getPlace(suggestion.placeId);
     _pickup_place[index] = sLocation;
     _pickup_latlng[index] = LatLng(
         sLocation.geometry.location.lat, sLocation.geometry.location.lng);
+
     var response = await http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
+    print(response.statusCode);
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
       _pickup_controller[index].text =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
-    var responseEng = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (responseEng.statusCode == 200) {
-      var result = jsonDecode(responseEng.body);
+    // var responseEng = await http.get(
+    //   Uri.parse(
+    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    // );
+    // if (responseEng.statusCode == 200) {
+    //   var result = jsonDecode(responseEng.body);
 
-      _pickup_eng_string[index] =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    }
+    //   _pickup_eng_string[index] =
+    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    // }
 
     _pickup_location[index] =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
 
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
-    } else {
-      animateCameraToLatLng(index);
+    if (_mapController2 != null) {
+      if (_delivery_controller[index].text.isNotEmpty &&
+          _pickup_controller[index].text.isNotEmpty) {
+        getPolyPoints(index);
+      } else {
+        animateCameraToLatLng(index);
+      }
     }
+
+    _pickuptextLoading[index] = false;
+
     notifyListeners();
+    if (_mapController2 == null) {
+      if (_delivery_controller[index].text.isNotEmpty &&
+          _pickup_controller[index].text.isNotEmpty) {
+        getPolyPoints(index);
+      } else {
+        animateCameraToLatLng(index);
+      }
+    }
   }
 
   Future<void> getAddressForPickupFromMapPicker(
@@ -663,16 +710,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
       _pickup_location[index] = "${position.latitude},${position.longitude}";
     }
-    var responseEng = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (responseEng.statusCode == 200) {
-      var result = jsonDecode(responseEng.body);
+    // var responseEng = await http.get(
+    //   Uri.parse(
+    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    // );
+    // if (responseEng.statusCode == 200) {
+    //   var result = jsonDecode(responseEng.body);
 
-      _pickup_eng_string[index] =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    }
+    //   _pickup_eng_string[index] =
+    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    // }
     if (_delivery_controller[index].text.isNotEmpty &&
         _pickup_controller[index].text.isNotEmpty) {
       getPolyPoints(index);
@@ -696,7 +743,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             zoom: 14.47),
       ),
     );
-    _mapController2.animateCamera(
+    _mapController2!.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
             target: LatLng(
@@ -722,16 +769,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _delivery_location[index] = "${position.latitude},${position.longitude}";
     }
 
-    var responseEng = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (responseEng.statusCode == 200) {
-      var result = jsonDecode(responseEng.body);
+    // var responseEng = await http.get(
+    //   Uri.parse(
+    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    // );
+    // if (responseEng.statusCode == 200) {
+    //   var result = jsonDecode(responseEng.body);
 
-      _delivery_eng_string[index] =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    }
+    //   _delivery_eng_string[index] =
+    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    // }
     if (_delivery_controller[index].text.isNotEmpty &&
         _pickup_controller[index].text.isNotEmpty) {
       getPolyPoints(index);
@@ -743,6 +790,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   }
 
   setDeliveryInfo(dynamic suggestion, int index) async {
+    // _deliverytextLoading[index] = true;
+    // notifyListeners();
     var sLocation = await PlaceService.getPlace(suggestion.placeId);
     _delivery_place[index] = sLocation;
     _delivery_latlng[index] = LatLng(
@@ -757,16 +806,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _delivery_controller[index].text =
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
-    var responseEng = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (responseEng.statusCode == 200) {
-      var result = jsonDecode(responseEng.body);
+    // var responseEng = await http.get(
+    //   Uri.parse(
+    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    // );
+    // if (responseEng.statusCode == 200) {
+    //   var result = jsonDecode(responseEng.body);
 
-      _delivery_eng_string[index] =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    }
+    //   _delivery_eng_string[index] =
+    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    // }
     _delivery_location[index] =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
     if (_delivery_controller[index].text.isNotEmpty &&
@@ -775,10 +824,14 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     } else {
       animateCameraToLatLng(index);
     }
+    _deliverytextLoading[index] = false;
+
     notifyListeners();
   }
 
   setStopPointInfo(dynamic suggestion, int index, int index2) async {
+    // _stoppointstextLoading[index][index2] = true;
+    // notifyListeners();
     var sLocation = await PlaceService.getPlace(suggestion.placeId);
     _stoppoints_place[index][index2] = sLocation;
     _stoppoints_latlng[index][index2] = LatLng(
@@ -794,16 +847,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
 
-    var responseEng = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (responseEng.statusCode == 200) {
-      var result = jsonDecode(responseEng.body);
+    // var responseEng = await http.get(
+    //   Uri.parse(
+    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    // );
+    // if (responseEng.statusCode == 200) {
+    //   var result = jsonDecode(responseEng.body);
 
-      _stoppoints_eng_string[index][index2] =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    }
+    //   _stoppoints_eng_string[index][index2] =
+    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    // }
     _stoppoints_location[index][index2] =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
     if (_delivery_controller[index].text.isNotEmpty &&
@@ -812,6 +865,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     } else {
       animateCameraToLatLng(index);
     }
+    _stoppointstextLoading[index][index2] = false;
+
     notifyListeners();
   }
 
@@ -974,16 +1029,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
 
-    var responseEng = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (responseEng.statusCode == 200) {
-      var result = jsonDecode(responseEng.body);
+    // var responseEng = await http.get(
+    //   Uri.parse(
+    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    // );
+    // if (responseEng.statusCode == 200) {
+    //   var result = jsonDecode(responseEng.body);
 
-      _stoppoints_eng_string[index][index2] =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    }
+    //   _stoppoints_eng_string[index][index2] =
+    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    // }
     _pickupLoading[index] = false;
 
     if (_delivery_controller[index].text.isNotEmpty &&
@@ -1027,16 +1082,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     }
 
-    var responseEng = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (responseEng.statusCode == 200) {
-      var result = jsonDecode(responseEng.body);
+    // var responseEng = await http.get(
+    //   Uri.parse(
+    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    // );
+    // if (responseEng.statusCode == 200) {
+    //   var result = jsonDecode(responseEng.body);
 
-      _delivery_eng_string[index] =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    }
+    //   _delivery_eng_string[index] =
+    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+    // }
     _deliveryLoading[index] = false;
     if (_delivery_controller[index].text.isNotEmpty &&
         _pickup_controller[index].text.isNotEmpty) {
@@ -1056,6 +1111,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _stoppoints_position[index].add(null);
     _stoppoints_place[index].add(null);
     _stoppointsLoading[index].add(false);
+    _stoppointstextLoading[index].add(false);
     _stoppointsPosition[index].add(false);
     _stop_marker[index]
         .add(Marker(markerId: MarkerId("stop${_stop_marker[index].length}")));
@@ -1070,6 +1126,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _stoppoints_position[index].removeAt(index2);
     _stoppoints_place[index].removeAt(index2);
     _stoppointsLoading[index].removeAt(index2);
+    _stoppointstextLoading[index].removeAt(index2);
     _stoppointsPosition[index].removeAt(index2);
     _stop_marker[index].removeAt(index2);
     notifyListeners();
@@ -1116,8 +1173,11 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _stoppoints_place.add([null]);
 
     _pickupLoading.add(false);
+    _pickuptextLoading.add(false);
     _deliveryLoading.add(false);
+    _deliverytextLoading.add(false);
     _stoppointsLoading.add([false]);
+    _stoppointstextLoading.add([false]);
 
     _pickupPosition.add(false);
     _deliveryPosition.add(false);
@@ -1184,7 +1244,10 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _pickupLoading.removeAt(index);
     _deliveryLoading.removeAt(index);
+    _pickuptextLoading.removeAt(index);
+    _deliverytextLoading.removeAt(index);
     _stoppointsLoading.removeAt(index);
+    _stoppointstextLoading.removeAt(index);
 
     _pickupPosition.removeAt(index);
     _deliveryPosition.removeAt(index);
@@ -1207,7 +1270,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _period.removeAt(index);
     _count.removeAt(index);
     _countpath--;
-    _count.removeAt(index);
     notifyListeners();
   }
 

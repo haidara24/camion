@@ -29,6 +29,7 @@
     "insert_value_validate":"insert value validate",
     
     "select_truck":"Select Truck",
+    "select_truck_type":"select truck type",
     "select_truck_error":"please select truck",
     "search_with_truck_number":"search with truck number",
     "search_for_truck":"Search For a Truck",
@@ -154,6 +155,9 @@
     "select_driver":"Select Driver",
     
     "order_truck":"Truck Order",
+    "form_init":"Init Form",
+    "form_init_confirm":"Are you sure you want to init the form?",
+
 
     "incoming_orders":"Incoming Orders",
     "shipment_search":"Shipment Search",

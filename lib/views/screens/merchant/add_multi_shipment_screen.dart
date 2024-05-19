@@ -65,7 +65,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
   String _mapStyle = "";
   String _darkmapStyle = "";
 
-  late BitmapDescriptor pickupicon;
+  BitmapDescriptor? pickupicon;
   late BitmapDescriptor deliveryicon;
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -197,50 +197,122 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
   int selectedIndex = 0;
 
   Widget pathList(AddMultiShipmentProvider provider, BuildContext pathcontext) {
-    return provider.countpath > 1
-        ? SizedBox(
-            height: 60.h,
-            child: ListView.builder(
-              itemCount: provider.countpath,
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                    provider.initMapbounds(selectedIndex);
-                  },
-                  child: Container(
-                    // width: 130.w,
-                    margin: const EdgeInsets.all(5),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 5,
-                      horizontal: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: selectedIndex == index
-                          ? AppColor.deepYellow
-                          : Colors.grey[400],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "الشاحنة رقم ${index + 1}",
-                        style: const TextStyle(
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+    return SizedBox(
+      height: 60.h,
+      child: Row(
+        children: [
+          ListView.builder(
+            itemCount: provider.countpath,
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                  provider.initMapbounds(selectedIndex);
+                },
+                child: Container(
+                  // width: 130.w,
+                  margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5,
+                    horizontal: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: selectedIndex == index
+                        ? AppColor.deepYellow
+                        : Colors.grey[400],
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "الشاحنة رقم ${index + 1}",
+                      style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   ),
+                ),
+              );
+            },
+          ),
+          InkWell(
+            onTap: () {
+              if (addShippmentProvider!
+                      .pickup_location[selectedIndex].isNotEmpty ||
+                  addShippmentProvider!
+                      .delivery_location[selectedIndex].isNotEmpty) {
+                if (addShippmentProvider!.trucks[selectedIndex] != null) {
+                  if (addShippmentProvider!
+                      .addShipmentformKey[selectedIndex].currentState!
+                      .validate()) {
+                    Scrollable.ensureVisible(
+                      key3.currentContext!,
+                      duration: const Duration(
+                        milliseconds: 500,
+                      ),
+                    );
+                    addShippmentProvider!.addpath();
+                    setState(() {
+                      selectedIndex++;
+                    });
+                  } else {
+                    Scrollable.ensureVisible(
+                      key1.currentContext!,
+                      duration: const Duration(
+                        milliseconds: 500,
+                      ),
+                    );
+                  }
+                } else {
+                  addShippmentProvider!.setTruckError(true, selectedIndex);
+                  Scrollable.ensureVisible(
+                    key2.currentContext!,
+                    duration: const Duration(
+                      milliseconds: 500,
+                    ),
+                  );
+                }
+              } else {
+                addShippmentProvider!.setPathError(true, selectedIndex);
+                Scrollable.ensureVisible(
+                  key3.currentContext!,
+                  duration: const Duration(
+                    milliseconds: 500,
+                  ),
                 );
-              },
+              }
+            },
+            child: Container(
+              width: 60.w,
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: 10,
+              ),
+              decoration: BoxDecoration(
+                color: AppColor.deepYellow,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Center(
+                child: Text(
+                  "+",
+                  style: TextStyle(
+                    fontSize: 19,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ),
           )
-        : const SizedBox.shrink();
+        ],
+      ),
+    );
   }
 
   @override
@@ -273,6 +345,123 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
 
   AddMultiShipmentProvider? addShippmentProvider;
 
+  _buildCo2Report(AddMultiShipmentProvider addShippmentProvider, int index) {
+    return Column(
+      children: [
+        SizedBox(
+          height: 50.h,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 35,
+                  width: 35,
+                  child: SvgPicture.asset("assets/icons/co2fingerprint.svg"),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                BlocBuilder<LocaleCubit, LocaleState>(
+                  builder: (context, localeState) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width * .65,
+                      child: Text(
+                        "${AppLocalizations.of(context)!.translate('total_co2')}: ${(addShippmentProvider.distance[index] * 1700) / 1000000} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
+                        style: const TextStyle(
+                          // color: Colors.white,
+                          fontSize: 17,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Divider(),
+        SizedBox(
+          height: 50.h,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 35,
+                  width: 35,
+                  child: SvgPicture.asset("assets/icons/distance.svg"),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                BlocBuilder<LocaleCubit, LocaleState>(
+                  builder: (context, localeState) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width * .65,
+                      child: Text(
+                        "${AppLocalizations.of(context)!.translate('distance')}: ${addShippmentProvider.distance[index]} ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
+                        style: const TextStyle(
+                          // color: Colors.white,
+                          fontSize: 17,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        const Divider(),
+        SizedBox(
+          height: 50.h,
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 30,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: 35,
+                  width: 35,
+                  child: SvgPicture.asset("assets/icons/time.svg"),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                BlocBuilder<LocaleCubit, LocaleState>(
+                  builder: (context, localeState) {
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width * .65,
+                      child: Text(
+                        "${AppLocalizations.of(context)!.translate('period')}: ${localeState.value.languageCode == "en" ? addShippmentProvider.period[index] : addShippmentProvider.period[index].replaceAll("days", "أيام").replaceAll("day", " يوم").replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("min", " واحدة دقيقة")} ",
+                        style: const TextStyle(
+                          // color: Colors.white,
+                          fontSize: 17,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -285,6 +474,56 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
             builder: (context, shipmentProvider, child) {
               return Scaffold(
                 backgroundColor: Colors.grey[300],
+                floatingActionButton: FloatingActionButton(
+                  backgroundColor: Colors.white,
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    barrierDismissible: false, // user must tap button!
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: Colors.white,
+                        title: Text(AppLocalizations.of(context)!
+                            .translate('form_init')),
+                        content: SingleChildScrollView(
+                          child: ListBody(
+                            children: <Widget>[
+                              Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('form_init_confirm'),
+                                  style: TextStyle(fontSize: 18)),
+                            ],
+                          ),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text(
+                                AppLocalizations.of(context)!.translate('no'),
+                                style: TextStyle(fontSize: 18)),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text(
+                                AppLocalizations.of(context)!.translate('yes'),
+                                style: TextStyle(fontSize: 18)),
+                            onPressed: () {
+                              shipmentProvider.initForm();
+                              Navigator.of(context).pop();
+                              setState(
+                                () {},
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
                 body: SingleChildScrollView(
                   // controller: controller,
                   child: Padding(
@@ -392,6 +631,15 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                     height:
                                                                         10.h,
                                                                   ),
+                                                                  SectionBody(
+                                                                    text: AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'pickup_address'),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height: 8.h,
+                                                                  ),
                                                                   TypeAheadField(
                                                                     textFieldConfiguration:
                                                                         TextFieldConfiguration(
@@ -422,8 +670,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                           InputDecoration(
                                                                         hintText:
                                                                             AppLocalizations.of(context)!.translate('enter_pickup_address'),
-                                                                        labelText:
-                                                                            AppLocalizations.of(context)!.translate('pickup_address'),
+                                                                        // labelText:
+                                                                        //     AppLocalizations.of(context)!.translate('pickup_address'),
                                                                         contentPadding:
                                                                             const EdgeInsets.symmetric(
                                                                           horizontal:
@@ -431,6 +679,13 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                           vertical:
                                                                               11.0,
                                                                         ),
+                                                                        prefixIcon: valueProvider.pickuptextLoading[selectedIndex]
+                                                                            ? const SizedBox(
+                                                                                height: 25,
+                                                                                width: 25,
+                                                                                child: LoadingIndicator(),
+                                                                              )
+                                                                            : null,
                                                                         suffixIcon:
                                                                             InkWell(
                                                                           onTap:
@@ -558,6 +813,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                     },
                                                                     onSuggestionSelected:
                                                                         (suggestion) async {
+                                                                      valueProvider.setPickupTextLoading(
+                                                                          true,
+                                                                          selectedIndex);
                                                                       valueProvider.setPickupInfo(
                                                                           suggestion,
                                                                           selectedIndex);
@@ -682,6 +940,13 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                                               horizontal: 9.0,
                                                                                               vertical: 11.0,
                                                                                             ),
+                                                                                            prefixIcon: valueProvider.stoppointstextLoading[selectedIndex][index2]
+                                                                                                ? const SizedBox(
+                                                                                                    height: 25,
+                                                                                                    width: 25,
+                                                                                                    child: LoadingIndicator(),
+                                                                                                  )
+                                                                                                : null,
                                                                                             suffixIcon: InkWell(
                                                                                               onTap: () {
                                                                                                 // Navigator.push(
@@ -778,6 +1043,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                                           );
                                                                                         },
                                                                                         onSuggestionSelected: (suggestion) async {
+                                                                                          valueProvider.setStopPointTextLoading(true, selectedIndex, index2);
                                                                                           valueProvider.setStopPointInfo(suggestion, selectedIndex, index2);
 
                                                                                           FocusManager.instance.primaryFocus?.unfocus();
@@ -812,31 +1078,31 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                                 const SizedBox(
                                                                                   height: 5,
                                                                                 ),
-                                                                                InkWell(
-                                                                                  onTap: () {
-                                                                                    valueProvider.setStopPointLoading(true, selectedIndex, index2);
-                                                                                    valueProvider.setStopPointPositionClick(true, selectedIndex, index2);
+                                                                                // InkWell(
+                                                                                //   onTap: () {
+                                                                                //     valueProvider.setStopPointLoading(true, selectedIndex, index2);
+                                                                                //     valueProvider.setStopPointPositionClick(true, selectedIndex, index2);
 
-                                                                                    valueProvider.getCurrentPositionForStop(context, selectedIndex, index2).then((value) => valueProvider.setStopPointLoading(false, selectedIndex, index2));
+                                                                                //     valueProvider.getCurrentPositionForStop(context, selectedIndex, index2).then((value) => valueProvider.setStopPointLoading(false, selectedIndex, index2));
 
-                                                                                    // _getCurrentPositionForDelivery();
-                                                                                  },
-                                                                                  child: Row(
-                                                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                                                    children: [
-                                                                                      Icon(
-                                                                                        Icons.location_on,
-                                                                                        color: AppColor.deepYellow,
-                                                                                      ),
-                                                                                      SizedBox(
-                                                                                        width: 5.w,
-                                                                                      ),
-                                                                                      Text(
-                                                                                        AppLocalizations.of(context)!.translate('pick_my_location'),
-                                                                                      ),
-                                                                                    ],
-                                                                                  ),
-                                                                                ),
+                                                                                //     // _getCurrentPositionForDelivery();
+                                                                                //   },
+                                                                                //   child: Row(
+                                                                                //     mainAxisAlignment: MainAxisAlignment.start,
+                                                                                //     children: [
+                                                                                //       Icon(
+                                                                                //         Icons.location_on,
+                                                                                //         color: AppColor.deepYellow,
+                                                                                //       ),
+                                                                                //       SizedBox(
+                                                                                //         width: 5.w,
+                                                                                //       ),
+                                                                                //       Text(
+                                                                                //         AppLocalizations.of(context)!.translate('pick_my_location'),
+                                                                                //       ),
+                                                                                //     ],
+                                                                                //   ),
+                                                                                // ),
                                                                                 // const SizedBox(
                                                                                 //   height: 12,
                                                                                 // ),
@@ -878,9 +1144,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                   ),
                                                                   Visibility(
                                                                     visible: valueProvider
-                                                                        .pickup_controller[
+                                                                        .pickup_location[
                                                                             selectedIndex]
-                                                                        .text
                                                                         .isNotEmpty,
                                                                     child:
                                                                         Column(
@@ -891,6 +1156,14 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                         const SizedBox(
                                                                           height:
                                                                               5,
+                                                                        ),
+                                                                        SectionBody(
+                                                                          text:
+                                                                              AppLocalizations.of(context)!.translate('delivery_address'),
+                                                                        ),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              8.h,
                                                                         ),
                                                                         TypeAheadField(
                                                                           textFieldConfiguration:
@@ -917,11 +1190,19 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                             decoration:
                                                                                 InputDecoration(
                                                                               hintText: AppLocalizations.of(context)!.translate('enter_delivery_address'),
-                                                                              labelText: AppLocalizations.of(context)!.translate('delivery_address'),
+                                                                              // labelText: AppLocalizations.of(context)!.translate('delivery_address'),
                                                                               contentPadding: const EdgeInsets.symmetric(
                                                                                 horizontal: 9.0,
                                                                                 vertical: 11.0,
                                                                               ),
+
+                                                                              prefixIcon: valueProvider.deliverytextLoading[selectedIndex]
+                                                                                  ? const SizedBox(
+                                                                                      height: 25,
+                                                                                      width: 25,
+                                                                                      child: LoadingIndicator(),
+                                                                                    )
+                                                                                  : null,
                                                                               suffixIcon: InkWell(
                                                                                 onTap: () {
                                                                                   Navigator.push(
@@ -1021,6 +1302,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                           },
                                                                           onSuggestionSelected:
                                                                               (suggestion) async {
+                                                                            valueProvider.setDeliveryTextLoading(true,
+                                                                                selectedIndex);
                                                                             valueProvider.setDeliveryInfo(suggestion,
                                                                                 selectedIndex);
 
@@ -1086,92 +1369,92 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                     ),
                                                                   ),
                                                                   const Spacer(),
-                                                                  BlocListener<
-                                                                      DrawRouteBloc,
-                                                                      DrawRouteState>(
-                                                                    listener:
-                                                                        (context,
-                                                                            state) {
-                                                                      if (state
-                                                                          is DrawRouteSuccess) {
-                                                                        Future.delayed(const Duration(milliseconds: 400))
-                                                                            .then((value) {
-                                                                          if (shipmentProvider
-                                                                              .delivery_controller[selectedIndex]
-                                                                              .text
-                                                                              .isNotEmpty) {
-                                                                            // getPolyPoints();
-                                                                            shipmentProvider.initMapbounds(selectedIndex);
-                                                                          }
-                                                                        });
-                                                                      }
-                                                                    },
-                                                                    child:
-                                                                        SizedBox(
-                                                                      height:
-                                                                          300.h,
+                                                                  Visibility(
+                                                                    visible: valueProvider
+                                                                        .pickup_location[
+                                                                            selectedIndex]
+                                                                        .isNotEmpty,
+                                                                    child: BlocListener<
+                                                                        DrawRouteBloc,
+                                                                        DrawRouteState>(
+                                                                      listener:
+                                                                          (context,
+                                                                              state) {
+                                                                        if (state
+                                                                            is DrawRouteSuccess) {
+                                                                          Future.delayed(const Duration(milliseconds: 400))
+                                                                              .then((value) {
+                                                                            if (shipmentProvider.delivery_controller[selectedIndex].text.isNotEmpty) {
+                                                                              // getPolyPoints();
+                                                                              shipmentProvider.initMapbounds(selectedIndex);
+                                                                            }
+                                                                          });
+                                                                        }
+                                                                      },
                                                                       child:
-                                                                          AbsorbPointer(
-                                                                        absorbing:
-                                                                            false,
+                                                                          SizedBox(
+                                                                        height:
+                                                                            300.h,
                                                                         child:
-                                                                            GoogleMap(
-                                                                          onMapCreated:
-                                                                              (controller) {
-                                                                            shipmentProvider.onMap2Created(controller,
-                                                                                _mapStyle);
-                                                                            shipmentProvider.initMapbounds(selectedIndex);
-                                                                          },
-                                                                          myLocationButtonEnabled:
+                                                                            AbsorbPointer(
+                                                                          absorbing:
                                                                               false,
-                                                                          zoomGesturesEnabled:
-                                                                              false,
-                                                                          scrollGesturesEnabled:
-                                                                              false,
-                                                                          tiltGesturesEnabled:
-                                                                              false,
-                                                                          rotateGesturesEnabled:
-                                                                              false,
-                                                                          // zoomControlsEnabled: false,
-                                                                          initialCameraPosition:
-                                                                              CameraPosition(
-                                                                            target:
-                                                                                shipmentProvider.center,
-                                                                            zoom:
-                                                                                shipmentProvider.zoom,
-                                                                          ),
-                                                                          gestureRecognizers: {},
-                                                                          markers: (shipmentProvider.pickup_latlng[selectedIndex] != null || shipmentProvider.delivery_latlng[selectedIndex] != null)
-                                                                              ? {
-                                                                                  shipmentProvider.pickup_latlng[selectedIndex] != null
-                                                                                      ? Marker(
-                                                                                          markerId: const MarkerId("pickup"),
-                                                                                          position: LatLng(double.parse(shipmentProvider.pickup_location[selectedIndex].split(",")[0]), double.parse(shipmentProvider.pickup_location[selectedIndex].split(",")[1])),
-                                                                                          icon: pickupicon,
-                                                                                        )
-                                                                                      : const Marker(
-                                                                                          markerId: MarkerId("pickup"),
-                                                                                        ),
-                                                                                  shipmentProvider.delivery_latlng[selectedIndex] != null
-                                                                                      ? Marker(
-                                                                                          markerId: const MarkerId("delivery"),
-                                                                                          position: LatLng(double.parse(shipmentProvider.delivery_location[selectedIndex].split(",")[0]), double.parse(shipmentProvider.delivery_location[selectedIndex].split(",")[1])),
-                                                                                          icon: deliveryicon,
-                                                                                        )
-                                                                                      : const Marker(
-                                                                                          markerId: MarkerId("delivery"),
-                                                                                        ),
-                                                                                }
-                                                                              : {},
-                                                                          polylines: {
-                                                                            Polyline(
-                                                                              polylineId: const PolylineId("route"),
-                                                                              points: deserializeLatLng(jsonEncode(shipmentProvider.pathes[selectedIndex])),
-                                                                              color: AppColor.deepYellow,
-                                                                              width: 7,
+                                                                          child:
+                                                                              GoogleMap(
+                                                                            onMapCreated:
+                                                                                (controller) {
+                                                                              shipmentProvider.onMap2Created(controller, _mapStyle);
+                                                                              shipmentProvider.initMapbounds(selectedIndex);
+                                                                            },
+                                                                            myLocationButtonEnabled:
+                                                                                false,
+                                                                            zoomGesturesEnabled:
+                                                                                false,
+                                                                            scrollGesturesEnabled:
+                                                                                false,
+                                                                            tiltGesturesEnabled:
+                                                                                false,
+                                                                            rotateGesturesEnabled:
+                                                                                false,
+                                                                            // zoomControlsEnabled: false,
+                                                                            initialCameraPosition:
+                                                                                CameraPosition(
+                                                                              target: shipmentProvider.center,
+                                                                              zoom: shipmentProvider.zoom,
                                                                             ),
-                                                                          },
-                                                                          // mapType: shipmentProvider.mapType,
+                                                                            gestureRecognizers: {},
+                                                                            markers: (shipmentProvider.pickup_latlng[selectedIndex] != null || shipmentProvider.delivery_latlng[selectedIndex] != null)
+                                                                                ? {
+                                                                                    shipmentProvider.pickup_latlng[selectedIndex] != null
+                                                                                        ? Marker(
+                                                                                            markerId: const MarkerId("pickup"),
+                                                                                            position: LatLng(double.parse(shipmentProvider.pickup_location[selectedIndex].split(",")[0]), double.parse(shipmentProvider.pickup_location[selectedIndex].split(",")[1])),
+                                                                                            icon: pickupicon!,
+                                                                                          )
+                                                                                        : const Marker(
+                                                                                            markerId: MarkerId("pickup"),
+                                                                                          ),
+                                                                                    shipmentProvider.delivery_latlng[selectedIndex] != null
+                                                                                        ? Marker(
+                                                                                            markerId: const MarkerId("delivery"),
+                                                                                            position: LatLng(double.parse(shipmentProvider.delivery_location[selectedIndex].split(",")[0]), double.parse(shipmentProvider.delivery_location[selectedIndex].split(",")[1])),
+                                                                                            icon: deliveryicon,
+                                                                                          )
+                                                                                        : const Marker(
+                                                                                            markerId: MarkerId("delivery"),
+                                                                                          ),
+                                                                                  }
+                                                                                : {},
+                                                                            polylines: {
+                                                                              Polyline(
+                                                                                polylineId: const PolylineId("route"),
+                                                                                points: deserializeLatLng(jsonEncode(shipmentProvider.pathes[selectedIndex])),
+                                                                                color: AppColor.deepYellow,
+                                                                                width: 7,
+                                                                              ),
+                                                                            },
+                                                                            // mapType: shipmentProvider.mapType,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -1190,18 +1473,23 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: [
-                                                          SectionTitle(
-                                                            text: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'choose_shippment_path'),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(4.0),
+                                                            child: SectionTitle(
+                                                              text: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'choose_shippment_path'),
+                                                            ),
                                                           ),
                                                           shipmentProvider
                                                                       .pickup_controller[
                                                                           selectedIndex]
                                                                       .text
-                                                                      .isNotEmpty ||
+                                                                      .isNotEmpty &&
                                                                   shipmentProvider
                                                                       .delivery_controller[
                                                                           selectedIndex]
@@ -1469,7 +1757,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                                 true,
                                                                             hint:
                                                                                 Text(
-                                                                              AppLocalizations.of(context)!.translate('select_truck'),
+                                                                              AppLocalizations.of(context)!.translate('select_truck_type'),
                                                                               style: TextStyle(
                                                                                 fontSize: 18,
                                                                                 color: Theme.of(context).hintColor,
@@ -2557,7 +2845,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 20,
+                                  height: 10,
                                 ),
                               ],
                             ),
@@ -2576,6 +2864,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                             selectedIndex--;
                                           });
                                         }
+                                        setState(() {});
                                         // _showAlertDialog(index);
                                       },
                                       child: Container(
@@ -2613,434 +2902,439 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                               });
                             }
                           },
-                          child: SizedBox(
-                            height: 300.h,
-                            child: AbsorbPointer(
-                              absorbing: false,
-                              child: GoogleMap(
-                                onMapCreated: (controller) {
-                                  shipmentProvider.onMapCreated(
-                                      controller, _mapStyle);
-                                },
-                                myLocationButtonEnabled: false,
-                                zoomGesturesEnabled: false,
-                                scrollGesturesEnabled: false,
-                                tiltGesturesEnabled: false,
-                                rotateGesturesEnabled: false,
-                                // zoomControlsEnabled: false,
-                                initialCameraPosition: CameraPosition(
-                                  target: shipmentProvider.center,
-                                  zoom: shipmentProvider.zoom,
-                                ),
-                                gestureRecognizers: {},
-                                markers: (shipmentProvider
-                                            .pickup_location[selectedIndex]
-                                            .isNotEmpty ||
-                                        shipmentProvider
-                                            .delivery_location[selectedIndex]
-                                            .isNotEmpty)
-                                    ? {
-                                        shipmentProvider
-                                                .pickup_location[selectedIndex]
-                                                .isNotEmpty
-                                            ? Marker(
-                                                markerId:
-                                                    const MarkerId("pickup"),
-                                                position: LatLng(
-                                                    double.parse(
-                                                        shipmentProvider
-                                                            .pickup_location[
-                                                                selectedIndex]
-                                                            .split(",")[0]),
-                                                    double.parse(
-                                                        shipmentProvider
-                                                            .pickup_location[
-                                                                selectedIndex]
-                                                            .split(",")[1])),
-                                                icon: pickupicon,
-                                              )
-                                            : const Marker(
-                                                markerId: MarkerId("pickup"),
-                                              ),
-                                        shipmentProvider.delivery_latlng[
-                                                    selectedIndex] !=
-                                                null
-                                            ? Marker(
-                                                markerId:
-                                                    const MarkerId("delivery"),
-                                                position: LatLng(
-                                                    double.parse(
-                                                        shipmentProvider
-                                                            .delivery_location[
-                                                                selectedIndex]
-                                                            .split(",")[0]),
-                                                    double.parse(
-                                                        shipmentProvider
-                                                            .delivery_location[
-                                                                selectedIndex]
-                                                            .split(",")[1])),
-                                                icon: deliveryicon,
-                                              )
-                                            : const Marker(
-                                                markerId: MarkerId("delivery"),
-                                              ),
-                                      }
-                                    : {},
-                                polylines: {
-                                  Polyline(
-                                    polylineId: const PolylineId("route"),
-                                    points: deserializeLatLng(jsonEncode(
-                                        shipmentProvider
-                                            .pathes[selectedIndex])),
-                                    color: AppColor.deepYellow,
-                                    width: 7,
+                          child: pickupicon != null
+                              ? SizedBox(
+                                  height: 300.h,
+                                  child: AbsorbPointer(
+                                    absorbing: false,
+                                    child: GoogleMap(
+                                      onMapCreated: (controller) {
+                                        shipmentProvider.onMapCreated(
+                                            controller, _mapStyle);
+                                      },
+                                      myLocationButtonEnabled: false,
+                                      zoomGesturesEnabled: false,
+                                      scrollGesturesEnabled: false,
+                                      tiltGesturesEnabled: false,
+                                      rotateGesturesEnabled: false,
+                                      // zoomControlsEnabled: false,
+                                      initialCameraPosition: CameraPosition(
+                                        target: shipmentProvider.center,
+                                        zoom: shipmentProvider.zoom,
+                                      ),
+                                      gestureRecognizers: {},
+                                      markers: (shipmentProvider
+                                                  .pickup_location[
+                                                      selectedIndex]
+                                                  .isNotEmpty ||
+                                              shipmentProvider
+                                                  .delivery_location[
+                                                      selectedIndex]
+                                                  .isNotEmpty)
+                                          ? {
+                                              shipmentProvider
+                                                      .pickup_location[
+                                                          selectedIndex]
+                                                      .isNotEmpty
+                                                  ? Marker(
+                                                      markerId: const MarkerId(
+                                                          "pickup"),
+                                                      position: LatLng(
+                                                          double.parse(shipmentProvider
+                                                              .pickup_location[
+                                                                  selectedIndex]
+                                                              .split(",")[0]),
+                                                          double.parse(shipmentProvider
+                                                              .pickup_location[
+                                                                  selectedIndex]
+                                                              .split(",")[1])),
+                                                      icon: pickupicon!,
+                                                    )
+                                                  : const Marker(
+                                                      markerId:
+                                                          MarkerId("pickup"),
+                                                    ),
+                                              shipmentProvider.delivery_latlng[
+                                                          selectedIndex] !=
+                                                      null
+                                                  ? Marker(
+                                                      markerId: const MarkerId(
+                                                          "delivery"),
+                                                      position: LatLng(
+                                                          double.parse(shipmentProvider
+                                                              .delivery_location[
+                                                                  selectedIndex]
+                                                              .split(",")[0]),
+                                                          double.parse(shipmentProvider
+                                                              .delivery_location[
+                                                                  selectedIndex]
+                                                              .split(",")[1])),
+                                                      icon: deliveryicon,
+                                                    )
+                                                  : const Marker(
+                                                      markerId:
+                                                          MarkerId("delivery"),
+                                                    ),
+                                            }
+                                          : {},
+                                      polylines: {
+                                        Polyline(
+                                          polylineId: const PolylineId("route"),
+                                          points: deserializeLatLng(jsonEncode(
+                                              shipmentProvider
+                                                  .pathes[selectedIndex])),
+                                          color: AppColor.deepYellow,
+                                          width: 7,
+                                        ),
+                                      },
+                                    ),
                                   ),
-                                },
-                              ),
-                            ),
-                          ),
+                                )
+                              : SizedBox.shrink(),
                         ),
                         const SizedBox(
-                          height: 20,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8.0),
-                          child: SectionBody(
-                              text:
-                                  "يمكنك إضافة شاحنة جديدة مع تحديد جميع المعلومات الخاصة بها"),
+                          height: 10,
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 2.5),
-                          child: CustomButton(
-                            color: AppColor.deepYellow,
-                            title: const Text("إضافة شاحنة جديدة"),
-                            onTap: () {
-                              if (shipmentProvider
-                                      .pickup_location[selectedIndex]
-                                      .isNotEmpty ||
-                                  shipmentProvider
-                                      .delivery_location[selectedIndex]
-                                      .isNotEmpty) {
-                                if (shipmentProvider.trucks[selectedIndex] !=
-                                    null) {
-                                  if (shipmentProvider
-                                      .addShipmentformKey[selectedIndex]
-                                      .currentState!
-                                      .validate()) {
-                                    Scrollable.ensureVisible(
-                                      key3.currentContext!,
-                                      duration: const Duration(
-                                        milliseconds: 500,
-                                      ),
-                                    );
-                                    shipmentProvider.addpath();
-                                    setState(() {
-                                      selectedIndex++;
-                                    });
-                                  } else {
-                                    Scrollable.ensureVisible(
-                                      key1.currentContext!,
-                                      duration: const Duration(
-                                        milliseconds: 500,
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  shipmentProvider.setTruckError(
-                                      true, selectedIndex);
-                                  Scrollable.ensureVisible(
-                                    key2.currentContext!,
-                                    duration: const Duration(
-                                      milliseconds: 500,
-                                    ),
-                                  );
-                                }
-                              } else {
-                                shipmentProvider.setPathError(
-                                    true, selectedIndex);
-                                Scrollable.ensureVisible(
-                                  key3.currentContext!,
-                                  duration: const Duration(
-                                    milliseconds: 500,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 2.5),
-                          child: BlocConsumer<ShipmentMultiCreateBloc,
-                              ShipmentMultiCreateState>(
-                            listener: (context, state) {
-                              print(state);
-                              if (state is ShipmentMultiCreateSuccessState) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(AppLocalizations.of(context)!
-                                      .translate('shipment_created_success')),
-                                  duration: const Duration(seconds: 3),
-                                ));
-                                shipmentProvider.initForm();
+                              horizontal: 8.0, vertical: 1.5),
+                          child: Card(
+                            child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 7.5),
+                                child: Column(
+                                  children: [
+                                    shipmentProvider.distance[selectedIndex] !=
+                                            0
+                                        ? _buildCo2Report(
+                                            shipmentProvider, selectedIndex)
+                                        : const SizedBox.shrink(),
+                                    const SizedBox(height: 8),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 2.5),
+                                      child: BlocConsumer<
+                                          ShipmentMultiCreateBloc,
+                                          ShipmentMultiCreateState>(
+                                        listener: (context, state) {
+                                          if (state
+                                              is ShipmentMultiCreateSuccessState) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                              content: Text(AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'shipment_created_success')),
+                                              duration:
+                                                  const Duration(seconds: 3),
+                                            ));
+                                            shipmentProvider.initForm();
 
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const ControlView(),
-                                  ),
-                                  (route) => false,
-                                );
-                              }
-                              if (state is ShipmentMultiCreateFailureState) {
-                                print(state.errorMessage);
-                              }
-                            },
-                            builder: (context, state) {
-                              if (state is ShippmentLoadingProgressState) {
-                                return CustomButton(
-                                  title: const LoadingIndicator(),
-                                  onTap: () {},
-                                );
-                              } else {
-                                return CustomButton(
-                                  title: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('create_shipment'),
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    if (shipmentProvider
-                                        .pickup_location[selectedIndex]
-                                        .isNotEmpty) {
-                                      if (shipmentProvider
-                                          .delivery_location[selectedIndex]
-                                          .isNotEmpty) {
-                                        if (shipmentProvider
-                                                .trucks[selectedIndex] !=
-                                            null) {
-                                          if (shipmentProvider
-                                              .addShipmentformKey[selectedIndex]
-                                              .currentState!
-                                              .validate()) {
-                                            for (var element in shipmentProvider
-                                                .addShipmentformKey) {
-                                              element.currentState?.save();
-                                            }
-
-                                            List<SubShipment>
-                                                subshipmentsitems = [];
-
-                                            for (var i = 0;
-                                                i <
-                                                    shipmentProvider
-                                                        .pickup_controller
-                                                        .length;
-                                                i++) {
-                                              List<ShipmentItems>
-                                                  shipmentitems = [];
-
-                                              int totalWeight = 0;
-                                              for (var j = 0;
-                                                  j <
-                                                      shipmentProvider
-                                                          .commodityWeight_controllers[
-                                                              i]
-                                                          .length;
-                                                  j++) {
-                                                ShipmentItems shipmentitem =
-                                                    ShipmentItems(
-                                                  commodityName: shipmentProvider
-                                                      .commodityName_controllers[
-                                                          i][j]
-                                                      .text,
-                                                  commodityWeight: double.parse(
-                                                          shipmentProvider
-                                                              .commodityWeight_controllers[
-                                                                  i][j]
-                                                              .text
-                                                              .replaceAll(
-                                                                  ",", ""))
-                                                      .toInt(),
-                                                );
-                                                shipmentitems.add(shipmentitem);
-                                                totalWeight += double.parse(
-                                                        shipmentProvider
-                                                            .commodityWeight_controllers[
-                                                                i][j]
-                                                            .text
-                                                            .replaceAll(
-                                                                ",", ""))
-                                                    .toInt();
-                                              }
-
-                                              List<PathPoint> points = [];
-                                              points.add(
-                                                PathPoint(
-                                                  pointType: "P",
-                                                  location:
-                                                      "${shipmentProvider.pickup_latlng[i]!.latitude},${shipmentProvider.pickup_latlng[i]!.longitude}",
-                                                  name: shipmentProvider
-                                                      .pickup_controller[i]
-                                                      .text,
-                                                  nameEn: shipmentProvider
-                                                      .pickup_eng_string[i],
-                                                  number: 0,
-                                                  city: 1,
-                                                ),
-                                              );
-                                              points.add(
-                                                PathPoint(
-                                                  pointType: "D",
-                                                  location:
-                                                      "${shipmentProvider.delivery_latlng[i]!.latitude},${shipmentProvider.delivery_latlng[i]!.longitude}",
-                                                  name: shipmentProvider
-                                                      .delivery_controller[i]
-                                                      .text,
-                                                  nameEn: shipmentProvider
-                                                      .delivery_eng_string[i],
-                                                  number: 0,
-                                                  city: 1,
-                                                ),
-                                              );
-
-                                              for (var s = 0;
-                                                  s <
-                                                      shipmentProvider
-                                                          .stoppoints_controller[
-                                                              i]
-                                                          .length;
-                                                  s++) {
-                                                points.add(
-                                                  PathPoint(
-                                                    pointType: "S",
-                                                    location:
-                                                        "${shipmentProvider.stoppoints_latlng[i][s]!.latitude},${shipmentProvider.stoppoints_latlng[i][s]!.longitude}",
-                                                    name: shipmentProvider
-                                                        .stoppoints_controller[
-                                                            i][s]
-                                                        .text,
-                                                    nameEn: shipmentProvider
-                                                            .stoppoints_eng_string[
-                                                        i][s],
-                                                    number: s,
-                                                    city: 1,
-                                                  ),
-                                                );
-                                              }
-                                              print(
-                                                  shipmentProvider.distance[i]);
-                                              print(shipmentProvider.period[i]);
-
-                                              SubShipment subshipment =
-                                                  SubShipment(
-                                                shipmentStatus: "P",
-                                                paths: jsonEncode(
-                                                    shipmentProvider.pathes[i]),
-                                                shipmentItems: shipmentitems,
-                                                totalWeight: totalWeight,
-                                                distance: shipmentProvider
-                                                    .distance[i],
-                                                period:
-                                                    shipmentProvider.period[i],
-                                                pathpoints: points,
-                                                truck: ShipmentTruck(
-                                                    id: shipmentProvider
-                                                        .trucks[selectedIndex]!
-                                                        .id!),
-                                                // truckTypes: truckTypes,
-                                                pickupDate: DateTime(
-                                                  shipmentProvider
-                                                      .loadDate[i].year,
-                                                  shipmentProvider
-                                                      .loadDate[i].month,
-                                                  shipmentProvider
-                                                      .loadDate[i].day,
-                                                  shipmentProvider
-                                                      .loadTime[i].hour,
-                                                  shipmentProvider
-                                                      .loadTime[i].day,
-                                                ),
-                                                deliveryDate: DateTime(
-                                                  shipmentProvider
-                                                      .loadDate[i].year,
-                                                  shipmentProvider
-                                                      .loadDate[i].month,
-                                                  shipmentProvider
-                                                      .loadDate[i].day,
-                                                  shipmentProvider
-                                                      .loadTime[i].hour,
-                                                  shipmentProvider
-                                                      .loadTime[i].day,
-                                                ),
-                                              );
-                                              subshipmentsitems
-                                                  .add(subshipment);
-                                            }
-
-                                            Shipmentv2 shipment = Shipmentv2(
-                                              subshipments: subshipmentsitems,
-                                            );
-
-                                            BlocProvider.of<
-                                                        ShipmentMultiCreateBloc>(
-                                                    context)
-                                                .add(
-                                              ShipmentMultiCreateButtonPressed(
-                                                shipment,
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ControlView(),
                                               ),
-                                            );
-                                          } else {
-                                            Scrollable.ensureVisible(
-                                              key1.currentContext!,
-                                              duration: const Duration(
-                                                milliseconds: 500,
-                                              ),
+                                              (route) => false,
                                             );
                                           }
-                                        } else {
-                                          shipmentProvider.setTruckError(
-                                              true, selectedIndex);
-                                          Scrollable.ensureVisible(
-                                            key2.currentContext!,
-                                            duration: const Duration(
-                                              milliseconds: 500,
-                                            ),
-                                          );
-                                        }
-                                      } else {
-                                        shipmentProvider.setPathError(
-                                            true, selectedIndex);
+                                          if (state
+                                              is ShipmentMultiCreateFailureState) {
+                                            print(state.errorMessage);
+                                          }
+                                        },
+                                        builder: (context, state) {
+                                          if (state
+                                              is ShippmentLoadingProgressState) {
+                                            return CustomButton(
+                                              title: const LoadingIndicator(),
+                                              onTap: () {},
+                                            );
+                                          } else {
+                                            return CustomButton(
+                                              title: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        'create_shipment'),
+                                                style: TextStyle(
+                                                  fontSize: 20.sp,
+                                                ),
+                                              ),
+                                              onTap: () {
+                                                if (shipmentProvider
+                                                    .pickup_location[
+                                                        selectedIndex]
+                                                    .isNotEmpty) {
+                                                  if (shipmentProvider
+                                                      .delivery_location[
+                                                          selectedIndex]
+                                                      .isNotEmpty) {
+                                                    if (shipmentProvider.trucks[
+                                                            selectedIndex] !=
+                                                        null) {
+                                                      if (shipmentProvider
+                                                          .addShipmentformKey[
+                                                              selectedIndex]
+                                                          .currentState!
+                                                          .validate()) {
+                                                        for (var element
+                                                            in shipmentProvider
+                                                                .addShipmentformKey) {
+                                                          element.currentState
+                                                              ?.save();
+                                                        }
 
-                                        Scrollable.ensureVisible(
-                                          key3.currentContext!,
-                                          duration: const Duration(
-                                            milliseconds: 500,
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      shipmentProvider.setPathError(
-                                          true, selectedIndex);
-                                      Scrollable.ensureVisible(
-                                        key3.currentContext!,
-                                        duration: const Duration(
-                                          milliseconds: 500,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                );
-                              }
-                            },
+                                                        List<SubShipment>
+                                                            subshipmentsitems =
+                                                            [];
+
+                                                        for (var i = 0;
+                                                            i <
+                                                                shipmentProvider
+                                                                    .pickup_controller
+                                                                    .length;
+                                                            i++) {
+                                                          List<ShipmentItems>
+                                                              shipmentitems =
+                                                              [];
+
+                                                          int totalWeight = 0;
+                                                          for (var j = 0;
+                                                              j <
+                                                                  shipmentProvider
+                                                                      .commodityWeight_controllers[
+                                                                          i]
+                                                                      .length;
+                                                              j++) {
+                                                            ShipmentItems
+                                                                shipmentitem =
+                                                                ShipmentItems(
+                                                              commodityName:
+                                                                  shipmentProvider
+                                                                      .commodityName_controllers[
+                                                                          i][j]
+                                                                      .text,
+                                                              commodityWeight:
+                                                                  double.parse(shipmentProvider
+                                                                          .commodityWeight_controllers[
+                                                                              i]
+                                                                              [
+                                                                              j]
+                                                                          .text
+                                                                          .replaceAll(
+                                                                              ",",
+                                                                              ""))
+                                                                      .toInt(),
+                                                            );
+                                                            shipmentitems.add(
+                                                                shipmentitem);
+                                                            totalWeight += double.parse(
+                                                                    shipmentProvider
+                                                                        .commodityWeight_controllers[
+                                                                            i]
+                                                                            [j]
+                                                                        .text
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            ""))
+                                                                .toInt();
+                                                          }
+
+                                                          List<PathPoint>
+                                                              points = [];
+                                                          points.add(
+                                                            PathPoint(
+                                                              pointType: "P",
+                                                              location:
+                                                                  "${shipmentProvider.pickup_latlng[i]!.latitude},${shipmentProvider.pickup_latlng[i]!.longitude}",
+                                                              name: shipmentProvider
+                                                                  .pickup_controller[
+                                                                      i]
+                                                                  .text,
+                                                              nameEn: shipmentProvider
+                                                                  .pickup_eng_string[i],
+                                                              number: 0,
+                                                              city: 1,
+                                                            ),
+                                                          );
+                                                          points.add(
+                                                            PathPoint(
+                                                              pointType: "D",
+                                                              location:
+                                                                  "${shipmentProvider.delivery_latlng[i]!.latitude},${shipmentProvider.delivery_latlng[i]!.longitude}",
+                                                              name: shipmentProvider
+                                                                  .delivery_controller[
+                                                                      i]
+                                                                  .text,
+                                                              nameEn: shipmentProvider
+                                                                  .delivery_eng_string[i],
+                                                              number: 0,
+                                                              city: 1,
+                                                            ),
+                                                          );
+
+                                                          for (var s = 0;
+                                                              s <
+                                                                  shipmentProvider
+                                                                      .stoppoints_controller[
+                                                                          i]
+                                                                      .length;
+                                                              s++) {
+                                                            points.add(
+                                                              PathPoint(
+                                                                pointType: "S",
+                                                                location:
+                                                                    "${shipmentProvider.stoppoints_latlng[i][s]!.latitude},${shipmentProvider.stoppoints_latlng[i][s]!.longitude}",
+                                                                name: shipmentProvider
+                                                                    .stoppoints_controller[
+                                                                        i][s]
+                                                                    .text,
+                                                                nameEn: shipmentProvider
+                                                                        .stoppoints_eng_string[
+                                                                    i][s],
+                                                                number: s,
+                                                                city: 1,
+                                                              ),
+                                                            );
+                                                          }
+
+                                                          SubShipment
+                                                              subshipment =
+                                                              SubShipment(
+                                                            shipmentStatus: "P",
+                                                            paths: jsonEncode(
+                                                                shipmentProvider
+                                                                    .pathes[i]),
+                                                            shipmentItems:
+                                                                shipmentitems,
+                                                            totalWeight:
+                                                                totalWeight,
+                                                            distance:
+                                                                shipmentProvider
+                                                                    .distance[i],
+                                                            period:
+                                                                shipmentProvider
+                                                                    .period[i],
+                                                            pathpoints: points,
+                                                            truck: ShipmentTruck(
+                                                                id: shipmentProvider
+                                                                    .trucks[
+                                                                        selectedIndex]!
+                                                                    .id!),
+                                                            // truckTypes: truckTypes,
+                                                            pickupDate:
+                                                                DateTime(
+                                                              shipmentProvider
+                                                                  .loadDate[i]
+                                                                  .year,
+                                                              shipmentProvider
+                                                                  .loadDate[i]
+                                                                  .month,
+                                                              shipmentProvider
+                                                                  .loadDate[i]
+                                                                  .day,
+                                                              shipmentProvider
+                                                                  .loadTime[i]
+                                                                  .hour,
+                                                              shipmentProvider
+                                                                  .loadTime[i]
+                                                                  .day,
+                                                            ),
+                                                            deliveryDate:
+                                                                DateTime(
+                                                              shipmentProvider
+                                                                  .loadDate[i]
+                                                                  .year,
+                                                              shipmentProvider
+                                                                  .loadDate[i]
+                                                                  .month,
+                                                              shipmentProvider
+                                                                  .loadDate[i]
+                                                                  .day,
+                                                              shipmentProvider
+                                                                  .loadTime[i]
+                                                                  .hour,
+                                                              shipmentProvider
+                                                                  .loadTime[i]
+                                                                  .day,
+                                                            ),
+                                                          );
+                                                          subshipmentsitems
+                                                              .add(subshipment);
+                                                        }
+
+                                                        Shipmentv2 shipment =
+                                                            Shipmentv2(
+                                                          subshipments:
+                                                              subshipmentsitems,
+                                                        );
+
+                                                        BlocProvider.of<
+                                                                    ShipmentMultiCreateBloc>(
+                                                                context)
+                                                            .add(
+                                                          ShipmentMultiCreateButtonPressed(
+                                                            shipment,
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        Scrollable
+                                                            .ensureVisible(
+                                                          key1.currentContext!,
+                                                          duration:
+                                                              const Duration(
+                                                            milliseconds: 500,
+                                                          ),
+                                                        );
+                                                      }
+                                                    } else {
+                                                      shipmentProvider
+                                                          .setTruckError(true,
+                                                              selectedIndex);
+                                                      Scrollable.ensureVisible(
+                                                        key2.currentContext!,
+                                                        duration:
+                                                            const Duration(
+                                                          milliseconds: 500,
+                                                        ),
+                                                      );
+                                                    }
+                                                  } else {
+                                                    shipmentProvider
+                                                        .setPathError(true,
+                                                            selectedIndex);
+
+                                                    Scrollable.ensureVisible(
+                                                      key3.currentContext!,
+                                                      duration: const Duration(
+                                                        milliseconds: 500,
+                                                      ),
+                                                    );
+                                                  }
+                                                } else {
+                                                  shipmentProvider.setPathError(
+                                                      true, selectedIndex);
+                                                  Scrollable.ensureVisible(
+                                                    key3.currentContext!,
+                                                    duration: const Duration(
+                                                      milliseconds: 500,
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )),
                           ),
                         ),
-                        SizedBox(
-                          height: 7.h,
-                        ),
+                        // SizedBox(
+                        //   height: 7.h,
+                        // ),
                       ],
                     ),
                   ),

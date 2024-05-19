@@ -966,7 +966,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     return SizedBox(
                       width: MediaQuery.of(context).size.width * .7,
                       child: Text(
-                        "${AppLocalizations.of(context)!.translate('total_co2')}: ${f.format(100)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
+                        "${AppLocalizations.of(context)!.translate('total_co2')}: ${(shipment.distance! * 1700) / 1000000} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
                         style: const TextStyle(
                           // color: Colors.white,
                           fontSize: 17,
