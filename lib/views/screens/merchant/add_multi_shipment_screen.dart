@@ -32,7 +32,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart' as intel;
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show FilteringTextInputFormatter, rootBundle;
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
@@ -2739,7 +2740,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                     signed:
                                                                         true),
                                                             inputFormatters: [
-                                                              DecimalFormatter(),
+                                                              FilteringTextInputFormatter
+                                                                  .digitsOnly,
                                                             ],
                                                             style:
                                                                 const TextStyle(
