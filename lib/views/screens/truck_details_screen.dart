@@ -1,10 +1,14 @@
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/managment/shipment_update_status_bloc.dart';
+import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
+import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,10 +18,14 @@ import 'package:provider/provider.dart';
 class TruckDetailsScreen extends StatefulWidget {
   final KTruck truck;
   final int index;
+  final String ops;
+  final int subshipmentId;
   TruckDetailsScreen({
     Key? key,
     required this.truck,
     required this.index,
+    required this.ops,
+    required this.subshipmentId,
   }) : super(key: key);
 
   @override
@@ -197,7 +205,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                       gestureRecognizers: {},
                                       markers: {
                                         Marker(
-                                          markerId: MarkerId("truck"),
+                                          markerId: const MarkerId("truck"),
                                           position: LatLng(
                                             double.parse(widget
                                                 .truck.locationLat!
@@ -249,7 +257,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   Row(
                                     children: [
                                       SizedBox(
@@ -284,7 +292,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  Divider(),
+                                  const Divider(),
                                   Row(
                                     children: [
                                       SizedBox(
@@ -337,7 +345,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  Divider(),
+                                  const Divider(),
 
                                   SizedBox(
                                     height: 7.h,
@@ -433,29 +441,82 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * .9,
-                            child: Consumer<AddMultiShipmentProvider>(
-                                builder: (context, shipmentProvider, child) {
-                              return CustomButton(
-                                title: Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('order_truck'),
-                                  style: TextStyle(
-                                    fontSize: 20.sp,
+                          widget.ops == "create_shipment"
+                              ? SizedBox(
+                                  width: MediaQuery.of(context).size.width * .9,
+                                  child: Consumer<AddMultiShipmentProvider>(
+                                      builder:
+                                          (context, shipmentProvider, child) {
+                                    return CustomButton(
+                                      title: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('order_truck'),
+                                        style: TextStyle(
+                                          fontSize: 20.sp,
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        shipmentProvider.setTruck(
+                                            widget.truck, widget.index);
+                                        shipmentProvider
+                                            .addSelectedTruck(widget.truck.id!);
+                                        Navigator.pop(context);
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  }),
+                                )
+                              : const SizedBox.shrink(),
+                          widget.ops == "assign_new_truck"
+                              ? SizedBox(
+                                  width: MediaQuery.of(context).size.width * .9,
+                                  child: BlocConsumer<OrderTruckBloc,
+                                      OrderTruckState>(
+                                    listener: (context, updatestate) {
+                                      if (updatestate
+                                          is OrderTruckSuccessState) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ControlView(),
+                                          ),
+                                          (route) => false,
+                                        );
+                                      }
+                                    },
+                                    builder: (context, updatestate) {
+                                      if (updatestate
+                                          is OrderTruckLoadingProgressState) {
+                                        return CustomButton(
+                                          title: const LoadingIndicator(),
+                                          onTap: () {},
+                                        );
+                                      } else {
+                                        return CustomButton(
+                                          title: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('order_truck'),
+                                            style: TextStyle(
+                                              fontSize: 20.sp,
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            BlocProvider.of<OrderTruckBloc>(
+                                                    context)
+                                                .add(
+                                              OrderTruckButtonPressed(
+                                                widget.subshipmentId,
+                                                widget.truck.id!,
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
                                   ),
-                                ),
-                                onTap: () {
-                                  shipmentProvider.setTruck(
-                                      widget.truck, widget.index);
-                                  shipmentProvider
-                                      .addSelectedTruck(widget.truck.id!);
-                                  Navigator.pop(context);
-                                  Navigator.pop(context);
-                                },
-                              );
-                            }),
-                          ),
+                                )
+                              : const SizedBox.shrink(),
                         ],
                       ),
                       SizedBox(

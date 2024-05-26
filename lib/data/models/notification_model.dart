@@ -6,6 +6,7 @@ class NotificationModel {
   String? dateCreated;
   String? noteficationType;
   bool? isread;
+  int? request;
   int? user;
   int? sender;
   int? shipment;
@@ -17,6 +18,7 @@ class NotificationModel {
     this.image,
     this.dateCreated,
     this.noteficationType,
+    this.request,
     this.isread,
     this.user,
     this.sender,
@@ -34,6 +36,7 @@ class NotificationModel {
     user = json['receiver'];
     sender = json['sender'];
     shipment = json['shipment'];
+    request = json['request'];
   }
 
   Map<String, dynamic> toJson() {
@@ -46,6 +49,7 @@ class NotificationModel {
     data['isread'] = isread;
     data['receiver'] = user;
     data['sender'] = sender;
+    data['request'] = request;
     return data;
   }
 }

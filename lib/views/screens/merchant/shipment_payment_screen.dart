@@ -15,11 +15,13 @@ import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
+import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
@@ -107,6 +109,22 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
     return paymentDate;
   }
 
+  Future<void> _checkAndRequestPermissions() async {
+    if (await Permission.photos.isGranted) {
+      print('Permission already granted');
+    } else {
+      PermissionStatus status = await Permission.photos.request();
+      if (status.isGranted) {
+        print('Permission granted');
+      } else if (status.isDenied) {
+        print('Permission denied by user');
+      } else if (status.isPermanentlyDenied) {
+        print('Permission permanently denied by user');
+        openAppSettings();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -115,386 +133,356 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Card(
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 15.h),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Stack(
+            children: [
+              Column(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${widget.shipment.shipment!}',
-                                  style: TextStyle(
-                                      // color: AppColor.lightBlue,
-                                      fontSize: 18.sp,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(
-                                  height: 7.h,
-                                ),
-                                ShipmentPathWidget(
-                                  loadDate:
-                                      setLoadDate(widget.shipment.pickupDate!),
-                                  pickupName: widget.shipment.pathpoints!
-                                      .singleWhere(
-                                          (element) => element.pointType == "P")
-                                      .name!,
-                                  deliveryName: widget.shipment.pathpoints!
-                                      .singleWhere(
-                                          (element) => element.pointType == "D")
-                                      .name!,
-                                  width: MediaQuery.of(context).size.width * .8,
-                                  pathwidth:
-                                      MediaQuery.of(context).size.width * .7,
-                                ).animate().slideX(
-                                    duration: 300.ms,
-                                    delay: 0.ms,
-                                    begin: 1,
-                                    end: 0,
-                                    curve: Curves.easeInOutSine),
-                                SizedBox(
-                                  height: 7.h,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    Card(
-                      elevation: 1,
-                      clipBehavior: Clip.antiAlias,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              width: double.infinity,
-                            ),
                             Text(
                               AppLocalizations.of(context)!
-                                  .translate('operation_cost'),
+                                  .translate('shipment_path_info'),
                               style: TextStyle(
-                                  // color: AppColor.lightBlue,
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 7.h,
-                            ),
-                            Text(
-                              '${AppLocalizations.of(context)!.translate('price')}: ${widget.shipment.truck!.fees!}',
-                              style: TextStyle(
-                                // color: AppColor.lightBlue,
-                                fontSize: 17.sp,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.darkGrey,
                               ),
                             ),
-                            Divider(
-                              height: 7.h,
-                            ),
-                            Text(
-                              '${AppLocalizations.of(context)!.translate('extra_fees')}: ${widget.shipment.truck!.extra_fees!}',
-                              style: TextStyle(
-                                // color: AppColor.lightBlue,
-                                fontSize: 17.sp,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 7.h,
-                            ),
-                            widget.shipment.shipmentpaymentv2 != null
-                                ? Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: double.infinity,
-                                      ),
-                                      Divider(
-                                        height: 7.h,
-                                      ),
-                                      Text(
-                                        '${AppLocalizations.of(context)!.translate('total_amount')}: ${(widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2!)}',
-                                        style: TextStyle(
-                                          // color: AppColor.lightBlue,
-                                          fontSize: 17.sp,
-                                        ),
-                                      ),
-                                      Divider(
-                                        height: 7.h,
-                                      ),
-                                      Text(
-                                        '${AppLocalizations.of(context)!.translate('payment_date')}: }',
-                                        style: TextStyle(
-                                          // color: AppColor.lightBlue,
-                                          fontSize: 17.sp,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 7.h,
-                                      ),
-                                      Divider(
-                                        height: 7.h,
-                                      ),
-                                      Text(
-                                        '${AppLocalizations.of(context)!.translate('payment_method')}: VISA Card',
-                                        style: TextStyle(
-                                          // color: AppColor.lightBlue,
-                                          fontSize: 17.sp,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 7.h,
-                                      ),
-                                    ],
-                                  )
-                                : const SizedBox.shrink(),
                           ],
                         ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        ShipmentPathVerticalWidget(
+                          pathpoints: widget.shipment.pathpoints!,
+                          pickupDate: widget.shipment.pickupDate!,
+                          deliveryDate: widget.shipment.deliveryDate!,
+                          langCode: localeState.value.languageCode,
+                          mini: false,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  Card(
+                    elevation: 1,
+                    clipBehavior: Clip.antiAlias,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
                       ),
                     ),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    widget.shipment.shipmentpaymentv2 == null
-                        ? Card(
-                            elevation: 1,
-                            clipBehavior: Clip.antiAlias,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            width: double.infinity,
+                          ),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .translate('operation_cost'),
+                            style: TextStyle(
+                                // color: AppColor.lightBlue,
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                          Text(
+                            '${AppLocalizations.of(context)!.translate('price')}: ${widget.shipment.truck!.fees!}',
+                            style: TextStyle(
+                              // color: AppColor.lightBlue,
+                              fontSize: 17.sp,
                             ),
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                          ),
+                          Divider(
+                            height: 7.h,
+                          ),
+                          Text(
+                            '${AppLocalizations.of(context)!.translate('extra_fees')}: ${widget.shipment.truck!.extra_fees!}',
+                            style: TextStyle(
+                              // color: AppColor.lightBlue,
+                              fontSize: 17.sp,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 7.h,
+                          ),
+                          widget.shipment.shipmentpaymentv2 != null
+                              ? Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(
                                       width: double.infinity,
                                     ),
+                                    Divider(
+                                      height: 7.h,
+                                    ),
                                     Text(
-                                      "اختر وسيلة الدفع",
+                                      '${AppLocalizations.of(context)!.translate('total_amount')}: ${(widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2!)}',
                                       style: TextStyle(
-                                          // color: AppColor.lightBlue,
-                                          fontSize: 18.sp,
-                                          fontWeight: FontWeight.bold),
+                                        // color: AppColor.lightBlue,
+                                        fontSize: 17.sp,
+                                      ),
+                                    ),
+                                    Divider(
+                                      height: 7.h,
+                                    ),
+                                    Text(
+                                      '${AppLocalizations.of(context)!.translate('payment_date')}: }',
+                                      style: TextStyle(
+                                        // color: AppColor.lightBlue,
+                                        fontSize: 17.sp,
+                                      ),
                                     ),
                                     SizedBox(
-                                      height: 8.h,
+                                      height: 7.h,
                                     ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedPaymentType = "B";
-                                            });
-                                          },
-                                          child: Container(
-                                            height: 65,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .28,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color:
-                                                    selectedPaymentType == "B"
-                                                        ? AppColor.deepYellow
-                                                        : Colors.grey[400]!,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: Center(
-                                              child: Image.asset(
-                                                "assets/images/albaraka.png",
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .25,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedPaymentType = "H";
-                                            });
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color:
-                                                    selectedPaymentType == "H"
-                                                        ? AppColor.deepYellow
-                                                        : Colors.grey[400]!,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            height: 65,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .28,
-                                            child: Center(
-                                              child: Image.asset(
-                                                "assets/images/alharam.png",
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .25,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            setState(() {
-                                              selectedPaymentType = "E";
-                                            });
-                                          },
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color:
-                                                    selectedPaymentType == "E"
-                                                        ? AppColor.deepYellow
-                                                        : Colors.grey[400]!,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            clipBehavior: Clip.hardEdge,
-                                            height: 65,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .28,
-                                            child: Center(
-                                              child: Image.asset(
-                                                "assets/images/fatora.png",
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .25,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                    Divider(
+                                      height: 7.h,
+                                    ),
+                                    Text(
+                                      '${AppLocalizations.of(context)!.translate('payment_method')}: VISA Card',
+                                      style: TextStyle(
+                                        // color: AppColor.lightBlue,
+                                        fontSize: 17.sp,
+                                      ),
                                     ),
                                     SizedBox(
-                                      height: 8.h,
+                                      height: 7.h,
                                     ),
-                                  ]),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                    widget.shipment.shipmentpaymentv2 == null
-                        ? Card(
-                            elevation: 1,
-                            clipBehavior: Clip.antiAlias,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                            color: Colors.white,
-                            child: paymentCard())
-                        : const SizedBox.shrink(),
-                    SizedBox(
-                      height: 5.h,
-                    ),
-                  ],
-                ),
-                Consumer<TaskNumProvider>(
-                    builder: (context, taskProvider, child) {
-                  return BlocConsumer<PaymentCreateBloc, PaymentCreateState>(
-                    listener: (context, state) {
-                      if (state is PaymentCreateSuccessState) {
-                        taskProvider.decreaseTaskNum();
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          backgroundColor: AppColor.deepGreen,
-                          dismissDirection: DismissDirection.up,
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.only(
-                              bottom: MediaQuery.of(context).size.height - 150,
-                              left: 10,
-                              right: 10),
-                          content: localeState.value.languageCode == 'en'
-                              ? const Text(
-                                  'Payment has been created successfully.',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
+                                  ],
                                 )
-                              : const Text(
-                                  'تم الدفع بنجاح',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                  ),
-                                ),
-                          duration: const Duration(seconds: 3),
-                        ));
-
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ControlView(),
+                              : const SizedBox.shrink(),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  widget.shipment.shipmentpaymentv2 == null
+                      ? Card(
+                          elevation: 1,
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
                             ),
-                            (route) => false);
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state is PaymentLoadingProgressState) {
-                        return Container(
-                          height: MediaQuery.of(context).size.height,
-                          color: Colors.white70,
-                          child: const Center(child: LoadingIndicator()),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
-                  );
-                }),
-              ],
-            ),
+                          ),
+                          color: Colors.white,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    width: double.infinity,
+                                  ),
+                                  Text(
+                                    "اختر وسيلة الدفع",
+                                    style: TextStyle(
+                                        // color: AppColor.lightBlue,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedPaymentType = "B";
+                                          });
+                                        },
+                                        child: Container(
+                                          height: 65,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .28,
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: selectedPaymentType == "B"
+                                                  ? AppColor.deepYellow
+                                                  : Colors.grey[400]!,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: Center(
+                                            child: Image.asset(
+                                              "assets/images/albaraka.png",
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .25,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedPaymentType = "H";
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: selectedPaymentType == "H"
+                                                  ? AppColor.deepYellow
+                                                  : Colors.grey[400]!,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          height: 65,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .28,
+                                          child: Center(
+                                            child: Image.asset(
+                                              "assets/images/alharam.png",
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .25,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedPaymentType = "E";
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: selectedPaymentType == "E"
+                                                  ? AppColor.deepYellow
+                                                  : Colors.grey[400]!,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          clipBehavior: Clip.hardEdge,
+                                          height: 65,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              .28,
+                                          child: Center(
+                                            child: Image.asset(
+                                              "assets/images/fatora.png",
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .25,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                ]),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  widget.shipment.shipmentpaymentv2 == null
+                      ? Card(
+                          elevation: 1,
+                          clipBehavior: Clip.antiAlias,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          color: Colors.white,
+                          child: paymentCard())
+                      : const SizedBox.shrink(),
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                ],
+              ),
+              Consumer<TaskNumProvider>(
+                  builder: (context, taskProvider, child) {
+                return BlocConsumer<PaymentCreateBloc, PaymentCreateState>(
+                  listener: (context, state) {
+                    if (state is PaymentCreateSuccessState) {
+                      taskProvider.decreaseTaskNum();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: AppColor.deepGreen,
+                        dismissDirection: DismissDirection.up,
+                        behavior: SnackBarBehavior.floating,
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height - 150,
+                            left: 10,
+                            right: 10),
+                        content: localeState.value.languageCode == 'en'
+                            ? const Text(
+                                'Payment has been created successfully.',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              )
+                            : const Text(
+                                'تم الدفع بنجاح',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                        duration: const Duration(seconds: 3),
+                      ));
+
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ControlView(),
+                          ),
+                          (route) => false);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is PaymentLoadingProgressState) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height,
+                        color: Colors.white70,
+                        child: const Center(child: LoadingIndicator()),
+                      );
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                );
+              }),
+            ],
           ),
         );
       },
@@ -583,6 +571,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                   size: 35,
                 ),
                 onTap: () async {
+                  _checkAndRequestPermissions();
                   var pickedImage = await _picker.pickImage(
                     source: ImageSource.gallery,
                   );

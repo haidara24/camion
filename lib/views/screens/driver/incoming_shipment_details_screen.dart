@@ -3,12 +3,19 @@ import 'dart:math';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/control_view.dart';
+import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
+import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/path_statistics_widget.dart';
+import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +26,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class IncomingShipmentDetailsScreen extends StatefulWidget {
-  IncomingShipmentDetailsScreen({Key? key}) : super(key: key);
+  final int requestId;
+  IncomingShipmentDetailsScreen({Key? key, required this.requestId})
+      : super(key: key);
 
   @override
   State<IncomingShipmentDetailsScreen> createState() =>
@@ -41,6 +50,17 @@ class _IncomingShipmentDetailsScreenState
 
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
+
+  TextEditingController rejectTextController = TextEditingController();
+  TextEditingController extraTextController = TextEditingController();
+  TextEditingController extraValueController = TextEditingController();
+
+  final GlobalKey<FormState> _acceptformKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _rejectformKey = GlobalKey<FormState>();
+
+  String rejectText = "";
+  String extraText = "_";
+  double extraValue = 0;
 
   initMapbounds(SubShipment shipment) {
     List<Marker> markers = [];
@@ -359,6 +379,7 @@ class _IncomingShipmentDetailsScreenState
                                       deliveryDate:
                                           shipmentstate.shipment.deliveryDate!,
                                       langCode: localeState.value.languageCode,
+                                      mini: false,
                                     ),
                                     const Divider(),
                                     Text(
@@ -369,8 +390,9 @@ class _IncomingShipmentDetailsScreenState
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    _buildCommodityWidget(
-                                        shipmentstate.shipment),
+                                    Commodity_info_widget(
+                                        shipmentItems: shipmentstate
+                                            .shipment.shipmentItems!),
                                     const Divider(),
                                     Text(
                                       "احصائيات مسار الشاحنة",
@@ -380,7 +402,402 @@ class _IncomingShipmentDetailsScreenState
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                    _buildCo2Report(shipmentstate.shipment),
+                                    PathStatisticsWidget(
+                                      distance:
+                                          shipmentstate.shipment.distance!,
+                                      period: shipmentstate.shipment.period!,
+                                    ),
+                                    const Divider(),
+                                    Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          BlocConsumer<
+                                              AcceptRequestForMerchantBloc,
+                                              AcceptRequestForMerchantState>(
+                                            listener: (context, acceptstate) {
+                                              if (acceptstate
+                                                  is AcceptRequestForMerchantSuccessState) {
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const ControlView(),
+                                                    ),
+                                                    (route) => false);
+                                              }
+                                            },
+                                            builder: (context, acceptstate) {
+                                              if (acceptstate
+                                                  is AcceptRequestLoadingProgressState) {
+                                                return CustomButton(
+                                                  title: SizedBox(
+                                                    width: 70.w,
+                                                    child: const Center(
+                                                      child: LoadingIndicator(),
+                                                    ),
+                                                  ),
+                                                  onTap: () {},
+                                                  color: Colors.white,
+                                                );
+                                              } else {
+                                                return CustomButton(
+                                                  title: SizedBox(
+                                                    width: 70.w,
+                                                    child: Center(
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'accept'),
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Colors.green),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    showDialog<void>(
+                                                      context: context,
+                                                      barrierDismissible:
+                                                          false, // user must tap button!
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          title: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'accept')),
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            child: Form(
+                                                              key:
+                                                                  _acceptformKey,
+                                                              child: ListBody(
+                                                                children: <Widget>[
+                                                                  SectionBody(
+                                                                      text:
+                                                                          "إضافة تكاليف اضافيةإن وجدت\n ملاحظة: يمكن قبول الطلب دون تعبئة الفورم."),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        extraTextController,
+                                                                    onTap: () {
+                                                                      extraTextController.selection = TextSelection(
+                                                                          baseOffset:
+                                                                              0,
+                                                                          extentOffset: extraTextController
+                                                                              .value
+                                                                              .text
+                                                                              .length);
+                                                                    },
+                                                                    maxLines: 3,
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18.sp),
+                                                                    scrollPadding:
+                                                                        EdgeInsets.only(
+                                                                            bottom:
+                                                                                MediaQuery.of(context).viewInsets.bottom + 50),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      labelText:
+                                                                          'وصف التكاليف الإضافية',
+                                                                      hintText:
+                                                                          'وصف التكاليف الإضافية',
+                                                                      hintStyle:
+                                                                          TextStyle(
+                                                                              fontSize: 18.sp),
+                                                                    ),
+                                                                    onChanged:
+                                                                        (value) {},
+                                                                    onSaved:
+                                                                        (newValue) {
+                                                                      extraTextController
+                                                                              .text =
+                                                                          newValue!;
+                                                                    },
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 8,
+                                                                  ),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        extraValueController,
+                                                                    onTap: () {
+                                                                      extraValueController.selection = TextSelection(
+                                                                          baseOffset:
+                                                                              0,
+                                                                          extentOffset: extraValueController
+                                                                              .value
+                                                                              .text
+                                                                              .length);
+                                                                    },
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18.sp),
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    textInputAction:
+                                                                        TextInputAction
+                                                                            .next,
+                                                                    scrollPadding:
+                                                                        EdgeInsets.only(
+                                                                            bottom:
+                                                                                MediaQuery.of(context).viewInsets.bottom + 50),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      labelText:
+                                                                          'قيمة التكاليف الإضافية',
+                                                                      hintText:
+                                                                          'قيمة التكاليف الإضافية',
+                                                                      hintStyle:
+                                                                          TextStyle(
+                                                                              fontSize: 18.sp),
+                                                                    ),
+                                                                    onChanged:
+                                                                        (value) {},
+                                                                    onSaved:
+                                                                        (newValue) {
+                                                                      if (newValue!
+                                                                          .isNotEmpty) {
+                                                                        extraValueController.text =
+                                                                            newValue;
+                                                                        extraValue =
+                                                                            double.parse(newValue);
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              child: Text(AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'cancel')),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                            TextButton(
+                                                              child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'ok')),
+                                                              onPressed: () {
+                                                                _acceptformKey
+                                                                    .currentState!
+                                                                    .save();
+                                                                BlocProvider.of<
+                                                                            AcceptRequestForMerchantBloc>(
+                                                                        context)
+                                                                    .add(
+                                                                  AcceptRequestButtonPressedEvent(
+                                                                    widget
+                                                                        .requestId,
+                                                                    extraTextController
+                                                                        .text,
+                                                                    extraValue,
+                                                                  ),
+                                                                );
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  color: Colors.white,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                          BlocConsumer<
+                                              RejectRequestForMerchantBloc,
+                                              RejectRequestForMerchantState>(
+                                            listener: (context, rejectstate) {
+                                              if (rejectstate
+                                                  is RejectRequestForMerchantSuccessState) {
+                                                Navigator.pushAndRemoveUntil(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const ControlView(),
+                                                    ),
+                                                    (route) => false);
+                                              }
+                                            },
+                                            builder: (context, rejectstate) {
+                                              if (rejectstate
+                                                  is RejectRequestLoadingProgressState) {
+                                                return CustomButton(
+                                                  title: SizedBox(
+                                                    width: 70.w,
+                                                    child: const Center(
+                                                      child: LoadingIndicator(),
+                                                    ),
+                                                  ),
+                                                  onTap: () {},
+                                                  color: Colors.white,
+                                                );
+                                              } else {
+                                                return CustomButton(
+                                                  title: SizedBox(
+                                                    width: 70.w,
+                                                    child: Center(
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'reject'),
+                                                        style: const TextStyle(
+                                                            color: Colors.red),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    showDialog<void>(
+                                                      context: context,
+                                                      barrierDismissible:
+                                                          false, // user must tap button!
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          title: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'reject')),
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            child: Form(
+                                                              key:
+                                                                  _rejectformKey,
+                                                              child: ListBody(
+                                                                children: <Widget>[
+                                                                  Text(
+                                                                      "الرجاء تحديد سبب الرفض"),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        rejectTextController,
+                                                                    onTap: () {
+                                                                      rejectTextController.selection = TextSelection(
+                                                                          baseOffset:
+                                                                              0,
+                                                                          extentOffset: rejectTextController
+                                                                              .value
+                                                                              .text
+                                                                              .length);
+                                                                    },
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            18.sp),
+                                                                    scrollPadding:
+                                                                        EdgeInsets.only(
+                                                                            bottom:
+                                                                                MediaQuery.of(context).viewInsets.bottom + 50),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      hintText:
+                                                                          'سبب الرفض',
+                                                                      hintStyle:
+                                                                          TextStyle(
+                                                                              fontSize: 18.sp),
+                                                                    ),
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value!
+                                                                          .isEmpty) {
+                                                                        return AppLocalizations.of(context)!
+                                                                            .translate('insert_value_validate');
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                    onSaved:
+                                                                        (newValue) {
+                                                                      rejectTextController
+                                                                              .text =
+                                                                          newValue!;
+                                                                      rejectText =
+                                                                          newValue!;
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              child: Text(AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'cancel')),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                            TextButton(
+                                                              child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'ok')),
+                                                              onPressed: () {
+                                                                if (_rejectformKey
+                                                                    .currentState!
+                                                                    .validate()) {
+                                                                  _rejectformKey
+                                                                      .currentState!
+                                                                      .save();
+                                                                  BlocProvider.of<
+                                                                              RejectRequestForMerchantBloc>(
+                                                                          context)
+                                                                      .add(
+                                                                    RejectRequestButtonPressedEvent(
+                                                                      widget
+                                                                          .requestId,
+                                                                      rejectText,
+                                                                    ),
+                                                                  );
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop();
+                                                                }
+                                                              },
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  color: Colors.white,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
                               )
@@ -398,121 +815,6 @@ class _IncomingShipmentDetailsScreenState
           );
         },
       ),
-    );
-  }
-
-  _buildCo2Report(SubShipment shipment) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 50.h,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: SvgPicture.asset("assets/icons/co2fingerprint.svg"),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                BlocBuilder<LocaleCubit, LocaleState>(
-                  builder: (context, localeState) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * .7,
-                      child: Text(
-                        "${AppLocalizations.of(context)!.translate('total_co2')}: ${f.format(100)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
-                        style: const TextStyle(
-                          // color: Colors.white,
-                          fontSize: 17,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50.h,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: SvgPicture.asset("assets/icons/distance.svg"),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                BlocBuilder<LocaleCubit, LocaleState>(
-                  builder: (context, localeState) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * .7,
-                      child: Text(
-                        "${AppLocalizations.of(context)!.translate('distance')}: ${shipment.distance} ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
-                        style: const TextStyle(
-                          // color: Colors.white,
-                          fontSize: 17,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50.h,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: SvgPicture.asset("assets/icons/time.svg"),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                BlocBuilder<LocaleCubit, LocaleState>(
-                  builder: (context, localeState) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * .7,
-                      child: Text(
-                        "${AppLocalizations.of(context)!.translate('period')}: ${localeState.value.languageCode == "en" ? shipment.period : shipment.period!.replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("hours", "ساعات")} ",
-                        style: const TextStyle(
-                          // color: Colors.white,
-                          fontSize: 17,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -543,95 +845,5 @@ class _IncomingShipmentDetailsScreenState
       count++;
     }
     return count;
-  }
-
-  final ScrollController _scrollController = ScrollController();
-
-  _buildCommodityWidget(SubShipment shipment) {
-    return SizedBox(
-      height: 135.h,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              SizedBox(
-                height: 25.h,
-                width: 25.w,
-                child: SvgPicture.asset("assets/icons/commodity_icon.svg"),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                AppLocalizations.of(context)!.translate('commodity_info'),
-                style: TextStyle(
-                  fontSize: 17.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            height: 95.h,
-            child: Scrollbar(
-              controller: _scrollController,
-              thumbVisibility: true,
-              thickness: 3.0,
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: shipment.shipmentItems!.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "${AppLocalizations.of(context)!.translate('commodity_name')}: ${shipment.shipmentItems![index].commodityName!}",
-                              style: TextStyle(
-                                fontSize: 17.sp,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "${AppLocalizations.of(context)!.translate('commodity_weight')}: ${shipment.shipmentItems![index].commodityWeight!}",
-                              style: TextStyle(
-                                fontSize: 17.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }

@@ -105,6 +105,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 child: InkWell(
                                   // borderRadius: BorderRadius.circular(45),
                                   onTap: () {
+                                    BlocProvider.of<NotificationBloc>(context)
+                                        .add(NotificationLoadEvent());
                                     notificationProvider
                                         .clearNotReadedNotification();
                                     Navigator.push(

@@ -14,8 +14,8 @@ class ShipmentUpdateStatusBloc
       (event, emit) async {
         emit(ShipmentUpdateStatusLoadingProgress());
         try {
-          var data = await shipmentRepository.updateKShipmentStatus(
-              event.state, event.offerId);
+          var data = await shipmentRepository.updateShipmentStatus(
+              event.shipmentId, event.state);
           if (data) {
             emit(ShipmentUpdateStatusLoadedSuccess());
           } else {

@@ -15,6 +15,7 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart' as intl;
 
 class AddMultiShipmentProvider extends ChangeNotifier {
   Shipmentv2? _shipment;
@@ -432,9 +433,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _distance[index] = double.parse(result["rows"][0]['elements'][0]
               ['distance']['text']
           .replaceAll(" km", ""));
-      print(_distance[index]);
       _period[index] = result["rows"][0]['elements'][0]['duration']['text'];
-      print(_period[index]);
     }
     notifyListeners();
   }
@@ -508,13 +507,12 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   }
 
   setLoadTime(DateTime time, int index) {
-    String am = time.hour > 12 ? 'pm' : 'am';
-    _time_controller[index].text = '${time.hour}:${time.minute} $am';
+    _time_controller[index].text = '${intl.DateFormat.jm().format(time)} ';
     _loadTime[index] = time;
     notifyListeners();
   }
 
-  setLoadDate(DateTime date, int index) {
+  setLoadDate(DateTime date, int index, String lang) {
     List months = [
       'jan',
       'feb',
@@ -529,8 +527,22 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       'nov',
       'dec'
     ];
+    List monthsAr = [
+      'كانون الثاني',
+      'شباط',
+      'أذار',
+      'نيسان',
+      'أيار',
+      'حزيران',
+      'تموز',
+      'آب',
+      'أيلول',
+      'تشرين الأول',
+      'تشرين الثاني',
+      'كانون الأول'
+    ];
     var mon = date.month;
-    var month = months[mon - 1];
+    var month = lang == "en" ? months[mon - 1] : monthsAr[mon - 1];
     _date_controller[index].text = '${date.year}-$month-${date.day}';
     _loadDate[index] = date;
     notifyListeners();
@@ -1103,18 +1115,38 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   }
 
   void addstoppoint(int index) {
-    TextEditingController stoppoint_controller = TextEditingController();
-    _stoppoints_controller[index].add(stoppoint_controller);
-    _stoppoints_location[index].add("");
-    _stoppoints_eng_string[index].add("");
-    _stoppoints_latlng[index].add(null);
-    _stoppoints_position[index].add(null);
-    _stoppoints_place[index].add(null);
-    _stoppointsLoading[index].add(false);
-    _stoppointstextLoading[index].add(false);
-    _stoppointsPosition[index].add(false);
-    _stop_marker[index]
-        .add(Marker(markerId: MarkerId("stop${_stop_marker[index].length}")));
+    if (_stoppoints_controller[index].length > 0) {
+      if (_stoppoints_controller[index]
+              [_stoppoints_controller[index].length - 1]
+          .text
+          .isNotEmpty) {
+        TextEditingController stoppoint_controller = TextEditingController();
+        _stoppoints_controller[index].add(stoppoint_controller);
+        _stoppoints_location[index].add("");
+        _stoppoints_eng_string[index].add("");
+        _stoppoints_latlng[index].add(null);
+        _stoppoints_position[index].add(null);
+        _stoppoints_place[index].add(null);
+        _stoppointsLoading[index].add(false);
+        _stoppointstextLoading[index].add(false);
+        _stoppointsPosition[index].add(false);
+        _stop_marker[index].add(
+            Marker(markerId: MarkerId("stop${_stop_marker[index].length}")));
+      }
+    } else {
+      TextEditingController stoppoint_controller = TextEditingController();
+      _stoppoints_controller[index].add(stoppoint_controller);
+      _stoppoints_location[index].add("");
+      _stoppoints_eng_string[index].add("");
+      _stoppoints_latlng[index].add(null);
+      _stoppoints_position[index].add(null);
+      _stoppoints_place[index].add(null);
+      _stoppointsLoading[index].add(false);
+      _stoppointstextLoading[index].add(false);
+      _stoppointsPosition[index].add(false);
+      _stop_marker[index]
+          .add(Marker(markerId: MarkerId("stop${_stop_marker[index].length}")));
+    }
     notifyListeners();
   }
 

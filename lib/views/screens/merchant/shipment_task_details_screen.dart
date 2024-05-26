@@ -473,6 +473,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                       deliveryDate:
                                           widget.shipment.deliveryDate!,
                                       langCode: localeState.value.languageCode,
+                                      mini: false,
                                     ),
                                   ],
                                 ),
@@ -1509,8 +1510,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                                 Border.all(
                                                                               color: Colors.black26,
                                                                             ),
-                                                                            color:
-                                                                                Colors.white,
+                                                                            // color:
+                                                                            //     Colors.white,
                                                                           ),
                                                                           // elevation: 2,
                                                                         ),

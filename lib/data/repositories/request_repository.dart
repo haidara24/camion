@@ -26,4 +26,61 @@ class RequestRepository {
     }
     return approvalRequests;
   }
+
+  Future<ApprovalRequest?> getRequestDetails(int id) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs =
+        await HttpHelper.get('$APPROVAL_REQUESTS_ENDPOINT$id/', apiToken: jwt);
+
+    print(rs.statusCode);
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+
+      var result = jsonDecode(myDataString);
+      return ApprovalRequest.fromJson(result);
+    }
+    return null;
+  }
+
+  Future<bool> acceptRequestForMerchant(
+      int id, String text, double extra_fees) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs = await HttpHelper.patch(
+        '$APPROVAL_REQUESTS_ENDPOINT$id/accept_request/',
+        {
+          "response_turn": "T",
+          "is_approved": true,
+          "extra_fees_text": text,
+          "extra_fees": extra_fees
+        },
+        apiToken: jwt);
+
+    if (rs.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> rejectRequestForMerchant(int id, String text) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs = await HttpHelper.patch(
+        '$APPROVAL_REQUESTS_ENDPOINT$id/reject_request/',
+        {"response_turn": "T", "is_approved": false, "reason": text},
+        apiToken: jwt);
+    print(rs.statusCode);
+    print(text);
+    print(rs.body);
+    if (rs.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

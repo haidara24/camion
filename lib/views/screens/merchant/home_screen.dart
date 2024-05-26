@@ -272,22 +272,6 @@ class _HomeScreenState extends State<HomeScreen>
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold),
                           ),
-                          // trailing: Container(
-                          //   width: 35.w,
-                          //   height: 20.h,
-                          //   decoration: BoxDecoration(
-                          //       color: AppColor.deepYellow,
-                          //       borderRadius: BorderRadius.circular(2)),
-                          //   child: Center(
-                          //     child: Text(
-                          //       "soon",
-                          //       style: TextStyle(
-                          //         color: Colors.white,
-                          //         fontSize: 12.sp,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ),
                       ),
                       const Divider(
@@ -332,7 +316,6 @@ class _HomeScreenState extends State<HomeScreen>
                             barrierDismissible: false, // user must tap button!
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                // <-- SEE HERE
                                 backgroundColor: Colors.white,
                                 title: Text(AppLocalizations.of(context)!
                                     .translate('log_out')),

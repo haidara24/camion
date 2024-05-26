@@ -142,6 +142,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
               markers.add(deliveryMarker);
 
               setState(() {});
+              initMapbounds();
             },
             child: Stack(
               clipBehavior: Clip.none,
@@ -304,46 +305,55 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 200.h,
-            child: GoogleMap(
-              onMapCreated: (GoogleMapController controller) async {
-                setState(() {
-                  _controller = controller;
-                  _controller.setMapStyle(_mapStyle);
-                });
-                initMapbounds();
-              },
-              zoomControlsEnabled: false,
+          Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height - 200.h,
+                child: GoogleMap(
+                  onMapCreated: (GoogleMapController controller) async {
+                    setState(() {
+                      _controller = controller;
+                      _controller.setMapStyle(_mapStyle);
+                    });
+                    initMapbounds();
+                  },
+                  zoomControlsEnabled: false,
 
-              initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                      double.parse(widget
-                          .shipment.subshipments![selectedIndex].pathpoints!
-                          .singleWhere((element) => element.pointType == "P")
-                          .location!
-                          .split(",")[0]),
-                      double.parse(widget
-                          .shipment.subshipments![selectedIndex].pathpoints!
-                          .singleWhere((element) => element.pointType == "P")
-                          .location!
-                          .split(",")[1])),
-                  zoom: 14.47),
-              // gestureRecognizers: {},
-              markers: markers,
-              polylines: {
-                Polyline(
-                  polylineId: const PolylineId("route"),
-                  points: deserializeLatLng(
-                      widget.shipment.subshipments![selectedIndex].paths!),
-                  color: AppColor.deepYellow,
-                  width: 7,
+                  initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                          double.parse(widget
+                              .shipment.subshipments![selectedIndex].pathpoints!
+                              .singleWhere(
+                                  (element) => element.pointType == "P")
+                              .location!
+                              .split(",")[0]),
+                          double.parse(widget
+                              .shipment.subshipments![selectedIndex].pathpoints!
+                              .singleWhere(
+                                  (element) => element.pointType == "P")
+                              .location!
+                              .split(",")[1])),
+                      zoom: 14.47),
+                  // gestureRecognizers: {},
+                  markers: markers,
+                  polylines: {
+                    Polyline(
+                      polylineId: const PolylineId("route"),
+                      points: deserializeLatLng(
+                          widget.shipment.subshipments![selectedIndex].paths!),
+                      color: AppColor.deepYellow,
+                      width: 7,
+                    ),
+                  },
+                  // mapType: shipmentProvider.mapType,
                 ),
-              },
-              // mapType: shipmentProvider.mapType,
-            ),
+              ),
+              SizedBox(
+                height: 200.h,
+              ),
+            ],
           ),
           Stack(
             clipBehavior: Clip.none,
@@ -379,8 +389,8 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                 top: -60,
                 child: InkWell(
                   onTap: () {
-                    Navigator.pop(context);
                     print("asd");
+                    Navigator.pop(context);
                   },
                   child: AbsorbPointer(
                     absorbing: false,
@@ -432,87 +442,5 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
     //   count++;
     // }
     return count;
-  }
-
-  final ScrollController _scrollController = ScrollController();
-
-  _buildCommodityWidget(List<ShipmentItems>? shipmentItems) {
-    return Table(
-      border: TableBorder.all(color: AppColor.deepYellow, width: 2),
-      children: [
-        TableRow(children: [
-          TableCell(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                  AppLocalizations.of(context)!.translate('commodity_name')),
-            ),
-          ),
-          TableCell(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                  AppLocalizations.of(context)!.translate('commodity_weight')),
-            ),
-          ),
-        ]),
-        ...List.generate(
-          shipmentItems!.length,
-          (index) => TableRow(children: [
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(shipmentItems[index].commodityName!),
-              ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(shipmentItems[index].commodityWeight!.toString()),
-              ),
-            ),
-          ]),
-        ),
-      ],
-    );
-  }
-
-  _buildCo2Report() {
-    return SizedBox(
-      height: 50.h,
-      width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              height: 35,
-              width: 35,
-              child: SvgPicture.asset("assets/icons/co2fingerprint.svg"),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            BlocBuilder<LocaleCubit, LocaleState>(
-              builder: (context, localeState) {
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width * .7,
-                  child: Text(
-                    "${AppLocalizations.of(context)!.translate('total_co2')}: ${f.format(100)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
-                    style: const TextStyle(
-                      // color: Colors.white,
-                      fontSize: 17,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

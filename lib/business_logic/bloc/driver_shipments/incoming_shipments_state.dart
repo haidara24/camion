@@ -12,7 +12,7 @@ final class IncomingShipmentsInitial extends IncomingShipmentsState {}
 class IncomingShipmentsLoadingProgress extends IncomingShipmentsState {}
 
 class IncomingShipmentsLoadedSuccess extends IncomingShipmentsState {
-  final List<Shipment> shipments;
+  final List<SubShipment> shipments;
 
   const IncomingShipmentsLoadedSuccess(this.shipments);
 }

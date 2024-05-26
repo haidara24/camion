@@ -8,8 +8,8 @@ sealed class ShipmentUpdateStatusEvent extends Equatable {
 }
 
 class ShipmentStatusUpdateEvent extends ShipmentUpdateStatusEvent {
-  final int offerId;
+  final int shipmentId;
   final String state;
 
-  const ShipmentStatusUpdateEvent(this.offerId, this.state);
+  const ShipmentStatusUpdateEvent(this.shipmentId, this.state);
 }

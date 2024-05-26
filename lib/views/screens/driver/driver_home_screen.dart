@@ -3,11 +3,10 @@ import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
-import 'package:camion/business_logic/bloc/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
-import 'package:camion/business_logic/bloc/driver_shipments/incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
@@ -191,7 +190,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_path');
 
-            currentScreen = DriverActiveShipmentDetailsScreen();
+            currentScreen = TrackingShipmentScreen();
           });
           break;
         }
@@ -407,7 +406,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             barrierDismissible: false, // user must tap button!
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                // <-- SEE HERE
                                 backgroundColor: Colors.white,
                                 title: Text(AppLocalizations.of(context)!
                                     .translate('log_out')),

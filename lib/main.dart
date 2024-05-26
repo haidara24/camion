@@ -9,8 +9,7 @@ import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
-import 'package:camion/business_logic/bloc/create_price_request_bloc.dart';
-import 'package:camion/business_logic/bloc/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/managment/create_price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/inprogress_shipments_bloc.dart';
@@ -38,6 +37,10 @@ import 'package:camion/business_logic/bloc/package_type_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/core/draw_route_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/shipment_update_status_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
@@ -197,6 +200,21 @@ class MyApp extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => DriverRequestsListBloc(
+                        requestRepository:
+                            RepositoryProvider.of<RequestRepository>(context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => RequestDetailsBloc(
+                        requestRepository:
+                            RepositoryProvider.of<RequestRepository>(context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => AcceptRequestForMerchantBloc(
+                        requestRepository:
+                            RepositoryProvider.of<RequestRepository>(context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => RejectRequestForMerchantBloc(
                         requestRepository:
                             RepositoryProvider.of<RequestRepository>(context)),
                   ),

@@ -1,21 +1,17 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/draw_route_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
-import 'package:camion/business_logic/bloc/create_price_request_bloc.dart';
+import 'package:camion/business_logic/bloc/managment/create_price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shippment_create_bloc.dart';
-import 'package:camion/business_logic/bloc/truck/trucks_list_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/commodity_category_model.dart';
 import 'package:camion/data/models/kshipment_model.dart';
-import 'package:camion/data/models/place_model.dart';
-import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/data/services/places_service.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -26,8 +22,6 @@ import 'package:camion/views/screens/merchant/select_truck_widget.dart';
 import 'package:camion/views/screens/merchant/shipment_map_preview.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';

@@ -33,7 +33,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   late TabController _tabController;
   int tabIndex = 0;
 
-  String _mapStyle = "";
+  // String _mapStyle = "";
 
   var f = intel.NumberFormat("#,###", "en_US");
   late BitmapDescriptor pickupicon;
@@ -67,9 +67,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       createMarkerIcons();
     });
-    rootBundle.loadString('assets/style/map_style.json').then((string) {
-      _mapStyle = string;
-    });
+    // rootBundle.loadString('assets/style/map_style.json').then((string) {
+    //   _mapStyle = string;
+    // });
     super.initState();
   }
 
@@ -149,8 +149,13 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
 
   String commodityItemsText(List<ShipmentItems> items) {
     String text = '';
-    for (var element in items) {
-      text = '$text${element.commodityName!}, ';
+
+    for (var i = 0; i < items.length; i++) {
+      if (i != (items.length - 1)) {
+        text = '$text${items[i].commodityName!}, ';
+      } else {
+        text = '$text${items[i].commodityName!}. ';
+      }
     }
     return text;
   }
@@ -357,9 +362,6 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: tabIndex == 0
@@ -399,176 +401,183 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                             },
                                             child: AbsorbPointer(
                                               absorbing: false,
-                                              child: Card(
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 4.0,
                                                 ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 48.h,
-                                                      color:
-                                                          Colors.white,
-                                                      child: Row(
-                                                        children: [
-                                                          Container(
-                                                            height: 45.h,
-                                                            width: 45.w,
-                                                            margin:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                              horizontal: 12,
-                                                            ),
-                                                            child: Center(
-                                                              child: localeState
-                                                                          .value
-                                                                          .languageCode ==
-                                                                      'en'
-                                                                  ? SvgPicture
-                                                                          .asset(
-                                                                      "assets/icons/truck_en.svg",
-                                                                      height:
-                                                                          30.h,
-                                                                      width:
-                                                                          30.w,
-                                                                      fit: BoxFit
-                                                                          .fill,
-                                                                    )
-                                                                      .animate(
-                                                                          delay: 600
-                                                                              .ms)
-                                                                      .shimmer(
-                                                                          duration: playDuration -
-                                                                              200
-                                                                                  .ms)
-                                                                      .flip()
-                                                                  : SvgPicture
-                                                                          .asset(
-                                                                      "assets/icons/truck_ar.svg",
-                                                                      height:
-                                                                          30.h,
-                                                                      width:
-                                                                          30.w,
-                                                                      fit: BoxFit
-                                                                          .fill,
-                                                                    )
-                                                                      .animate(
-                                                                          delay: 600
-                                                                              .ms)
-                                                                      .shimmer(
-                                                                          duration:
-                                                                              playDuration - 200.ms)
-                                                                      .flip(),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: 100.w,
-                                                            child: Text(
-                                                              commodityItemsText(state
-                                                                  .shipments[
-                                                                      index]
-                                                                  .subshipments![
-                                                                      0]
-                                                                  .shipmentItems!),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                // color: AppColor.lightBlue,
-                                                                fontSize: 17.sp,
+                                                child: Card(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: double.infinity,
+                                                        height: 48.h,
+                                                        color: Colors.white,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              height: 45.h,
+                                                              width: 45.w,
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal: 12,
+                                                              ),
+                                                              child: Center(
+                                                                child: localeState
+                                                                            .value
+                                                                            .languageCode ==
+                                                                        'en'
+                                                                    ? SvgPicture
+                                                                            .asset(
+                                                                        "assets/icons/truck_en.svg",
+                                                                        height:
+                                                                            30.h,
+                                                                        width:
+                                                                            30.w,
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      )
+                                                                        .animate(
+                                                                            delay: 600
+                                                                                .ms)
+                                                                        .shimmer(
+                                                                            duration: playDuration -
+                                                                                200
+                                                                                    .ms)
+                                                                        .flip()
+                                                                    : SvgPicture
+                                                                            .asset(
+                                                                        "assets/icons/truck_ar.svg",
+                                                                        height:
+                                                                            30.h,
+                                                                        width:
+                                                                            30.w,
+                                                                        fit: BoxFit
+                                                                            .fill,
+                                                                      )
+                                                                        .animate(
+                                                                            delay: 600
+                                                                                .ms)
+                                                                        .shimmer(
+                                                                            duration:
+                                                                                playDuration - 200.ms)
+                                                                        .flip(),
                                                               ),
                                                             ),
-                                                          ),
-                                                          Spacer(),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        11),
-                                                            child: Text(
-                                                              '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
-                                                              style: TextStyle(
+                                                            SizedBox(
+                                                              width: 100.w,
+                                                              child: Text(
+                                                                commodityItemsText(state
+                                                                    .shipments[
+                                                                        index]
+                                                                    .subshipments![
+                                                                        0]
+                                                                    .shipmentItems!),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
                                                                   // color: AppColor.lightBlue,
                                                                   fontSize:
-                                                                      18.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                                      17.sp,
+                                                                ),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 190.h,
-                                                      child: IgnorePointer(
-                                                        ignoring: true,
-                                                        child: GoogleMap(
-                                                          onMapCreated:
-                                                              (GoogleMapController
-                                                                  controller) async {
-                                                            setState(() {
-                                                              _maps.add(null);
-                                                              _maps[index] =
-                                                                  controller;
-                                                              _maps[index]!
-                                                                  .setMapStyle(
-                                                                      _mapStyle);
-                                                            });
-                                                            initMapbounds(
-                                                                state.shipments[
-                                                                    index],
-                                                                index);
-                                                          },
-                                                          myLocationButtonEnabled:
-                                                              false,
-                                                          zoomGesturesEnabled:
-                                                              false,
-                                                          scrollGesturesEnabled:
-                                                              false,
-                                                          tiltGesturesEnabled:
-                                                              false,
-                                                          rotateGesturesEnabled:
-                                                              false,
-                                                          zoomControlsEnabled:
-                                                              false,
-                                                          initialCameraPosition:
-                                                              const CameraPosition(
-                                                                  target: LatLng(
-                                                                      35.363149,
-                                                                      35.932120),
-                                                                  zoom: 14.47),
-                                                          gestureRecognizers: {},
-                                                          markers: getMarkers(
-                                                              state.shipments[
-                                                                  index]),
-                                                          polylines: getRoutes(
-                                                              state
-                                                                  .shipments[
-                                                                      index]
-                                                                  .subshipments!),
-                                                          // mapType: shipmentProvider.mapType,
+                                                            Spacer(),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          11),
+                                                              child: Text(
+                                                                '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
+                                                                style: TextStyle(
+                                                                    // color: AppColor.lightBlue,
+                                                                    fontSize: 18.sp,
+                                                                    fontWeight: FontWeight.bold),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ).animate().slideX(
-                                                  duration: 350.ms,
-                                                  delay: 0.ms,
-                                                  begin: 1,
-                                                  end: 0,
-                                                  curve: Curves.easeInOutSine),
+                                                      SizedBox(
+                                                        height: 190.h,
+                                                        child: IgnorePointer(
+                                                          ignoring: true,
+                                                          child: GoogleMap(
+                                                            onMapCreated:
+                                                                (GoogleMapController
+                                                                    controller) async {
+                                                              setState(() {
+                                                                _maps.add(null);
+                                                                _maps[index] =
+                                                                    controller;
+                                                                // _maps[index]!
+                                                                //     .setMapStyle(
+                                                                //         _mapStyle);
+                                                              });
+                                                              initMapbounds(
+                                                                  state.shipments[
+                                                                      index],
+                                                                  index);
+                                                            },
+                                                            myLocationButtonEnabled:
+                                                                false,
+                                                            zoomGesturesEnabled:
+                                                                false,
+                                                            scrollGesturesEnabled:
+                                                                false,
+                                                            tiltGesturesEnabled:
+                                                                false,
+                                                            rotateGesturesEnabled:
+                                                                false,
+                                                            zoomControlsEnabled:
+                                                                false,
+                                                            initialCameraPosition:
+                                                                const CameraPosition(
+                                                                    target: LatLng(
+                                                                        35.363149,
+                                                                        35.932120),
+                                                                    zoom:
+                                                                        14.47),
+                                                            gestureRecognizers: {},
+                                                            markers: getMarkers(
+                                                                state.shipments[
+                                                                    index]),
+                                                            polylines:
+                                                                getRoutes(state
+                                                                    .shipments[
+                                                                        index]
+                                                                    .subshipments!),
+                                                            // mapType: shipmentProvider.mapType,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ).animate().slideX(
+                                                    duration: 350.ms,
+                                                    delay: 0.ms,
+                                                    begin: 1,
+                                                    end: 0,
+                                                    curve:
+                                                        Curves.easeInOutSine),
+                                              ),
                                             ),
                                           );
                                         },

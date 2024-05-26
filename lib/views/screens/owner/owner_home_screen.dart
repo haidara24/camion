@@ -361,7 +361,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                             barrierDismissible: false, // user must tap button!
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                // <-- SEE HERE
                                 backgroundColor: Colors.white,
                                 title: Text(AppLocalizations.of(context)!
                                     .translate('log_out')),

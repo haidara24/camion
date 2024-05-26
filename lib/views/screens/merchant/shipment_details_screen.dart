@@ -10,8 +10,10 @@ import 'package:camion/data/models/co2_report.dart';
 import 'package:camion/data/services/co2_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
+import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
@@ -40,7 +42,6 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   String _mapStyle = "";
   PanelState panelState = PanelState.hidden;
   final panelTransation = const Duration(milliseconds: 500);
-  Co2Report _report = Co2Report();
   var f = intel.NumberFormat("#,###", "en_US");
 
   int selectedIndex = 0;
@@ -460,79 +461,6 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     );
   }
 
-  void calculateCo2Report(Shipmentv2 shipment) {
-    ShippmentDetail detail = ShippmentDetail();
-    detail.legs = [];
-    detail.load = [];
-    Legs leg = Legs();
-    leg.mode = "LTL";
-    print("report!.title!");
-    Origin origin = Origin();
-    leg.origin = origin;
-    Origin destination = Origin();
-    leg.destination = destination;
-
-    leg.origin!.latitude = double.parse(shipment
-        .subshipments![selectedIndex].pathpoints!
-        .singleWhere((element) => element.pointType == "P")
-        .location!
-        .split(",")[0]);
-    leg.origin!.longitude = double.parse(shipment
-        .subshipments![selectedIndex].pathpoints!
-        .singleWhere((element) => element.pointType == "P")
-        .location!
-        .split(",")[1]);
-    leg.destination!.latitude = double.parse(shipment
-        .subshipments![selectedIndex].pathpoints!
-        .singleWhere((element) => element.pointType == "D")
-        .location!
-        .split(",")[0]);
-    leg.destination!.longitude = double.parse(shipment
-        .subshipments![selectedIndex].pathpoints!
-        .singleWhere((element) => element.pointType == "D")
-        .location!
-        .split(",")[1]);
-
-    detail.legs!.add(leg);
-
-    for (var i = 0;
-        i < shipment.subshipments![selectedIndex].shipmentItems!.length;
-        i++) {
-      Load load = Load();
-      load.unitWeightKg = shipment
-          .subshipments![selectedIndex].shipmentItems![i].commodityWeight!
-          .toDouble();
-      load.unitType = "pallets";
-      detail.load!.add(load);
-    }
-
-    Co2Service.getCo2Calculate(
-            detail,
-            LatLng(
-                double.parse(shipment.subshipments![selectedIndex].pathpoints!
-                    .singleWhere((element) => element.pointType == "P")
-                    .location!
-                    .split(",")[0]),
-                double.parse(shipment.subshipments![selectedIndex].pathpoints!
-                    .singleWhere((element) => element.pointType == "P")
-                    .location!
-                    .split(",")[1])),
-            LatLng(
-                double.parse(shipment.subshipments![selectedIndex].pathpoints!
-                    .singleWhere((element) => element.pointType == "D")
-                    .location!
-                    .split(",")[0]),
-                double.parse(shipment.subshipments![selectedIndex].pathpoints!
-                    .singleWhere((element) => element.pointType == "D")
-                    .location!
-                    .split(",")[1])))
-        .then((value) {
-      setState(() {
-        _report = value!;
-      });
-    });
-  }
-
   late BitmapDescriptor pickupicon;
   late BitmapDescriptor deliveryicon;
   late BitmapDescriptor parkicon;
@@ -828,6 +756,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                         .subshipments![selectedIndex]
                                         .deliveryDate!,
                                     langCode: localeState.value.languageCode,
+                                    mini: false,
                                   ),
                                   const Divider(),
                                   SectionTitle(
@@ -835,18 +764,23 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                         .translate("commodity_info"),
                                   ),
                                   const SizedBox(height: 4),
-                                  _buildCommodityWidget(shipmentstate
-                                      .shipment
-                                      .subshipments![selectedIndex]
-                                      .shipmentItems),
+                                  Commodity_info_widget(
+                                      shipmentItems: shipmentstate
+                                          .shipment
+                                          .subshipments![selectedIndex]
+                                          .shipmentItems),
                                   const Divider(),
                                   SectionTitle(
                                     text: AppLocalizations.of(context)!
                                         .translate("shipment_route_statistics"),
                                   ),
                                   const SizedBox(height: 4),
-                                  _buildCo2Report(shipmentstate
-                                      .shipment.subshipments![selectedIndex]),
+                                  PathStatisticsWidget(
+                                    distance: shipmentstate.shipment
+                                        .subshipments![selectedIndex].distance!,
+                                    period: shipmentstate.shipment
+                                        .subshipments![selectedIndex].period!,
+                                  ),
                                 ],
                               ),
                             )
@@ -895,163 +829,5 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     //   count++;
     // }
     return count;
-  }
-
-  final ScrollController _scrollController = ScrollController();
-
-  _buildCommodityWidget(List<ShipmentItems>? shipmentItems) {
-    return Table(
-      border: TableBorder.all(color: AppColor.deepYellow, width: 2),
-      children: [
-        TableRow(children: [
-          TableCell(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                  AppLocalizations.of(context)!.translate('commodity_name')),
-            ),
-          ),
-          TableCell(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                  AppLocalizations.of(context)!.translate('commodity_weight')),
-            ),
-          ),
-        ]),
-        ...List.generate(
-          shipmentItems!.length,
-          (index) => TableRow(children: [
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(shipmentItems[index].commodityName!),
-              ),
-            ),
-            TableCell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(shipmentItems[index].commodityWeight!.toString()),
-              ),
-            ),
-          ]),
-        ),
-      ],
-    );
-  }
-
-  _buildCo2Report(SubShipment shipment) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 50.h,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: SvgPicture.asset("assets/icons/co2fingerprint.svg"),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                BlocBuilder<LocaleCubit, LocaleState>(
-                  builder: (context, localeState) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * .7,
-                      child: Text(
-                        "${AppLocalizations.of(context)!.translate('total_co2')}: ${(shipment.distance! * 1700) / 1000000} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
-                        style: const TextStyle(
-                          // color: Colors.white,
-                          fontSize: 17,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50.h,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: SvgPicture.asset("assets/icons/distance.svg"),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                BlocBuilder<LocaleCubit, LocaleState>(
-                  builder: (context, localeState) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * .7,
-                      child: Text(
-                        "${AppLocalizations.of(context)!.translate('distance')}: ${shipment.distance} ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
-                        style: const TextStyle(
-                          // color: Colors.white,
-                          fontSize: 17,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 50.h,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  height: 35,
-                  width: 35,
-                  child: SvgPicture.asset("assets/icons/time.svg"),
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                BlocBuilder<LocaleCubit, LocaleState>(
-                  builder: (context, localeState) {
-                    return SizedBox(
-                      width: MediaQuery.of(context).size.width * .7,
-                      child: Text(
-                        "${AppLocalizations.of(context)!.translate('period')}: ${shipment.period} ",
-                        style: const TextStyle(
-                          // color: Colors.white,
-                          fontSize: 17,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

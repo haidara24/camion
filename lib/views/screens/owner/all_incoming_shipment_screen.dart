@@ -438,7 +438,8 @@ class _AllIncomingShippmentLogScreenState
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              IncomingShipmentDetailsScreen(),
+                                                              IncomingShipmentDetailsScreen(
+                                                                  requestId: 0),
                                                         ),
                                                       ),
                                                     );
@@ -968,7 +969,8 @@ class _AllIncomingShippmentLogScreenState
                                                         context,
                                                         MaterialPageRoute(
                                                           builder: (context) =>
-                                                              IncomingShipmentDetailsScreen(),
+                                                              IncomingShipmentDetailsScreen(
+                                                                  requestId: 0),
                                                         ),
                                                       ),
                                                     );

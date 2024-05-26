@@ -10,12 +10,14 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
   final DateTime pickupDate;
   final DateTime deliveryDate;
   final String langCode;
+  final bool mini;
   const ShipmentPathVerticalWidget({
     Key? key,
     required this.pathpoints,
     required this.pickupDate,
     required this.deliveryDate,
     required this.langCode,
+    required this.mini,
   }) : super(key: key);
 
   String setLoadDate(DateTime date, String lang) {
@@ -60,7 +62,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
       if (element.pointType == "P") {
         list.add(
           SizedBox(
-            height: 85,
+            height: 65,
             child: TimelineTile(
               isLast: false,
               isFirst: true,
@@ -69,14 +71,15 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 25,
+                width: 17,
                 color: AppColor.deepYellow,
                 iconStyle: IconStyle(
                   iconData: Icons.circle_sharp,
-                  color: Colors.white,
-                  fontSize: 20,
+                  color: AppColor.deepYellow,
+                  fontSize: 15,
                 ),
               ),
+              // afterLineStyle: LineStyle(),
               alignment: TimelineAlign.manual,
               lineXY: .3,
               startChild: FittedBox(
@@ -113,10 +116,10 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
     }
 
     for (var element in pathpoints) {
-      if (element.pointType == "S") {
+      if (element.pointType == "S" && !mini) {
         list.add(
           SizedBox(
-            height: 85,
+            height: 65,
             child: TimelineTile(
               isLast: false,
               isFirst: false,
@@ -124,12 +127,12 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 25,
+                width: 17,
                 color: AppColor.deepYellow,
                 iconStyle: IconStyle(
                   iconData: Icons.circle_sharp,
-                  color: Colors.white,
-                  fontSize: 20,
+                  color: AppColor.deepYellow,
+                  fontSize: 15,
                 ),
               ),
               alignment: TimelineAlign.manual,
@@ -152,7 +155,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
       if (element.pointType == "D") {
         list.add(
           SizedBox(
-            height: 85,
+            height: 65,
             child: TimelineTile(
               isLast: true,
               isFirst: false,
@@ -161,12 +164,12 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 25,
+                width: 17,
                 color: AppColor.deepYellow,
                 iconStyle: IconStyle(
                   iconData: Icons.circle_sharp,
-                  color: Colors.white,
-                  fontSize: 20,
+                  color: AppColor.deepYellow,
+                  fontSize: 15,
                 ),
               ),
               alignment: TimelineAlign.manual,

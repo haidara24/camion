@@ -1,4 +1,5 @@
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -120,14 +121,18 @@ class SearchShippmentScreen extends StatelessWidget {
                                     //     .difference(state.offers[index].createdDate!);
                                     return InkWell(
                                       onTap: () {
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder: (context) =>
-                                        //           SearchShipmentDetailsScreen(
-                                        //               shipment: state
-                                        //                   .shipments[index]),
-                                        //     ));
+                                        BlocProvider.of<SubShipmentDetailsBloc>(
+                                                context)
+                                            .add(SubShipmentDetailsLoadEvent(
+                                                state.shipments[index].id!));
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SearchShipmentDetailsScreen(
+                                                      shipment: state
+                                                          .shipments[index]),
+                                            ));
                                       },
                                       child: AbsorbPointer(
                                         absorbing: false,
@@ -181,6 +186,7 @@ class SearchShippmentScreen extends StatelessWidget {
                                                     .pickupDate!,
                                                 langCode: localeState
                                                     .value.languageCode,
+                                                mini: true,
                                               ),
                                             ],
                                           ),

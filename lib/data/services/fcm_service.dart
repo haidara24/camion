@@ -128,43 +128,15 @@ class NotificationServices {
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) {
-    if (message.data['notefication_type'] == "A") {
-      // BlocProvider.of<ShipmentDetailsBloc>(context)
-      //     .add(ShipmentDetailsLoadEvent(int.parse(message.data['shipmentId'])));
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => ShipmentTaskDetailsFromNotificationScreen(),
-      //   ),
-      // );
-      BlocProvider.of<ShipmentDetailsBloc>(context)
-          .add(ShipmentDetailsLoadEvent(int.parse(message.data['shipmentId'])));
+    // if (message.data['notefication_type'] == "A") {
+    //   BlocProvider.of<ShipmentDetailsBloc>(context)
+    //       .add(ShipmentDetailsLoadEvent(int.parse(message.data['shipmentId'])));
 
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ActiveShipmentDetailsFromNotificationScreen(
-              user_id: 'driver${int.parse(message.data['sender'])}',
-            ),
-          ));
-    }
-    // else if (message.data['notefication_type'] == "O") {
-    //   BlocProvider.of<OfferDetailsBloc>(context)
-    //       .add(OfferDetailsLoadEvent(int.parse(message.data['offerId'])));
     //   Navigator.push(
     //       context,
     //       MaterialPageRoute(
-    //         builder: (context) => OrderDetailsScreen(),
-    //       ));
-    // }
-    // else if (message.data['notefication_type'] == "T") {
-    //   BlocProvider.of<OfferDetailsBloc>(context)
-    //       .add(OfferDetailsLoadEvent(int.parse(message.data['offerId'])));
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => OfferDetailsScreen(
-    //           type: "trader",
+    //         builder: (context) => ActiveShipmentDetailsFromNotificationScreen(
+    //           user_id: 'driver${int.parse(message.data['sender'])}',
     //         ),
     //       ));
     // }
@@ -195,7 +167,5 @@ class NotificationServices {
           HttpHeaders.authorizationHeader: 'JWT $jwt'
         },
         body: jsonEncode({"isread": true}));
-    print(response.statusCode);
-    print(response.body);
   }
 }

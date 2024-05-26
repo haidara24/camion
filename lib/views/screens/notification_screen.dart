@@ -1,10 +1,13 @@
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 // import 'package:camion/business_logic/bloc/offer_details_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/views/screens/merchant/active_shipment_details_from_notification.dart';
+import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
+import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,11 +56,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           title: "Notifications",
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Consumer<NotificationProvider>(
+          child: BlocBuilder<NotificationBloc, NotificationState>(
+            builder: (context, state) {
+              if (state is NotificationLoadedSuccess) {
+                return Consumer<NotificationProvider>(
                   builder: (context, notificationProvider, child) {
                     return notificationProvider.notifications.isEmpty
                         ? const Center(
@@ -69,9 +71,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              // DateTime now = DateTime.now();
-                              // Duration diff = now
-                              //     .difference(state.offers[index].createdDate!);
                               DateTime now = DateTime.now();
                               Duration diff = now.difference(DateTime.parse(
                                   notificationProvider
@@ -90,24 +89,34 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 child: ListTile(
                                   contentPadding: EdgeInsets.zero,
                                   onTap: () {
-                                    BlocProvider.of<ShipmentDetailsBloc>(
-                                            context)
-                                        .add(ShipmentDetailsLoadEvent(
-                                            notificationProvider
+                                    if (notificationProvider
                                                 .notifications[index]
-                                                .shipment!));
-                                    print(notificationProvider
-                                        .notifications[index].sender!);
+                                                .noteficationType ==
+                                            "A" ||
+                                        notificationProvider
+                                                .notifications[index]
+                                                .noteficationType ==
+                                            "J") {
+                                      BlocProvider.of<RequestDetailsBloc>(
+                                              context)
+                                          .add(RequestDetailsLoadEvent(
+                                              notificationProvider
+                                                  .notifications[index]
+                                                  .request!));
 
-                                    Navigator.push(
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              ActiveShipmentDetailsFromNotificationScreen(
-                                            user_id:
-                                                'driver${notificationProvider.notifications[index].sender!}',
+                                              ApprovalRequestDetailsScreen(
+                                            type: notificationProvider
+                                                .notifications[index]
+                                                .noteficationType!,
                                           ),
-                                        ));
+                                        ),
+                                      );
+                                    }
+
                                     if (!notificationProvider
                                         .notifications[index].isread!) {
                                       NotificationServices
@@ -135,11 +144,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                     .image!
                                                     .length >
                                                 1)
-                                            ? Image.network(
-                                                'https://matjari.app/media/${notificationProvider.notifications[index].image!}',
-                                                height: 55.h,
-                                                width: 55.w,
-                                                fit: BoxFit.fill,
+                                            ? ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(180),
+                                                child: Image.network(
+                                                  'https://matjari.app/media/${notificationProvider.notifications[index].image!}',
+                                                  height: 55.h,
+                                                  width: 55.w,
+                                                  fit: BoxFit.fill,
+                                                ),
                                               )
                                             : Text(
                                                 notificationProvider
@@ -178,9 +191,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               );
                             });
                   },
-                ),
-              ),
-            ],
+                );
+              } else {
+                return Center(
+                  child: LoadingIndicator(),
+                );
+              }
+            },
           ),
         ),
       ),

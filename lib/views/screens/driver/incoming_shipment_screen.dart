@@ -1,13 +1,11 @@
 import 'package:camion/Localization/app_localizations.dart';
-import 'package:camion/business_logic/bloc/driver_requests_list_bloc.dart';
-import 'package:camion/business_logic/bloc/driver_shipments/incoming_shipments_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/inprogress_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
-import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -187,101 +185,111 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                             const NeverScrollableScrollPhysics(),
                                         shrinkWrap: true,
                                         itemBuilder: (context, index) {
-                                          return InkWell(
-                                            onTap: () {
-                                              BlocProvider.of<
-                                                          SubShipmentDetailsBloc>(
-                                                      context)
-                                                  .add(
-                                                      SubShipmentDetailsLoadEvent(
-                                                          state
-                                                              .requests[index]
-                                                              .subshipment!
-                                                              .id!));
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        IncomingShipmentDetailsScreen(),
-                                                  ));
-                                            },
-                                            child: AbsorbPointer(
-                                              absorbing: false,
-                                              child: Card(
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 48.h,
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                      child: Row(
+                                          return state.requests[index]
+                                                      .responseTurn ==
+                                                  "D"
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    BlocProvider.of<
+                                                                SubShipmentDetailsBloc>(
+                                                            context)
+                                                        .add(SubShipmentDetailsLoadEvent(
+                                                            state
+                                                                .requests[index]
+                                                                .subshipment!
+                                                                .id!));
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              IncomingShipmentDetailsScreen(
+                                                                  requestId: state
+                                                                      .requests[
+                                                                          index]
+                                                                      .id!),
+                                                        ));
+                                                  },
+                                                  child: AbsorbPointer(
+                                                    absorbing: false,
+                                                    child: Card(
+                                                      shape:
+                                                          const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(10),
+                                                        ),
+                                                      ),
+                                                      child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
-                                                                .spaceBetween,
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
                                                         children: [
-                                                          Text(
-                                                            "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                              // color: AppColor.lightBlue,
-                                                              fontSize: 17.sp,
+                                                          Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 48.h,
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    // color: AppColor.lightBlue,
+                                                                    fontSize:
+                                                                        17.sp,
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          11),
+                                                                  child: Text(
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
+                                                                    style: TextStyle(
+                                                                        // color: AppColor.lightBlue,
+                                                                        fontSize: 18.sp,
+                                                                        fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
                                                           ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        11),
-                                                            child: Text(
-                                                              '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
-                                                              style: TextStyle(
-                                                                  // color: AppColor.lightBlue,
-                                                                  fontSize:
-                                                                      18.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
+                                                          ShipmentPathVerticalWidget(
+                                                            pathpoints: state
+                                                                .requests[index]
+                                                                .subshipment!
+                                                                .pathpoints!,
+                                                            pickupDate: state
+                                                                .requests[index]
+                                                                .subshipment!
+                                                                .pickupDate!,
+                                                            deliveryDate: state
+                                                                .requests[index]
+                                                                .subshipment!
+                                                                .pickupDate!,
+                                                            langCode: localeState
+                                                                .value
+                                                                .languageCode,
+                                                            mini: true,
                                                           ),
                                                         ],
                                                       ),
                                                     ),
-                                                    ShipmentPathVerticalWidget(
-                                                      pathpoints: state
-                                                          .requests[index]
-                                                          .subshipment!
-                                                          .pathpoints!,
-                                                      pickupDate: state
-                                                          .requests[index]
-                                                          .subshipment!
-                                                          .pickupDate!,
-                                                      deliveryDate: state
-                                                          .requests[index]
-                                                          .subshipment!
-                                                          .pickupDate!,
-                                                      langCode: localeState
-                                                          .value.languageCode,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
+                                                  ),
+                                                )
+                                              : const SizedBox.shrink();
                                         },
                                       );
                               } else {
@@ -452,37 +460,25 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                                 CrossAxisAlignment
                                                                     .start,
                                                             children: [
-                                                              ShipmentPathWidget(
-                                                                loadDate: setLoadDate(state
+                                                              ShipmentPathVerticalWidget(
+                                                                pathpoints: state
                                                                     .shipments[
                                                                         index]
-                                                                    .pickupDate!),
-                                                                pickupName: state
+                                                                    .pathpoints!,
+                                                                pickupDate: state
                                                                     .shipments[
                                                                         index]
-                                                                    .pickupCityLocation!,
-                                                                deliveryName: state
+                                                                    .pickupDate!,
+                                                                deliveryDate: state
                                                                     .shipments[
                                                                         index]
-                                                                    .deliveryCityLocation!,
-                                                                width: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    .66,
-                                                                pathwidth: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    .56,
-                                                              ).animate().slideX(
-                                                                  duration:
-                                                                      300.ms,
-                                                                  delay: 0.ms,
-                                                                  begin: 1,
-                                                                  end: 0,
-                                                                  curve: Curves
-                                                                      .easeInOutSine),
+                                                                    .deliveryDate!,
+                                                                langCode:
+                                                                    localeState
+                                                                        .value
+                                                                        .languageCode,
+                                                                mini: true,
+                                                              ),
                                                               SizedBox(
                                                                 height: 7.h,
                                                               ),

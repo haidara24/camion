@@ -8,6 +8,7 @@ class ApprovalRequest {
   String? responseTurn;
   bool? isApproved;
   String? reason;
+  String? extratext;
   double? extraFees;
 
   ApprovalRequest(
@@ -16,19 +17,20 @@ class ApprovalRequest {
       this.subshipment,
       this.responseTurn,
       this.isApproved,
+      this.extratext,
       this.reason,
       this.extraFees});
 
   ApprovalRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     driver = json['driver'];
-    print("k");
     subshipment = json['subshipment'] != null
         ? SimpleSubshipment.fromJson(json['subshipment'])
         : null;
     responseTurn = json['response_turn'];
     isApproved = json['is_approved'];
     reason = json['reason'];
+    extratext = json['extra_fees_text'];
     extraFees = json['extra_fees'];
   }
 
@@ -43,6 +45,7 @@ class ApprovalRequest {
     data['is_approved'] = isApproved;
     data['reason'] = reason;
     data['extra_fees'] = extraFees;
+    data['extra_fees_text'] = extratext;
     return data;
   }
 }
