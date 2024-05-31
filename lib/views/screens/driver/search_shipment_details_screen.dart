@@ -525,7 +525,7 @@ class _SearchShipmentDetailsScreenState
                                                                                         child: Padding(
                                                                                           padding: const EdgeInsets.all(8.0),
                                                                                           child: Text(
-                                                                                            "${state.trucks[index].truckuser!.user!.firstName!} ${state.trucks[index].truckuser!.user!.lastName!}",
+                                                                                            "${state.trucks[index].truckuser!.usertruck!.firstName!} ${state.trucks[index].truckuser!.usertruck!.lastName!}",
                                                                                             style: TextStyle(
                                                                                               fontSize: 18.sp,
                                                                                             ),

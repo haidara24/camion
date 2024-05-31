@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -11,7 +12,10 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/data/services/co2_service.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/http_helper.dart';
+import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +28,7 @@ import 'package:location/location.dart' as loc;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intel;
+import 'package:shimmer/shimmer.dart';
 
 class TrackingShipmentScreen extends StatefulWidget {
   TrackingShipmentScreen({
@@ -50,7 +55,11 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     duration: const Duration(seconds: 2),
     vsync: this,
   );
-  initMapbounds(SubShipment subshipment) {
+
+  double distance = 0;
+  String period = "";
+
+  initMapbounds(SubShipment subshipment) async {
     List<Marker> markers = [];
     var pickuplocation = subshipment.pathpoints!
         .singleWhere((element) => element.pointType == "P")
@@ -88,12 +97,19 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 50.0);
-    print("asd");
+    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 130.0);
     _controller.animateCamera(cameraUpdate);
-    // _mapController2.animateCamera(cameraUpdate);
-    print("asd");
-    // notifyListeners();
+
+    var response = await HttpHelper.get(
+        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${deliverylocation[0]},${deliverylocation[1]}&origins=${subshipment.truck!.location_lat!.split(",")[0]},${subshipment.truck!.location_lat!.split(",")[1]}&key=AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c&mode=DRIVING');
+
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      distance = double.parse(result["rows"][0]['elements'][0]['distance']
+              ['text']
+          .replaceAll(" km", ""));
+      period = result["rows"][0]['elements'][0]['duration']['text'];
+    }
   }
 
   late BitmapDescriptor pickupicon;
@@ -103,6 +119,253 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   late LatLng truckLocation;
   late bool truckLocationassign;
   Set<Marker> markers = Set();
+
+  Widget pathList(SubShipment subshipments, String language) {
+    return GestureDetector(
+      onVerticalDragUpdate: (details) {
+        _onVerticalGesture(details, subshipments, language);
+      },
+      child: Container(
+        color: Colors.grey[200],
+        height: 110.h,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 4.h,
+                      width: 25.w,
+                      child: SvgPicture.asset(
+                        "assets/icons/arrow_up.svg",
+                        fit: BoxFit.contain,
+                        height: 8.h,
+                        width: 25.w,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const Spacer(),
+            SizedBox(
+              height: 88.h,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onVerticalGesture(
+      DragUpdateDetails details, SubShipment subshipment, String language) {
+    if (details.primaryDelta! < -7) {
+      panelState = PanelState.open;
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        // isDismissible: false,
+        // enableDrag: false,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(0),
+          ),
+        ),
+        builder: (context) => GestureDetector(
+          onVerticalDragUpdate: (details) {
+            if (details.primaryDelta! > 7) {
+              Navigator.pop(context);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            // constraints:
+            //     BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+            width: double.infinity,
+            child: ListView(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: AbsorbPointer(
+                        absorbing: false,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * .8,
+                          padding: EdgeInsets.all(8.0),
+                          child: Center(
+                            child: SizedBox(
+                              height: 8.h,
+                              width: 25.w,
+                              child: SvgPicture.asset(
+                                "assets/icons/arrow_down.svg",
+                                fit: BoxFit.contain,
+                                height: 8.h,
+                                width: 25.w,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              height: 58.w,
+                              width: 58.w,
+                              decoration: BoxDecoration(
+                                  // color: AppColor.lightGoldenYellow,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: CircleAvatar(
+                                radius: 25.h,
+                                // backgroundColor: AppColor.deepBlue,
+                                child: Center(
+                                  child: (subshipment.truck!.truckuser!.user!
+                                              .image!.length >
+                                          1)
+                                      ? ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(180),
+                                          child: Image.network(
+                                            subshipment
+                                                .truck!.truckuser!.user!.image!,
+                                            height: 55.w,
+                                            width: 55.w,
+                                            fit: BoxFit.fill,
+                                          ),
+                                        )
+                                      : Text(
+                                          subshipment.truck!.truckuser!.user!
+                                              .firstName!,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 28.sp,
+                                          ),
+                                        ),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "${subshipment.truck!.truckuser!.user!.firstName!} ${subshipment.truck!.truckuser!.user!.lastName!}",
+                              style: TextStyle(
+                                // color: AppColor.lightBlue,
+                                fontSize: 19.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 35.h,
+                              width: 155.w,
+                              child: CachedNetworkImage(
+                                imageUrl: subshipment.truck!.truck_type!.image!,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) =>
+                                        Shimmer.fromColors(
+                                  baseColor: (Colors.grey[300])!,
+                                  highlightColor: (Colors.grey[100])!,
+                                  enabled: true,
+                                  child: Container(
+                                    height: 25.h,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 35.h,
+                                  width: 155.w,
+                                  color: Colors.grey[300],
+                                  child: Center(
+                                    child: Text(AppLocalizations.of(context)!
+                                        .translate('image_load_error')),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Text(
+                              "${language == 'en' ? subshipment.truck!.truck_type!.name! : subshipment.truck!.truck_type!.nameAr!}  ",
+                              style: TextStyle(
+                                // color: AppColor.lightBlue,
+                                fontSize: 19.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const Divider(),
+                    Text(
+                      "مسار الشحنة",
+                      style: TextStyle(
+                        // color: AppColor.lightBlue,
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ShipmentPathVerticalWidget(
+                      pathpoints: subshipment.pathpoints!,
+                      pickupDate: subshipment.pickupDate!,
+                      deliveryDate: subshipment.deliveryDate!,
+                      langCode: language,
+                      mini: false,
+                    ),
+                    const Divider(),
+                    Text(
+                      "تفاصيل بضاعة الشاحنة",
+                      style: TextStyle(
+                        // color: AppColor.lightBlue,
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Commodity_info_widget(
+                        shipmentItems: subshipment.shipmentItems!),
+                    const Divider(),
+                    Text(
+                      "احصائيات مسار الشاحنة",
+                      style: TextStyle(
+                        // color: AppColor.lightBlue,
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    PathStatisticsWidget(
+                      distance: subshipment.distance!,
+                      period: subshipment.period!,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else if (details.primaryDelta! > 7 && panelState == PanelState.open) {
+      // changeToHidden();
+    }
+  }
 
   createMarkerIcons() async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
@@ -146,29 +409,6 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     super.dispose();
   }
 
-  void _onVerticalGesture(DragUpdateDetails details) {
-    if (details.primaryDelta! < -7 && panelState == PanelState.hidden) {
-      changeToOpen();
-    } else if (details.primaryDelta! > 7 && panelState == PanelState.open) {
-      changeToHidden();
-    }
-  }
-
-  void changeToOpen() {
-    setState(() {
-      panelState = PanelState.open;
-    });
-  }
-
-  void changeToHidden() {
-    setState(() {
-      panelState = PanelState.hidden;
-    });
-  }
-
-  List<LatLng> _truckpolyline = [];
-  bool _printed = false;
-
   String setLoadDate(DateTime date) {
     List months = [
       'jan',
@@ -194,131 +434,125 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   var count = 25;
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: BlocBuilder<DriverActiveShipmentBloc, DriverActiveShipmentState>(
-          builder: (context, state) {
-            if (state is DriverActiveShipmentLoadedSuccess) {
-              if (state.shipments.isEmpty) {
-                return Center(
-                  child: Text(
-                      AppLocalizations.of(context)!.translate('no_shipments')),
-                );
-              } else {
-                return Consumer<ActiveShippmentProvider>(
-                    builder: (context, shipmentProvider, child) {
-                  return AnimatedBuilder(
-                    animation: _animationController,
-                    builder: (context, child) {
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return SafeArea(
+          child: Scaffold(
+            body: BlocBuilder<DriverActiveShipmentBloc,
+                DriverActiveShipmentState>(
+              builder: (context, state) {
+                if (state is DriverActiveShipmentLoadedSuccess) {
+                  if (state.shipments.isEmpty) {
+                    return Center(
+                      child: Text(AppLocalizations.of(context)!
+                          .translate('no_shipments')),
+                    );
+                  } else {
+                    return Consumer<ActiveShippmentProvider>(
+                        builder: (context, shipmentProvider, child) {
                       return Stack(
+                        alignment: Alignment.bottomCenter,
                         children: [
-                          GoogleMap(
-                            onMapCreated:
-                                (GoogleMapController controller) async {
-                              setState(() {
-                                _controller = controller;
-                                _controller.setMapStyle(_mapStyle);
-                              });
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                            child: GoogleMap(
+                              onMapCreated:
+                                  (GoogleMapController controller) async {
+                                setState(() {
+                                  _controller = controller;
+                                  _controller.setMapStyle(_mapStyle);
+                                });
 
-                              initMapbounds(state.shipments[0]);
-                              // setLoadDate(shipment.subshipments![selectedIndex].pickupDate!);
-                              // setLoadTime(shipment.subshipments![selectedIndex].pickupDate!);
-                              markers = {};
-                              var pickupMarker = Marker(
-                                markerId: const MarkerId("pickup"),
-                                position: LatLng(
-                                    double.parse(state.shipments[0].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "P")
-                                        .location!
-                                        .split(",")[0]),
-                                    double.parse(state.shipments[0].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "P")
-                                        .location!
-                                        .split(",")[1])),
-                                icon: pickupicon,
-                              );
-                              markers.add(pickupMarker);
-                              var deliveryMarker = Marker(
-                                markerId: const MarkerId("delivery"),
-                                position: LatLng(
-                                    double.parse(state.shipments[0].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "D")
-                                        .location!
-                                        .split(",")[0]),
-                                    double.parse(state.shipments[0].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "D")
-                                        .location!
-                                        .split(",")[1])),
-                                icon: deliveryicon,
-                              );
-                              markers.add(deliveryMarker);
+                                initMapbounds(state.shipments[0]);
+                                markers = {};
+                                var pickupMarker = Marker(
+                                  markerId: const MarkerId("pickup"),
+                                  position: LatLng(
+                                      double.parse(state
+                                          .shipments[0].pathpoints!
+                                          .singleWhere((element) =>
+                                              element.pointType == "P")
+                                          .location!
+                                          .split(",")[0]),
+                                      double.parse(state
+                                          .shipments[0].pathpoints!
+                                          .singleWhere((element) =>
+                                              element.pointType == "P")
+                                          .location!
+                                          .split(",")[1])),
+                                  icon: pickupicon,
+                                );
+                                markers.add(pickupMarker);
+                                var deliveryMarker = Marker(
+                                  markerId: const MarkerId("delivery"),
+                                  position: LatLng(
+                                      double.parse(state
+                                          .shipments[0].pathpoints!
+                                          .singleWhere((element) =>
+                                              element.pointType == "D")
+                                          .location!
+                                          .split(",")[0]),
+                                      double.parse(state
+                                          .shipments[0].pathpoints!
+                                          .singleWhere((element) =>
+                                              element.pointType == "D")
+                                          .location!
+                                          .split(",")[1])),
+                                  icon: deliveryicon,
+                                );
+                                markers.add(deliveryMarker);
 
-                              var truckMarker = Marker(
-                                markerId: const MarkerId("truck"),
-                                position: LatLng(
-                                    double.parse(state
-                                        .shipments[0].truck!.location_lat!
-                                        .split(",")[0]),
-                                    double.parse(state
-                                        .shipments[0].truck!.location_lat!
-                                        .split(",")[1])),
-                                icon: truckicon,
-                              );
-                              markers.add(truckMarker);
-                              setState(() {});
-                            },
-                            zoomControlsEnabled: false,
+                                var truckMarker = Marker(
+                                  markerId: const MarkerId("truck"),
+                                  position: LatLng(
+                                      double.parse(state
+                                          .shipments[0].truck!.location_lat!
+                                          .split(",")[0]),
+                                      double.parse(state
+                                          .shipments[0].truck!.location_lat!
+                                          .split(",")[1])),
+                                  icon: truckicon,
+                                );
+                                markers.add(truckMarker);
+                                setState(() {});
+                              },
+                              zoomControlsEnabled: false,
 
-                            initialCameraPosition: CameraPosition(
-                                target: LatLng(35.363149, 35.932120),
-                                zoom: 14.47),
-                            // gestureRecognizers: {},
-                            markers: markers,
-                            polylines: state.shipments.isNotEmpty
-                                ? {
-                                    Polyline(
-                                      polylineId: const PolylineId("route"),
-                                      points: deserializeLatLng(
-                                          state.shipments[0].paths!),
-                                      color: AppColor.deepYellow,
-                                      width: 7,
-                                    ),
-                                  }
-                                : {},
-                            // mapType: shipmentProvider.mapType,
-                          ),
-                          AnimatedPositioned(
-                            duration: panelTransation,
-                            curve: Curves.decelerate,
-                            left: 0,
-                            right: 0,
-                            bottom: _getTopForPanel(),
-                            child: GestureDetector(
-                              onVerticalDragUpdate: _onVerticalGesture,
-                              child: _buildExpandedPanelWidget(
-                                  context, state.shipments[0]),
-                              // child: AnimatedSwitcher(
-                              //   duration: panelTransation,
-                              //   child: _buildPanelOption(context),
-                              // ),
+                              initialCameraPosition: const CameraPosition(
+                                  target: LatLng(35.363149, 35.932120),
+                                  zoom: 14.47),
+                              // gestureRecognizers: {},
+                              markers: markers,
+                              polylines: state.shipments.isNotEmpty
+                                  ? {
+                                      Polyline(
+                                        polylineId: const PolylineId("route"),
+                                        points: deserializeLatLng(
+                                            state.shipments[0].paths!),
+                                        color: AppColor.deepYellow,
+                                        width: 4,
+                                      ),
+                                    }
+                                  : {},
+                              // mapType: shipmentProvider.mapType,
                             ),
+                          ),
+                          pathList(
+                            state.shipments[0],
+                            localeState.value.languageCode,
                           ),
                         ],
                       );
-                    },
-                  );
-                });
-              }
-            } else {
-              return const Center(child: LoadingIndicator());
-            }
-          },
-        ),
-      ),
+                    });
+                  }
+                } else {
+                  return const Center(child: LoadingIndicator());
+                }
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -340,280 +574,5 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     print("asd3");
 
     setState(() {});
-  }
-
-  double? _getTopForPanel() {
-    if (panelState == PanelState.hidden) {
-      return 120.h - 350.h;
-    } else if (panelState == PanelState.open) {
-      return 0;
-    }
-  }
-
-  Widget _buildExpandedPanelWidget(BuildContext context, SubShipment shipment) {
-    return BlocBuilder<LocaleCubit, LocaleState>(
-      builder: (context, localeState) {
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              height: 350.h,
-              width: MediaQuery.of(context).size.width,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(13),
-                  topRight: Radius.circular(13),
-                ),
-              ),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 7.h,
-                  ),
-                  ShipmentPathVerticalWidget(
-                    pathpoints: shipment.pathpoints!,
-                    pickupDate: shipment.pickupDate!,
-                    deliveryDate: shipment.deliveryDate!,
-                    langCode: localeState.value.languageCode,
-                    mini: false,
-                  ),
-                  const Divider(),
-                  _buildCommodityWidget(shipment.shipmentItems, shipment),
-                  const Divider(),
-                  _buildCo2Report(),
-                ],
-              ),
-            ),
-            BlocBuilder<LocaleCubit, LocaleState>(
-              builder: (context, localeState) {
-                return Positioned(
-                  top: -20,
-                  right: MediaQuery.of(context).size.width * .45,
-                  child: panelState == PanelState.hidden
-                      ? InkWell(
-                          onTap: () {
-                            changeToOpen();
-                          },
-                          child: AbsorbPointer(
-                            absorbing: true,
-                            child: Container(
-                              height: 45.h,
-                              width: 45.w,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey[300]!,
-                                  width: 1,
-                                ),
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(45),
-                              ),
-                              child: Center(
-                                child: SizedBox(
-                                  height: 25.h,
-                                  width: 25.w,
-                                  child: SvgPicture.asset(
-                                    "assets/icons/arrow_up.svg",
-                                    fit: BoxFit.contain,
-                                    height: 25.h,
-                                    width: 25.w,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      : InkWell(
-                          onTap: () {
-                            changeToHidden();
-                          },
-                          child: AbsorbPointer(
-                            absorbing: true,
-                            child: Container(
-                              height: 45.h,
-                              width: 45.w,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey[300]!,
-                                  width: 1,
-                                ),
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(45),
-                              ),
-                              child: Center(
-                                child: SizedBox(
-                                  height: 25.h,
-                                  width: 25.w,
-                                  child: SvgPicture.asset(
-                                    "assets/icons/arrow_down.svg",
-                                    fit: BoxFit.contain,
-                                    height: 25.h,
-                                    width: 25.w,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  final ScrollController _scrollController = ScrollController();
-
-  gettruckpolylineCoordinates(LatLng driver, LatLng distination) async {
-    _truckpolyline = [];
-    PolylinePoints polylinePoints = PolylinePoints();
-    print("werwer");
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-      PointLatLng(driver.latitude, driver.longitude),
-      PointLatLng(distination.latitude, distination.longitude),
-    );
-    _truckpolyline = [];
-    if (result.points.isNotEmpty) {
-      result.points.forEach((element) {
-        _truckpolyline.add(
-          LatLng(
-            element.latitude,
-            element.longitude,
-          ),
-        );
-      });
-    }
-    setState(() {});
-  }
-
-  _buildCommodityWidget(
-      List<ShipmentItems>? shipmentItems, SubShipment shipment) {
-    return SizedBox(
-      height: 135.h,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const SizedBox(
-                width: 10,
-              ),
-              SizedBox(
-                height: 25.h,
-                width: 25.w,
-                child: SvgPicture.asset("assets/icons/commodity_icon.svg"),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                AppLocalizations.of(context)!.translate('commodity_info'),
-                style: TextStyle(
-                  fontSize: 17.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          SizedBox(
-            height: 95.h,
-            child: Scrollbar(
-              controller: _scrollController,
-              thumbVisibility: true,
-              thickness: 3.0,
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: ListView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: shipment.shipmentItems!.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "${AppLocalizations.of(context)!.translate('commodity_name')}: ${shipment.shipmentItems![index].commodityName!}",
-                              style: TextStyle(
-                                fontSize: 17.sp,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "${AppLocalizations.of(context)!.translate('commodity_weight')}: ${shipment.shipmentItems![index].commodityWeight!}",
-                              style: TextStyle(
-                                fontSize: 17.sp,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _buildCo2Report() {
-    return SizedBox(
-      height: 50.h,
-      width: MediaQuery.of(context).size.width,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 30,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              height: 35,
-              width: 35,
-              child: SvgPicture.asset("assets/icons/co2fingerprint.svg"),
-            ),
-            const SizedBox(
-              width: 5,
-            ),
-            BlocBuilder<LocaleCubit, LocaleState>(
-              builder: (context, localeState) {
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width * .7,
-                  child: Text(
-                    "${AppLocalizations.of(context)!.translate('total_co2')}: ${f.format(_report.et!.toInt())} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
-                    style: const TextStyle(
-                      // color: Colors.white,
-                      fontSize: 17,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

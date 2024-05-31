@@ -1,18 +1,16 @@
-import 'dart:convert';
-
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/data/models/shipment_model.dart';
+import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/shipment_instructions_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_task_details_screen.dart';
-import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
@@ -117,7 +115,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: AppColor.lightGrey200,
+            backgroundColor: Colors.grey[100],
             body: RefreshIndicator(
               onRefresh: onRefresh,
               child: SingleChildScrollView(
@@ -212,7 +210,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                   Container(
                                                     width: double.infinity,
                                                     height: 48.h,
-                                                    color: AppColor.deepYellow,
+                                                    color: Colors.grey[300],
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -235,10 +233,15 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                             ),
                                                           ),
                                                         ),
-                                                        Spacer(),
+                                                        const Spacer(),
                                                         Container(
                                                           height: 65.h,
-                                                          width: 75.w,
+                                                          width: 47.w,
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      10),
                                                           decoration:
                                                               BoxDecoration(
                                                             borderRadius:
@@ -251,66 +254,87 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                               clipBehavior:
                                                                   Clip.none,
                                                               children: [
-                                                                Card(
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5)),
-                                                                  elevation: 2,
+                                                                Center(
                                                                   child:
-                                                                      Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            8.0),
+                                                                      SizedBox(
+                                                                    height:
+                                                                        40.h,
+                                                                    width: 40.h,
                                                                     child:
                                                                         Center(
-                                                                      child:
-                                                                          Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .translate('tasks'),
-                                                                      ),
+                                                                      child: SvgPicture
+                                                                          .asset(
+                                                                              "assets/icons/notification.svg"),
                                                                     ),
                                                                   ),
                                                                 ),
-                                                                // getunfinishedTasks(
-                                                                //             state.shipments[
-                                                                //                 index]) >
-                                                                //         0
-                                                                //     ? Positioned(
-                                                                //         right: localeState.value.languageCode ==
-                                                                //                 'en'
-                                                                //             ? 0
-                                                                //             : null,
-                                                                //         left: localeState.value.languageCode ==
-                                                                //                 'en'
-                                                                //             ? null
-                                                                //             : 0,
-                                                                //         child:
-                                                                //             Container(
-                                                                //           height:
-                                                                //               25,
-                                                                //           width:
-                                                                //               25,
-                                                                //           decoration:
-                                                                //               BoxDecoration(
-                                                                //             color:
-                                                                //                 Colors.red,
-                                                                //             borderRadius:
-                                                                //                 BorderRadius.circular(45),
-                                                                //           ),
-                                                                //           child:
-                                                                //               Center(
-                                                                //             child: Text(
-                                                                //                 getunfinishedTasks(state.shipments[index]).toString(),
-                                                                //                 style: TextStyle(
-                                                                //                   color: Colors.white,
-                                                                //                 )),
-                                                                //           ),
-                                                                //         ),
-                                                                //       )
-                                                                //     : const SizedBox
-                                                                //         .shrink(),
+                                                                getunfinishedTasks(
+                                                                            state.shipments[index]) >
+                                                                        0
+                                                                    ? Positioned(
+                                                                        right: localeState.value.languageCode ==
+                                                                                'en'
+                                                                            ? 0
+                                                                            : null,
+                                                                        left: localeState.value.languageCode ==
+                                                                                'en'
+                                                                            ? null
+                                                                            : 0,
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              20,
+                                                                          width:
+                                                                              20,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                AppColor.deepYellow,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(45),
+                                                                          ),
+                                                                          child:
+                                                                              Center(
+                                                                            child: Text(getunfinishedTasks(state.shipments[index]).toString(),
+                                                                                style: const TextStyle(
+                                                                                  color: Colors.white,
+                                                                                )),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    : Positioned(
+                                                                        right: localeState.value.languageCode ==
+                                                                                'en'
+                                                                            ? 0
+                                                                            : null,
+                                                                        left: localeState.value.languageCode ==
+                                                                                'en'
+                                                                            ? null
+                                                                            : 0,
+                                                                        child:
+                                                                            Container(
+                                                                          height:
+                                                                              20,
+                                                                          width:
+                                                                              20,
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                Colors.green,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(45),
+                                                                          ),
+                                                                          child:
+                                                                              const Center(
+                                                                            child:
+                                                                                Icon(
+                                                                              Icons.check,
+                                                                              color: Colors.white,
+                                                                              size: 15,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
                                                               ],
                                                             ),
                                                           ),
@@ -390,12 +414,12 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
     );
   }
 
-  int getunfinishedTasks(Shipment shipment) {
+  int getunfinishedTasks(SubShipment shipment) {
     var count = 0;
-    if (shipment.shipmentinstruction == null) {
+    if (shipment.shipmentinstructionv2 == null) {
       count++;
     }
-    if (shipment.shipmentpayment == null) {
+    if (shipment.shipmentpaymentv2 == null) {
       count++;
     }
     return count;

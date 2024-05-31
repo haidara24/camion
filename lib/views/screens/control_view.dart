@@ -1,12 +1,11 @@
-import 'package:camion/business_logic/bloc/check_point/charge_types_list_bloc.dart';
-import 'package:camion/business_logic/bloc/check_point/check_point_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
-import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/complete_managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/simple_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/views/screens/check_point/home_screen.dart';
@@ -15,7 +14,6 @@ import 'package:camion/views/screens/managment/managment_home_screen.dart';
 import 'package:camion/views/screens/merchant/home_screen.dart';
 import 'package:camion/views/screens/owner/owner_home_screen.dart';
 import 'package:camion/views/screens/select_user_type.dart';
-import 'package:camion/views/screens/select_user_type_screen.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,6 +86,10 @@ class _ControlViewState extends State<ControlView> {
                 } else if (state is AuthMerchentSuccessState) {
                   BlocProvider.of<ActiveShipmentListBloc>(context)
                       .add(ActiveShipmentListLoadEvent());
+                  BlocProvider.of<ShipmentRunningBloc>(context)
+                      .add(ShipmentRunningLoadEvent("R"));
+                  BlocProvider.of<ShipmentListBloc>(context)
+                      .add(ShipmentListLoadEvent("P"));
                   return HomeScreen();
                 } else if (state is AuthInitial) {
                   BlocProvider.of<AuthBloc>(context).add(AuthCheckRequested());

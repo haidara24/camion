@@ -13,7 +13,7 @@ class TruckFixListBloc extends Bloc<TruckFixListEvent, TruckFixListState> {
     on<TruckFixListLoad>((event, emit) async {
       emit(TruckFixListLoadingProgress());
       try {
-        var fixes = await truckRepository.getTruckExpenses(event.truckId);
+        var fixes = await truckRepository.getTruckExpenses();
         emit(TruckFixListLoadedSuccess(fixes));
       } catch (e) {
         emit(TruckFixListLoadedFailed(e.toString()));

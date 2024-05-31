@@ -147,6 +147,12 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<KTruck?> _trucks = [null];
   List<KTruck?> get trucks => _trucks;
 
+  List<bool> _pathConfirm = [false];
+  List<bool> get pathConfirm => _pathConfirm;
+
+  List<bool> _truckConfirm = [false];
+  List<bool> get truckConfirm => _truckConfirm;
+
   List<bool> _truckError = [false];
   List<bool> get truckError => _truckError;
 
@@ -297,6 +303,10 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _selectedTruck = [];
 
     _trucks = [null];
+
+    _truckConfirm = [false];
+
+    _pathConfirm = [false];
 
     _truckError = [false];
 
@@ -1175,6 +1185,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _trucks.add(null);
 
     _pathError.add(false);
+    _truckConfirm.add(false);
+    _pathConfirm.add(false);
     _truckError.add(false);
     _dateError.add(false);
     _commodityCategory_controller.add([null]);
@@ -1245,6 +1257,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _trucks.removeAt(index);
 
     _pathError.removeAt(index);
+    _truckConfirm.removeAt(index);
+    _pathConfirm.removeAt(index);
     _truckError.removeAt(index);
     _dateError.removeAt(index);
     _commodityCategory_controller.removeAt(index);
@@ -1418,6 +1432,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   void setPathError(bool value, int index) {
     _pathError[index] = value;
+    notifyListeners();
+  }
+
+  void setPathConfirm(bool value, int index) {
+    _pathConfirm[index] = value;
+    notifyListeners();
+  }
+
+  void setTruckConfirm(bool value, int index) {
+    _truckConfirm[index] = value;
     notifyListeners();
   }
 

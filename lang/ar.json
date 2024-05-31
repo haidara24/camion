@@ -29,7 +29,7 @@
     "package_type":"نوع الطرد",
     "insert_value_validate":"الرجاء ادخال قيمة",
 
-    "select_info":"معلومات الشاحنة",
+    "truck_info":"معلومات الشاحنة",
     "select_truck":"اختر شاحنة",
     "select_truck_type":"اختر نوع الشاحنة",
     "select_truck_error":"الرجاء اختيار شاحنة",

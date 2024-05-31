@@ -202,7 +202,7 @@ class _AllIncomingShippmentLogScreenState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 DropdownButtonHideUnderline(
-                                  child: DropdownButton2<Truck?>(
+                                  child: DropdownButton2<KTruck?>(
                                     isExpanded: true,
                                     barrierLabel: AppLocalizations.of(context)!
                                         .translate('select_driver'),
@@ -215,11 +215,11 @@ class _AllIncomingShippmentLogScreenState
                                       ),
                                     ),
                                     items: state.trucks
-                                        .map((Truck item) =>
-                                            DropdownMenuItem<Truck>(
+                                        .map((KTruck item) =>
+                                            DropdownMenuItem<KTruck>(
                                               value: item,
                                               child: Text(
-                                                "${item.truckuser!.user!.firstName!} ${item.truckuser!.user!.lastName!}",
+                                                "${item.truckuser!.usertruck!.firstName!} ${item.truckuser!.usertruck!.lastName!}",
                                                 style: const TextStyle(
                                                   fontSize: 17,
                                                 ),
@@ -227,7 +227,7 @@ class _AllIncomingShippmentLogScreenState
                                             ))
                                         .toList(),
                                     value: truckProvider.selectedTruck,
-                                    onChanged: (Truck? value) {
+                                    onChanged: (KTruck? value) {
                                       truckProvider.setSelectedTruck(value!);
                                       setState(() {
                                         truckId = value.truckuser!.id!;
@@ -337,10 +337,10 @@ class _AllIncomingShippmentLogScreenState
                                       ),
                                       searchMatchFn: (item, searchValue) {
                                         print(searchValue);
-                                        print(item.value!.truckuser!.user!
+                                        print(item.value!.truckuser!.usertruck!
                                             .firstName!);
-                                        return item
-                                            .value!.truckuser!.user!.firstName!
+                                        return item.value!.truckuser!.usertruck!
+                                            .firstName!
                                             .contains(searchValue);
                                       },
                                     ),

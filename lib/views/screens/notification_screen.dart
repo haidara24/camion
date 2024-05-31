@@ -99,10 +99,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             "J") {
                                       BlocProvider.of<RequestDetailsBloc>(
                                               context)
-                                          .add(RequestDetailsLoadEvent(
-                                              notificationProvider
-                                                  .notifications[index]
-                                                  .request!));
+                                          .add(RequestDetailsLoadEvent(21));
 
                                       Navigator.push(
                                         context,

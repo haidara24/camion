@@ -7,7 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class TruckRepository {
-  List<Truck> trucks = [];
   List<KTruck> ktrucks = [];
   List<TruckPaper> truckPapers = [];
   List<TruckExpense> truckExpenses = [];
@@ -34,24 +33,18 @@ class TruckRepository {
     return ktrucks;
   }
 
-  Future<List<KTruck>> getKTrucks(int type) async {
+  Future<bool> updateTruckLocation(int id, String location) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-
-    var rs = await HttpHelper.get('$KTRUCKS_ENDPOINT?truck_type=$type',
+    var rs = await HttpHelper.patch(
+        '$TRUCKS_ENDPOINT$id/', {'location_lat': location},
         apiToken: jwt);
-    ktrucks = [];
-    print(rs.statusCode);
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
 
-      print(myDataString);
-      var result = jsonDecode(myDataString);
-      for (var element in result) {
-        ktrucks.add(KTruck.fromJson(element));
-      }
+    if (rs.statusCode == 200) {
+      return true;
+    } else {
+      return false;
     }
-    return ktrucks;
   }
 
   Future<List<KTruck>> searchKTrucks(String query) async {
@@ -59,7 +52,7 @@ class TruckRepository {
     var jwt = prefs.getString("token");
 
     var rs =
-        await HttpHelper.get('$KTRUCKS_ENDPOINT?search=$query', apiToken: jwt);
+        await HttpHelper.get('$TRUCKS_ENDPOINT?search=$query', apiToken: jwt);
     ktrucks = [];
     print(rs.statusCode);
     if (rs.statusCode == 200) {
@@ -73,30 +66,30 @@ class TruckRepository {
     return ktrucks;
   }
 
-  Future<List<Truck>> getTrucksForOwner(int ownerId) async {
+  Future<List<KTruck>> getTrucksForOwner(int ownerId) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
     var rs =
         await HttpHelper.get('$TRUCKS_ENDPOINT?owner=$ownerId', apiToken: jwt);
-    trucks = [];
+    ktrucks = [];
     print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
-      trucks.add(Truck(
+      ktrucks.add(KTruck(
         id: 0,
-        truckuser: Truckuser(
+        truckuser: KTuckUser(
           id: 0,
-          user: UserInfo(id: 0, firstName: "All", lastName: ""),
+          usertruck: Usertruck(id: 0, firstName: "All", lastName: ""),
         ),
       ));
       for (var element in result) {
-        trucks.add(Truck.fromJson(element));
+        ktrucks.add(KTruck.fromJson(element));
       }
     }
-    return trucks;
+    return ktrucks;
   }
 
   Future<KTruck?> getTruck(int id) async {
@@ -171,12 +164,12 @@ class TruckRepository {
     }
   }
 
-  Future<List<TruckExpense>> getTruckExpenses(int truck) async {
+  Future<List<TruckExpense>> getTruckExpenses() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
-    var rs = await HttpHelper.get('$TRUCK_EXPENSES_ENDPOINT?truck=$truck',
-        apiToken: jwt);
+    var rs =
+        await HttpHelper.get('$TRUCK_EXPENSES_ENDPOINT?truck=3', apiToken: jwt);
     truckExpenses = [];
     print(rs.statusCode);
     if (rs.statusCode == 200) {
@@ -202,7 +195,7 @@ class TruckRepository {
         "dob": fix.dob,
         "is_fixes": fix.isFixes,
         "truck": fix.truck,
-        "expense_type": fix.expenseType
+        "expense_type": fix.expenseType!.id!
       },
       apiToken: token,
     );

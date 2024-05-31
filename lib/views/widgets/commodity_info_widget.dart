@@ -10,7 +10,10 @@ class Commodity_info_widget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Table(
-      border: TableBorder.all(color: AppColor.deepYellow, width: 1),
+      border: TableBorder.all(
+        color: Colors.grey[400]!,
+        width: 1,
+      ),
       children: [
         TableRow(children: [
           TableCell(

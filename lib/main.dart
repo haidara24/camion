@@ -52,6 +52,7 @@ import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_details_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/trucks_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_papers/create_truck_paper_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_papers/truck_papers_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
@@ -286,6 +287,11 @@ class MyApp extends StatelessWidget {
                     create: (context) => SimpleCategoryListBloc(
                         categoryRepository:
                             RepositoryProvider.of<CategoryRepository>(context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => TruckFixListBloc(
+                        truckRepository:
+                            RepositoryProvider.of<TruckRepository>(context)),
                   ),
                   BlocProvider(
                     create: (context) => OwnerTrucksBloc(

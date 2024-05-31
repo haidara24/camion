@@ -24,7 +24,6 @@ const PATHPOINTS_ENDPOINT = '${DOMAIN}camion/checkpathpoints/';
 const CHARGES_ENDPOINT = '${DOMAIN}camion/passcharges/';
 const CHARGETYPE_ENDPOINT = '${DOMAIN}camion/chargestypes/';
 const TRUCKS_ENDPOINT = '${DOMAIN}camion/trucks2/';
-const KTRUCKS_ENDPOINT = '${DOMAIN}camion/ktrucks/';
 const TRUCK_PAPERS_ENDPOINT = '${DOMAIN}camion/truckpapers/';
 const TRUCK_EXPENSES_ENDPOINT = '${DOMAIN}camion/truckfixes/';
 const PACKAGE_TYPES_ENDPOINT = '${DOMAIN}camion/packagestypes/';

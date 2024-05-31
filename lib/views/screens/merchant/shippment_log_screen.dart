@@ -36,7 +36,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   // String _mapStyle = "";
 
   var f = intel.NumberFormat("#,###", "en_US");
-  late BitmapDescriptor pickupicon;
+  BitmapDescriptor? pickupicon;
   late BitmapDescriptor deliveryicon;
   List<Set<Marker>> markers = [];
 
@@ -204,7 +204,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                   .singleWhere((element) => element.pointType == "P")
                   .location!
                   .split(",")[1])),
-          icon: pickupicon,
+          icon: pickupicon!,
         ));
       }
       if (shipments.subshipments![i].pathpoints!
@@ -315,20 +315,17 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: AppColor.lightGrey200,
+            backgroundColor: Colors.grey[100],
             body: SingleChildScrollView(
               // physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                  Container(
+                    color: Colors.grey[200],
                     child: TabBar(
+                      indicatorColor: AppColor.deepYellow,
                       controller: _tabController,
                       onTap: (value) {
                         switch (value) {
@@ -368,7 +365,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                         ? BlocConsumer<ShipmentListBloc, ShipmentListState>(
                             listener: (context, state) {},
                             builder: (context, state) {
-                              if (state is ShipmentListLoadedSuccess) {
+                              if (state is ShipmentListLoadedSuccess &&
+                                  pickupicon != null) {
                                 return state.shipments.isEmpty
                                     ? Center(
                                         child: Text(
@@ -407,6 +405,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                   vertical: 4.0,
                                                 ),
                                                 child: Card(
+                                                  elevation: 2,
                                                   shape:
                                                       const RoundedRectangleBorder(
                                                     borderRadius:
@@ -424,7 +423,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       Container(
                                                         width: double.infinity,
                                                         height: 48.h,
-                                                        color: Colors.white,
+                                                        color: Colors.grey[300],
                                                         child: Row(
                                                           children: [
                                                             Container(

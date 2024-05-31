@@ -12,7 +12,7 @@ final class OwnerTrucksInitial extends OwnerTrucksState {}
 class OwnerTrucksLoadingProgress extends OwnerTrucksState {}
 
 class OwnerTrucksLoadedSuccess extends OwnerTrucksState {
-  final List<Truck> trucks;
+  final List<KTruck> trucks;
 
   const OwnerTrucksLoadedSuccess(this.trucks);
 }

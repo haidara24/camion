@@ -550,68 +550,6 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
   }
 
   bool shipmentsLoaded = false;
-  _buildCo2Report(SubShipment shipment) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          // height: 50.h,
-          width: MediaQuery.of(context).size.width * .29,
-          child: BlocBuilder<LocaleCubit, LocaleState>(
-            builder: (context, localeState) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width * .29,
-                child: Text(
-                  "${AppLocalizations.of(context)!.translate('total_co2')}:\n ${f.format(100)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
-                  style: const TextStyle(
-                    // color: Colors.white,
-                    fontSize: 17,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        SizedBox(
-          // height: 50.h,
-          width: MediaQuery.of(context).size.width * .29,
-          child: BlocBuilder<LocaleCubit, LocaleState>(
-            builder: (context, localeState) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width * .29,
-                child: Text(
-                  "المسافة المتبقية: ${shipment.distance} ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
-                  style: const TextStyle(
-                    // color: Colors.white,
-                    fontSize: 17,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        SizedBox(
-          // height: 50.h,
-          width: MediaQuery.of(context).size.width * .29,
-          child: BlocBuilder<LocaleCubit, LocaleState>(
-            builder: (context, localeState) {
-              return SizedBox(
-                width: MediaQuery.of(context).size.width * .7,
-                child: Text(
-                  "الوقت المتبقي: \n ${period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
-                  style: const TextStyle(
-                    // color: Colors.white,
-                    fontSize: 17,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

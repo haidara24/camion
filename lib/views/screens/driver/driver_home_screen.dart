@@ -7,11 +7,14 @@ import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipme
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/http_helper.dart';
+import 'package:camion/views/screens/driver/fixes_list_screen.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_screen.dart';
 import 'package:camion/views/screens/driver/search_shipment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
@@ -46,12 +49,14 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   NotificationServices notificationServices = NotificationServices();
   late TabController _tabController;
   late SharedPreferences prefs;
+  Timer? _timer;
 
   _getLocation() async {
     prefs = await SharedPreferences.getInstance();
     var userprofile =
         UserModel.fromJson(jsonDecode(prefs.getString("userProfile")!));
     var driverId = prefs.getInt("truckuser");
+
     try {
       final loc.LocationData _locationResult = await location.getLocation();
       await FirebaseFirestore.instance
@@ -72,6 +77,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     var userprofile =
         UserModel.fromJson(jsonDecode(prefs.getString("userProfile")!));
     var driverId = prefs.getInt("truckuser");
+    _locationSubscription?.cancel();
+    _timer?.cancel();
+
     _locationSubscription = location.onLocationChanged.handleError((onError) {
       print(onError);
       _locationSubscription?.cancel();
@@ -79,16 +87,19 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         _locationSubscription = null;
       });
     }).listen((loc.LocationData currentlocation) async {
-      print(currentlocation);
+      if (_timer == null || !_timer!.isActive) {
+        print(currentlocation);
 
-      await FirebaseFirestore.instance
-          .collection('location')
-          .doc('driver${userprofile.id}')
-          .set({
-        'latitude': currentlocation.latitude,
-        'longitude': currentlocation.longitude,
-        'name': '${userprofile.firstName!} ${userprofile.lastName!}'
-      }, SetOptions(merge: true));
+        var jwt = prefs.getString("token");
+        var rs = await HttpHelper.patch(
+            '$TRUCKS_ENDPOINT${3}/',
+            {
+              'location_lat':
+                  '${currentlocation.latitude},${currentlocation.longitude}'
+            },
+            apiToken: jwt);
+        _timer = Timer(const Duration(minutes: 1), () {});
+      }
     });
   }
 
@@ -114,7 +125,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   void initState() {
     super.initState();
     // _getLocation();
-    // _listenLocation();
+    _listenLocation();
     getUserData();
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
 
@@ -166,7 +177,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
       case 1:
         {
           BlocProvider.of<DriverRequestsListBloc>(context)
-              .add(DriverRequestsListLoadEvent());
+              .add(const DriverRequestsListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('incoming_orders');
             currentScreen = IncomingShippmentLogScreen();
@@ -362,6 +373,34 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                           //     ),
                           //   ),
                           // ),
+                        ),
+                      ),
+                      const Divider(
+                        color: Colors.white,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          BlocProvider.of<TruckFixListBloc>(context)
+                              .add(TruckFixListLoad());
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FixesListScreen(),
+                              ));
+                          _scaffoldKey.currentState!.closeDrawer();
+                        },
+                        child: ListTile(
+                          leading: SvgPicture.asset(
+                            "assets/icons/help_info.svg",
+                            height: 20.h,
+                          ),
+                          title: Text(
+                            "إصلاحاتي",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                       const Divider(

@@ -5,12 +5,10 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/search_shipment_details_screen.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
-import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
@@ -82,7 +80,6 @@ class SearchShippmentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playDuration = 600.ms;
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
         return Directionality(

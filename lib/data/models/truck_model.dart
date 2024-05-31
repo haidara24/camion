@@ -219,14 +219,41 @@ class TruckPaper {
   }
 }
 
+class ExpenseType {
+  int? id;
+  String? name;
+  String? nameAr;
+
+  ExpenseType({
+    this.id,
+    this.name,
+    this.nameAr,
+  });
+
+  ExpenseType.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    nameAr = json['name_ar'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['name_ar'] = nameAr;
+    return data;
+  }
+}
+
 class TruckExpense {
   int? id;
   String? fixType;
+  String? note;
   int? amount;
   DateTime? dob;
   bool? isFixes;
   int? truck;
-  int? expenseType;
+  ExpenseType? expenseType;
 
   TruckExpense(
       {this.id,
@@ -244,7 +271,9 @@ class TruckExpense {
     dob = DateTime.parse(json['dob']);
     isFixes = json['is_fixes'];
     truck = json['truck'];
-    expenseType = json['expense_type'];
+    expenseType = json['expense_type'] != null
+        ? ExpenseType.fromJson(json['expense_type'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -255,7 +284,7 @@ class TruckExpense {
     data['dob'] = dob;
     data['is_fixes'] = isFixes;
     data['truck'] = truck;
-    data['expense_type'] = expenseType;
+    data['expense_type'] = expenseType!;
     return data;
   }
 }

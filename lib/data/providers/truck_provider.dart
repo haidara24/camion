@@ -2,13 +2,13 @@ import 'package:camion/data/models/truck_model.dart';
 import 'package:flutter/material.dart';
 
 class TruckProvider extends ChangeNotifier {
-  Truck? _selectedTruck;
-  Truck? get selectedTruck => _selectedTruck;
+  KTruck? _selectedTruck;
+  KTruck? get selectedTruck => _selectedTruck;
 
-  List<Truck>? _trucks;
-  List<Truck>? get trucks => _trucks;
+  List<KTruck>? _trucks;
+  List<KTruck>? get trucks => _trucks;
 
-  setTrucks(List<Truck>? value) {
+  setTrucks(List<KTruck>? value) {
     _trucks = value;
     notifyListeners();
   }
@@ -19,7 +19,7 @@ class TruckProvider extends ChangeNotifier {
     _trucks = [];
   }
 
-  setSelectedTruck(Truck? value) {
+  setSelectedTruck(KTruck? value) {
     _selectedTruck = value;
     notifyListeners();
   }

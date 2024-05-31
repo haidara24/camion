@@ -70,7 +70,7 @@ class _MainScreenState extends State<MainScreen> {
               : TextDirection.rtl,
           child: SafeArea(
             child: Scaffold(
-              backgroundColor: AppColor.lightGrey200,
+              backgroundColor: Colors.grey[100],
               body: RefreshIndicator(
                 onRefresh: onRefresh,
                 child: Padding(

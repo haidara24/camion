@@ -117,8 +117,6 @@ class _HomeScreenState extends State<HomeScreen>
         }
       case 1:
         {
-          BlocProvider.of<ShipmentListBloc>(context)
-              .add(ShipmentListLoadEvent("P"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('shippment_log');
             currentScreen = ShippmentLogScreen();
@@ -136,8 +134,8 @@ class _HomeScreenState extends State<HomeScreen>
         }
       case 3:
         {
-          BlocProvider.of<ActiveShipmentListBloc>(context)
-              .add(ActiveShipmentListLoadEvent());
+          // BlocProvider.of<ActiveShipmentListBloc>(context)
+          //     .add(ActiveShipmentListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('tracking');
             currentScreen = ActiveShipmentScreen();
@@ -146,11 +144,8 @@ class _HomeScreenState extends State<HomeScreen>
         }
       case 4:
         {
-          BlocProvider.of<ShipmentRunningBloc>(context)
-              .add(ShipmentRunningLoadEvent("R"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('tasks');
-
             currentScreen = ShipmentTaskScreen();
           });
           break;
