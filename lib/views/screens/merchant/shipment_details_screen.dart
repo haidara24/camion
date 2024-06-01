@@ -6,8 +6,6 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
-import 'package:camion/data/models/co2_report.dart';
-import 'package:camion/data/services/co2_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
@@ -20,7 +18,6 @@ import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -375,6 +372,18 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                 icon: deliveryicon,
               );
               markers.add(deliveryMarker);
+              for (var element
+                  in shipment.subshipments![selectedIndex].pathpoints!) {
+                if (element.pointType! == "S") {
+                  markers.add(Marker(
+                    markerId: const MarkerId("stoppoint"),
+                    position: LatLng(
+                        double.parse(element.location!.split(",")[0]),
+                        double.parse(element.location!.split(",")[1])),
+                    icon: stopicon,
+                  ));
+                }
+              }
 
               setState(() {});
             },
@@ -463,7 +472,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
 
   late BitmapDescriptor pickupicon;
   late BitmapDescriptor deliveryicon;
-  late BitmapDescriptor parkicon;
+  late BitmapDescriptor stopicon;
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
@@ -474,7 +483,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
         const ImageConfiguration(), "assets/icons/location1.png");
     deliveryicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/location2.png");
-    parkicon = await BitmapDescriptor.fromAssetImage(
+    stopicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/locationP.png");
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
@@ -507,6 +516,16 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
       icon: deliveryicon,
     );
     markers.add(deliveryMarker);
+    for (var element in shipment.subshipments![selectedIndex].pathpoints!) {
+      if (element.pointType! == "S") {
+        markers.add(Marker(
+          markerId: const MarkerId("stoppoint"),
+          position: LatLng(double.parse(element.location!.split(",")[0]),
+              double.parse(element.location!.split(",")[1])),
+          icon: deliveryicon,
+        ));
+      }
+    }
 
     setState(() {});
   }

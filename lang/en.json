@@ -136,6 +136,9 @@
     "total_weight":"Gross Weight",
     "net_weight":"Net Weight",
     "final_weight":"VGM",
+    "first_weight":"First Weight",
+    "second_weight":"Second Weight",
+    "commodity_gross_weight":"Commodity Gross Weight",
     "truck_weight":"Truck Weight",
     "charger_name":"Name",
     "charger_address":"Address",
@@ -173,7 +176,7 @@
     "store":"Store",
     "home":"Home",
     "shippment_log":"Log",
-    "order_shippment":"Truck Order",
+    "order_shippment":"Create Shipment",
     "tracking":"Tracking",
     "tasks":"Tasks"
 

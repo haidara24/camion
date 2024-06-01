@@ -137,6 +137,9 @@
     "total_weight":"الوزن القائم",
     "net_weight":"الوزن الصافي",
     "final_weight":"الوزن النهائي",
+    "first_weight":"الوزن الأول",
+    "second_weight":"الوزن الثاني",
+    "commodity_gross_weight":"الوزن القائم للبضاعة",
     "truck_weight":"وزن الشاحنة",
     "charger_name":"اسم الشاحن",
     "charger_address":"عنوان الشاحن",
@@ -173,7 +176,7 @@
     "store":"المتجر",
     "home":"الرئيسية",
     "shippment_log":"السجل",
-    "order_shippment":"طلب شاحنة",
+    "order_shippment":"إنشاء شحنة",
     "tracking":"تتبع شحنة",
     "tasks":"المهام"
 

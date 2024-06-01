@@ -2965,7 +2965,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                           ),
                                           const Divider(),
                                           Visibility(
-                                            visible: addShippmentProvider!
+                                            visible: shipmentProvider!
                                                 .truckConfirm[selectedIndex],
                                             child: Text(
                                                 "الرجاء اكمال بيانات الشاحنة الحالية قبل إضافة شاحنة أخرى.",
@@ -2979,24 +2979,24 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                             children: [
                                               InkWell(
                                                 onTap: () {
-                                                  if (addShippmentProvider!
+                                                  if (shipmentProvider!
                                                           .pickup_location[
                                                               selectedIndex]
                                                           .isNotEmpty ||
-                                                      addShippmentProvider!
+                                                      shipmentProvider!
                                                           .delivery_location[
                                                               selectedIndex]
                                                           .isNotEmpty) {
-                                                    if (addShippmentProvider!
+                                                    if (shipmentProvider!
                                                                 .trucks[
                                                             selectedIndex] !=
                                                         null) {
-                                                      if (addShippmentProvider!
+                                                      if (shipmentProvider!
                                                           .addShipmentformKey[
                                                               selectedIndex]
                                                           .currentState!
                                                           .validate()) {
-                                                        addShippmentProvider!
+                                                        shipmentProvider!
                                                             .setTruckConfirm(
                                                                 false,
                                                                 selectedIndex);
@@ -3008,24 +3008,24 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             milliseconds: 500,
                                                           ),
                                                         );
-                                                        addShippmentProvider!
+                                                        shipmentProvider!
                                                             .addpath();
                                                         setState(() {
                                                           selectedIndex++;
                                                         });
                                                       } else {
-                                                        addShippmentProvider!
+                                                        shipmentProvider!
                                                             .setTruckConfirm(
                                                                 true,
                                                                 selectedIndex);
                                                       }
                                                     } else {
-                                                      addShippmentProvider!
+                                                      shipmentProvider!
                                                           .setTruckConfirm(true,
                                                               selectedIndex);
                                                     }
                                                   } else {
-                                                    addShippmentProvider!
+                                                    shipmentProvider!
                                                         .setTruckConfirm(true,
                                                             selectedIndex);
                                                   }

@@ -23,6 +23,7 @@ import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -1688,14 +1689,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                   textInputAction:
                                                                       TextInputAction
                                                                           .done,
-                                                                  keyboardType: const TextInputType
-                                                                      .numberWithOptions(
-                                                                      decimal:
-                                                                          true,
-                                                                      signed:
-                                                                          true),
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .number,
                                                                   inputFormatters: [
-                                                                    DecimalFormatter(),
+                                                                    FilteringTextInputFormatter
+                                                                        .digitsOnly,
                                                                   ],
                                                                   style: const TextStyle(
                                                                       fontSize:
@@ -1795,14 +1794,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                   textInputAction:
                                                                       TextInputAction
                                                                           .done,
-                                                                  keyboardType: const TextInputType
-                                                                      .numberWithOptions(
-                                                                      decimal:
-                                                                          true,
-                                                                      signed:
-                                                                          true),
+                                                                  keyboardType:
+                                                                      TextInputType
+                                                                          .number,
                                                                   inputFormatters: [
-                                                                    DecimalFormatter(),
+                                                                    FilteringTextInputFormatter
+                                                                        .digitsOnly,
                                                                   ],
                                                                   style: const TextStyle(
                                                                       fontSize:
@@ -2189,10 +2186,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                               TextInputAction
                                                                   .done,
                                                           keyboardType:
-                                                              const TextInputType
-                                                                  .numberWithOptions(
-                                                                  decimal: true,
-                                                                  signed: true),
+                                                              TextInputType
+                                                                  .number,
+                                                          inputFormatters: [
+                                                            FilteringTextInputFormatter
+                                                                .digitsOnly,
+                                                          ],
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 18),
@@ -2202,7 +2201,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                     .of(
                                                                         context)!
                                                                 .translate(
-                                                                    'total_weight'),
+                                                                    'first_weight'),
                                                             contentPadding:
                                                                 const EdgeInsets
                                                                     .symmetric(
@@ -2210,6 +2209,17 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                         11.0,
                                                                     horizontal:
                                                                         9.0),
+                                                            suffix: Text(
+                                                              localeState.value
+                                                                          .languageCode ==
+                                                                      "en"
+                                                                  ? "kg"
+                                                                  : "كغ",
+                                                            ),
+                                                            suffixStyle:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        15),
                                                           ),
                                                           onTapOutside:
                                                               (event) {
@@ -2227,7 +2237,21 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
 
                                                             // evaluatePrice();
                                                           },
-                                                          onChanged: (value) {},
+                                                          onChanged: (value) {
+                                                            if (net_weight_controller
+                                                                .text
+                                                                .isNotEmpty) {
+                                                              final_weight_controller
+                                                                  .text = (double.parse(
+                                                                          net_weight_controller
+                                                                              .text) -
+                                                                      double.parse(
+                                                                          truck_weight_controller
+                                                                              .text))
+                                                                  .abs()
+                                                                  .toString();
+                                                            }
+                                                          },
                                                           autovalidateMode:
                                                               AutovalidateMode
                                                                   .onUserInteraction,
@@ -2264,40 +2288,43 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                             net_weight_controller
                                                                     .selection =
                                                                 TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        net_weight_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
+                                                              baseOffset: 0,
+                                                              extentOffset:
+                                                                  net_weight_controller
+                                                                      .value
+                                                                      .text
+                                                                      .length,
+                                                            );
                                                           },
-                                                          // enabled:
-                                                          //     widget.shipment.shipmentinstruction == null,
-                                                          scrollPadding: EdgeInsets.only(
-                                                              bottom: MediaQuery.of(
-                                                                          context)
-                                                                      .viewInsets
-                                                                      .bottom +
-                                                                  20),
+                                                          scrollPadding:
+                                                              EdgeInsets.only(
+                                                            bottom: MediaQuery.of(
+                                                                        context)
+                                                                    .viewInsets
+                                                                    .bottom +
+                                                                20,
+                                                          ),
                                                           textInputAction:
                                                               TextInputAction
                                                                   .done,
                                                           keyboardType:
-                                                              const TextInputType
-                                                                  .numberWithOptions(
-                                                                  decimal: true,
-                                                                  signed: true),
+                                                              TextInputType
+                                                                  .number,
+                                                          inputFormatters: [
+                                                            FilteringTextInputFormatter
+                                                                .digitsOnly,
+                                                          ],
                                                           style:
                                                               const TextStyle(
-                                                                  fontSize: 18),
+                                                            fontSize: 18,
+                                                          ),
                                                           decoration:
                                                               InputDecoration(
                                                             labelText: AppLocalizations
                                                                     .of(
                                                                         context)!
                                                                 .translate(
-                                                                    'net_weight'),
+                                                                    'second_weight'),
                                                             contentPadding:
                                                                 const EdgeInsets
                                                                     .symmetric(
@@ -2305,6 +2332,17 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                         11.0,
                                                                     horizontal:
                                                                         9.0),
+                                                            suffix: Text(
+                                                              localeState.value
+                                                                          .languageCode ==
+                                                                      "en"
+                                                                  ? "kg"
+                                                                  : "كغ",
+                                                            ),
+                                                            suffixStyle:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        15),
                                                           ),
                                                           onTapOutside:
                                                               (event) {
@@ -2322,7 +2360,21 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
 
                                                             // evaluatePrice();
                                                           },
-                                                          onChanged: (value) {},
+                                                          onChanged: (value) {
+                                                            if (truck_weight_controller
+                                                                .text
+                                                                .isNotEmpty) {
+                                                              final_weight_controller
+                                                                  .text = (double.parse(
+                                                                          net_weight_controller
+                                                                              .text) -
+                                                                      double.parse(
+                                                                          truck_weight_controller
+                                                                              .text))
+                                                                  .abs()
+                                                                  .toString();
+                                                            }
+                                                          },
                                                           autovalidateMode:
                                                               AutovalidateMode
                                                                   .onUserInteraction,
@@ -2388,10 +2440,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                             TextInputAction
                                                                 .done,
                                                         keyboardType:
-                                                            const TextInputType
-                                                                .numberWithOptions(
-                                                                decimal: true,
-                                                                signed: true),
+                                                            TextInputType
+                                                                .number,
+                                                        inputFormatters: [
+                                                          FilteringTextInputFormatter
+                                                              .digitsOnly,
+                                                        ],
                                                         style: const TextStyle(
                                                             fontSize: 18),
                                                         decoration:
@@ -2399,7 +2453,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           labelText: AppLocalizations
                                                                   .of(context)!
                                                               .translate(
-                                                                  'final_weight'),
+                                                                  'commodity_gross_weight'),
                                                           contentPadding:
                                                               const EdgeInsets
                                                                   .symmetric(
@@ -2407,6 +2461,16 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                       11.0,
                                                                   horizontal:
                                                                       9.0),
+                                                          suffix: Text(
+                                                            localeState.value
+                                                                        .languageCode ==
+                                                                    "en"
+                                                                ? "kg"
+                                                                : "كغ",
+                                                          ),
+                                                          suffixStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 15),
                                                         ),
                                                         onTapOutside: (event) {
                                                           FocusManager.instance
