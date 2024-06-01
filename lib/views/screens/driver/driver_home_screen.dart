@@ -21,7 +21,6 @@ import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/driver/tracking_shippment_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,14 +58,14 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
 
     try {
       final loc.LocationData _locationResult = await location.getLocation();
-      await FirebaseFirestore.instance
-          .collection('location')
-          .doc('driver${userprofile.id}')
-          .set({
-        'latitude': _locationResult.latitude,
-        'longitude': _locationResult.longitude,
-        'name': '${userprofile.firstName!} ${userprofile.lastName!}'
-      }, SetOptions(merge: true));
+      // await FirebaseFirestore.instance
+      //     .collection('location')
+      //     .doc('driver${userprofile.id}')
+      //     .set({
+      //   'latitude': _locationResult.latitude,
+      //   'longitude': _locationResult.longitude,
+      //   'name': '${userprofile.firstName!} ${userprofile.lastName!}'
+      // }, SetOptions(merge: true));
     } catch (e) {
       print(e);
     }

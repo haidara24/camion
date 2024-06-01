@@ -2525,7 +2525,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                     .done,
                                                             keyboardType:
                                                                 TextInputType
-                                                                    .phone,
+                                                                    .number,
                                                             inputFormatters: [
                                                               FilteringTextInputFormatter
                                                                   .digitsOnly,
