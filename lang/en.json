@@ -132,6 +132,7 @@
     "reciever_info":"Consignee Info",
     "commodity_info":"Commodity Info",
     "other_info":"Other Information",
+    "weight_info":"Weight Information",
     "add_instruction":"Add Instruction",
     "total_weight":"Gross Weight",
     "net_weight":"Net Weight",

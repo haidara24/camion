@@ -300,7 +300,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
             width: double.infinity,
             child: ListView(
               // shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              // physics: NeverScrollableScrollPhysics(),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -605,40 +605,38 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   child: LoadingIndicator(),
                                                 )
                                               : null,
-                                          suffixIcon: InkWell(
-                                            onTap: () {
-                                              // Navigator.push(
-                                              //   context,
-                                              //   MaterialPageRoute(
-                                              //     builder: (context) => MultiShippmentPickUpMapScreen(
-                                              //       type: 1,
-                                              //       index: index,
-                                              //       location: valueProvider.delivery_latlng[index],
-                                              //     ),
-                                              //   ),
-                                              // ).then((value) => FocusManager.instance.primaryFocus?.unfocus());
+                                          // suffixIcon: InkWell(
+                                          //   onTap: () {
+                                          //     // Navigator.push(
+                                          //     //   context,
+                                          //     //   MaterialPageRoute(
+                                          //     //     builder: (context) => MultiShippmentPickUpMapScreen(
+                                          //     //       type: 1,
+                                          //     //       index: index,
+                                          //     //       location: valueProvider.delivery_latlng[index],
+                                          //     //     ),
+                                          //     //   ),
+                                          //     // ).then((value) => FocusManager.instance.primaryFocus?.unfocus());
 
-                                              print(
-                                                  "delivry address co2 evaluation");
-                                              // Get.to(SearchFilterView());
-                                              Future.delayed(const Duration(
-                                                      milliseconds: 1500))
-                                                  .then((value) {
-                                                // if (evaluateCo2()) {
-                                                //   calculateCo2Report();
-                                                // }
-                                              });
-                                            },
-                                            child: Container(
-                                              margin: const EdgeInsets.all(7),
-                                              width: 55.0,
-                                              height: 15.0,
-                                              child: Icon(
-                                                Icons.map,
-                                                color: AppColor.deepYellow,
-                                              ),
-                                            ),
-                                          ),
+                                          //     // Get.to(SearchFilterView());
+                                          //     Future.delayed(const Duration(
+                                          //             milliseconds: 1500))
+                                          //         .then((value) {
+                                          //       // if (evaluateCo2()) {
+                                          //       //   calculateCo2Report();
+                                          //       // }
+                                          //     });
+                                          //   },
+                                          //   child: Container(
+                                          //     margin: const EdgeInsets.all(7),
+                                          //     width: 55.0,
+                                          //     height: 15.0,
+                                          //     child: Icon(
+                                          //       Icons.map,
+                                          //       color: AppColor.deepYellow,
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ),
                                         onSubmitted: (value) {
                                           // BlocProvider.of<StopScrollCubit>(context)
@@ -726,10 +724,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                       // _showAlertDialog(index);
                                     },
                                     child: Container(
-                                      height: 30,
-                                      width: 30,
+                                      height: 25,
+                                      width: 25,
                                       decoration: BoxDecoration(
-                                        color: Colors.red,
+                                        color: Colors.grey[400],
                                         borderRadius: BorderRadius.circular(45),
                                       ),
                                       child: const Center(
@@ -1618,6 +1616,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   focusNode: _path_node,
                                   child: Card(
                                     key: key3,
+                                    elevation: 2,
                                     margin:
                                         const EdgeInsets.symmetric(vertical: 5),
                                     color: Colors.white,
@@ -1639,7 +1638,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                 showShipmentPathModalSheet(
                                                     context,
                                                     localeState
-                                                        .value.countryCode!);
+                                                        .value.languageCode!);
                                               }
                                             },
                                             child: Row(
@@ -1656,7 +1655,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             "assets/icons/shipment_path.svg"),
                                                       )
                                                     : const SizedBox.shrink(),
-                                                const SizedBox(width: 7),
+                                                const SizedBox(width: 8),
                                                 SectionTitle(
                                                   text: AppLocalizations.of(
                                                           context)!
@@ -1684,7 +1683,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                     showShipmentPathModalSheet(
                                                         context,
                                                         localeState.value
-                                                            .countryCode!);
+                                                            .languageCode!);
                                                   },
                                                   child: AbsorbPointer(
                                                     absorbing: true,
@@ -1947,338 +1946,322 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                         )
                                       : const SizedBox.shrink(),
                                 ),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 3),
-                                  child: EnsureVisibleWhenFocused(
-                                    focusNode: _truck_node,
-                                    child: Card(
-                                      elevation: 2,
-                                      key: key2,
-                                      color: Colors.white,
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 7.5),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                if (shipmentProvider
-                                                        .pickup_location[
-                                                            selectedIndex]
-                                                        .isNotEmpty &&
-                                                    shipmentProvider
-                                                        .delivery_location[
-                                                            selectedIndex]
-                                                        .isNotEmpty) {
-                                                  if (shipmentProvider.trucks[
-                                                          selectedIndex] !=
-                                                      null) {
-                                                    showTruckModalSheet(
-                                                        context,
-                                                        localeState.value
-                                                            .languageCode);
-                                                  }
-                                                } else {
-                                                  shipmentProvider.setPathError(
-                                                      true, selectedIndex);
-                                                  Scrollable.ensureVisible(
-                                                    key3.currentContext!,
-                                                    duration: const Duration(
-                                                      milliseconds: 500,
-                                                    ),
-                                                  );
-                                                }
-                                              },
-                                              child: AbsorbPointer(
-                                                absorbing: true,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    shipmentProvider.trucks[
-                                                                selectedIndex] !=
-                                                            null
-                                                        ? SizedBox(
-                                                            height: 25.h,
-                                                            width: 25.h,
-                                                            child: localeState
-                                                                        .value
-                                                                        .languageCode ==
-                                                                    "en"
-                                                                ? SvgPicture.asset(
-                                                                    "assets/icons/truck.svg")
-                                                                : SvgPicture.asset(
-                                                                    "assets/icons/truck_ar.svg"),
-                                                          )
-                                                        : const SizedBox
-                                                            .shrink(),
-                                                    const SizedBox(width: 8),
-                                                    Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4.0),
-                                                      child: SectionTitle(
-                                                        text: AppLocalizations
-                                                                .of(context)!
-                                                            .translate(
-                                                                'truck_info'),
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                    shipmentProvider.trucks[
-                                                                selectedIndex] !=
-                                                            null
-                                                        ? Icon(Icons.edit,
-                                                            color: AppColor
-                                                                .deepYellow)
-                                                        : const SizedBox
-                                                            .shrink(),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            shipmentProvider.trucks[
-                                                        selectedIndex] ==
-                                                    null
-                                                ? InkWell(
-                                                    onTap: () {
-                                                      if (shipmentProvider
-                                                              .pickup_location[
-                                                                  selectedIndex]
-                                                              .isNotEmpty &&
-                                                          shipmentProvider
-                                                              .delivery_location[
-                                                                  selectedIndex]
-                                                              .isNotEmpty) {
-                                                        showTruckModalSheet(
-                                                            context,
-                                                            localeState.value
-                                                                .languageCode);
-                                                      } else {
-                                                        shipmentProvider
-                                                            .setPathError(true,
-                                                                selectedIndex);
-                                                        Scrollable
-                                                            .ensureVisible(
-                                                          key3.currentContext!,
-                                                          duration:
-                                                              const Duration(
-                                                            milliseconds: 500,
-                                                          ),
-                                                        );
-                                                      }
-                                                    },
-                                                    child: AbsorbPointer(
-                                                      absorbing: true,
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          border: Border.all(
-                                                            width: 1,
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(4.0),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              shipmentProvider.trucks[
-                                                                          selectedIndex] ==
-                                                                      null
-                                                                  ? SizedBox(
-                                                                      height:
-                                                                          25.h,
-                                                                      width:
-                                                                          25.h,
-                                                                      child: localeState.value.languageCode ==
-                                                                              "en"
-                                                                          ? SvgPicture.asset(
-                                                                              "assets/icons/truck.svg")
-                                                                          : SvgPicture.asset(
-                                                                              "assets/icons/truck_ar.svg"),
-                                                                    )
-                                                                  : const SizedBox
-                                                                      .shrink(),
-                                                              const SizedBox(
-                                                                  width: 8),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                        .all(
-                                                                        4.0),
-                                                                child:
-                                                                    SectionTitle(
-                                                                  text: AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'select_truck'),
-                                                                ),
-                                                              ),
-                                                              const Spacer(),
-                                                              shipmentProvider.trucks[
-                                                                          selectedIndex] !=
-                                                                      null
-                                                                  ? Icon(
-                                                                      Icons
-                                                                          .edit,
-                                                                      color: AppColor
-                                                                          .deepYellow)
-                                                                  : Icon(
-                                                                      Icons
-                                                                          .arrow_forward_ios,
-                                                                      color: AppColor
-                                                                          .deepYellow,
-                                                                    ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : const SizedBox.shrink(),
-                                            shipmentProvider.trucks[
+                                EnsureVisibleWhenFocused(
+                                  focusNode: _truck_node,
+                                  child: Card(
+                                    elevation: 2,
+                                    key: key2,
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 5),
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10.0, vertical: 7.5),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              if (shipmentProvider
+                                                      .pickup_location[
+                                                          selectedIndex]
+                                                      .isNotEmpty &&
+                                                  shipmentProvider
+                                                      .delivery_location[
+                                                          selectedIndex]
+                                                      .isNotEmpty) {
+                                                if (shipmentProvider.trucks[
                                                         selectedIndex] !=
-                                                    null
-                                                ? Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Image.network(
-                                                        shipmentProvider
-                                                            .trucks[
-                                                                selectedIndex]!
-                                                            .images![0]
-                                                            .image!,
-                                                        height: 175.h,
-                                                        width: double.infinity,
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder: (context,
-                                                            error, stackTrace) {
-                                                          return Container(
-                                                            height: 175.h,
-                                                            width:
-                                                                double.infinity,
-                                                            color: Colors
-                                                                .grey[300],
-                                                            child: const Center(
-                                                              child: Text(
-                                                                  "error on loading "),
-                                                            ),
-                                                          );
-                                                        },
-                                                        loadingBuilder: (context,
-                                                            child,
-                                                            loadingProgress) {
-                                                          if (loadingProgress ==
-                                                              null) {
-                                                            return child;
-                                                          }
-
-                                                          return SizedBox(
-                                                            height: 175.h,
-                                                            child: Center(
-                                                              child:
-                                                                  CircularProgressIndicator(
-                                                                value: loadingProgress
-                                                                            .expectedTotalBytes !=
-                                                                        null
-                                                                    ? loadingProgress
-                                                                            .cumulativeBytesLoaded /
-                                                                        loadingProgress
-                                                                            .expectedTotalBytes!
-                                                                    : null,
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                      SizedBox(
-                                                        height: 7.h,
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            SectionBody(
-                                                              text:
-                                                                  '${AppLocalizations.of(context)!.translate('driver_name')}: ${shipmentProvider.trucks[selectedIndex]!.truckuser!.usertruck!.firstName} ${shipmentProvider.trucks[selectedIndex]!.truckuser!.usertruck!.lastName}',
-                                                            ),
-                                                            SizedBox(
-                                                              height: 7.h,
-                                                            ),
-                                                            SectionBody(
-                                                              text:
-                                                                  '${AppLocalizations.of(context)!.translate('net_weight')}: ${shipmentProvider.trucks[selectedIndex]!.emptyWeight}',
-                                                            ),
-                                                            SizedBox(
-                                                              height: 7.h,
-                                                            ),
-                                                            SectionBody(
-                                                              text:
-                                                                  '${AppLocalizations.of(context)!.translate('truck_number')}: ${shipmentProvider.trucks[selectedIndex]!.truckNumber}',
-                                                            ),
-                                                            SizedBox(
-                                                              height: 7.h,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    ],
-                                                  )
-                                                : const SizedBox.shrink(),
-                                            Visibility(
-                                              visible: shipmentProvider
-                                                  .truckError[selectedIndex],
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                    null) {
+                                                  showTruckModalSheet(
+                                                      context,
+                                                      localeState
+                                                          .value.languageCode);
+                                                }
+                                              } else {
+                                                shipmentProvider.setPathError(
+                                                    true, selectedIndex);
+                                                Scrollable.ensureVisible(
+                                                  key3.currentContext!,
+                                                  duration: const Duration(
+                                                    milliseconds: 500,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                            child: AbsorbPointer(
+                                              absorbing: true,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'select_truck_error'),
-                                                      style: const TextStyle(
-                                                        color: Colors.red,
-                                                        fontSize: 17,
-                                                      ),
-                                                    ),
+                                                  shipmentProvider.trucks[
+                                                              selectedIndex] !=
+                                                          null
+                                                      ? SizedBox(
+                                                          height: 25.h,
+                                                          width: 25.h,
+                                                          child: localeState
+                                                                      .value
+                                                                      .languageCode ==
+                                                                  "en"
+                                                              ? SvgPicture.asset(
+                                                                  "assets/icons/truck.svg")
+                                                              : SvgPicture.asset(
+                                                                  "assets/icons/truck_ar.svg"),
+                                                        )
+                                                      : const SizedBox.shrink(),
+                                                  const SizedBox(width: 8),
+                                                  SectionTitle(
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'truck_info'),
                                                   ),
-                                                  SizedBox(
-                                                    height: 7.h,
-                                                  ),
+                                                  const Spacer(),
+                                                  shipmentProvider.trucks[
+                                                              selectedIndex] !=
+                                                          null
+                                                      ? Icon(Icons.edit,
+                                                          color: AppColor
+                                                              .deepYellow)
+                                                      : const SizedBox.shrink(),
                                                 ],
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                          shipmentProvider
+                                                      .trucks[selectedIndex] ==
+                                                  null
+                                              ? InkWell(
+                                                  onTap: () {
+                                                    if (shipmentProvider
+                                                            .pickup_location[
+                                                                selectedIndex]
+                                                            .isNotEmpty &&
+                                                        shipmentProvider
+                                                            .delivery_location[
+                                                                selectedIndex]
+                                                            .isNotEmpty) {
+                                                      showTruckModalSheet(
+                                                          context,
+                                                          localeState.value
+                                                              .languageCode);
+                                                    } else {
+                                                      shipmentProvider
+                                                          .setPathError(true,
+                                                              selectedIndex);
+                                                      Scrollable.ensureVisible(
+                                                        key3.currentContext!,
+                                                        duration:
+                                                            const Duration(
+                                                          milliseconds: 500,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: AbsorbPointer(
+                                                    absorbing: true,
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        border: Border.all(
+                                                          width: 1,
+                                                          color: Colors.grey,
+                                                        ),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(4.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            shipmentProvider.trucks[
+                                                                        selectedIndex] ==
+                                                                    null
+                                                                ? SizedBox(
+                                                                    height:
+                                                                        25.h,
+                                                                    width: 25.h,
+                                                                    child: localeState.value.languageCode ==
+                                                                            "en"
+                                                                        ? SvgPicture.asset(
+                                                                            "assets/icons/truck_en.svg")
+                                                                        : SvgPicture.asset(
+                                                                            "assets/icons/truck_ar.svg"),
+                                                                  )
+                                                                : const SizedBox
+                                                                    .shrink(),
+                                                            const SizedBox(
+                                                                width: 8),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(4.0),
+                                                              child:
+                                                                  SectionTitle(
+                                                                text: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'select_truck'),
+                                                              ),
+                                                            ),
+                                                            const Spacer(),
+                                                            shipmentProvider.trucks[
+                                                                        selectedIndex] !=
+                                                                    null
+                                                                ? Icon(
+                                                                    Icons.edit,
+                                                                    color: AppColor
+                                                                        .deepYellow)
+                                                                : Icon(
+                                                                    Icons
+                                                                        .arrow_forward_ios,
+                                                                    color: AppColor
+                                                                        .deepYellow,
+                                                                  ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              : const SizedBox.shrink(),
+                                          shipmentProvider
+                                                      .trucks[selectedIndex] !=
+                                                  null
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Image.network(
+                                                      shipmentProvider
+                                                          .trucks[
+                                                              selectedIndex]!
+                                                          .images![0]
+                                                          .image!,
+                                                      height: 175.h,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.cover,
+                                                      errorBuilder: (context,
+                                                          error, stackTrace) {
+                                                        return Container(
+                                                          height: 175.h,
+                                                          width:
+                                                              double.infinity,
+                                                          color:
+                                                              Colors.grey[300],
+                                                          child: const Center(
+                                                            child: Text(
+                                                                "error on loading "),
+                                                          ),
+                                                        );
+                                                      },
+                                                      loadingBuilder: (context,
+                                                          child,
+                                                          loadingProgress) {
+                                                        if (loadingProgress ==
+                                                            null) {
+                                                          return child;
+                                                        }
+
+                                                        return SizedBox(
+                                                          height: 175.h,
+                                                          child: Center(
+                                                            child:
+                                                                CircularProgressIndicator(
+                                                              value: loadingProgress
+                                                                          .expectedTotalBytes !=
+                                                                      null
+                                                                  ? loadingProgress
+                                                                          .cumulativeBytesLoaded /
+                                                                      loadingProgress
+                                                                          .expectedTotalBytes!
+                                                                  : null,
+                                                            ),
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                    SizedBox(
+                                                      height: 7.h,
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8.0),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SectionBody(
+                                                            text:
+                                                                '${AppLocalizations.of(context)!.translate('driver_name')}: ${shipmentProvider.trucks[selectedIndex]!.truckuser!.usertruck!.firstName} ${shipmentProvider.trucks[selectedIndex]!.truckuser!.usertruck!.lastName}',
+                                                          ),
+                                                          SizedBox(
+                                                            height: 7.h,
+                                                          ),
+                                                          SectionBody(
+                                                            text:
+                                                                '${AppLocalizations.of(context)!.translate('net_weight')}: ${shipmentProvider.trucks[selectedIndex]!.emptyWeight}',
+                                                          ),
+                                                          SizedBox(
+                                                            height: 7.h,
+                                                          ),
+                                                          SectionBody(
+                                                            text:
+                                                                '${AppLocalizations.of(context)!.translate('truck_number')}: ${shipmentProvider.trucks[selectedIndex]!.truckNumber}',
+                                                          ),
+                                                          SizedBox(
+                                                            height: 7.h,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  ],
+                                                )
+                                              : const SizedBox.shrink(),
+                                          Visibility(
+                                            visible: shipmentProvider
+                                                .truckError[selectedIndex],
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'select_truck_error'),
+                                                    style: const TextStyle(
+                                                      color: Colors.red,
+                                                      fontSize: 17,
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 7.h,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -2813,7 +2796,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                 .translate('loading_time'),
                                           ),
                                           const SizedBox(
-                                            height: 10,
+                                            height: 4,
                                           ),
                                           Row(
                                             mainAxisAlignment:
@@ -3035,7 +3018,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                     const Text(
                                                       "إضافة شاحنة ",
                                                       style: TextStyle(
-                                                        fontSize: 16,
+                                                        fontSize: 15,
                                                         // fontWeight:
                                                         // FontWeight.bold,
                                                         // color: Colors.white,
@@ -3048,8 +3031,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             const EdgeInsets
                                                                 .all(8.0),
                                                         child: SizedBox(
-                                                          height: 25.h,
-                                                          width: 25.w,
+                                                          height: 28.h,
+                                                          width: 28.w,
                                                           child: SvgPicture.asset(
                                                               "assets/icons/add.svg"),
                                                         ),

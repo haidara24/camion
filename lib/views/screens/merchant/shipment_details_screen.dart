@@ -571,6 +571,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
@@ -606,207 +607,212 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
               },
               builder: (context, shipmentstate) {
                 if (shipmentstate is ShipmentDetailsLoadedSuccess) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 300.h,
-                        child: Stack(
-                          children: [
-                            GoogleMap(
-                              onMapCreated:
-                                  (GoogleMapController controller) async {
-                                setState(() {
-                                  _controller = controller;
-                                  _controller.setMapStyle(_mapStyle);
-                                });
-                                initMapbounds(shipmentstate.shipment);
-                              },
-                              myLocationButtonEnabled: false,
-                              zoomGesturesEnabled: false,
-                              scrollGesturesEnabled: false,
-                              tiltGesturesEnabled: false,
-                              rotateGesturesEnabled: false,
-                              zoomControlsEnabled: false,
-                              initialCameraPosition: CameraPosition(
-                                  target: LatLng(
-                                      double.parse(shipmentstate
-                                          .shipment
-                                          .subshipments![selectedIndex]
-                                          .pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "P")
-                                          .location!
-                                          .split(",")[0]),
-                                      double.parse(shipmentstate
-                                          .shipment
-                                          .subshipments![selectedIndex]
-                                          .pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "P")
-                                          .location!
-                                          .split(",")[1])),
-                                  zoom: 14.47),
-                              gestureRecognizers: {},
-                              markers: markers,
-                              polylines: {
-                                Polyline(
-                                  polylineId: const PolylineId("route"),
-                                  points: deserializeLatLng(shipmentstate
-                                      .shipment
-                                      .subshipments![selectedIndex]
-                                      .paths!),
-                                  color: AppColor.deepYellow,
-                                  width: 4,
-                                ),
-                              },
-                              // mapType: shipmentProvider.mapType,
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 4,
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (context, animation,
-                                              secondaryAnimation) =>
-                                          ShipmentDetailsMapScreen(
-                                        shipment: shipmentstate.shipment,
-                                      ),
-                                      transitionDuration:
-                                          const Duration(milliseconds: 1000),
-                                      transitionsBuilder: (context, animation,
-                                          secondaryAnimation, child) {
-                                        var begin = const Offset(0.0, -1.0);
-                                        var end = Offset.zero;
-                                        var curve = Curves.ease;
-
-                                        var tween = Tween(
-                                                begin: begin, end: end)
-                                            .chain(CurveTween(curve: curve));
-
-                                        return SlideTransition(
-                                          position: animation.drive(tween),
-                                          child: child,
-                                        );
-                                      },
-                                    ),
-                                  ).then((value) {
-                                    initMapbounds(shipmentstate.shipment);
+                  return SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 300.h,
+                          child: Stack(
+                            children: [
+                              GoogleMap(
+                                onMapCreated:
+                                    (GoogleMapController controller) async {
+                                  setState(() {
+                                    _controller = controller;
+                                    // _controller.setMapStyle(_mapStyle);
                                   });
-                                  // shipmentProvider.setMapMode(MapType.satellite);
+                                  initMapbounds(shipmentstate.shipment);
                                 },
-                                child: const AbsorbPointer(
-                                  absorbing: false,
-                                  child: SizedBox(
-                                    height: 50,
-                                    width: 70,
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.zoom_out_map,
-                                        color: Colors.white,
-                                        size: 35,
+                                myLocationButtonEnabled: false,
+                                zoomGesturesEnabled: false,
+                                scrollGesturesEnabled: false,
+                                tiltGesturesEnabled: false,
+                                rotateGesturesEnabled: false,
+                                zoomControlsEnabled: false,
+                                initialCameraPosition: CameraPosition(
+                                    target: LatLng(
+                                        double.parse(shipmentstate
+                                            .shipment
+                                            .subshipments![selectedIndex]
+                                            .pathpoints!
+                                            .singleWhere((element) =>
+                                                element.pointType == "P")
+                                            .location!
+                                            .split(",")[0]),
+                                        double.parse(shipmentstate
+                                            .shipment
+                                            .subshipments![selectedIndex]
+                                            .pathpoints!
+                                            .singleWhere((element) =>
+                                                element.pointType == "P")
+                                            .location!
+                                            .split(",")[1])),
+                                    zoom: 14.47),
+                                gestureRecognizers: {},
+                                markers: markers,
+                                polylines: {
+                                  Polyline(
+                                    polylineId: const PolylineId("route"),
+                                    points: deserializeLatLng(shipmentstate
+                                        .shipment
+                                        .subshipments![selectedIndex]
+                                        .paths!),
+                                    color: AppColor.deepYellow,
+                                    width: 4,
+                                  ),
+                                },
+                                // mapType: shipmentProvider.mapType,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 4,
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        pageBuilder: (context, animation,
+                                                secondaryAnimation) =>
+                                            ShipmentDetailsMapScreen(
+                                          shipment: shipmentstate.shipment,
+                                        ),
+                                        transitionDuration:
+                                            const Duration(milliseconds: 1000),
+                                        transitionsBuilder: (context, animation,
+                                            secondaryAnimation, child) {
+                                          var begin = const Offset(0.0, -1.0);
+                                          var end = Offset.zero;
+                                          var curve = Curves.ease;
+
+                                          var tween = Tween(
+                                                  begin: begin, end: end)
+                                              .chain(CurveTween(curve: curve));
+
+                                          return SlideTransition(
+                                            position: animation.drive(tween),
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    ).then((value) {
+                                      initMapbounds(shipmentstate.shipment);
+                                    });
+                                    // shipmentProvider.setMapMode(MapType.satellite);
+                                  },
+                                  child: const AbsorbPointer(
+                                    absorbing: false,
+                                    child: SizedBox(
+                                      height: 50,
+                                      width: 70,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.zoom_out_map,
+                                          color: Colors.grey,
+                                          size: 35,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: ListView(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              SectionTitle(
+                                text: AppLocalizations.of(context)!
+                                    .translate("assigned_trucks"),
+                              ),
+                              const SizedBox(height: 4),
+                              pathList(shipmentstate.shipment),
+                              const Divider(
+                                height: 12,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
                                   SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate("assigned_trucks"),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  pathList(shipmentstate.shipment),
-                                  const Divider(
-                                    height: 12,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SectionTitle(
-                                          text:
-                                              "${AppLocalizations.of(context)!.translate("shipment_status")}: "),
-                                      SectionBody(
-                                        text: getStatusName(
-                                          shipmentstate
-                                              .shipment
-                                              .subshipments![selectedIndex]
-                                              .shipmentStatus!,
-                                          localeState.value.languageCode,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(
-                                    height: 12,
-                                  ),
-                                  SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate("shipment_route"),
-                                  ),
-                                  ShipmentPathVerticalWidget(
-                                    pathpoints: shipmentstate
-                                        .shipment
-                                        .subshipments![selectedIndex]
-                                        .pathpoints!,
-                                    pickupDate: shipmentstate
-                                        .shipment
-                                        .subshipments![selectedIndex]
-                                        .pickupDate!,
-                                    deliveryDate: shipmentstate
-                                        .shipment
-                                        .subshipments![selectedIndex]
-                                        .deliveryDate!,
-                                    langCode: localeState.value.languageCode,
-                                    mini: false,
-                                  ),
-                                  const Divider(),
-                                  SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate("commodity_info"),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Commodity_info_widget(
-                                      shipmentItems: shipmentstate
+                                      text:
+                                          "${AppLocalizations.of(context)!.translate("shipment_status")}: "),
+                                  SectionBody(
+                                    text: getStatusName(
+                                      shipmentstate
                                           .shipment
                                           .subshipments![selectedIndex]
-                                          .shipmentItems),
-                                  const Divider(),
-                                  SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate("shipment_route_statistics"),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  PathStatisticsWidget(
-                                    distance: shipmentstate.shipment
-                                        .subshipments![selectedIndex].distance!,
-                                    period: shipmentstate.shipment
-                                        .subshipments![selectedIndex].period!,
+                                          .shipmentStatus!,
+                                      localeState.value.languageCode,
+                                    ),
                                   ),
                                 ],
                               ),
-                            )
-                          ],
+                              const Divider(
+                                height: 12,
+                              ),
+                              SectionTitle(
+                                text: AppLocalizations.of(context)!
+                                    .translate("shipment_route"),
+                              ),
+                              ShipmentPathVerticalWidget(
+                                pathpoints: shipmentstate.shipment
+                                    .subshipments![selectedIndex].pathpoints!,
+                                pickupDate: shipmentstate.shipment
+                                    .subshipments![selectedIndex].pickupDate!,
+                                deliveryDate: shipmentstate.shipment
+                                    .subshipments![selectedIndex].deliveryDate!,
+                                langCode: localeState.value.languageCode,
+                                mini: false,
+                              ),
+                              const Divider(),
+                              SectionTitle(
+                                text: AppLocalizations.of(context)!
+                                    .translate("commodity_info"),
+                              ),
+                              const SizedBox(height: 4),
+                              Commodity_info_widget(
+                                  shipmentItems: shipmentstate
+                                      .shipment
+                                      .subshipments![selectedIndex]
+                                      .shipmentItems),
+                              const Divider(),
+                              SectionTitle(
+                                text: AppLocalizations.of(context)!
+                                    .translate("shipment_route_statistics"),
+                              ),
+                              const SizedBox(height: 4),
+                              PathStatisticsWidget(
+                                distance: shipmentstate.shipment
+                                    .subshipments![selectedIndex].distance!,
+                                period: shipmentstate.shipment
+                                    .subshipments![selectedIndex].period!,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+
+                        // Expanded(
+                        //   child: ListView(
+                        //     children: [
+                        //       Padding(
+                        //         padding: const EdgeInsets.all(8.0),
+                        //         child: Column(
+                        //           crossAxisAlignment: CrossAxisAlignment.start,
+                        //           children: [
+                        //             ],
+                        //         ),
+                        //       )
+                        //     ],
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   );
                 } else {
                   return const Center(child: LoadingIndicator());

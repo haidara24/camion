@@ -33,7 +33,10 @@ class ActiveShipmentScreen extends StatefulWidget {
   State<ActiveShipmentScreen> createState() => _ActiveShipmentScreenState();
 }
 
-class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
+class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
+    with TickerProviderStateMixin {
+  late AnimationController animcontroller;
+
   late GoogleMapController _controller;
 
   String _mapStyle = "";
@@ -111,6 +114,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
+        transitionAnimationController: animcontroller,
         // isDismissible: false,
         // enableDrag: false,
         shape: const RoundedRectangleBorder(
@@ -536,12 +540,22 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen> {
   @override
   void initState() {
     super.initState();
+    animcontroller = BottomSheet.createAnimationController(this);
+    animcontroller.duration = Duration(milliseconds: 1000);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       createMarkerIcons();
     });
     rootBundle.loadString('assets/style/map_style.json').then((string) {
       _mapStyle = string;
     });
+  }
+
+  @override
+  void dispose() {
+    animcontroller.dispose();
+    _controller.dispose();
+
+    super.dispose();
   }
 
   Future<void> onRefresh() async {

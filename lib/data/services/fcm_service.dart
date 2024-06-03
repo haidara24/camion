@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/firebase_options.dart';
-import 'package:camion/views/screens/merchant/active_shipment_details_from_notification.dart';
+import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -128,6 +128,20 @@ class NotificationServices {
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) {
+    if (message.data['notefication_type'] == "A" ||
+        message.data['notefication_type'] == "J") {
+      BlocProvider.of<RequestDetailsBloc>(context)
+          .add(RequestDetailsLoadEvent(21));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ApprovalRequestDetailsScreen(
+            type: message.data['notefication_type'].noteficationType!,
+          ),
+        ),
+      );
+    }
     // if (message.data['notefication_type'] == "A") {
     //   BlocProvider.of<ShipmentDetailsBloc>(context)
     //       .add(ShipmentDetailsLoadEvent(int.parse(message.data['shipmentId'])));

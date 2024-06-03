@@ -1,10 +1,7 @@
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
-// import 'package:camion/business_logic/bloc/offer_details_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
-import 'package:camion/views/screens/merchant/active_shipment_details_from_notification.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
@@ -99,7 +96,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             "J") {
                                       BlocProvider.of<RequestDetailsBloc>(
                                               context)
-                                          .add(RequestDetailsLoadEvent(21));
+                                          .add(RequestDetailsLoadEvent(
+                                              notificationProvider
+                                                  .notifications[index]
+                                                  .request!));
 
                                       Navigator.push(
                                         context,

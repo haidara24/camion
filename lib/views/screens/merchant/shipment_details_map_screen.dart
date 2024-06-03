@@ -3,14 +3,12 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
-import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -78,16 +76,12 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 50.0);
-    print("asd");
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     _controller.animateCamera(cameraUpdate);
-    // _mapController2.animateCamera(cameraUpdate);
-    print("asd");
-    // notifyListeners();
   }
 
   Widget pathList(Shipmentv2 shipment) {
@@ -289,6 +283,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
 
   @override
   void dispose() {
+    _controller.dispose();
     super.dispose();
   }
 
@@ -304,111 +299,82 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
   var count = 25;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height - 200.h,
-                child: GoogleMap(
-                  onMapCreated: (GoogleMapController controller) async {
-                    setState(() {
-                      _controller = controller;
-                      _controller.setMapStyle(_mapStyle);
-                    });
-                    initMapbounds();
-                  },
-                  zoomControlsEnabled: false,
+    return SafeArea(
+      child: Scaffold(
+        appBar: CustomAppBar(
+          title:
+              "${AppLocalizations.of(context)!.translate('shipment_number')}: ${widget.shipment.id!}",
+        ),
+        body: Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 270.h,
+              child: GoogleMap(
+                onMapCreated: (GoogleMapController controller) async {
+                  setState(() {
+                    _controller = controller;
+                    // _controller.setMapStyle(_mapStyle);
+                  });
+                  initMapbounds();
+                },
+                zoomControlsEnabled: false,
 
-                  initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                          double.parse(widget
-                              .shipment.subshipments![selectedIndex].pathpoints!
-                              .singleWhere(
-                                  (element) => element.pointType == "P")
-                              .location!
-                              .split(",")[0]),
-                          double.parse(widget
-                              .shipment.subshipments![selectedIndex].pathpoints!
-                              .singleWhere(
-                                  (element) => element.pointType == "P")
-                              .location!
-                              .split(",")[1])),
-                      zoom: 14.47),
-                  // gestureRecognizers: {},
-                  markers: markers,
-                  polylines: {
-                    Polyline(
-                      polylineId: const PolylineId("route"),
-                      points: deserializeLatLng(
-                          widget.shipment.subshipments![selectedIndex].paths!),
-                      color: AppColor.deepYellow,
-                      width: 7,
-                    ),
-                  },
-                  // mapType: shipmentProvider.mapType,
-                ),
-              ),
-              SizedBox(
-                height: 200.h,
-              ),
-            ],
-          ),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Container(
-                color: Colors.white,
-                height: 200.h,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      SectionTitle(
-                        text: AppLocalizations.of(context)!
-                            .translate("assigned_trucks"),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      pathList(widget.shipment),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                    ],
+                initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                        double.parse(widget
+                            .shipment.subshipments![selectedIndex].pathpoints!
+                            .singleWhere((element) => element.pointType == "P")
+                            .location!
+                            .split(",")[0]),
+                        double.parse(widget
+                            .shipment.subshipments![selectedIndex].pathpoints!
+                            .singleWhere((element) => element.pointType == "P")
+                            .location!
+                            .split(",")[1])),
+                    zoom: 14.47),
+                // gestureRecognizers: {},
+                markers: markers,
+                polylines: {
+                  Polyline(
+                    polylineId: const PolylineId("route"),
+                    points: deserializeLatLng(
+                        widget.shipment.subshipments![selectedIndex].paths!),
+                    color: AppColor.deepYellow,
+                    width: 7,
                   ),
-                ),
+                },
+                // mapType: shipmentProvider.mapType,
               ),
-              Positioned(
-                top: -60,
-                child: InkWell(
-                  onTap: () {
-                    print("asd");
-                    Navigator.pop(context);
-                  },
-                  child: AbsorbPointer(
-                    absorbing: false,
-                    child: Container(
-                      margin: const EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(45),
-                      ),
-                      padding: const EdgeInsets.all(8.0),
-                      child: const Icon(Icons.arrow_back),
+            ),
+            Container(
+              color: Colors.white,
+              height: 170.h,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 5,
                     ),
-                  ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("assigned_trucks"),
+                    ),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    pathList(widget.shipment),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -422,11 +388,11 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 50.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     mapcontroller.animateCamera(cameraUpdate);
     print("asd3");
 

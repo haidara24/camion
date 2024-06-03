@@ -131,8 +131,8 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
                 iconStyle: IconStyle(
                   iconData: Icons.circle_sharp,
-                  color: AppColor.deepYellow,
-                  fontSize: 15,
+                  color: Colors.white,
+                  fontSize: 14,
                 ),
               ),
               alignment: TimelineAlign.manual,
@@ -166,11 +166,18 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
               indicatorStyle: IndicatorStyle(
                 width: 17,
                 color: AppColor.deepYellow,
-                iconStyle: IconStyle(
-                  iconData: Icons.circle_sharp,
-                  color: AppColor.deepYellow,
-                  fontSize: 15,
+                indicator: Center(
+                  child: Icon(
+                    Icons.square,
+                    color: AppColor.deepYellow,
+                    size: 18,
+                  ),
                 ),
+                // iconStyle: IconStyle(
+                //   iconData: Icons.circle_sharp,
+                //   color: AppColor.deepYellow,
+                //   fontSize: 15,
+                // ),
               ),
               alignment: TimelineAlign.manual,
               lineXY: .3,

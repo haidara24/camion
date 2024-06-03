@@ -4,7 +4,6 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/instruction_create_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/package_type_bloc.dart';
-import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -106,83 +105,6 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
   List<TextEditingController> commodityQuantity_controller = [];
   List<TextEditingController> readpackageType_controller = [];
   List<PackageType?> packageType_controller = [null];
-
-  // Widget pathList() {
-  //   return SizedBox(
-  //     height: 60.h,
-  //     child: ListView.builder(
-  //       itemCount: widget.shipment.subshipments!.length,
-  //       shrinkWrap: true,
-  //       scrollDirection: Axis.horizontal,
-  //       itemBuilder: (context, index) {
-  //         return InkWell(
-  //           onTap: () {
-  //             setState(() {
-  //               selectedIndex = index;
-  //             });
-  //             // instructionsProvider!
-  //             //     .setSubShipment(widget.shipment.subshipments![index], index);
-  //             if (widget.shipment.subshipments![selectedIndex]
-  //                     .shipmentinstructionv2 !=
-  //                 null) {
-  //               setState(() {
-  //                 hasinstruction = true;
-  //                 selectedRadioTile = "K";
-  //               });
-  //               BlocProvider.of<ReadInstructionBloc>(context).add(
-  //                   ReadInstructionLoadEvent(widget
-  //                       .shipment.subshipments![index].shipmentinstructionv2!));
-  //             } else {
-  //               commodityName_controller.clear();
-  //               commodityWeight_controller.clear();
-  //               commodityQuantity_controller.clear();
-  //               packageType_controller.clear();
-  //               for (var i = 0;
-  //                   i < widget.shipment.subshipments![0].shipmentItems!.length;
-  //                   i++) {
-  //                 commodityName_controller.add(TextEditingController(
-  //                     text: widget.shipment.subshipments![0].shipmentItems![i]
-  //                         .commodityName!));
-  //                 commodityQuantity_controller.add(TextEditingController());
-  //                 commodityWeight_controller.add(TextEditingController());
-  //                 packageType_controller.add(null);
-  //               }
-  //               setState(() {});
-  //             }
-  //           },
-  //           child: Container(
-  //             width: 130.w,
-  //             margin: const EdgeInsets.all(5),
-  //             padding: const EdgeInsets.all(5),
-  //             decoration: BoxDecoration(
-  //               color: selectedIndex == index
-  //                   ? AppColor.lightYellow
-  //                   : Colors.white,
-  //               borderRadius: BorderRadius.circular(11),
-  //               border: Border.all(
-  //                 color: selectedIndex == index
-  //                     ? AppColor.deepYellow
-  //                     : Colors.grey[400]!,
-  //               ),
-  //             ),
-  //             child: Center(
-  //               child: Text(
-  //                 "المسار رقم ${index + 1}",
-  //                 style: TextStyle(
-  //                   fontSize: 19,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: selectedIndex == index
-  //                       ? AppColor.deepYellow
-  //                       : Colors.black,
-  //                 ),
-  //               ),
-  //             ),
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
 
   @override
   void initState() {
@@ -2140,7 +2062,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         text: AppLocalizations
                                                                 .of(context)!
                                                             .translate(
-                                                                'other_info'),
+                                                                'weight_info'),
                                                       ),
                                                     ]),
                                                 Padding(
@@ -2540,7 +2462,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                       text: AppLocalizations.of(
                                                               context)!
                                                           .translate(
-                                                              'other_info'),
+                                                              'weight_info'),
                                                     ),
                                                   ],
                                                 ),
@@ -2549,19 +2471,19 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                 ),
                                                 SectionBody(
                                                     text:
-                                                        '${AppLocalizations.of(context)!.translate('net_weight')}: ${state.instruction.netWeight!.toString()}'),
+                                                        '${AppLocalizations.of(context)!.translate('first_weight')}: ${state.instruction.netWeight!.toString()}'),
                                                 const SizedBox(
                                                   height: 8,
                                                 ),
                                                 SectionBody(
                                                     text:
-                                                        '${AppLocalizations.of(context)!.translate('total_weight')}: ${state.instruction.truckWeight!.toString()}'),
+                                                        '${AppLocalizations.of(context)!.translate('second_weight')}: ${state.instruction.truckWeight!.toString()}'),
                                                 const SizedBox(
                                                   height: 8,
                                                 ),
                                                 SectionBody(
                                                     text:
-                                                        '${AppLocalizations.of(context)!.translate('final_weight')}: ${state.instruction.finalWeight!.toString()}'),
+                                                        '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${state.instruction.finalWeight!.toString()}'),
                                                 const SizedBox(
                                                   height: 8,
                                                 ),

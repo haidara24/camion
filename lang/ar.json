@@ -80,7 +80,7 @@
     "running":"الجارية",
     "completed":"المكتملة",
     "no_shipments":"لا يوجد شحنات لعرضها",
-    "shipment_number":"رقم الشحنة",
+    "shipment_number":"الشحنة رقم ",
     "commodity_type":"نوع البضاعة",
     
     "search_result":"نتائج البحث",
@@ -133,6 +133,7 @@
     "reciever_info":"معلومات المستلم",
     "commodity_info":"معلومات البضاعة",
     "other_info":"معلومات إضافية",
+    "weight_info":"معلومات الوزن",
     "add_instruction":"اضافة تعليمات الشحن",
     "total_weight":"الوزن القائم",
     "net_weight":"الوزن الصافي",
