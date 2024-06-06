@@ -19,13 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
-    BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
-    BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
-    BlocProvider.of<ShipmentListBloc>(context).add(ShipmentListLoadEvent("P"));
-    BlocProvider.of<ActiveShipmentListBloc>(context)
-        .add(ActiveShipmentListLoadEvent());
-    Future.delayed(const Duration(seconds: 8))
+    Future.delayed(const Duration(seconds: 3))
         .then((value) => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(

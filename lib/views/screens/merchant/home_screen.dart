@@ -6,6 +6,7 @@ import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
@@ -18,6 +19,7 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/active_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/add_multi_shipment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
+import 'package:camion/views/screens/merchant/complete_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_task_screen.dart';
 import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
@@ -250,8 +252,51 @@ class _HomeScreenState extends State<HomeScreen>
                             prefs.setString("language", "en");
                           }
                           Future.delayed(const Duration(milliseconds: 500))
-                              .then((value) =>
-                                  _scaffoldKey.currentState!.closeDrawer());
+                              .then((value) {
+                            _scaffoldKey.currentState!.closeDrawer();
+                            switch (navigationValue) {
+                              case 0:
+                                {
+                                  setState(() {
+                                    title = AppLocalizations.of(context)!
+                                        .translate('home');
+                                  });
+                                  break;
+                                }
+                              case 1:
+                                {
+                                  setState(() {
+                                    title = AppLocalizations.of(context)!
+                                        .translate('shippment_log');
+                                  });
+                                  break;
+                                }
+                              case 2:
+                                {
+                                  setState(() {
+                                    title = AppLocalizations.of(context)!
+                                        .translate('order_shippment');
+                                  });
+                                  break;
+                                }
+                              case 3:
+                                {
+                                  setState(() {
+                                    title = AppLocalizations.of(context)!
+                                        .translate('tracking');
+                                  });
+                                  break;
+                                }
+                              case 4:
+                                {
+                                  setState(() {
+                                    title = AppLocalizations.of(context)!
+                                        .translate('tasks');
+                                  });
+                                  break;
+                                }
+                            }
+                          });
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
@@ -262,6 +307,35 @@ class _HomeScreenState extends State<HomeScreen>
                             localeState.value.languageCode != 'en'
                                 ? "English"
                                 : "العربية",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      const Divider(
+                        color: Colors.white,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          BlocProvider.of<ShipmentCompleteListBloc>(context)
+                              .add(ShipmentCompleteListLoadEvent());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CompleteShipmentScreen(),
+                            ),
+                          );
+                        },
+                        child: ListTile(
+                          leading: SvgPicture.asset(
+                            "assets/icons/listalt_selected.svg",
+                            height: 20.h,
+                          ),
+                          title: Text(
+                            AppLocalizations.of(context)!
+                                .translate('shippment_log'),
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.sp,
@@ -601,22 +675,22 @@ class _HomeScreenState extends State<HomeScreen>
                                 height: 66.h,
                                 icon: Consumer<TaskNumProvider>(
                                   builder: (context, value, child) {
-                                    return BlocListener<ActiveShipmentListBloc,
-                                        ActiveShipmentListState>(
+                                    return BlocListener<ShipmentRunningBloc,
+                                        ShipmentRunningState>(
                                       listener: (context, state) {
                                         if (state
-                                            is ActiveShipmentListLoadedSuccess) {
+                                            is ShipmentRunningLoadedSuccess) {
                                           var taskNum = 0;
-                                          // for (var element in state.shipments) {
-                                          //   if (element.shipmentinstruction ==
-                                          //       null) {
-                                          //     taskNum++;
-                                          //   }
-                                          //   if (element.shipmentpayment ==
-                                          //       null) {
-                                          //     taskNum++;
-                                          //   }
-                                          // }
+                                          for (var element in state.shipments) {
+                                            if (element.shipmentinstructionv2 ==
+                                                null) {
+                                              taskNum++;
+                                            }
+                                            if (element.shipmentpaymentv2 ==
+                                                null) {
+                                              taskNum++;
+                                            }
+                                          }
                                           value.setTaskNum(taskNum);
                                         }
                                       },
@@ -684,7 +758,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                     height: 25,
                                                     width: 25,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.red,
+                                                      color:
+                                                          AppColor.deepYellow,
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               45),

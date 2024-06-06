@@ -223,17 +223,20 @@ class ExpenseType {
   int? id;
   String? name;
   String? nameAr;
+  String? image;
 
   ExpenseType({
     this.id,
     this.name,
     this.nameAr,
+    this.image,
   });
 
   ExpenseType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     nameAr = json['name_ar'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -241,6 +244,7 @@ class ExpenseType {
     data['id'] = id;
     data['name'] = name;
     data['name_ar'] = nameAr;
+    data['image'] = image;
     return data;
   }
 }

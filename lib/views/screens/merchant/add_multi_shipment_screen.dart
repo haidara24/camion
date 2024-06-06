@@ -1628,7 +1628,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           const SizedBox(
-                                            height: 10,
+                                            height: 4,
                                           ),
                                           InkWell(
                                             onTap: () {
@@ -1663,15 +1663,6 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                           'shippment_path'),
                                                 ),
                                                 const Spacer(),
-                                                shipmentProvider.pathConfirm[
-                                                        selectedIndex]
-                                                    ? Icon(
-                                                        Icons.edit,
-                                                        color:
-                                                            AppColor.deepYellow,
-                                                      )
-                                                    : const SizedBox.shrink(),
-                                                const SizedBox(width: 10),
                                               ],
                                             ),
                                           ),
@@ -1757,17 +1748,40 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                           Visibility(
                                             visible: shipmentProvider
                                                 .pathConfirm[selectedIndex],
-                                            child:
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
                                                 AddShipmentPathVerticalWidget(
-                                              stations: shipmentProvider
-                                                      .stoppoints_controller[
-                                                  selectedIndex],
-                                              pickup: shipmentProvider
-                                                      .pickup_controller[
-                                                  selectedIndex],
-                                              delivery: shipmentProvider
-                                                      .delivery_controller[
-                                                  selectedIndex],
+                                                  stations: shipmentProvider
+                                                          .stoppoints_controller[
+                                                      selectedIndex],
+                                                  pickup: shipmentProvider
+                                                          .pickup_controller[
+                                                      selectedIndex],
+                                                  delivery: shipmentProvider
+                                                          .delivery_controller[
+                                                      selectedIndex],
+                                                ),
+                                                shipmentProvider.pathConfirm[
+                                                        selectedIndex]
+                                                    ? InkWell(
+                                                        onTap: () {
+                                                          mapIndex =
+                                                              selectedIndex;
+                                                          showShipmentPathModalSheet(
+                                                              context,
+                                                              localeState.value
+                                                                  .languageCode!);
+                                                        },
+                                                        child: Icon(
+                                                          Icons.edit,
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                        ),
+                                                      )
+                                                    : const SizedBox.shrink(),
+                                              ],
                                             ),
                                           ),
                                           Visibility(
@@ -2510,8 +2524,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                 TextInputType
                                                                     .number,
                                                             inputFormatters: [
-                                                              FilteringTextInputFormatter
-                                                                  .digitsOnly,
+                                                              DecimalFormatter(),
                                                             ],
                                                             style:
                                                                 const TextStyle(
@@ -2556,9 +2569,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                               //   calculateCo2Report();
                                                               // }
                                                             },
-                                                            autovalidateMode:
-                                                                AutovalidateMode
-                                                                    .onUserInteraction,
+                                                            // autovalidateMode:
+                                                            //     AutovalidateMode
+                                                            //         .onUserInteraction,
                                                             validator: (value) {
                                                               if (value!
                                                                   .isEmpty) {
@@ -2615,7 +2628,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                       style:
                                                                           TextStyle(
                                                                         fontSize:
-                                                                            17,
+                                                                            16,
                                                                         fontWeight:
                                                                             FontWeight.bold,
                                                                         color: AppColor
@@ -3541,7 +3554,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   )
                                 : Positioned(
                                     left: 5,
-                                    top: -10,
+                                    top: 0,
                                     child: InkWell(
                                       onTap: () {
                                         showDialog<void>(

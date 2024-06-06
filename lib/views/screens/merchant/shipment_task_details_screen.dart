@@ -27,6 +27,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ShipmentTaskDetailsScreen extends StatefulWidget {
   final SubShipment shipment;
@@ -1179,7 +1180,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                             is ReadInstructionLoadedSuccess) {
                                           return Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 7),
+                                              vertical: 4,
+                                            ),
                                             child: Card(
                                               elevation: 2,
                                               color: Colors.white,
@@ -1286,8 +1288,40 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                             ),
                                           );
                                         } else {
-                                          return const Center(
-                                              child: LoadingIndicator());
+                                          return Shimmer.fromColors(
+                                            baseColor: (Colors.grey[300])!,
+                                            highlightColor: (Colors.grey[100])!,
+                                            enabled: true,
+                                            direction: ShimmerDirection.ttb,
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              itemBuilder: (_, __) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    margin: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 5),
+                                                    height: 150.h,
+                                                    width: double.infinity,
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              itemCount: 1,
+                                            ),
+                                          );
                                         }
                                       },
                                     ),
@@ -1615,8 +1649,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                       TextInputType
                                                                           .number,
                                                                   inputFormatters: [
-                                                                    FilteringTextInputFormatter
-                                                                        .digitsOnly,
+                                                                    DecimalFormatter(),
                                                                   ],
                                                                   style: const TextStyle(
                                                                       fontSize:
@@ -1720,8 +1753,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                       TextInputType
                                                                           .number,
                                                                   inputFormatters: [
-                                                                    FilteringTextInputFormatter
-                                                                        .digitsOnly,
+                                                                    DecimalFormatter(),
                                                                   ],
                                                                   style: const TextStyle(
                                                                       fontSize:
@@ -1884,159 +1916,192 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                       builder: (context, state) {
                                         if (state
                                             is ReadInstructionLoadedSuccess) {
-                                          return Container(
+                                          return Card(
                                             margin: const EdgeInsets.symmetric(
-                                                vertical: 7),
+                                                vertical: 4),
                                             color: Colors.white,
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      SectionTitle(
-                                                        text: AppLocalizations
-                                                                .of(context)!
-                                                            .translate(
-                                                                'commodity_info'),
-                                                      ),
-                                                    ]),
-                                                ListView.builder(
-                                                    shrinkWrap: true,
-                                                    physics:
-                                                        const NeverScrollableScrollPhysics(),
-                                                    itemCount: widget.shipment
-                                                        .shipmentItems!.length,
-                                                    itemBuilder:
-                                                        (context, index2) {
-                                                      return Stack(
-                                                        children: [
-                                                          Card(
-                                                            color:
-                                                                Colors.grey[50],
-                                                            margin:
-                                                                const EdgeInsets
-                                                                    .all(5),
-                                                            child: Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              padding:
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SectionTitle(
+                                                          text: AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  'commodity_info'),
+                                                        ),
+                                                      ]),
+                                                  ListView.builder(
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                      itemCount: widget
+                                                          .shipment
+                                                          .shipmentItems!
+                                                          .length,
+                                                      itemBuilder:
+                                                          (context, index2) {
+                                                        return Stack(
+                                                          children: [
+                                                            Card(
+                                                              color: Colors
+                                                                  .grey[50],
+                                                              margin:
                                                                   const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          10.0,
-                                                                      vertical:
-                                                                          7.5),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 7,
-                                                                  ),
-                                                                  Container(
-                                                                    child: SectionBody(
-                                                                        text:
-                                                                            '${AppLocalizations.of(context)!.translate('commodity_name')}: ${state.instruction.commodityItems![index2].commodityName!}'),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 12,
-                                                                  ),
-                                                                  Container(
-                                                                    child: SectionBody(
-                                                                        text:
-                                                                            '${AppLocalizations.of(context)!.translate('commodity_quantity')}: ${state.instruction.commodityItems![index2].commodityQuantity!.toString()}'),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 12,
-                                                                  ),
-                                                                  Container(
-                                                                    child: SectionBody(
-                                                                        text:
-                                                                            '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${widget.shipment.shipmentItems![index2].commodityWeight!.toString()} كغ'),
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 12,
-                                                                  ),
-                                                                ],
+                                                                      .all(5),
+                                                              child: Container(
+                                                                width: double
+                                                                    .infinity,
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        10.0,
+                                                                    vertical:
+                                                                        7.5),
+                                                                child: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    const SizedBox(
+                                                                      height: 7,
+                                                                    ),
+                                                                    Container(
+                                                                      child: SectionBody(
+                                                                          text:
+                                                                              '${AppLocalizations.of(context)!.translate('commodity_name')}: ${state.instruction.commodityItems![index2].commodityName!}'),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      height:
+                                                                          12,
+                                                                    ),
+                                                                    Container(
+                                                                      child: SectionBody(
+                                                                          text:
+                                                                              '${AppLocalizations.of(context)!.translate('commodity_quantity')}: ${state.instruction.commodityItems![index2].commodityQuantity!.toString()}'),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      height:
+                                                                          12,
+                                                                    ),
+                                                                    Container(
+                                                                      child: SectionBody(
+                                                                          text:
+                                                                              '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${widget.shipment.shipmentItems![index2].commodityWeight!.toString()} كغ'),
+                                                                    ),
+                                                                    const SizedBox(
+                                                                      height:
+                                                                          12,
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          (widget
-                                                                      .shipment
-                                                                      .shipmentItems!
-                                                                      .length >
-                                                                  1)
-                                                              ? Positioned(
-                                                                  left: localeState
-                                                                              .value
-                                                                              .languageCode ==
-                                                                          "en"
-                                                                      ? null
-                                                                      : 5,
-                                                                  right: localeState
-                                                                              .value
-                                                                              .languageCode ==
-                                                                          "en"
-                                                                      ? 5
-                                                                      : null,
-                                                                  top: 5,
-                                                                  child:
-                                                                      Container(
-                                                                    height: 30,
-                                                                    width: 35,
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      color: AppColor
-                                                                          .deepYellow,
-                                                                      borderRadius:
-                                                                          BorderRadius
-                                                                              .only(
-                                                                        topLeft: localeState.value.languageCode ==
-                                                                                "en"
-                                                                            ? Radius.circular(5)
-                                                                            : Radius.circular(12),
-                                                                        topRight: localeState.value.languageCode ==
-                                                                                "en"
-                                                                            ? Radius.circular(12)
-                                                                            : Radius.circular(5),
-                                                                        bottomLeft:
-                                                                            Radius.circular(5),
-                                                                        bottomRight:
-                                                                            Radius.circular(5),
-                                                                      ),
-                                                                    ),
+                                                            (widget
+                                                                        .shipment
+                                                                        .shipmentItems!
+                                                                        .length >
+                                                                    1)
+                                                                ? Positioned(
+                                                                    left: localeState.value.languageCode ==
+                                                                            "en"
+                                                                        ? null
+                                                                        : 5,
+                                                                    right: localeState.value.languageCode ==
+                                                                            "en"
+                                                                        ? 5
+                                                                        : null,
+                                                                    top: 5,
                                                                     child:
-                                                                        Center(
+                                                                        Container(
+                                                                      height:
+                                                                          30,
+                                                                      width: 35,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: AppColor
+                                                                            .deepYellow,
+                                                                        borderRadius:
+                                                                            BorderRadius.only(
+                                                                          topLeft: localeState.value.languageCode == "en"
+                                                                              ? Radius.circular(5)
+                                                                              : Radius.circular(12),
+                                                                          topRight: localeState.value.languageCode == "en"
+                                                                              ? Radius.circular(12)
+                                                                              : Radius.circular(5),
+                                                                          bottomLeft:
+                                                                              Radius.circular(5),
+                                                                          bottomRight:
+                                                                              Radius.circular(5),
+                                                                        ),
+                                                                      ),
                                                                       child:
-                                                                          Text(
-                                                                        (index2 +
-                                                                                1)
-                                                                            .toString(),
-                                                                        style:
-                                                                            const TextStyle(
-                                                                          color:
-                                                                              Colors.white,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
+                                                                          Center(
+                                                                        child:
+                                                                            Text(
+                                                                          (index2 + 1)
+                                                                              .toString(),
+                                                                          style:
+                                                                              const TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                  ),
-                                                                )
-                                                              : const SizedBox
-                                                                  .shrink(),
-                                                        ],
-                                                      );
-                                                    }),
-                                              ],
+                                                                  )
+                                                                : const SizedBox
+                                                                    .shrink(),
+                                                          ],
+                                                        );
+                                                      }),
+                                                ],
+                                              ),
                                             ),
                                           );
                                         } else {
-                                          return const Center(
-                                              child: LoadingIndicator());
+                                          return Shimmer.fromColors(
+                                            baseColor: (Colors.grey[300])!,
+                                            highlightColor: (Colors.grey[100])!,
+                                            enabled: true,
+                                            direction: ShimmerDirection.ttb,
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              itemBuilder: (_, __) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    margin: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 5),
+                                                    height: 150.h,
+                                                    width: double.infinity,
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              itemCount: 1,
+                                            ),
+                                          );
                                         }
                                       },
                                     ),
@@ -2111,8 +2176,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                               TextInputType
                                                                   .number,
                                                           inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .digitsOnly,
+                                                            DecimalFormatter(),
                                                           ],
                                                           style:
                                                               const TextStyle(
@@ -2233,8 +2297,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                               TextInputType
                                                                   .number,
                                                           inputFormatters: [
-                                                            FilteringTextInputFormatter
-                                                                .digitsOnly,
+                                                            DecimalFormatter(),
                                                           ],
                                                           style:
                                                               const TextStyle(
@@ -2365,8 +2428,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                             TextInputType
                                                                 .number,
                                                         inputFormatters: [
-                                                          FilteringTextInputFormatter
-                                                              .digitsOnly,
+                                                          DecimalFormatter(),
                                                         ],
                                                         style: const TextStyle(
                                                             fontSize: 18),
@@ -2444,55 +2506,93 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                       builder: (context, state) {
                                         if (state
                                             is ReadInstructionLoadedSuccess) {
-                                          return Container(
+                                          return Card(
                                             margin: const EdgeInsets.symmetric(
-                                                vertical: 15),
+                                                vertical: 4),
                                             color: Colors.white,
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
-                                                    SectionTitle(
-                                                      text: AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'weight_info'),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SectionTitle(
+                                                          text: AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  'weight_info'),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('first_weight')}: ${state.instruction.netWeight!.toString()}'),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('second_weight')}: ${state.instruction.truckWeight!.toString()}'),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${state.instruction.finalWeight!.toString()}'),
+                                                    const SizedBox(
+                                                      height: 8,
                                                     ),
                                                   ],
                                                 ),
-                                                const SizedBox(
-                                                  height: 10,
-                                                ),
-                                                SectionBody(
-                                                    text:
-                                                        '${AppLocalizations.of(context)!.translate('first_weight')}: ${state.instruction.netWeight!.toString()}'),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                SectionBody(
-                                                    text:
-                                                        '${AppLocalizations.of(context)!.translate('second_weight')}: ${state.instruction.truckWeight!.toString()}'),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                                SectionBody(
-                                                    text:
-                                                        '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${state.instruction.finalWeight!.toString()}'),
-                                                const SizedBox(
-                                                  height: 8,
-                                                ),
-                                              ],
+                                              ),
                                             ),
                                           );
                                         } else {
-                                          return const Center(
-                                              child: LoadingIndicator());
+                                          return Shimmer.fromColors(
+                                            baseColor: (Colors.grey[300])!,
+                                            highlightColor: (Colors.grey[100])!,
+                                            enabled: true,
+                                            direction: ShimmerDirection.ttb,
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              itemBuilder: (_, __) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    margin: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 5),
+                                                    height: 150.h,
+                                                    width: double.infinity,
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              itemCount: 1,
+                                            ),
+                                          );
                                         }
                                       },
                                     ),

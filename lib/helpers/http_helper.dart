@@ -26,6 +26,7 @@ const CHARGETYPE_ENDPOINT = '${DOMAIN}camion/chargestypes/';
 const TRUCKS_ENDPOINT = '${DOMAIN}camion/trucks2/';
 const TRUCK_PAPERS_ENDPOINT = '${DOMAIN}camion/truckpapers/';
 const TRUCK_EXPENSES_ENDPOINT = '${DOMAIN}camion/truckfixes/';
+const FIXES_TYPE_ENDPOINT = '${DOMAIN}camion/fixestype/';
 const PACKAGE_TYPES_ENDPOINT = '${DOMAIN}camion/packagestypes/';
 const SHIPPMENTS_ENDPOINT = '${DOMAIN}camion/shippments/';
 const PRICEREQUEST_ENDPOINT = '${DOMAIN}camion/pricerequests/';

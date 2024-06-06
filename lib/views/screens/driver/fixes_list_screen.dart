@@ -2,6 +2,7 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/driver/create_fix_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,18 @@ class FixesListScreen extends StatelessWidget {
               backgroundColor: AppColor.lightGrey200,
               appBar: CustomAppBar(
                 title: "مصروفي",
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateFixScreen(),
+                  ),
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
               ),
               body: SingleChildScrollView(
                 // physics: const NeverScrollableScrollPhysics(),
@@ -108,19 +121,28 @@ class FixesListScreen extends StatelessWidget {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    // SvgPicture.network(state.fixes[index].expenseType!.name!),
+                                                    SizedBox(
+                                                      height: 25.h,
+                                                      width: 25.h,
+                                                      child: SvgPicture.network(
+                                                          state
+                                                              .fixes[index]
+                                                              .expenseType!
+                                                              .image!),
+                                                    ),
                                                     Padding(
                                                       padding: const EdgeInsets
                                                           .symmetric(
-                                                          horizontal: 11),
+                                                        horizontal: 11,
+                                                      ),
                                                       child: Text(
                                                         'التكلفة: ${state.fixes[index].amount} ${localeState.value.languageCode == "en" ? 'S.P' : 'ل.س'}',
                                                         style: TextStyle(
-                                                            // color: AppColor.lightBlue,
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                          // color: AppColor.lightBlue,
+                                                          fontSize: 18.sp,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
