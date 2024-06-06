@@ -22,7 +22,10 @@ class ShipmentRepository {
   List<KCategory> kCategories = [];
   List<Shipment> shipments = [];
   List<SubShipment> subshipments = [];
+  List<SubShipment> subshipmentsA = [];
+  List<SubShipment> subshipmentsR = [];
   List<Shipmentv2> kshipments = [];
+  List<Shipmentv2> shipmentsC = [];
   List<ManagmentShipment> mshipments = [];
 
   Future<bool> updateKShipmentStatus(String state, int shipmentId) async {
@@ -118,30 +121,57 @@ class ShipmentRepository {
   }
 
   Future<List<SubShipment>> getSubShipmentList(String status) async {
-    subshipments = [];
-    var prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
-    var merchant = prefs.getInt("merchant") ?? 0;
+    switch (status) {
+      case "R":
+        {
+          subshipmentsR = [];
+          var prefs = await SharedPreferences.getInstance();
+          var jwt = prefs.getString("token");
+          var merchant = prefs.getInt("merchant") ?? 0;
 
-    var response = await HttpHelper.get(
-      "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status",
-      apiToken: jwt,
-    );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
-    if (response.statusCode == 200) {
-      for (var element in json) {
-        subshipments.add(SubShipment.fromJson(element));
-      }
+          var response = await HttpHelper.get(
+            "${SUB_SHIPPMENTSV2_ENDPOINT}merchant/$merchant/status/$status/",
+            apiToken: jwt,
+          );
+          var myDataString = utf8.decode(response.bodyBytes);
+          var json = jsonDecode(myDataString);
+          if (response.statusCode == 200) {
+            for (var element in json) {
+              subshipmentsR.add(SubShipment.fromJson(element));
+            }
+            return subshipmentsR.reversed.toList();
+          } else {
+            return subshipmentsR;
+          }
+        }
+      default:
+        {
+          subshipments = [];
+          var prefs = await SharedPreferences.getInstance();
+          var jwt = prefs.getString("token");
+          var merchant = prefs.getInt("merchant") ?? 0;
 
-      return subshipments.reversed.toList();
-    } else {
-      return subshipments;
+          var response = await HttpHelper.get(
+            "${SUB_SHIPPMENTSV2_ENDPOINT}merchant/$merchant/status/$status/",
+            apiToken: jwt,
+          );
+          var myDataString = utf8.decode(response.bodyBytes);
+          var json = jsonDecode(myDataString);
+          if (response.statusCode == 200) {
+            for (var element in json) {
+              subshipments.add(SubShipment.fromJson(element));
+            }
+
+            return subshipments.reversed.toList();
+          } else {
+            return subshipments;
+          }
+        }
     }
   }
 
   Future<List<Shipmentv2>> getKShipmentList(String status) async {
-    kshipments = [];
+    shipmentsC = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var merchant = prefs.getInt("merchant") ?? 0;
@@ -154,13 +184,13 @@ class ShipmentRepository {
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        kshipments.add(Shipmentv2.fromJson(element));
+        shipmentsC.add(Shipmentv2.fromJson(element));
         print(response.statusCode);
       }
 
-      return kshipments.reversed.toList();
+      return shipmentsC.reversed.toList();
     } else {
-      return kshipments;
+      return shipmentsC;
     }
   }
 
@@ -304,23 +334,24 @@ class ShipmentRepository {
   }
 
   Future<List<SubShipment>> getActiveTruckShipments() async {
-    subshipments = [];
+    subshipmentsA = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var merchant = prefs.getInt("merchant") ?? 0;
     var response = await HttpHelper.get(
-      "${SUB_SHIPPMENTSV2_ENDPOINT}?shipment_status=A",
+      "${SUB_SHIPPMENTSV2_ENDPOINT}merchant/$merchant/status/A/",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        subshipments.add(SubShipment.fromJson(element));
+        subshipmentsA.add(SubShipment.fromJson(element));
       }
 
-      return subshipments.reversed.toList();
+      return subshipmentsA.reversed.toList();
     } else {
-      return subshipments;
+      return subshipmentsA;
     }
   }
 
