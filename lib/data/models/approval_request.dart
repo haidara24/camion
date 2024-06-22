@@ -50,6 +50,104 @@ class ApprovalRequest {
   }
 }
 
+class OwnerApprovalRequest {
+  int? id;
+  Driver? driver;
+  SimpleSubshipment? subshipment;
+  String? responseTurn;
+  bool? isApproved;
+  String? reason;
+  String? extratext;
+  double? extraFees;
+
+  OwnerApprovalRequest(
+      {this.id,
+      this.driver,
+      this.subshipment,
+      this.responseTurn,
+      this.isApproved,
+      this.extratext,
+      this.reason,
+      this.extraFees});
+
+  OwnerApprovalRequest.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    driver = json['driver'] != null ? Driver.fromJson(json['driver']) : null;
+    subshipment = json['subshipment'] != null
+        ? SimpleSubshipment.fromJson(json['subshipment'])
+        : null;
+    responseTurn = json['response_turn'];
+    isApproved = json['is_approved'];
+    reason = json['reason'];
+    extratext = json['extra_fees_text'];
+    extraFees = json['extra_fees'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['driver'] = driver;
+    if (subshipment != null) {
+      data['subshipment'] = subshipment!.toJson();
+    }
+    data['response_turn'] = responseTurn;
+    data['is_approved'] = isApproved;
+    data['reason'] = reason;
+    data['extra_fees'] = extraFees;
+    data['extra_fees_text'] = extratext;
+    return data;
+  }
+}
+
+class MerchantApprovalRequest {
+  int? id;
+  Driver? driver;
+  SimpleMerchantSubshipment? subshipment;
+  String? responseTurn;
+  bool? isApproved;
+  String? reason;
+  String? extratext;
+  double? extraFees;
+
+  MerchantApprovalRequest(
+      {this.id,
+      this.driver,
+      this.subshipment,
+      this.responseTurn,
+      this.isApproved,
+      this.extratext,
+      this.reason,
+      this.extraFees});
+
+  MerchantApprovalRequest.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    driver = json['driver'] != null ? Driver.fromJson(json['driver']) : null;
+    subshipment = json['subshipment'] != null
+        ? SimpleMerchantSubshipment.fromJson(json['subshipment'])
+        : null;
+    responseTurn = json['response_turn'];
+    isApproved = json['is_approved'];
+    reason = json['reason'];
+    extratext = json['extra_fees_text'];
+    extraFees = json['extra_fees'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['driver'] = driver;
+    if (subshipment != null) {
+      data['subshipment'] = subshipment!.toJson();
+    }
+    data['response_turn'] = responseTurn;
+    data['is_approved'] = isApproved;
+    data['reason'] = reason;
+    data['extra_fees'] = extraFees;
+    data['extra_fees_text'] = extratext;
+    return data;
+  }
+}
+
 class SimpleSubshipment {
   int? id;
   SimpleShipment? shipment;
@@ -85,6 +183,46 @@ class SimpleSubshipment {
     if (shipment != null) {
       data['shipment'] = shipment!.toJson();
     }
+    data['pickup_date'] = pickupDate?.toIso8601String();
+    if (pathpoints != null) {
+      data['path_points'] = pathpoints!.map((v) => v.toJson()).toList();
+    }
+
+    return data;
+  }
+}
+
+class SimpleMerchantSubshipment {
+  int? id;
+  int? shipment;
+  List<PathPoint>? pathpoints;
+  DateTime? pickupDate;
+
+  SimpleMerchantSubshipment({
+    this.id,
+    this.shipment,
+    this.pathpoints,
+    this.pickupDate,
+  });
+
+  SimpleMerchantSubshipment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    shipment = json['shipment'];
+
+    if (json['path_points'] != null) {
+      pathpoints = <PathPoint>[];
+      json['path_points'].forEach((v) {
+        pathpoints!.add(PathPoint.fromJson(v));
+      });
+    }
+
+    pickupDate = DateTime.parse(json['pickup_date']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['shipment'] = shipment;
     data['pickup_date'] = pickupDate?.toIso8601String();
     if (pathpoints != null) {
       data['path_points'] = pathpoints!.map((v) => v.toJson()).toList();

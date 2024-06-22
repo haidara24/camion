@@ -23,21 +23,21 @@ const PERMISSIONS_ENDPOINT = '${DOMAIN}camion/permessions/';
 const PATHPOINTS_ENDPOINT = '${DOMAIN}camion/checkpathpoints/';
 const CHARGES_ENDPOINT = '${DOMAIN}camion/passcharges/';
 const CHARGETYPE_ENDPOINT = '${DOMAIN}camion/chargestypes/';
+const DRIVERS_ENDPOINT = '${DOMAIN}camion/drivers/';
+const MERCHANTS_ENDPOINT = '${DOMAIN}camion/merchants/';
+const STORES_ENDPOINT = '${DOMAIN}camion/storehouses/';
 const TRUCKS_ENDPOINT = '${DOMAIN}camion/trucks2/';
 const TRUCK_PAPERS_ENDPOINT = '${DOMAIN}camion/truckpapers/';
 const TRUCK_EXPENSES_ENDPOINT = '${DOMAIN}camion/truckfixes/';
 const FIXES_TYPE_ENDPOINT = '${DOMAIN}camion/fixestype/';
 const PACKAGE_TYPES_ENDPOINT = '${DOMAIN}camion/packagestypes/';
-const SHIPPMENTS_ENDPOINT = '${DOMAIN}camion/shippments/';
 const PRICEREQUEST_ENDPOINT = '${DOMAIN}camion/pricerequests/';
-const KSHIPPMENTS_ENDPOINT = '${DOMAIN}camion/shipments/';
 const SHIPPMENTSV2_ENDPOINT = '${DOMAIN}camion/shipmentV2s/';
 const SUB_SHIPPMENTSV2_ENDPOINT = '${DOMAIN}camion/subshippments/';
 const SHIPPMENTS_PAYMENT_ENDPOINT = '${DOMAIN}camion/shipmentpayment/';
 const SHIPPMENTS_INSTRUCTION_ENDPOINT =
     '${DOMAIN}camion/shippmentinstructions/';
 const NOTIFICATIONS_ENDPOINT = '${DOMAIN}camion/notifecations/';
-const KNOTIFICATIONS_ENDPOINT = '${DOMAIN}camion/knotifecations/';
 
 class HttpHelper {
   static Future<http.Response> post(String url, Map<String, dynamic> body,

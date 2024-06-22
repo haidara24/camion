@@ -408,8 +408,8 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                         height: 50.h,
                         width: 175.w,
                         child: CachedNetworkImage(
-                          imageUrl: shipment.subshipments![selectedIndex].truck!
-                              .truck_type!.image!,
+                          imageUrl: shipment
+                              .subshipments![index].truck!.truck_type!.image!,
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) =>
                                   Shimmer.fromColors(
@@ -437,7 +437,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                         height: 7.h,
                       ),
                       Text(
-                        "${shipment.subshipments![selectedIndex].truck!.truckuser!.user!.firstName!} ${shipment.subshipments![selectedIndex].truck!.truckuser!.user!.lastName!}",
+                        "${shipment.subshipments![index].truck!.truckuser!.user!.firstName!} ${shipment.subshipments![index].truck!.truckuser!.user!.lastName!}",
                         style: TextStyle(
                           fontSize: 17.sp,
                           color: AppColor.deepBlack,
@@ -449,8 +449,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                 Positioned(
                   top: -5,
                   left: -6,
-                  child: shipment.subshipments![selectedIndex].shipmentStatus ==
-                          "R"
+                  child: shipment.subshipments![index].shipmentStatus == "R"
                       ? const Icon(
                           Icons.circle,
                           color: Colors.green,

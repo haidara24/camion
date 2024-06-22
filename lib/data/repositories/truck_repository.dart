@@ -30,7 +30,6 @@ class TruckRepository {
         ktrucks.add(KTruck.fromJson(element));
       }
     }
-    print(ktrucks);
     return ktrucks;
   }
 
@@ -67,12 +66,12 @@ class TruckRepository {
     return ktrucks;
   }
 
-  Future<List<KTruck>> getTrucksForOwner(int ownerId) async {
+  Future<List<KTruck>> getTrucksForOwner() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
-    var rs =
-        await HttpHelper.get('$TRUCKS_ENDPOINT?owner=$ownerId', apiToken: jwt);
+    var rs = await HttpHelper.get('${TRUCKS_ENDPOINT}list_for_owner/',
+        apiToken: jwt);
     ktrucks = [];
     print(rs.statusCode);
     if (rs.statusCode == 200) {
@@ -173,11 +172,11 @@ class TruckRepository {
     print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       var res = jsonDecode(respStr);
       return TruckPaper.fromJson(res);
     } else {
       final respStr = await response.stream.bytesToString();
+      print(respStr);
       return null;
     }
   }
@@ -203,9 +202,11 @@ class TruckRepository {
   Future<List<TruckExpense>> getTruckExpenses() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var truckId = prefs.getInt("truckId");
+    print(truckId);
 
-    var rs =
-        await HttpHelper.get('$TRUCK_EXPENSES_ENDPOINT?truck=3', apiToken: jwt);
+    var rs = await HttpHelper.get('$TRUCK_EXPENSES_ENDPOINT?truck=$truckId',
+        apiToken: jwt);
     truckExpenses = [];
     print(rs.statusCode);
     if (rs.statusCode == 200) {
@@ -222,22 +223,21 @@ class TruckRepository {
   Future<TruckExpense?> createTruckExpense(TruckExpense fix) async {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-
+    var truckId = prefs.getInt("truckId");
     var response = await HttpHelper.post(
       TRUCK_EXPENSES_ENDPOINT,
       {
         "fix_type": fix.fixType,
         "amount": fix.amount,
-        "dob": fix.dob,
-        "is_fixes": fix.isFixes,
-        "truck": fix.truck,
+        "dob": fix.dob?.toIso8601String(),
+        "truck": truckId,
         "expense_type": fix.expenseType!.id!
       },
       apiToken: token,
     );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
+      var myDataString = utf8.decode(response.bodyBytes);
+      var json = jsonDecode(myDataString);
       var fix = TruckExpense.fromJson(jsonDecode(response.body));
 
       return fix;

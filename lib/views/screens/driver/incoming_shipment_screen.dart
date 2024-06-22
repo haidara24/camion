@@ -102,7 +102,16 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
     }
   }
 
-  Future<void> onRefresh() async {}
+  Future<void> onRefresh() async {
+    if (tabIndex == 0) {
+      BlocProvider.of<DriverRequestsListBloc>(context)
+          .add(DriverRequestsListLoadEvent(null));
+    } else {
+      BlocProvider.of<InprogressShipmentsBloc>(context)
+          .add(InprogressShipmentsLoadEvent("R", null));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final playDuration = 600.ms;
@@ -116,453 +125,353 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
             backgroundColor: AppColor.lightGrey200,
             body: SingleChildScrollView(
               // physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
-                    child: TabBar(
-                      controller: _tabController,
-                      onTap: (value) {
-                        switch (value) {
-                          case 0:
-                            BlocProvider.of<DriverRequestsListBloc>(context)
-                                .add(DriverRequestsListLoadEvent());
-                            break;
-                          case 1:
-                            BlocProvider.of<InprogressShipmentsBloc>(context)
-                                .add(InprogressShipmentsLoadEvent("R"));
-                            break;
-                          default:
-                        }
-                        setState(() {
-                          tabIndex = value;
-                        });
-                      },
-                      tabs: [
-                        // first tab [you can add an icon using the icon property]
-                        Tab(
-                          child: Center(
-                              child: Text(AppLocalizations.of(context)!
-                                  .translate('pending'))),
-                        ),
-
-                        Tab(
-                          child: Center(
-                              child: Text(AppLocalizations.of(context)!
-                                  .translate('inprogress'))),
-                        ),
-                      ],
+              child: RefreshIndicator(
+                onRefresh: onRefresh,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 7, vertical: 7),
+                      child: TabBar(
+                        controller: _tabController,
+                        onTap: (value) {
+                          switch (value) {
+                            case 0:
+                              BlocProvider.of<DriverRequestsListBloc>(context)
+                                  .add(DriverRequestsListLoadEvent(null));
+                              break;
+                            case 1:
+                              BlocProvider.of<InprogressShipmentsBloc>(context)
+                                  .add(InprogressShipmentsLoadEvent("R", null));
+                              break;
+                            default:
+                          }
+                          setState(() {
+                            tabIndex = value;
+                          });
+                        },
+                        tabs: [
+                          Tab(
+                            child: Center(
+                                child: Text(AppLocalizations.of(context)!
+                                    .translate('pending'))),
+                          ),
+                          Tab(
+                            child: Center(
+                                child: Text(AppLocalizations.of(context)!
+                                    .translate('inprogress'))),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10.h,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: tabIndex == 0
-                        ? BlocConsumer<DriverRequestsListBloc,
-                            DriverRequestsListState>(
-                            listener: (context, state) {
-                              print(state);
-                            },
-                            builder: (context, state) {
-                              if (state is DriverRequestsListLoadedSuccess) {
-                                return state.requests.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('no_shipments')),
-                                      )
-                                    : ListView.builder(
-                                        itemCount: state.requests.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          return state.requests[index]
-                                                      .responseTurn ==
-                                                  "D"
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    BlocProvider.of<
-                                                                SubShipmentDetailsBloc>(
-                                                            context)
-                                                        .add(SubShipmentDetailsLoadEvent(
+                    SizedBox(
+                      height: 8.h,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: tabIndex == 0
+                          ? BlocConsumer<DriverRequestsListBloc,
+                              DriverRequestsListState>(
+                              listener: (context, state) {
+                                print(state);
+                              },
+                              builder: (context, state) {
+                                if (state is DriverRequestsListLoadedSuccess) {
+                                  return state.requests.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('no_shipments')),
+                                        )
+                                      : ListView.builder(
+                                          itemCount: state.requests.length,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                BlocProvider.of<
+                                                            SubShipmentDetailsBloc>(
+                                                        context)
+                                                    .add(
+                                                        SubShipmentDetailsLoadEvent(
                                                             state
                                                                 .requests[index]
                                                                 .subshipment!
                                                                 .id!));
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              IncomingShipmentDetailsScreen(
-                                                                  requestId: state
-                                                                      .requests[
-                                                                          index]
-                                                                      .id!),
-                                                        ));
-                                                  },
-                                                  child: AbsorbPointer(
-                                                    absorbing: false,
-                                                    child: Card(
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                          Radius.circular(10),
-                                                        ),
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Container(
-                                                            width:
-                                                                double.infinity,
-                                                            height: 48.h,
-                                                            color: AppColor
-                                                                .deepYellow,
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                  "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    // color: AppColor.lightBlue,
-                                                                    fontSize:
-                                                                        17.sp,
-                                                                  ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          IncomingShipmentDetailsScreen(
+                                                              requestId: state
+                                                                  .requests[
+                                                                      index]
+                                                                  .id!),
+                                                    ));
+                                              },
+                                              child: AbsorbPointer(
+                                                absorbing: false,
+                                                child: Card(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: double.infinity,
+                                                        height: 48.h,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                // color: AppColor.lightBlue,
+                                                                fontSize: 17.sp,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
                                                                       .symmetric(
                                                                       horizontal:
                                                                           11),
-                                                                  child: Text(
-                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
-                                                                    style: TextStyle(
-                                                                        // color: AppColor.lightBlue,
-                                                                        fontSize: 18.sp,
-                                                                        fontWeight: FontWeight.bold),
-                                                                  ),
-                                                                ),
-                                                              ],
+                                                              child: Text(
+                                                                '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
+                                                                style: TextStyle(
+                                                                    // color: AppColor.lightBlue,
+                                                                    fontSize: 18.sp,
+                                                                    fontWeight: FontWeight.bold),
+                                                              ),
                                                             ),
-                                                          ),
-                                                          ShipmentPathVerticalWidget(
-                                                            pathpoints: state
-                                                                .requests[index]
-                                                                .subshipment!
-                                                                .pathpoints!,
-                                                            pickupDate: state
-                                                                .requests[index]
-                                                                .subshipment!
-                                                                .pickupDate!,
-                                                            deliveryDate: state
-                                                                .requests[index]
-                                                                .subshipment!
-                                                                .pickupDate!,
-                                                            langCode: localeState
-                                                                .value
-                                                                .languageCode,
-                                                            mini: true,
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
+                                                      ShipmentPathVerticalWidget(
+                                                        pathpoints: state
+                                                            .requests[index]
+                                                            .subshipment!
+                                                            .pathpoints!,
+                                                        pickupDate: state
+                                                            .requests[index]
+                                                            .subshipment!
+                                                            .pickupDate!,
+                                                        deliveryDate: state
+                                                            .requests[index]
+                                                            .subshipment!
+                                                            .pickupDate!,
+                                                        langCode: localeState
+                                                            .value.languageCode,
+                                                        mini: true,
+                                                      ),
+                                                    ],
                                                   ),
-                                                )
-                                              : const SizedBox.shrink();
-                                        },
-                                      );
-                              } else {
-                                return Shimmer.fromColors(
-                                  baseColor: (Colors.grey[300])!,
-                                  highlightColor: (Colors.grey[100])!,
-                                  enabled: true,
-                                  direction: ShimmerDirection.ttb,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemBuilder: (_, __) => Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 5),
-                                          height: 250.h,
-                                          width: double.infinity,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    itemCount: 6,
-                                  ),
-                                );
-                              }
-                            },
-                          )
-                        : BlocBuilder<InprogressShipmentsBloc,
-                            InprogressShipmentsState>(
-                            builder: (context, state) {
-                              if (state is InprogressShipmentsLoadedSuccess) {
-                                return state.shipments.isEmpty
-                                    ? Center(
-                                        child: Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('no_shipments')),
-                                      )
-                                    : ListView.builder(
-                                        itemCount: state.shipments.length,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        shrinkWrap: true,
-                                        itemBuilder: (context, index) {
-                                          // DateTime now = DateTime.now();
-                                          // Duration diff = now
-                                          //     .difference(state.offers[index].createdDate!);
-                                          return InkWell(
-                                            onTap: () {
-                                              // Navigator.push(
-                                              //     context,
-                                              //     MaterialPageRoute(
-                                              //       builder: (context) =>
-                                              //           IncomingShipmentDetailsScreen(
-                                              //               shipment:
-                                              //                   state.shipments[
-                                              //                       index]),
-                                              //     ));
-                                            },
-                                            child: Card(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10),
                                                 ),
                                               ),
-                                              child: Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 5.h),
+                                            );
+                                          },
+                                        );
+                                } else {
+                                  return Shimmer.fromColors(
+                                    baseColor: (Colors.grey[300])!,
+                                    highlightColor: (Colors.grey[100])!,
+                                    enabled: true,
+                                    direction: ShimmerDirection.ttb,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (_, __) => Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 5),
+                                            height: 250.h,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      itemCount: 6,
+                                    ),
+                                  );
+                                }
+                              },
+                            )
+                          : BlocBuilder<InprogressShipmentsBloc,
+                              InprogressShipmentsState>(
+                              builder: (context, state) {
+                                if (state is InprogressShipmentsLoadedSuccess) {
+                                  return state.shipments.isEmpty
+                                      ? Center(
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('no_shipments')),
+                                        )
+                                      : ListView.builder(
+                                          itemCount: state.shipments.length,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return InkWell(
+                                              onTap: () {
+                                                // Navigator.push(
+                                                //     context,
+                                                //     MaterialPageRoute(
+                                                //       builder: (context) =>
+                                                //           IncomingShipmentDetailsScreen(
+                                                //               shipment:
+                                                //                   state.shipments[
+                                                //                       index]),
+                                                //     ));
+                                              },
+                                              child: Card(
+                                                shape:
+                                                    const RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(10),
+                                                  ),
+                                                ),
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 11),
-                                                      child: Text(
-                                                        '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
-                                                        style: TextStyle(
-                                                            // color: AppColor.lightBlue,
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                    ),
-                                                    ListTile(
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                      enabled: false,
-                                                      leading: Container(
-                                                        height: 75.h,
-                                                        width: 75.w,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                                // color: AppColor.lightGoldenYellow,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            5)),
-                                                        child: Center(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: localeState
-                                                                        .value
-                                                                        .languageCode ==
-                                                                    'en'
-                                                                ? SvgPicture
-                                                                        .asset(
-                                                                    "assets/icons/truck_en.svg",
-                                                                    height:
-                                                                        55.h,
-                                                                    width: 55.w,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  )
-                                                                    .animate(
-                                                                        delay: 600
-                                                                            .ms)
-                                                                    .shimmer(
-                                                                        duration: playDuration -
-                                                                            200
-                                                                                .ms)
-                                                                    .flip()
-                                                                : SvgPicture
-                                                                        .asset(
-                                                                    "assets/icons/truck_ar.svg",
-                                                                    height:
-                                                                        55.h,
-                                                                    width: 55.w,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  )
-                                                                    .animate(
-                                                                        delay: 600
-                                                                            .ms)
-                                                                    .shimmer(
-                                                                        duration:
-                                                                            playDuration -
-                                                                                200.ms)
-                                                                    .flip(),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      title: Row(
+                                                    Container(
+                                                      width: double.infinity,
+                                                      height: 48.h,
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                      child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .spaceBetween,
                                                         children: [
-                                                          Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              ShipmentPathVerticalWidget(
-                                                                pathpoints: state
-                                                                    .shipments[
-                                                                        index]
-                                                                    .pathpoints!,
-                                                                pickupDate: state
-                                                                    .shipments[
-                                                                        index]
-                                                                    .pickupDate!,
-                                                                deliveryDate: state
-                                                                    .shipments[
-                                                                        index]
-                                                                    .deliveryDate!,
-                                                                langCode:
-                                                                    localeState
-                                                                        .value
-                                                                        .languageCode,
-                                                                mini: true,
-                                                              ),
-                                                              SizedBox(
-                                                                height: 7.h,
-                                                              ),
-                                                              Text(
-                                                                '${AppLocalizations.of(context)!.translate('commodity_type')}: ${state.shipments[index].shipmentItems![0].commodityName!}',
-                                                                style:
-                                                                    TextStyle(
+                                                          Text(
+                                                            "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.shipments[index].shipment!} ${state.shipments[index].shipment!}",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                              // color: AppColor.lightBlue,
+                                                              fontSize: 17.sp,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        11),
+                                                            child: Text(
+                                                              '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
+                                                              style: TextStyle(
                                                                   // color: AppColor.lightBlue,
                                                                   fontSize:
-                                                                      17.sp,
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                height: 7.h,
-                                                              ),
-                                                              Text(
-                                                                '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${f.format(state.shipments[index].shipmentItems![0].commodityWeight!)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  // color: AppColor.lightBlue,
-                                                                  fontSize:
-                                                                      17.sp,
-                                                                ),
-                                                              ),
-
-                                                              // // Text(
-                                                              //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
-                                                            ],
+                                                                      18.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
-                                                      dense: false,
+                                                    ),
+                                                    ShipmentPathVerticalWidget(
+                                                      pathpoints: state
+                                                          .shipments[index]
+                                                          .pathpoints!,
+                                                      pickupDate: state
+                                                          .shipments[index]
+                                                          .pickupDate!,
+                                                      deliveryDate: state
+                                                          .shipments[index]
+                                                          .pickupDate!,
+                                                      langCode: localeState
+                                                          .value.languageCode,
+                                                      mini: true,
                                                     ),
                                                   ],
                                                 ),
-                                              ),
-                                            ).animate().slideX(
-                                                duration: 350.ms,
-                                                delay: 0.ms,
-                                                begin: 1,
-                                                end: 0,
-                                                curve: Curves.easeInOutSine),
-                                          );
-                                        },
-                                      );
-                              } else {
-                                return Shimmer.fromColors(
-                                  baseColor: (Colors.grey[300])!,
-                                  highlightColor: (Colors.grey[100])!,
-                                  enabled: true,
-                                  direction: ShimmerDirection.ttb,
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    itemBuilder: (_, __) => Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.symmetric(
-                                              horizontal: 15, vertical: 5),
-                                          height: 250.h,
-                                          width: double.infinity,
-                                          clipBehavior: Clip.antiAlias,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                              ).animate().slideX(
+                                                  duration: 350.ms,
+                                                  delay: 0.ms,
+                                                  begin: 1,
+                                                  end: 0,
+                                                  curve: Curves.easeInOutSine),
+                                            );
+                                          },
+                                        );
+                                } else {
+                                  return Shimmer.fromColors(
+                                    baseColor: (Colors.grey[300])!,
+                                    highlightColor: (Colors.grey[100])!,
+                                    enabled: true,
+                                    direction: ShimmerDirection.ttb,
+                                    child: ListView.builder(
+                                      shrinkWrap: true,
+                                      itemBuilder: (_, __) => Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 15, vertical: 5),
+                                            height: 250.h,
+                                            width: double.infinity,
+                                            clipBehavior: Clip.antiAlias,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                      itemCount: 6,
                                     ),
-                                    itemCount: 6,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                ],
+                                  );
+                                }
+                              },
+                            ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/data/models/user_model.dart';
+import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
@@ -9,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({Key? key}) : super(key: key);
@@ -236,7 +242,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     height: 30.h,
                                   ),
                                   BlocConsumer<AuthBloc, AuthState>(
-                                    listener: (context, state) {
+                                    listener: (context, state) async {
                                       if (state is AuthDriverSuccessState ||
                                           state is AuthOwnerSuccessState ||
                                           state is AuthMerchentSuccessState ||
@@ -270,6 +276,60 @@ class _SignInScreenState extends State<SignInScreen> {
                                           ),
                                           (route) => false,
                                         );
+                                        var prefs = await SharedPreferences
+                                            .getInstance();
+                                        var jwt = prefs.getString("token");
+                                        Response userresponse =
+                                            await HttpHelper.get(
+                                                PROFILE_ENDPOINT,
+                                                apiToken: jwt);
+                                        if (userresponse.statusCode == 200) {
+                                          var prefs = await SharedPreferences
+                                              .getInstance();
+                                          var userType =
+                                              prefs.getString("userType") ?? "";
+                                          if (userType.isNotEmpty) {
+                                            var myDataString = utf8
+                                                .decode(userresponse.bodyBytes);
+                                            print("myDataString");
+                                            print(myDataString);
+                                            prefs.setString(
+                                                "userProfile", myDataString);
+                                            var result =
+                                                jsonDecode(myDataString);
+                                            var userProfile =
+                                                UserModel.fromJson(result);
+                                            if (userProfile.merchant != null) {
+                                              prefs.setInt("merchant",
+                                                  userProfile.merchant!);
+                                            }
+                                            if (userProfile.truckowner !=
+                                                null) {
+                                              prefs.setInt("truckowner",
+                                                  userProfile.truckowner!);
+                                            }
+                                            if (userProfile.truckuser != null) {
+                                              prefs.setInt("truckuser",
+                                                  userProfile.truckuser!);
+                                              print("userProfile.truckuser");
+                                              print(userProfile.truckuser);
+                                              Response driverResponse =
+                                                  await HttpHelper.get(
+                                                      '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
+                                                      apiToken: jwt);
+                                              if (driverResponse.statusCode ==
+                                                  200) {
+                                                var driverDataString =
+                                                    utf8.decode(driverResponse
+                                                        .bodyBytes);
+                                                var res = jsonDecode(
+                                                    driverDataString);
+                                                prefs.setInt(
+                                                    "truckId", res['truck2']);
+                                              }
+                                            }
+                                          }
+                                        }
                                       }
 
                                       if (state is AuthLoginErrorState) {

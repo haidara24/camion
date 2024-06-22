@@ -8,7 +8,7 @@ sealed class DriverRequestsListEvent extends Equatable {
 }
 
 class DriverRequestsListLoadEvent extends DriverRequestsListEvent {
-  // final int driverId;
+  final int? driverId;
 
-  const DriverRequestsListLoadEvent();
+  const DriverRequestsListLoadEvent(this.driverId);
 }

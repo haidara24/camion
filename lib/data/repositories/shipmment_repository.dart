@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:camion/data/models/commodity_category_model.dart';
 import 'package:camion/data/models/kshipment_model.dart';
-import 'package:camion/data/models/shipment_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/helpers/http_helper.dart';
@@ -20,7 +19,6 @@ class ShipmentRepository {
   List<CommodityCategory> commodityCategories = [];
   List<KCommodityCategory> kcommodityCategories = [];
   List<KCategory> kCategories = [];
-  List<Shipment> shipments = [];
   List<SubShipment> subshipments = [];
   List<SubShipment> subshipmentsA = [];
   List<SubShipment> subshipmentsR = [];
@@ -32,7 +30,7 @@ class ShipmentRepository {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.patch(
-      "$KSHIPPMENTS_ENDPOINT$shipmentId/",
+      "$SHIPPMENTSV2_ENDPOINT$shipmentId/",
       {"shipment_status": state},
       apiToken: jwt,
     );
@@ -182,10 +180,10 @@ class ShipmentRepository {
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
+    print(response.statusCode);
     if (response.statusCode == 200) {
-      for (var element in json) {
+      for (var element in json["results"]) {
         shipmentsC.add(Shipmentv2.fromJson(element));
-        print(response.statusCode);
       }
 
       return shipmentsC.reversed.toList();
@@ -201,7 +199,7 @@ class ShipmentRepository {
     var jwt = prefs.getString("token");
 
     var response = await HttpHelper.get(
-      "${KSHIPPMENTS_ENDPOINT}filter_by_status/?shipment_status=$status",
+      "${SHIPPMENTSV2_ENDPOINT}filter_by_status/?shipment_status=$status",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
@@ -218,27 +216,99 @@ class ShipmentRepository {
     }
   }
 
-  Future<List<SubShipment>> getDriverShipmentList(String status) async {
-    subshipments = [];
+  Future<List<SubShipment>> getDriverActiveShipmentList(String status) async {
+    subshipmentsA = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var driver = prefs.getInt("truckuser") ?? 0;
-    print(driver.toString());
 
     var response = await HttpHelper.get(
       "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status&driver=$driver",
       apiToken: jwt,
     );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
+    print(response.statusCode);
     if (response.statusCode == 200) {
-      for (var element in json) {
-        subshipments.add(SubShipment.fromJson(element));
+      var myDataString = utf8.decode(response.bodyBytes);
+      var json = jsonDecode(myDataString);
+      for (var element in json["results"]) {
+        subshipmentsA.add(SubShipment.fromJson(element));
       }
 
-      return subshipments.reversed.toList();
+      return subshipmentsA.reversed.toList();
     } else {
-      return subshipments;
+      return subshipmentsA;
+    }
+  }
+
+  // Future<List<SubShipment>> getDriverShipmentList(String status) async {
+  //   subshipments = [];
+  //   var prefs = await SharedPreferences.getInstance();
+  //   var jwt = prefs.getString("token");
+  //   var driver = prefs.getInt("truckuser") ?? 0;
+
+  //   var response = await HttpHelper.get(
+  //     "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status&driver=$driver",
+  //     apiToken: jwt,
+  //   );
+  //   print(response.statusCode);
+  //   if (response.statusCode == 200) {
+  //     var myDataString = utf8.decode(response.bodyBytes);
+  //     var json = jsonDecode(myDataString);
+  //     for (var element in json["results"]) {
+  //       subshipments.add(SubShipment.fromJson(element));
+  //     }
+
+  //     return subshipments.reversed.toList();
+  //   } else {
+  //     return subshipments;
+  //   }
+  // }
+
+  Future<List<SubShipment>> getDriverShipmentList(
+      String status, int? truckId) async {
+    subshipmentsR = [];
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var truck = prefs.getInt("truckId") ?? 0;
+    var response = await HttpHelper.get(
+      "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status&truck=${truckId ?? truck}",
+      apiToken: jwt,
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var myDataString = utf8.decode(response.bodyBytes);
+      var json = jsonDecode(myDataString);
+      for (var element in json["results"]) {
+        subshipmentsR.add(SubShipment.fromJson(element));
+      }
+
+      return subshipmentsR.reversed.toList();
+    } else {
+      return subshipmentsR;
+    }
+  }
+
+  Future<List<SubShipment>> getDriverRunningShipmentListForOwner(
+      String status) async {
+    subshipmentsR = [];
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var response = await HttpHelper.get(
+      "${SUB_SHIPPMENTSV2_ENDPOINT}list_for_owner_and_status/",
+      apiToken: jwt,
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var myDataString = utf8.decode(response.bodyBytes);
+      var json = jsonDecode(myDataString);
+      for (var element in json["results"]) {
+        subshipmentsR.add(SubShipment.fromJson(element));
+      }
+
+      return subshipmentsR.reversed.toList();
+    } else {
+      return subshipmentsR;
     }
   }
 
@@ -265,48 +335,48 @@ class ShipmentRepository {
     }
   }
 
-  Future<List<Shipment>> getDriverShipmentListForOwner(
+  Future<List<Shipmentv2>> getDriverShipmentListForOwner(
       String status, int driverId) async {
-    shipments = [];
+    kshipments = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.get(
-      "$SHIPPMENTS_ENDPOINT?shipment_status=$status&merchant=&driver=$driverId",
+      "$SHIPPMENTSV2_ENDPOINT?shipment_status=$status&merchant=&driver=$driverId",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        shipments.add(Shipment.fromJson(element));
+        kshipments.add(Shipmentv2.fromJson(element));
       }
 
-      return shipments.reversed.toList();
+      return kshipments.reversed.toList();
     } else {
-      return shipments;
+      return kshipments;
     }
   }
 
-  Future<List<Shipment>> getOwnerShipmentList(String status) async {
-    shipments = [];
+  Future<List<SubShipment>> getOwnerShipmentList(String status) async {
+    subshipments = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     // var driver = prefs.getInt("truckowner") ?? 0;
 
     var response = await HttpHelper.get(
-      "${SHIPPMENTS_ENDPOINT}pending_shipments_for_owner/?shipment_status=$status",
+      "${SUB_SHIPPMENTSV2_ENDPOINT}pending_shipments_for_owner/?shipment_status=$status",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        shipments.add(Shipment.fromJson(element));
+        subshipments.add(SubShipment.fromJson(element));
       }
 
-      return shipments.reversed.toList();
+      return subshipments.reversed.toList();
     } else {
-      return shipments;
+      return subshipments;
     }
   }
 
@@ -317,7 +387,7 @@ class ShipmentRepository {
     // var driver = prefs.getInt("truckowner") ?? 0;
 
     var response = await HttpHelper.get(
-      "${KSHIPPMENTS_ENDPOINT}pending_shipments_for_owner/?shipment_status=$status",
+      "${SHIPPMENTSV2_ENDPOINT}pending_shipments_for_owner/?shipment_status=$status",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
@@ -363,13 +433,14 @@ class ShipmentRepository {
       "${SUB_SHIPPMENTSV2_ENDPOINT}no_driver_shipments/",
       apiToken: jwt,
     );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
+      var myDataString = utf8.decode(response.bodyBytes);
+      var json = jsonDecode(myDataString);
       for (var element in json) {
         subshipments.add(SubShipment.fromJson(element));
       }
-
       return subshipments.reversed.toList();
     } else {
       return subshipments;
@@ -424,7 +495,6 @@ class ShipmentRepository {
 
     List<Map<String, dynamic>> sub_shipments = [];
     for (var element in shipment.subshipments!) {
-      // print(jsonEncode(element.toJson()));
       var item = element.toJson();
       sub_shipments.add(item);
     }
@@ -433,63 +503,13 @@ class ShipmentRepository {
 
     request.fields['merchant'] = userModel.merchant!.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);
-    // print(userModel.merchant!.toString());
-
-    // print(jsonEncode(request.fields));
     var response = await request.send();
     print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       var resString = jsonDecode(respStr);
-      print(resString);
       var res = Shipmentv2.fromJson(resString);
       return res;
-    } else {
-      final respStr = await response.stream.bytesToString();
-      print(respStr);
-      return null;
-    }
-  }
-
-  Future<int?> createShipment(Shipment shipment, int driver) async {
-    prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("token");
-    var request = http.MultipartRequest('POST', Uri.parse(SHIPPMENTS_ENDPOINT));
-    request.headers.addAll({
-      HttpHeaders.authorizationHeader: "JWT $token",
-      HttpHeaders.contentTypeHeader: "multipart/form-data"
-    });
-    List<Map<String, dynamic>> shipment_items = [];
-    for (var element in shipment.shipmentItems!) {
-      var item = element.toJson();
-      shipment_items.add(item);
-    }
-    print("asdad");
-
-    var dataString = prefs.getString("userProfile");
-    UserModel userModel = UserModel.fromJson(jsonDecode(dataString!));
-
-    request.fields['merchant'] = userModel.merchant!.toString();
-    request.fields['driver'] = driver.toString();
-    request.fields['total_weight'] = shipment.totalWeight.toString();
-    request.fields['truck_type'] = shipment.truckType!.id!.toString();
-    request.fields['pickup_city_location'] =
-        shipment.pickupCityLocation.toString();
-    request.fields['pickup_city_lat'] = shipment.pickupCityLat.toString();
-    request.fields['pickup_city_lang'] = shipment.pickupCityLang.toString();
-    request.fields['delivery_city_location'] =
-        shipment.deliveryCityLocation.toString();
-    request.fields['delivery_city_lat'] = shipment.deliveryCityLat.toString();
-    request.fields['delivery_city_lang'] = shipment.deliveryCityLang.toString();
-    request.fields['pickup_date'] = shipment.pickupDate.toString();
-    request.fields['shipment_items'] = jsonEncode(shipment_items);
-    print(jsonEncode(request.fields));
-    var response = await request.send();
-    print(response.statusCode);
-    if (response.statusCode == 201) {
-      final respStr = await response.stream.bytesToString();
-      var res = jsonDecode(respStr);
-      return res['truck_type'];
     } else {
       final respStr = await response.stream.bytesToString();
       print(respStr);
@@ -501,7 +521,7 @@ class ShipmentRepository {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var request =
-        http.MultipartRequest('POST', Uri.parse(KSHIPPMENTS_ENDPOINT));
+        http.MultipartRequest('POST', Uri.parse(SHIPPMENTSV2_ENDPOINT));
     request.headers.addAll({
       HttpHeaders.authorizationHeader: "JWT $token",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
@@ -529,8 +549,6 @@ class ShipmentRepository {
     request.fields['truck_type'] = shipment.truckType!.id!.toString();
     request.fields['shipment_items'] = jsonEncode(shipment_items);
     request.fields['path_points'] = jsonEncode(path_points);
-    print(jsonEncode(shipment_items));
-    print(jsonEncode(path_points));
     var response = await request.send();
     print(response.statusCode);
     if (response.statusCode == 201) {

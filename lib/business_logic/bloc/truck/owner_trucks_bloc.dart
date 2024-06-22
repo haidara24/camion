@@ -13,7 +13,7 @@ class OwnerTrucksBloc extends Bloc<OwnerTrucksEvent, OwnerTrucksState> {
     on<OwnerTrucksLoadEvent>((event, emit) async {
       emit(OwnerTrucksLoadingProgress());
       try {
-        var result = await truckRepository.getTrucksForOwner(event.owner);
+        var result = await truckRepository.getTrucksForOwner();
         emit(OwnerTrucksLoadedSuccess(result));
       } catch (e) {
         emit(OwnerTrucksLoadedFailed(e.toString()));

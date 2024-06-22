@@ -14,8 +14,8 @@ class InprogressShipmentsBloc
     on<InprogressShipmentsLoadEvent>((event, emit) async {
       emit(InprogressShipmentsLoadingProgress());
       try {
-        var result =
-            await shipmentRepository.getDriverShipmentList(event.state);
+        var result = await shipmentRepository.getDriverShipmentList(
+            event.state, event.driverId);
         emit(InprogressShipmentsLoadedSuccess(result));
       } catch (e) {
         emit(InprogressShipmentsLoadedFailed(e.toString()));

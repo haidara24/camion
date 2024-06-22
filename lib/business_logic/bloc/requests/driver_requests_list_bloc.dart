@@ -14,7 +14,7 @@ class DriverRequestsListBloc
     on<DriverRequestsListLoadEvent>((event, emit) async {
       emit(DriverRequestsListLoadingProgress());
       try {
-        var result = await requestRepository.getApprovalRequests();
+        var result = await requestRepository.getApprovalRequests(event.driverId);
 
         emit(DriverRequestsListLoadedSuccess(result));
       } catch (e) {

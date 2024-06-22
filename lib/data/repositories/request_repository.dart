@@ -7,24 +7,67 @@ import 'package:shared_preferences/shared_preferences.dart';
 class RequestRepository {
   late SharedPreferences prefs;
   List<ApprovalRequest> approvalRequests = [];
+  List<MerchantApprovalRequest> merchantapprovalRequests = [];
 
-  Future<List<ApprovalRequest>> getApprovalRequests() async {
+  Future<List<ApprovalRequest>> getApprovalRequests(int? driverId) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var driver = prefs.getInt("truckuser");
-    var rs = await HttpHelper.get('$APPROVAL_REQUESTS_ENDPOINT?driver=$driver',
+    var driver = prefs.getInt('truckuser');
+    var rs = await HttpHelper.get(
+        '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}',
         apiToken: jwt);
     approvalRequests = [];
+    print(rs.statusCode);
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+      print(myDataString);
+
+      var result = jsonDecode(myDataString);
+      for (var element in result) {
+        approvalRequests.add(ApprovalRequest.fromJson(element));
+      }
+    }
+    return approvalRequests;
+  }
+
+  Future<List<ApprovalRequest>> getApprovalRequestsForOwner() async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var rs = await HttpHelper.get(
+        '${APPROVAL_REQUESTS_ENDPOINT}list_for_owner/',
+        apiToken: jwt);
+    approvalRequests = [];
+    print(rs.statusCode);
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+      print(myDataString);
+
+      var result = jsonDecode(myDataString);
+      for (var element in result) {
+        approvalRequests.add(ApprovalRequest.fromJson(element));
+      }
+    }
+    return approvalRequests;
+  }
+
+  Future<List<MerchantApprovalRequest>> getApprovalRequestsForMerchant() async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var rs = await HttpHelper.get(
+        '${APPROVAL_REQUESTS_ENDPOINT}list_for_merchant/',
+        apiToken: jwt);
+    merchantapprovalRequests = [];
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
-        print(rs.statusCode);
-        approvalRequests.add(ApprovalRequest.fromJson(element));
+        merchantapprovalRequests.add(MerchantApprovalRequest.fromJson(element));
       }
     }
-    return approvalRequests;
+
+    return merchantapprovalRequests;
   }
 
   Future<ApprovalRequest?> getRequestDetails(int id) async {

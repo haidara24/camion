@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'dart:io';
+
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/instruction_create_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
@@ -26,6 +28,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -106,6 +109,60 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
   List<TextEditingController> commodityQuantity_controller = [];
   List<TextEditingController> readpackageType_controller = [];
   List<PackageType?> packageType_controller = [null];
+
+  List<File> _files = [];
+  final ImagePicker _picker = ImagePicker();
+
+  List<Widget> _buildAttachmentImages() {
+    List<Widget> list = [];
+    if (_files.isNotEmpty) {
+      for (var i = 0; i < _files.length; i++) {
+        var elem = Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.topLeft,
+          children: [
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 6),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                  width: 1,
+                ),
+              ),
+              width: 80.w,
+              height: 95.h,
+              child: Image(
+                height: 80.w,
+                width: 95.h,
+                fit: BoxFit.fill,
+                image: FileImage(_files[i]),
+              ),
+            ),
+            Positioned(
+              top: -24,
+              left: -8,
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _files.removeAt(i);
+                  });
+                },
+                icon: Card(
+                  color: Colors.grey[200]!,
+                  child: Icon(
+                    Icons.delete,
+                    color: Colors.red[400],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+        list.add(elem);
+      }
+    }
+    return list;
+  }
 
   @override
   void initState() {
@@ -2030,15 +2087,17 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                         borderRadius:
                                                                             BorderRadius.only(
                                                                           topLeft: localeState.value.languageCode == "en"
-                                                                              ? Radius.circular(5)
-                                                                              : Radius.circular(12),
+                                                                              ? const Radius.circular(5)
+                                                                              : const Radius.circular(12),
                                                                           topRight: localeState.value.languageCode == "en"
-                                                                              ? Radius.circular(12)
-                                                                              : Radius.circular(5),
-                                                                          bottomLeft:
-                                                                              Radius.circular(5),
-                                                                          bottomRight:
-                                                                              Radius.circular(5),
+                                                                              ? const Radius.circular(12)
+                                                                              : const Radius.circular(5),
+                                                                          bottomLeft: const Radius
+                                                                              .circular(
+                                                                              5),
+                                                                          bottomRight: const Radius
+                                                                              .circular(
+                                                                              5),
                                                                         ),
                                                                       ),
                                                                       child:
@@ -2228,12 +2287,16 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                 .text
                                                                 .isNotEmpty) {
                                                               final_weight_controller
-                                                                  .text = (double.parse(
-                                                                          net_weight_controller
-                                                                              .text) -
-                                                                      double.parse(
-                                                                          truck_weight_controller
-                                                                              .text))
+                                                                  .text = (double.parse(net_weight_controller
+                                                                          .text
+                                                                          .replaceAll(
+                                                                              ",",
+                                                                              "")) -
+                                                                      double.parse(truck_weight_controller
+                                                                          .text
+                                                                          .replaceAll(
+                                                                              ",",
+                                                                              "")))
                                                                   .abs()
                                                                   .toString();
                                                             }
@@ -2350,12 +2413,16 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                 .text
                                                                 .isNotEmpty) {
                                                               final_weight_controller
-                                                                  .text = (double.parse(
-                                                                          net_weight_controller
-                                                                              .text) -
-                                                                      double.parse(
-                                                                          truck_weight_controller
-                                                                              .text))
+                                                                  .text = (double.parse(net_weight_controller
+                                                                          .text
+                                                                          .replaceAll(
+                                                                              ",",
+                                                                              "")) -
+                                                                      double.parse(truck_weight_controller
+                                                                          .text
+                                                                          .replaceAll(
+                                                                              ",",
+                                                                              "")))
                                                                   .abs()
                                                                   .toString();
                                                             }
@@ -2598,6 +2665,164 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                     ),
                               widget.shipment.shipmentinstructionv2 == null
                                   ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3),
+                                      child: Card(
+                                        color: Colors.white,
+                                        elevation: 2,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  const SectionTitle(
+                                                      text:
+                                                          "ارفع الصور والملفات"),
+                                                  InkWell(
+                                                    onTap: () async {
+                                                      var pickedImages =
+                                                          await _picker
+                                                              .pickMultiImage();
+                                                      for (var element
+                                                          in pickedImages) {
+                                                        _files.add(
+                                                            File(element.path));
+                                                      }
+                                                      setState(
+                                                        () {},
+                                                      );
+                                                    },
+                                                    child: Card(
+                                                      elevation: 1,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Center(
+                                                          child: SizedBox(
+                                                            height: 40.h,
+                                                            width: 50.w,
+                                                            child: SvgPicture.asset(
+                                                                "assets/icons/cloud.svg"),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Wrap(
+                                                alignment: WrapAlignment.start,
+                                                children:
+                                                    _buildAttachmentImages(),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : BlocBuilder<ReadInstructionBloc,
+                                      ReadInstructionState>(
+                                      builder: (context, state) {
+                                        if (state
+                                            is ReadInstructionLoadedSuccess) {
+                                          return Card(
+                                            margin: const EdgeInsets.symmetric(
+                                                vertical: 4),
+                                            color: Colors.white,
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SectionTitle(
+                                                          text: AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  'weight_info'),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('first_weight')}: ${state.instruction.netWeight!.toString()}'),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('second_weight')}: ${state.instruction.truckWeight!.toString()}'),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${state.instruction.finalWeight!.toString()}'),
+                                                    const SizedBox(
+                                                      height: 8,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        } else {
+                                          return Shimmer.fromColors(
+                                            baseColor: (Colors.grey[300])!,
+                                            highlightColor: (Colors.grey[100])!,
+                                            enabled: true,
+                                            direction: ShimmerDirection.ttb,
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              itemBuilder: (_, __) => Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    margin: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 5),
+                                                    height: 150.h,
+                                                    width: double.infinity,
+                                                    clipBehavior:
+                                                        Clip.antiAlias,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              itemCount: 1,
+                                            ),
+                                          );
+                                        }
+                                      },
+                                    ),
+                              widget.shipment.shipmentinstructionv2 == null
+                                  ? Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Consumer<TaskNumProvider>(builder:
                                           (context, taskProvider, child) {
@@ -2663,7 +2888,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) =>
-                                                        ControlView(),
+                                                        const ControlView(),
                                                   ),
                                                   (route) => false);
                                             }
@@ -2805,8 +3030,11 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         BlocProvider.of<
                                                                     InstructionCreateBloc>(
                                                                 context)
-                                                            .add(InstructionCreateButtonPressed(
-                                                                shipmentInstruction));
+                                                            .add(
+                                                          InstructionCreateButtonPressed(
+                                                              shipmentInstruction,
+                                                              _files),
+                                                        );
                                                       } else {
                                                         Scrollable
                                                             .ensureVisible(

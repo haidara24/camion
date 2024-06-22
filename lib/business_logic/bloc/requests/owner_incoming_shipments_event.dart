@@ -7,9 +7,4 @@ class OwnerIncomingShipmentsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class OwnerIncomingShipmentsLoadEvent extends OwnerIncomingShipmentsEvent {
-  final String state;
-  final int driverId;
-
-  OwnerIncomingShipmentsLoadEvent(this.state, this.driverId);
-}
+class OwnerIncomingShipmentsLoadEvent extends OwnerIncomingShipmentsEvent {}

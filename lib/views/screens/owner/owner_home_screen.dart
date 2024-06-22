@@ -56,8 +56,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
     });
     print("_usermodel.truckowner!");
     print(_usermodel.truckowner!);
-    BlocProvider.of<OwnerTrucksBloc>(context)
-        .add(OwnerTrucksLoadEvent(_usermodel.truckowner!));
+    BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
   }
 
   @override

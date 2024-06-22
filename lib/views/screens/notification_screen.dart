@@ -1,7 +1,9 @@
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
+import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
@@ -59,8 +61,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 return Consumer<NotificationProvider>(
                   builder: (context, notificationProvider, child) {
                     return notificationProvider.notifications.isEmpty
-                        ? const Center(
-                            child: Text("There are no Notifications to show."),
+                        ? ListView(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            children: [
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * .75,
+                                child: const Center(
+                                  child: Text(
+                                      "There are no Notifications to show."),
+                                ),
+                              )
+                            ],
                           )
                         : ListView.builder(
                             itemCount:
@@ -74,7 +87,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       .notifications[index].dateCreated!));
                               return Container(
                                 decoration: BoxDecoration(
-                                  border: Border(
+                                  border: const Border(
                                       // bottom: BorderSide(
                                       //     color: AppColor.deepBlue, width: 2),
                                       ),
@@ -112,6 +125,28 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           ),
                                         ),
                                       );
+                                    }
+                                    if (notificationProvider
+                                            .notifications[index]
+                                            .noteficationType ==
+                                        "O") {
+                                      BlocProvider.of<SubShipmentDetailsBloc>(
+                                              context)
+                                          .add(SubShipmentDetailsLoadEvent(
+                                              notificationProvider
+                                                  .notifications[index]
+                                                  .shipment!));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                IncomingShipmentDetailsScreen(
+                                                    requestId:
+                                                        notificationProvider
+                                                            .notifications[
+                                                                index]
+                                                            .request!),
+                                          ));
                                     }
 
                                     if (!notificationProvider
@@ -186,12 +221,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   dense: false,
                                 ),
                               );
-                            });
+                            },
+                          );
                   },
                 );
               } else {
-                return Center(
-                  child: LoadingIndicator(),
+                return ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * .75,
+                      child: const Center(
+                        child: LoadingIndicator(),
+                      ),
+                    )
+                  ],
                 );
               }
             },

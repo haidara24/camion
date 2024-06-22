@@ -5,8 +5,10 @@ import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart'
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/formatter.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
+import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
+import 'package:intl/intl.dart' as intel;
 
 class CreateFixScreen extends StatefulWidget {
   CreateFixScreen({Key? key}) : super(key: key);
@@ -35,6 +38,8 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
   DateTime fixDate = DateTime.now();
 
   ExpenseType? fixtype;
+
+  var f = intel.NumberFormat("#,###", "en_US");
 
   setLoadDate(DateTime date, String lang) {
     List months = [
@@ -136,7 +141,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
           child: SafeArea(
             child: Scaffold(
               backgroundColor: AppColor.lightGrey200,
-              appBar: CustomAppBar(
+              appBar: DriverAppBar(
                 title: "إضافة مصروف",
               ),
               body: SingleChildScrollView(
@@ -253,21 +258,48 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                               // width: 350.w,
                               child: TextFormField(
                                 controller: _costController,
+                                onTap: () {
+                                  _costController.selection = TextSelection(
+                                      baseOffset:
+                                          _costController.value.text.length,
+                                      extentOffset:
+                                          _costController.value.text.length);
+                                },
+                                scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          20,
+                                ),
+                                textInputAction: TextInputAction.done,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  DecimalFormatter(),
+                                ],
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 19.sp,
+                                  fontSize: 18.sp,
                                 ),
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20.w, vertical: 2.h),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 11.0, horizontal: 9.0),
                                   hintStyle: TextStyle(
                                     color: Colors.grey[900],
-                                    fontSize: 19,
+                                    fontSize: 18,
                                   ),
                                   hintText: "أدخل تكلفة المصروف",
-                                  filled: true,
+                                  // filled: true,
                                   // fillColor: Colors.white,
                                 ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .translate('insert_value_validate');
+                                  }
+                                  return null;
+                                },
+                                onSaved: (newValue) {
+                                  _costController.text = newValue!;
+                                },
                               ),
                             ),
                             const SizedBox(
@@ -303,6 +335,13 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                       color: Colors.grey[900],
                                     ),
                                   ),
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .translate('insert_value_validate');
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ),
@@ -316,20 +355,46 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                 controller: _noteController,
                                 style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 19.sp,
+                                  fontSize: 18.sp,
                                 ),
                                 maxLines: 4,
+                                onTap: () {
+                                  _costController.selection = TextSelection(
+                                      baseOffset:
+                                          _costController.value.text.length,
+                                      extentOffset:
+                                          _costController.value.text.length);
+                                },
+                                scrollPadding: EdgeInsets.only(
+                                  bottom:
+                                      MediaQuery.of(context).viewInsets.bottom +
+                                          20,
+                                ),
+                                textInputAction: TextInputAction.done,
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  DecimalFormatter(),
+                                ],
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20.w, vertical: 2.h),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 11.0, horizontal: 9.0),
                                   hintStyle: TextStyle(
-                                    fontSize: 19,
                                     color: Colors.grey[900],
+                                    fontSize: 18,
                                   ),
                                   hintText:
                                       "أدخل أية تكاليف إضافية\n مثال: دواليب ماركة Dunlop.",
-                                  filled: true,
                                 ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .translate('insert_value_validate');
+                                  }
+                                  return null;
+                                },
+                                onSaved: (newValue) {
+                                  _noteController.text = newValue!;
+                                },
                               ),
                             ),
                             const SizedBox(
@@ -382,10 +447,13 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                       ),
                                       onTap: () {
                                         TruckExpense fix = TruckExpense();
-                                        // charge.shipment = widget.shipment.id!;
-                                        // charge.checkPoint = checkpooint!.id!;
-                                        // charge.charges_type = selectedCharges;
-                                        // charge.note = _noteController;
+                                        fix.amount = double.parse(
+                                            _costController.text
+                                                .replaceAll(",", ""));
+                                        fix.fixType = " ";
+                                        fix.dob = fixDate;
+                                        fix.expenseType = fixtype;
+                                        fix.note = _noteController.text;
                                         BlocProvider.of<CreateTruckFixBloc>(
                                                 context)
                                             .add(

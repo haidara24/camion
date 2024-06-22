@@ -4,6 +4,7 @@ class UserModel {
   String? firstName;
   String? lastName;
   String? phone;
+  String? email;
   String? image;
   int? merchant;
   int? truckowner;
@@ -15,6 +16,7 @@ class UserModel {
       this.firstName,
       this.lastName,
       this.phone,
+      this.email,
       this.image,
       this.merchant,
       this.truckowner,
@@ -26,6 +28,7 @@ class UserModel {
     firstName = json['first_name'];
     lastName = json['last_name'];
     phone = json['phone'] ?? "";
+    email = json['email'] ?? "";
     image = json['image'] ?? "";
     merchant = json['merchant'] ?? 0;
     truckowner = json['truckowner'] ?? 0;
@@ -39,6 +42,7 @@ class UserModel {
     data['first_name'] = firstName;
     data['last_name'] = lastName;
     data['phone'] = phone;
+    data['email'] = email;
     data['image'] = image;
     // if (merchant != null) {
     //   data['merchant'] = merchant!.toJson();
@@ -55,16 +59,78 @@ class UserModel {
 
 class Merchant {
   int? id;
+  List<Stores>? stores;
+  bool? verified;
+  String? address;
+  String? companyName;
+  String? imageId;
+  String? imageTradeLicense;
+  UserModel? user;
 
-  Merchant({this.id});
+  Merchant({
+    this.id,
+    this.stores,
+    this.verified,
+    this.address,
+    this.companyName,
+    this.imageId,
+    this.imageTradeLicense,
+    this.user,
+  });
 
   Merchant.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    if (json['stores'] != null) {
+      stores = <Stores>[];
+      json['stores'].forEach((v) {
+        stores!.add(Stores.fromJson(v));
+      });
+    }
+    verified = json['verified'];
+    address = json['address'] ?? "";
+    companyName = json['company_name'] ?? "";
+    imageId = json['imageId'] ?? "";
+    imageTradeLicense = json['imageTradeLicense'] ?? "";
+    user = json['user'] != null ? UserModel.fromJson(json["user"]) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    if (stores != null) {
+      data['stores'] = stores!.map((v) => v.toJson()).toList();
+    }
+    data['verified'] = verified;
+    data['address'] = address;
+    data['company_name'] = companyName;
+    data['imageId'] = imageId;
+    data['imageTradeLicense'] = imageTradeLicense;
+    data['user'] = user;
+    return data;
+  }
+}
+
+class Stores {
+  int? id;
+  String? address;
+  String? location;
+  int? merchant;
+
+  Stores({this.id, this.address, this.location, this.merchant});
+
+  Stores.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    address = json['address'];
+    location = json['location'];
+    merchant = json['merchant'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['address'] = address;
+    data['location'] = location;
+    data['merchant'] = merchant;
     return data;
   }
 }
@@ -117,16 +183,16 @@ class Driver {
 
   Driver.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     truck = json['truck'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['truck'] = this.truck;
-    if (this.user != null) {
-      data['user'] = this.user!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['truck'] = truck;
+    if (user != null) {
+      data['user'] = user!.toJson();
     }
     return data;
   }
@@ -158,13 +224,13 @@ class User {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['username'] = this.username;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['phone'] = this.phone;
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['username'] = username;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['phone'] = phone;
+    data['image'] = image;
     return data;
   }
 }

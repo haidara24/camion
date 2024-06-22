@@ -13,6 +13,7 @@ import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
+import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
@@ -282,7 +283,7 @@ class _IncomingShipmentDetailsScreenState
                 ? TextDirection.ltr
                 : TextDirection.rtl,
             child: Scaffold(
-              appBar: CustomAppBar(
+              appBar: DriverAppBar(
                 title:
                     AppLocalizations.of(context)!.translate('shipment_details'),
               ),

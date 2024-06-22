@@ -167,6 +167,7 @@
     "form_init_confirm":"هل أنت متأكد من تهيئة الفورم؟",
 
     "incoming_orders":"الطلبات الواردة",
+    "outcoming_orders":"الطلبات الصادرة",
     "shipment_search":"بحث عن شحنة",
     "my_path":"مساري",
     "path":"المسار",
@@ -177,6 +178,7 @@
     "store":"المتجر",
     "home":"الرئيسية",
     "shippment_log":"السجل",
+    "myshipments":"شحناتي",
     "order_shippment":"إنشاء شحنة",
     "tracking":"تتبع شحنة",
     "tasks":"المهام"

@@ -1,10 +1,13 @@
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/complete_managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/simple_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/package_type_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
@@ -72,10 +75,21 @@ class _ControlViewState extends State<ControlView> {
             return BlocBuilder<AuthBloc, AuthState>(
               builder: (context, state) {
                 if (state is AuthDriverSuccessState) {
-                  BlocProvider.of<FixTypeListBloc>(context)
-                      .add(FixTypeListLoad());
+                  //driver
+                  // BlocProvider.of<UnassignedShipmentListBloc>(context)
+                  //     .add(UnassignedShipmentListLoadEvent());
+                  // BlocProvider.of<DriverActiveShipmentBloc>(context)
+                  //     .add(DriverActiveShipmentLoadEvent("A"));
+                  // BlocProvider.of<DriverRequestsListBloc>(context)
+                  //     .add(const DriverRequestsListLoadEvent(null));
+                  // BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+                  // BlocProvider.of<FixTypeListBloc>(context)
+                  //     .add(FixTypeListLoad());
                   return DriverHomeScreen();
                 } else if (state is AuthOwnerSuccessState) {
+                  //owner
+                  BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+
                   return OwnerHomeScreen();
                 } else if (state is AuthManagmentSuccessState) {
                   BlocProvider.of<ManagmentShipmentListBloc>(context)
@@ -90,6 +104,7 @@ class _ControlViewState extends State<ControlView> {
                       .add(CompleteManagmentShipmentListLoadEvent("C"));
                   return CheckPointHomeScreen();
                 } else if (state is AuthMerchentSuccessState) {
+                  //merchant
                   BlocProvider.of<ShipmentRunningBloc>(context)
                       .add(ShipmentRunningLoadEvent("R"));
                   BlocProvider.of<PostBloc>(context).add(PostLoadEvent());

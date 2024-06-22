@@ -7,6 +7,7 @@ import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipme
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -19,7 +20,7 @@ import 'package:camion/views/screens/driver/incoming_shipment_screen.dart';
 import 'package:camion/views/screens/driver/search_shipment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/driver/tracking_shippment_screen.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
+import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -91,7 +92,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
 
         var jwt = prefs.getString("token");
         var rs = await HttpHelper.patch(
-            '$TRUCKS_ENDPOINT${3}/',
+            '$TRUCKS_ENDPOINT${2}/',
             {
               'location_lat':
                   '${currentlocation.latitude},${currentlocation.longitude}'
@@ -126,8 +127,14 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     // _getLocation();
     _listenLocation();
     getUserData();
+    BlocProvider.of<UnassignedShipmentListBloc>(context)
+        .add(UnassignedShipmentListLoadEvent());
+    BlocProvider.of<DriverActiveShipmentBloc>(context)
+        .add(DriverActiveShipmentLoadEvent("A"));
+    BlocProvider.of<DriverRequestsListBloc>(context)
+        .add(const DriverRequestsListLoadEvent(null));
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
-
+    BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
     notificationServices.requestNotificationPermission();
     // notificationServices.forgroundMessage(context);
     notificationServices.firebaseInit(context);
@@ -166,7 +173,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     switch (selectedValue) {
       case 0:
         {
-          BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('home');
             currentScreen = MainScreen();
@@ -175,8 +181,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         }
       case 1:
         {
-          BlocProvider.of<DriverRequestsListBloc>(context)
-              .add(const DriverRequestsListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('incoming_orders');
             currentScreen = IncomingShippmentLogScreen();
@@ -185,8 +189,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         }
       case 2:
         {
-          BlocProvider.of<UnassignedShipmentListBloc>(context)
-              .add(UnassignedShipmentListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('shipment_search');
             currentScreen = SearchShippmentScreen();
@@ -195,8 +197,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         }
       case 3:
         {
-          BlocProvider.of<DriverActiveShipmentBloc>(context)
-              .add(DriverActiveShipmentLoadEvent("A"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_path');
 
@@ -224,7 +224,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
               child: Scaffold(
                 key: _scaffoldKey,
                 resizeToAvoidBottomInset: false,
-                appBar: CustomAppBar(
+                appBar: DriverAppBar(
                   title: title,
                   scaffoldKey: _scaffoldKey,
                 ),
@@ -500,7 +500,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                     builder: (context, state) {
                       if (state is BottomNavBarShown) {
                         return Container(
-                          height: 88.h,
+                          height: 75.h,
                           color: AppColor.deepBlack,
                           child: TabBar(
                             labelPadding: EdgeInsets.zero,
@@ -526,8 +526,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/home_selected.svg",
-                                            width: 36.w,
-                                            height: 36.h,
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -550,7 +550,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                           SvgPicture.asset(
                                             "assets/icons/home.svg",
                                             width: 30.w,
-                                            height: 30.h,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -576,8 +576,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/listalt_selected.svg",
-                                            width: 36.w,
-                                            height: 36.h,
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -611,7 +611,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                           SvgPicture.asset(
                                             "assets/icons/listalt.svg",
                                             width: 30.w,
-                                            height: 30.h,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -648,8 +648,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/truck_order_selected.svg",
-                                            width: 36.w,
-                                            height: 36.h,
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -681,7 +681,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                           SvgPicture.asset(
                                             "assets/icons/truck_order.svg",
                                             width: 30.w,
-                                            height: 30.h,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -717,8 +717,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/location_selected.svg",
-                                            width: 36.w,
-                                            height: 36.h,
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -741,7 +741,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                           SvgPicture.asset(
                                             "assets/icons/location.svg",
                                             width: 30.w,
-                                            height: 30.h,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(

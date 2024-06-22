@@ -167,6 +167,7 @@
 
 
     "incoming_orders":"Incoming Orders",
+    "outcoming_orders":"Outcoming Orders",
     "shipment_search":"Shipment Search",
     "my_path":"My Path",
     "path":"The Path",
@@ -177,6 +178,7 @@
     "store":"Store",
     "home":"Home",
     "shippment_log":"Log",
+    "myshipments":"My Shipments",
     "order_shippment":"Create Shipment",
     "tracking":"Tracking",
     "tasks":"Tasks"

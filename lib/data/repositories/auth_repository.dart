@@ -28,13 +28,7 @@ class AuthRepository {
       );
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       firebaseToken = await messaging.getToken();
-      // if (Platform.isIOS) {
-      //   firebaseToken = await messaging.getAPNSToken();
-      // } else if (Platform.isAndroid) {
-      // }
 
-      // firebaseToken = await messaging.getToken();
-      // print(firebaseToken);
       Response response = await HttpHelper.post(LOGIN_ENDPOINT, {
         "username": username,
         "password": password,
@@ -49,29 +43,7 @@ class AuthRepository {
         data["details"] = jsonObject["detail"];
       } else {
         presisteToken(jsonObject);
-        print(jsonObject["access"]);
-        Response userresponse = await HttpHelper.get(PROFILE_ENDPOINT,
-            apiToken: jsonObject["access"]);
-        if (userresponse.statusCode == 200) {
-          var prefs = await SharedPreferences.getInstance();
-          var userType = prefs.getString("userType") ?? "";
-          if (userType.isNotEmpty) {
-            var myDataString = utf8.decode(userresponse.bodyBytes);
-            print(myDataString);
-            prefs.setString("userProfile", myDataString);
-            var result = jsonDecode(myDataString);
-            var userProfile = UserModel.fromJson(result);
-            if (userProfile.merchant != null) {
-              prefs.setInt("merchant", userProfile.merchant!);
-            }
-            if (userProfile.truckowner != null) {
-              prefs.setInt("truckowner", userProfile.truckowner!);
-            }
-            if (userProfile.truckuser != null) {
-              prefs.setInt("truckuser", userProfile.truckuser!);
-            }
-          }
-        }
+
         data["token"] = jsonObject["access"];
       }
       return data;

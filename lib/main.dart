@@ -31,14 +31,18 @@ import 'package:camion/business_logic/bloc/managment/shipment_update_status_bloc
 import 'package:camion/business_logic/bloc/managment/simple_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_active_shipments_bloc.dart';
-import 'package:camion/business_logic/bloc/owner_shipments/owner_incoming_shipments_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/package_type_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/core/draw_route_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/shipment_update_status_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/create_store_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/merchant_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/merchant_update_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
@@ -54,6 +58,7 @@ import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/trucks_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_fixes/create_truck_fix_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_papers/create_truck_paper_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_papers/truck_papers_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
@@ -74,6 +79,7 @@ import 'package:camion/data/repositories/instruction_repository.dart';
 import 'package:camion/data/repositories/notification_repository.dart';
 import 'package:camion/data/repositories/post_repository.dart';
 import 'package:camion/data/repositories/price_request_repository.dart';
+import 'package:camion/data/repositories/profile_repository.dart';
 import 'package:camion/data/repositories/request_repository.dart';
 import 'package:camion/data/repositories/shipmment_repository.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
@@ -169,6 +175,9 @@ class MyApp extends StatelessWidget {
                   create: (context) => PriceRequestRepository(),
                 ),
                 RepositoryProvider(
+                  create: (context) => ProfileRepository(),
+                ),
+                RepositoryProvider(
                   create: (context) => CategoryRepository(),
                 ),
                 RepositoryProvider(
@@ -181,14 +190,36 @@ class MyApp extends StatelessWidget {
               child: MultiBlocProvider(
                 providers: [
                   BlocProvider(
-                      create: (context) => AuthBloc(
-                          authRepository:
-                              RepositoryProvider.of<AuthRepository>(context))),
+                    create: (context) => AuthBloc(
+                      authRepository:
+                          RepositoryProvider.of<AuthRepository>(context),
+                    ),
+                  ),
                   BlocProvider(
-                      create: (context) => NotificationBloc(
-                          notificationRepository:
-                              RepositoryProvider.of<NotificationRepository>(
-                                  context))),
+                    create: (context) => MerchantProfileBloc(
+                      profileRepository:
+                          RepositoryProvider.of<ProfileRepository>(context),
+                    ),
+                  ),
+                  BlocProvider(
+                    create: (context) => CreateStoreBloc(
+                      profileRepository:
+                          RepositoryProvider.of<ProfileRepository>(context),
+                    ),
+                  ),
+                  BlocProvider(
+                    create: (context) => MerchantUpdateProfileBloc(
+                      profileRepository:
+                          RepositoryProvider.of<ProfileRepository>(context),
+                    ),
+                  ),
+                  BlocProvider(
+                    create: (context) => NotificationBloc(
+                      notificationRepository:
+                          RepositoryProvider.of<NotificationRepository>(
+                              context),
+                    ),
+                  ),
                   BlocProvider(
                     create: (context) => PostBloc(
                         postRepository:
@@ -202,6 +233,11 @@ class MyApp extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => DriverRequestsListBloc(
+                        requestRepository:
+                            RepositoryProvider.of<RequestRepository>(context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => MerchantRequestsListBloc(
                         requestRepository:
                             RepositoryProvider.of<RequestRepository>(context)),
                   ),
@@ -291,6 +327,11 @@ class MyApp extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => TruckFixListBloc(
+                        truckRepository:
+                            RepositoryProvider.of<TruckRepository>(context)),
+                  ),
+                  BlocProvider(
+                    create: (context) => CreateTruckFixBloc(
                         truckRepository:
                             RepositoryProvider.of<TruckRepository>(context)),
                   ),
@@ -419,8 +460,8 @@ class MyApp extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (context) => OwnerIncomingShipmentsBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
+                        requestRepository:
+                            RepositoryProvider.of<RequestRepository>(context)),
                   ),
                   BlocProvider(
                     create: (context) => InprogressShipmentsBloc(

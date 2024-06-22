@@ -15,7 +15,7 @@ class IncomingShipmentsBloc
       emit(IncomingShipmentsLoadingProgress());
       try {
         var result =
-            await shipmentRepository.getDriverShipmentList(event.state);
+            await shipmentRepository.getDriverShipmentList(event.state, null);
         emit(IncomingShipmentsLoadedSuccess(result));
       } catch (e) {
         emit(IncomingShipmentsLoadedFailed(e.toString()));

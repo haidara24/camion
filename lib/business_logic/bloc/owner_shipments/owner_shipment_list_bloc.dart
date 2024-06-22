@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:camion/data/models/shipment_model.dart';
+import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/repositories/shipmment_repository.dart';
 import 'package:equatable/equatable.dart';
 
@@ -14,7 +14,8 @@ class OwnerShipmentListBloc
     on<OwnerShipmentListLoadEvent>((event, emit) async {
       emit(OwnerShipmentListLoadingProgress());
       try {
-        var result = await shipmentRepository.getOwnerShipmentList(event.state);
+        var result = await shipmentRepository
+            .getDriverRunningShipmentListForOwner(event.state);
         emit(OwnerShipmentListLoadedSuccess(result));
       } catch (e) {
         emit(OwnerShipmentListLoadedFailed(e.toString()));

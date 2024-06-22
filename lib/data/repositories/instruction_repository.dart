@@ -10,7 +10,9 @@ class InstructionRepository {
   late SharedPreferences prefs;
 
   Future<Shipmentinstruction?> createShipmentInstruction(
-      Shipmentinstruction shipment) async {
+    Shipmentinstruction shipment,
+    List<File> files,
+  ) async {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var request = http.MultipartRequest(
@@ -19,6 +21,20 @@ class InstructionRepository {
       HttpHeaders.authorizationHeader: "JWT $token",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
     });
+
+    final uploadImages = <http.MultipartFile>[];
+    for (final imageFiles in files) {
+      uploadImages.add(
+        await http.MultipartFile.fromPath(
+          'files',
+          imageFiles.path,
+          filename: imageFiles.path.split('/').last,
+        ),
+      );
+    }
+    for (var element in uploadImages) {
+      request.files.add(element);
+    }
 
     List<Map<String, dynamic>> sub_commodity_items = [];
     for (var element in shipment.commodityItems!) {

@@ -4,6 +4,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/create_fix_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
+import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,7 +25,7 @@ class FixesListScreen extends StatelessWidget {
           child: SafeArea(
             child: Scaffold(
               backgroundColor: AppColor.lightGrey200,
-              appBar: CustomAppBar(
+              appBar: DriverAppBar(
                 title: "مصروفي",
               ),
               floatingActionButton: FloatingActionButton(
@@ -50,7 +51,10 @@ class FixesListScreen extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: BlocBuilder<TruckFixListBloc, TruckFixListState>(
+                      child: BlocConsumer<TruckFixListBloc, TruckFixListState>(
+                        listener: (context, state) {
+                          print(state);
+                        },
                         builder: (context, state) {
                           if (state is TruckFixListLoadedSuccess) {
                             return state.fixes.isEmpty
@@ -77,123 +81,130 @@ class FixesListScreen extends StatelessWidget {
                                                 Radius.circular(10),
                                               ),
                                             ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    // SvgPicture.network(state.fixes[index].expenseType!.name!),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 11),
-                                                      child: Text(
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                "en"
-                                                            ? state
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 25.h,
+                                                        width: 25.h,
+                                                        child: SvgPicture
+                                                            .network(state
                                                                 .fixes[index]
                                                                 .expenseType!
-                                                                .name!
-                                                            : state
-                                                                .fixes[index]
-                                                                .expenseType!
-                                                                .nameAr!,
-                                                        style: TextStyle(
-                                                            // color: AppColor.lightBlue,
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                                .image!),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Divider(),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    SizedBox(
-                                                      height: 25.h,
-                                                      width: 25.h,
-                                                      child: SvgPicture.network(
-                                                          state
-                                                              .fixes[index]
-                                                              .expenseType!
-                                                              .image!),
-                                                    ),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                        horizontal: 11,
-                                                      ),
-                                                      child: Text(
-                                                        'التكلفة: ${state.fixes[index].amount} ${localeState.value.languageCode == "en" ? 'S.P' : 'ل.س'}',
-                                                        style: TextStyle(
-                                                          // color: AppColor.lightBlue,
-                                                          fontSize: 18.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold,
+                                                      const SizedBox(width: 8),
+                                                      // SvgPicture.network(state.fixes[index].expenseType!.name!),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 11),
+                                                        child: Text(
+                                                          localeState.value
+                                                                      .languageCode ==
+                                                                  "en"
+                                                              ? state
+                                                                  .fixes[index]
+                                                                  .expenseType!
+                                                                  .name!
+                                                              : state
+                                                                  .fixes[index]
+                                                                  .expenseType!
+                                                                  .nameAr!,
+                                                          style: TextStyle(
+                                                              // color: AppColor.lightBlue,
+                                                              fontSize: 18.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Divider(),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    // SvgPicture.network(state.fixes[index].expenseType!.name!),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 11),
-                                                      child: Text(
-                                                        'التاريخ: ${state.fixes[index].dob!.day}/${state.fixes[index].dob!.month}/${state.fixes[index].dob!.year}',
-                                                        style: TextStyle(
+                                                    ],
+                                                  ),
+                                                  const Divider(),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 11,
+                                                        ),
+                                                        child: Text(
+                                                          'التكلفة: ${state.fixes[index].amount} ${localeState.value.languageCode == "en" ? 'S.P' : 'ل.س'}',
+                                                          style: TextStyle(
                                                             // color: AppColor.lightBlue,
                                                             fontSize: 18.sp,
                                                             fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Divider(),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    // SvgPicture.network(state.fixes[index].expenseType!.name!),
-                                                    Padding(
-                                                      padding: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 11),
-                                                      child: Text(
-                                                        'ملاحظات: ${state.fixes[index].note}',
-                                                        style: TextStyle(
-                                                            // color: AppColor.lightBlue,
-                                                            fontSize: 18.sp,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
+                                                    ],
+                                                  ),
+                                                  const Divider(),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      // SvgPicture.network(state.fixes[index].expenseType!.name!),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 11),
+                                                        child: Text(
+                                                          'التاريخ: ${state.fixes[index].dob!.year}/${state.fixes[index].dob!.month}/${state.fixes[index].dob!.day}',
+                                                          style: TextStyle(
+                                                              // color: AppColor.lightBlue,
+                                                              fontSize: 18.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ],
+                                                    ],
+                                                  ),
+                                                  const Divider(),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      // SvgPicture.network(state.fixes[index].expenseType!.name!),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 11),
+                                                        child: Text(
+                                                          'ملاحظات: ${state.fixes[index].note}',
+                                                          style: TextStyle(
+                                                              // color: AppColor.lightBlue,
+                                                              fontSize: 18.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),

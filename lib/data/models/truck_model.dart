@@ -253,7 +253,7 @@ class TruckExpense {
   int? id;
   String? fixType;
   String? note;
-  int? amount;
+  double? amount;
   DateTime? dob;
   bool? isFixes;
   int? truck;

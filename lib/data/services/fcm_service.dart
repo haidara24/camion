@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/firebase_options.dart';
+import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -131,7 +133,7 @@ class NotificationServices {
     if (message.data['notefication_type'] == "A" ||
         message.data['notefication_type'] == "J") {
       BlocProvider.of<RequestDetailsBloc>(context)
-          .add(RequestDetailsLoadEvent(21));
+          .add(RequestDetailsLoadEvent(message.data['requestId']));
 
       Navigator.push(
         context,
@@ -141,6 +143,16 @@ class NotificationServices {
           ),
         ),
       );
+    }
+    if (message.data['notefication_type'] == "O") {
+      BlocProvider.of<SubShipmentDetailsBloc>(context)
+          .add(SubShipmentDetailsLoadEvent(message.data['shipmentId']));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IncomingShipmentDetailsScreen(
+                requestId: message.data['requestId']),
+          ));
     }
     // if (message.data['notefication_type'] == "A") {
     //   BlocProvider.of<ShipmentDetailsBloc>(context)

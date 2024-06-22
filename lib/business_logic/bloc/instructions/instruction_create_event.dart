@@ -9,6 +9,7 @@ sealed class InstructionCreateEvent extends Equatable {
 
 class InstructionCreateButtonPressed extends InstructionCreateEvent {
   final Shipmentinstruction instruction;
+  final List<File> files;
 
-  InstructionCreateButtonPressed(this.instruction);
+  InstructionCreateButtonPressed(this.instruction, this.files);
 }

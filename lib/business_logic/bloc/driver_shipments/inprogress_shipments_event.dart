@@ -9,6 +9,6 @@ sealed class InprogressShipmentsEvent extends Equatable {
 
 class InprogressShipmentsLoadEvent extends InprogressShipmentsEvent {
   final String state;
-
-  InprogressShipmentsLoadEvent(this.state);
+  final int? driverId;
+  InprogressShipmentsLoadEvent(this.state, this.driverId);
 }

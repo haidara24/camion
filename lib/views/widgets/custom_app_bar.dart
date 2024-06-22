@@ -13,8 +13,14 @@ import 'package:provider/provider.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   String title;
   GlobalKey<ScaffoldState>? scaffoldKey;
+  Color? color;
   Function()? onTap;
-  CustomAppBar({super.key, required this.title, this.scaffoldKey, this.onTap});
+  CustomAppBar(
+      {super.key,
+      required this.title,
+      this.scaffoldKey,
+      this.onTap,
+      this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Container(
             height: 70.h,
             padding: EdgeInsets.only(bottom: 6.h),
-            color: AppColor.deepBlack,
+            color: color ?? AppColor.deepBlack,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: Row(

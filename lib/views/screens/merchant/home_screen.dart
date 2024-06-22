@@ -5,9 +5,8 @@ import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/merchant_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -20,6 +19,7 @@ import 'package:camion/views/screens/merchant/active_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/add_multi_shipment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/merchant/complete_shipment_screen.dart';
+import 'package:camion/views/screens/merchant/merchant_profile_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_task_screen.dart';
 import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen>
       case 1:
         {
           setState(() {
-            title = AppLocalizations.of(context)!.translate('shippment_log');
+            title = AppLocalizations.of(context)!.translate('myshipments');
             currentScreen = ShippmentLogScreen();
           });
           break;
@@ -186,51 +186,69 @@ class _HomeScreenState extends State<HomeScreen>
                       SizedBox(
                         height: 35.h,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: AppColor.deepYellow,
-                            radius: 35.h,
-                            child: userloading
-                                ? const Center(
-                                    child: LoadingIndicator(),
-                                  )
-                                : (_usermodel.image!.isNotEmpty ||
-                                        _usermodel.image! != null)
-                                    ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(180),
-                                        child: Image.network(
-                                          _usermodel.image!,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                          "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
-                                          style: TextStyle(
-                                            fontSize: 28.sp,
+                      InkWell(
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          var merchant = prefs.getInt("merchant");
+
+                          // ignore: use_build_context_synchronously
+                          BlocProvider.of<MerchantProfileBloc>(context)
+                              .add(MerchantProfileLoad(merchant!));
+
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MerchantProfileScreen(user: _usermodel),
+                              ));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: AppColor.deepYellow,
+                              radius: 35.h,
+                              child: userloading
+                                  ? const Center(
+                                      child: LoadingIndicator(),
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(180),
+                                      child: Image.network(
+                                        _usermodel.image!,
+                                        fit: BoxFit.fill,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Center(
+                                          child: Text(
+                                            "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
+                                            style: TextStyle(
+                                              fontSize: 28.sp,
+                                            ),
                                           ),
                                         ),
                                       ),
-                          ),
-                          userloading
-                              ? Text(
-                                  "",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              : Text(
-                                  "${_usermodel.firstName!} ${_usermodel.lastName!}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
-                        ],
+                                    ),
+                            ),
+                            userloading
+                                ? Text(
+                                    "",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : Text(
+                                    "${_usermodel.firstName!} ${_usermodel.lastName!}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 15.h,
@@ -267,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 {
                                   setState(() {
                                     title = AppLocalizations.of(context)!
-                                        .translate('shippment_log');
+                                        .translate('myshipments');
                                   });
                                   break;
                                 }
@@ -533,7 +551,7 @@ class _HomeScreenState extends State<HomeScreen>
                                               : const SizedBox.shrink(),
                                           Text(
                                             AppLocalizations.of(context)!
-                                                .translate('shippment_log'),
+                                                .translate('myshipments'),
                                             style: TextStyle(
                                                 color: AppColor.deepYellow,
                                                 fontSize: 15.sp),
@@ -556,7 +574,7 @@ class _HomeScreenState extends State<HomeScreen>
                                               : const SizedBox.shrink(),
                                           Text(
                                             AppLocalizations.of(context)!
-                                                .translate('shippment_log'),
+                                                .translate('myshipments'),
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 15.sp),

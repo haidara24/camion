@@ -3386,7 +3386,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                         pathpoints:
                                                                             points,
                                                                         truck: ShipmentTruck(
-                                                                            id: shipmentProvider.trucks[selectedIndex]!.id!),
+                                                                            id: shipmentProvider.trucks[i]!.id!),
                                                                         // truckTypes: truckTypes,
                                                                         pickupDate:
                                                                             DateTime(

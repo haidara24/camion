@@ -7,8 +7,4 @@ sealed class OwnerTrucksEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class OwnerTrucksLoadEvent extends OwnerTrucksEvent {
-  final int owner;
-
-  OwnerTrucksLoadEvent(this.owner);
-}
+class OwnerTrucksLoadEvent extends OwnerTrucksEvent {}
