@@ -9,6 +9,7 @@ class NotificationRepository {
   late SharedPreferences prefs;
 
   List<NotificationModel> notifications = [];
+  List<NotificationModel> ownernotifications = [];
 
   Future<List<NotificationModel>> getNotification() async {
     prefs = await SharedPreferences.getInstance();
@@ -25,6 +26,25 @@ class NotificationRepository {
       }
     }
     return notifications.reversed.toList();
+  }
+
+  Future<List<NotificationModel>> getDriverNotificationsForOwner() async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs = await HttpHelper.get(
+        "${NOTIFICATIONS_ENDPOINT}truckowner_notifications/",
+        apiToken: jwt);
+    ownernotifications = [];
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+
+      var result = jsonDecode(myDataString);
+      for (var element in result) {
+        ownernotifications.add(NotificationModel.fromJson(element));
+      }
+    }
+    return ownernotifications.reversed.toList();
   }
 
   Future<bool> readNotification(int id) async {

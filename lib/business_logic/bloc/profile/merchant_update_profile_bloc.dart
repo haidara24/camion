@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/repositories/profile_repository.dart';
@@ -14,7 +16,8 @@ class MerchantUpdateProfileBloc
     on<MerchantUpdateProfileButtonPressed>((event, emit) async {
       emit(MerchantUpdateProfileLoadingProgress());
       try {
-        var result = await profileRepository.updateMerchant(event.merchant);
+        var result =
+            await profileRepository.updateMerchant(event.merchant, event.file);
         if (result != null) {
           emit(MerchantUpdateProfileLoadedSuccess(result));
         } else {

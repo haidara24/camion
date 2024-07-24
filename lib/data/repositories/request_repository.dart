@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class RequestRepository {
   late SharedPreferences prefs;
   List<ApprovalRequest> approvalRequests = [];
+  List<OwnerApprovalRequest> ownerapprovalRequests = [];
   List<MerchantApprovalRequest> merchantapprovalRequests = [];
 
   Future<List<ApprovalRequest>> getApprovalRequests(int? driverId) async {
@@ -17,11 +18,8 @@ class RequestRepository {
         '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}',
         apiToken: jwt);
     approvalRequests = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
-      print(myDataString);
-
       var result = jsonDecode(myDataString);
       for (var element in result) {
         approvalRequests.add(ApprovalRequest.fromJson(element));
@@ -30,13 +28,13 @@ class RequestRepository {
     return approvalRequests;
   }
 
-  Future<List<ApprovalRequest>> getApprovalRequestsForOwner() async {
+  Future<List<OwnerApprovalRequest>> getApprovalRequestsForOwner() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var rs = await HttpHelper.get(
         '${APPROVAL_REQUESTS_ENDPOINT}list_for_owner/',
         apiToken: jwt);
-    approvalRequests = [];
+    ownerapprovalRequests = [];
     print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
@@ -44,17 +42,18 @@ class RequestRepository {
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
-        approvalRequests.add(ApprovalRequest.fromJson(element));
+        ownerapprovalRequests.add(OwnerApprovalRequest.fromJson(element));
       }
     }
-    return approvalRequests;
+    return ownerapprovalRequests;
   }
 
   Future<List<MerchantApprovalRequest>> getApprovalRequestsForMerchant() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var merchant = prefs.getInt("merchant");
     var rs = await HttpHelper.get(
-        '${APPROVAL_REQUESTS_ENDPOINT}list_for_merchant/',
+        '${APPROVAL_REQUESTS_ENDPOINT}merchant/$merchant/',
         apiToken: jwt);
     merchantapprovalRequests = [];
     print(rs.statusCode);
@@ -101,7 +100,8 @@ class RequestRepository {
           "extra_fees": extra_fees
         },
         apiToken: jwt);
-
+    print(rs.statusCode);
+    print(rs.body);
     if (rs.statusCode == 200) {
       return true;
     } else {

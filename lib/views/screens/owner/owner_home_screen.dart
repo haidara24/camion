@@ -4,9 +4,13 @@ import 'dart:convert';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/owner_shipments/owner_active_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
@@ -14,7 +18,10 @@ import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/owner/all_incoming_shipment_screen.dart';
+import 'package:camion/views/screens/owner/owner_active_shipment_screen.dart';
+import 'package:camion/views/screens/owner/owner_profile_screen.dart';
 import 'package:camion/views/screens/owner/owner_search_shipment_screen.dart';
+import 'package:camion/views/screens/owner/owner_truck_list_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -54,16 +61,22 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
     setState(() {
       userloading = false;
     });
-    print("_usermodel.truckowner!");
-    print(_usermodel.truckowner!);
-    BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
   }
 
   @override
   void initState() {
     super.initState();
     getUserData();
+    BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
+
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+    BlocProvider.of<OwnerIncomingShipmentsBloc>(context)
+        .add(OwnerIncomingShipmentsLoadEvent());
+    BlocProvider.of<UnassignedShipmentListBloc>(context)
+        .add(UnassignedShipmentListLoadEvent());
+    BlocProvider.of<OwnerActiveShipmentsBloc>(context)
+        .add(OwnerActiveShipmentsLoadEvent());
+    BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
 
     notificationServices.requestNotificationPermission();
     // notificationServices.forgroundMessage(context);
@@ -73,7 +86,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
 
     _tabController = TabController(
       initialIndex: 0,
-      length: 4,
+      length: 5,
       vsync: this,
     );
 
@@ -130,17 +143,27 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
           });
           break;
         }
-      // case 3:
-      //   {
-      //     BlocProvider.of<OwnerActiveShipmentsBloc>(context)
-      //         .add(OwnerActiveShipmentsLoadEvent());
-      //     setState(() {
-      //       title = AppLocalizations.of(context)!.translate('tracking');
+      case 3:
+        {
+          BlocProvider.of<OwnerActiveShipmentsBloc>(context)
+              .add(OwnerActiveShipmentsLoadEvent());
+          setState(() {
+            title = AppLocalizations.of(context)!.translate('tracking');
 
-      //       currentScreen = OwnerActiveShipmentScreen();
-      //     });
-      //     break;
-      //   }
+            currentScreen = OwnerActiveShipmentScreen();
+          });
+          break;
+        }
+      case 4:
+        {
+          BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
+          setState(() {
+            title = AppLocalizations.of(context)!.translate('my_trucks');
+
+            currentScreen = OwnerTruckListScreen();
+          });
+          break;
+        }
     }
   }
 
@@ -175,51 +198,69 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                       SizedBox(
                         height: 35.h,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: AppColor.deepYellow,
-                            radius: 35.h,
-                            child: userloading
-                                ? const Center(
-                                    child: LoadingIndicator(),
-                                  )
-                                : (_usermodel.image!.isNotEmpty ||
-                                        _usermodel.image! != null)
-                                    ? ClipRRect(
+                      InkWell(
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          var owner = prefs.getInt("truckowner");
+                          print(owner);
+                          // ignore: use_build_context_synchronously
+                          BlocProvider.of<OwnerProfileBloc>(context)
+                              .add(OwnerProfileLoad(owner!));
+
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    OwnerProfileScreen(user: _usermodel),
+                              ));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CircleAvatar(
+                                backgroundColor: AppColor.deepYellow,
+                                radius: 35.h,
+                                child: userloading
+                                    ? Center(
+                                        child: LoadingIndicator(),
+                                      )
+                                    : ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(180),
                                         child: Image.network(
                                           _usermodel.image!,
                                           fit: BoxFit.fill,
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                          "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
-                                          style: TextStyle(
-                                            fontSize: 28.sp,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Center(
+                                            child: Text(
+                                              "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
+                                              style: TextStyle(
+                                                fontSize: 28.sp,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                          ),
-                          userloading
-                              ? Text(
-                                  "",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              : Text(
-                                  "${_usermodel.firstName!} ${_usermodel.lastName!}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
-                        ],
+                                      )),
+                            userloading
+                                ? Text(
+                                    "",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : Text(
+                                    "${_usermodel.firstName!} ${_usermodel.lastName!}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 15.h,
@@ -273,6 +314,14 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                   setState(() {
                                     title = AppLocalizations.of(context)!
                                         .translate('my_path');
+                                  });
+                                  break;
+                                }
+                              case 4:
+                                {
+                                  setState(() {
+                                    title = AppLocalizations.of(context)!
+                                        .translate('my_trucks');
                                   });
                                   break;
                                 }
@@ -644,6 +693,55 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                         Text(
                                           AppLocalizations.of(context)!
                                               .translate('tracking'),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15.sp),
+                                        )
+                                      ],
+                                    ),
+                            ),
+                            Tab(
+                              // text: "التعرفة",
+                              height: 66.h,
+                              icon: navigationValue == 4
+                                  ? Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/location_selected.svg",
+                                          width: 36.w,
+                                          height: 36.h,
+                                        ),
+                                        localeState.value.languageCode == 'en'
+                                            ? const SizedBox(
+                                                height: 4,
+                                              )
+                                            : const SizedBox.shrink(),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('my_trucks'),
+                                          style: TextStyle(
+                                              color: AppColor.deepYellow,
+                                              fontSize: 15.sp),
+                                        )
+                                      ],
+                                    )
+                                  : Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/location.svg",
+                                          width: 30.w,
+                                          height: 30.h,
+                                        ),
+                                        localeState.value.languageCode == 'en'
+                                            ? const SizedBox(
+                                                height: 4,
+                                              )
+                                            : const SizedBox.shrink(),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('my_trucks'),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15.sp),

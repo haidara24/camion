@@ -14,8 +14,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MerchantProfileScreen extends StatefulWidget {
-  final UserModel user;
-  MerchantProfileScreen({Key? key, required this.user}) : super(key: key);
+  // final Merchant user;
+  MerchantProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<MerchantProfileScreen> createState() => _MerchantProfileScreenState();
@@ -25,6 +25,10 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
   final GlobalKey<FormState> _profileFormKey = GlobalKey<FormState>();
 
   bool editMode = false;
+
+  TextEditingController firstNameController = TextEditingController();
+
+  TextEditingController lastNameController = TextEditingController();
 
   TextEditingController phoneController = TextEditingController();
 
@@ -128,6 +132,10 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                   onTap: () {
                                     setState(() {
                                       editMode = !editMode;
+                                      firstNameController.text =
+                                          state.merchant.user!.firstName!;
+                                      lastNameController.text =
+                                          state.merchant.user!.lastName!;
                                       phoneController.text =
                                           state.merchant.user!.phone!;
                                       emailController.text =
@@ -151,6 +159,119 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                             const SizedBox(
                               height: 10,
                             ),
+                            editMode
+                                ? Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: TextFormField(
+                                          controller: firstNameController,
+                                          onTap: () {
+                                            firstNameController.selection =
+                                                TextSelection(
+                                                    baseOffset: 0,
+                                                    extentOffset:
+                                                        firstNameController
+                                                            .value.text.length);
+                                          },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  20),
+                                          textInputAction: TextInputAction.done,
+                                          style: const TextStyle(fontSize: 18),
+                                          decoration: const InputDecoration(
+                                            labelText: "الاسم الأول",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 11.0,
+                                                    horizontal: 9.0),
+                                          ),
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          onEditingComplete: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'insert_value_validate');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            firstNameController.text =
+                                                newValue!;
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .4,
+                                        child: TextFormField(
+                                          controller: lastNameController,
+                                          onTap: () {
+                                            lastNameController.selection =
+                                                TextSelection(
+                                                    baseOffset: 0,
+                                                    extentOffset:
+                                                        lastNameController
+                                                            .value.text.length);
+                                          },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  20),
+                                          textInputAction: TextInputAction.done,
+                                          style: const TextStyle(fontSize: 18),
+                                          decoration: const InputDecoration(
+                                            labelText: "الاسم الأول",
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    vertical: 11.0,
+                                                    horizontal: 9.0),
+                                          ),
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          onEditingComplete: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'insert_value_validate');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            lastNameController.text = newValue!;
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
                             editMode
                                 ? TextFormField(
                                     controller: phoneController,
@@ -568,7 +689,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                   if (btnstate
                                       is MerchantUpdateProfileLoadingProgress) {
                                     return CustomButton(
-                                      title: const LoadingIndicator(),
+                                      title: LoadingIndicator(),
                                       onTap: () {},
                                     );
                                   } else {
@@ -589,12 +710,16 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                               emailController.text;
                                           merchant.user!.phone =
                                               phoneController.text;
+                                          merchant.user!.firstName =
+                                              firstNameController.text;
+                                          merchant.user!.lastName =
+                                              lastNameController.text;
                                           BlocProvider.of<
                                                       MerchantUpdateProfileBloc>(
                                                   context)
                                               .add(
                                                   MerchantUpdateProfileButtonPressed(
-                                                      merchant));
+                                                      merchant, null));
                                         }
                                       },
                                     );
@@ -607,7 +732,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                     ]),
                   );
                 } else {
-                  return const Center(
+                  return Center(
                     child: LoadingIndicator(),
                   );
                 }

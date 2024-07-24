@@ -5,12 +5,13 @@ import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
+import 'package:camion/views/screens/driver/inprogress_shipment_details_screen.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
+import 'package:camion/views/widgets/shipments_widgets/shimmer_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
@@ -292,36 +293,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                           },
                                         );
                                 } else {
-                                  return Shimmer.fromColors(
-                                    baseColor: (Colors.grey[300])!,
-                                    highlightColor: (Colors.grey[100])!,
-                                    enabled: true,
-                                    direction: ShimmerDirection.ttb,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemBuilder: (_, __) => Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 5),
-                                            height: 250.h,
-                                            width: double.infinity,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      itemCount: 6,
-                                    ),
-                                  );
+                                  return ShimmerLoadingWidget();
                                 }
                               },
                             )
@@ -343,15 +315,25 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                           itemBuilder: (context, index) {
                                             return InkWell(
                                               onTap: () {
-                                                // Navigator.push(
-                                                //     context,
-                                                //     MaterialPageRoute(
-                                                //       builder: (context) =>
-                                                //           IncomingShipmentDetailsScreen(
-                                                //               shipment:
-                                                //                   state.shipments[
-                                                //                       index]),
-                                                //     ));
+                                                BlocProvider.of<
+                                                            SubShipmentDetailsBloc>(
+                                                        context)
+                                                    .add(
+                                                        SubShipmentDetailsLoadEvent(
+                                                            state
+                                                                .shipments[
+                                                                    index]
+                                                                .id!));
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          InprogressShipmentDetailsScreen(
+                                                              shipmentId: state
+                                                                  .shipments[
+                                                                      index]
+                                                                  .id!),
+                                                    ));
                                               },
                                               child: Card(
                                                 shape:
@@ -433,36 +415,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                           },
                                         );
                                 } else {
-                                  return Shimmer.fromColors(
-                                    baseColor: (Colors.grey[300])!,
-                                    highlightColor: (Colors.grey[100])!,
-                                    enabled: true,
-                                    direction: ShimmerDirection.ttb,
-                                    child: ListView.builder(
-                                      shrinkWrap: true,
-                                      itemBuilder: (_, __) => Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 15, vertical: 5),
-                                            height: 250.h,
-                                            width: double.infinity,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      itemCount: 6,
-                                    ),
-                                  );
+                                  return ShimmerLoadingWidget();
                                 }
                               },
                             ),

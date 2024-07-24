@@ -1625,7 +1625,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                           (context) {
                                                         return Container(
                                                           color: Colors.white,
-                                                          child: const Center(
+                                                          child: Center(
                                                             child:
                                                                 LoadingIndicator(),
                                                           ),
@@ -1771,7 +1771,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                               ],
                                                             ),
                                                           )
-                                                        : const Row(
+                                                        : Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
                                                                     .start,
@@ -1909,7 +1909,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                               (context) {
                                                                             return Container(
                                                                               color: Colors.white,
-                                                                              child: const Center(
+                                                                              child: Center(
                                                                                 child: LoadingIndicator(),
                                                                               ),
                                                                             );
@@ -2230,8 +2230,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                             return Container(
                                                               color:
                                                                   Colors.white,
-                                                              child:
-                                                                  const Center(
+                                                              child: Center(
                                                                 child:
                                                                     LoadingIndicator(),
                                                               ),
@@ -2366,7 +2365,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                                                     ],
                                                                   ),
                                                                 )
-                                                              : const Row(
+                                                              : Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
                                                                           .start,
@@ -3046,7 +3045,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                             builder: (context, state) {
                               if (state is ShippmentLoadingProgressState) {
                                 return CustomButton(
-                                  title: const LoadingIndicator(),
+                                  title: LoadingIndicator(),
                                   onTap: () {},
                                 );
                               } else {

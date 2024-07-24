@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:camion/data/models/approval_request.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 
@@ -67,6 +68,7 @@ class SubShipment {
   List<PathPoint>? pathpoints;
   ShipmentTruck? truck;
   double? distance;
+  double? price;
   String? period;
 
   SubShipment({
@@ -83,6 +85,7 @@ class SubShipment {
     this.pathpoints,
     this.truck,
     this.distance,
+    this.price,
     this.period,
   });
 
@@ -91,10 +94,103 @@ class SubShipment {
     shipmentStatus = json['shipment_status'];
     paths = json['path'];
     distance = json['distance'];
+    price = json['price'];
     period = json['period'];
     truck =
         json['truck'] != null ? ShipmentTruck.fromJson(json['truck']) : null;
     shipment = json['shipment'];
+    shipmentinstructionv2 = json['shipmentinstructionv2'];
+    shipmentpaymentv2 = json['shipmentpaymentv2'];
+    totalWeight = json['total_weight'];
+    pickupDate = DateTime.parse(json['pickup_date']);
+    deliveryDate = DateTime.parse(json['delivery_date']);
+    if (json['shipment_items'] != null) {
+      shipmentItems = <ShipmentItems>[];
+      json['shipment_items'].forEach((v) {
+        shipmentItems!.add(ShipmentItems.fromJson(v));
+      });
+    }
+
+    if (json['path_points'] != null) {
+      pathpoints = <PathPoint>[];
+      json['path_points'].forEach((v) {
+        pathpoints!.add(PathPoint.fromJson(v));
+      });
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+
+    data['id'] = id;
+    data['shipment_status'] = shipmentStatus;
+    data['path'] = paths;
+    data['truck'] = truck!.id!;
+    data['distance'] = distance ?? 0.0;
+    data['price'] = price ?? 0.0;
+    data['period'] = period ?? "";
+    data['total_weight'] = totalWeight;
+    data['pickup_date'] = pickupDate?.toIso8601String();
+    data['delivery_date'] = deliveryDate?.toIso8601String();
+    print("2");
+    // data['shipmentinstructionv2'] = shipmentinstructionv2!;
+    // data['shipmentpaymentv2'] = shipmentpaymentv2!;
+    if (shipmentItems != null) {
+      data['shipment_items'] = shipmentItems!.map((v) => v.toJson()).toList();
+    }
+
+    if (pathpoints != null) {
+      data['path_points'] = pathpoints!.map((v) => v.toJson()).toList();
+    }
+
+    return data;
+  }
+}
+
+class OwnerSubShipment {
+  int? id;
+  String? shipmentStatus;
+  String? paths;
+  SimpleShipment? shipment;
+  int? shipmentinstructionv2;
+  int? shipmentpaymentv2;
+  int? totalWeight;
+  DateTime? pickupDate;
+  DateTime? deliveryDate;
+  List<ShipmentItems>? shipmentItems;
+  List<PathPoint>? pathpoints;
+  ShipmentTruck? truck;
+  double? distance;
+  String? period;
+
+  OwnerSubShipment({
+    this.id,
+    this.shipmentStatus,
+    this.paths,
+    this.shipment,
+    this.shipmentinstructionv2,
+    this.shipmentpaymentv2,
+    this.totalWeight,
+    this.pickupDate,
+    this.deliveryDate,
+    this.shipmentItems,
+    this.pathpoints,
+    this.truck,
+    this.distance,
+    this.period,
+  });
+
+  OwnerSubShipment.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    shipmentStatus = json['shipment_status'];
+    paths = json['path'];
+    distance = json['distance'];
+    period = json['period'];
+    truck =
+        json['truck'] != null ? ShipmentTruck.fromJson(json['truck']) : null;
+    shipment = json['shipment'] != null
+        ? SimpleShipment.fromJson(json['shipment'])
+        : null;
     shipmentinstructionv2 = json['shipmentinstructionv2'];
     shipmentpaymentv2 = json['shipmentpaymentv2'];
     totalWeight = json['total_weight'];
@@ -153,6 +249,7 @@ class ShipmentTruck {
   int? gross_weight;
   int? fees;
   int? extra_fees;
+  String? gpsId;
 
   ShipmentTruck({
     this.id,
@@ -165,6 +262,7 @@ class ShipmentTruck {
     this.gross_weight,
     this.fees,
     this.extra_fees,
+    this.gpsId,
   });
 
   ShipmentTruck.fromJson(Map<String, dynamic> json) {
@@ -182,6 +280,7 @@ class ShipmentTruck {
     gross_weight = json['gross_weight'];
     fees = json['fees'];
     extra_fees = json['extra_fees'];
+    gpsId = json['gpsId'];
   }
 }
 

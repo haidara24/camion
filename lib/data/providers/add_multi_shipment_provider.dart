@@ -43,6 +43,10 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<List<TextEditingController>> get commodityWeight_controllers =>
       _commodityWeight_controllers;
 
+  List<double> _totalWeight = [0.0];
+
+  List<double> get totalWeight => _totalWeight;
+
   List<List<TextEditingController>> _commodityName_controllers = [
     [TextEditingController()]
   ];
@@ -236,6 +240,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       [TextEditingController()]
     ];
 
+    _totalWeight = [0.0];
+
     _commodityName_controllers = [
       [TextEditingController()]
     ];
@@ -348,6 +354,15 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _time_controller = [TextEditingController()];
 
     _date_controller = [TextEditingController()];
+  }
+
+  calculateTotalWeight(int index) {
+    _totalWeight[index] = 0;
+    for (var element in _commodityWeight_controllers[index]) {
+      _totalWeight[index] +=
+          double.parse(element.text.replaceAll(",", "")).toInt();
+    }
+    notifyListeners();
   }
 
   setTruckType(TruckType type) {
@@ -1191,6 +1206,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _dateError.add(false);
     _commodityCategory_controller.add([null]);
     _pathes.add([]);
+    _totalWeight.add(0.0);
     _addShipmentformKey.add(GlobalKey<FormState>());
 
     _pickup_controller.add(TextEditingController());
@@ -1253,6 +1269,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _commodityWeight_controllers.removeAt(index);
     _commodityName_controllers.removeAt(index);
     _commodityCategories.removeAt(index);
+    _totalWeight.removeAt(index);
 
     _trucks.removeAt(index);
 

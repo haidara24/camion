@@ -6,15 +6,19 @@ import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_active_status_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
+import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
+import 'package:camion/views/screens/driver/driver_profile_screen.dart';
 import 'package:camion/views/screens/driver/fixes_list_screen.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_screen.dart';
 import 'package:camion/views/screens/driver/search_shipment_screen.dart';
@@ -124,17 +128,21 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   @override
   void initState() {
     super.initState();
+    GpsRepository.getTokenForGps();
+
     // _getLocation();
     _listenLocation();
     getUserData();
-    BlocProvider.of<UnassignedShipmentListBloc>(context)
-        .add(UnassignedShipmentListLoadEvent());
-    BlocProvider.of<DriverActiveShipmentBloc>(context)
-        .add(DriverActiveShipmentLoadEvent("A"));
-    BlocProvider.of<DriverRequestsListBloc>(context)
-        .add(const DriverRequestsListLoadEvent(null));
+    // BlocProvider.of<UnassignedShipmentListBloc>(context)
+    //     .add(UnassignedShipmentListLoadEvent());
+    // BlocProvider.of<DriverActiveShipmentBloc>(context)
+    //     .add(DriverActiveShipmentLoadEvent("A"));
+    // BlocProvider.of<DriverRequestsListBloc>(context)
+    //     .add(const DriverRequestsListLoadEvent(null));
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
+    BlocProvider.of<TruckActiveStatusBloc>(context)
+        .add(LoadTruckActiveStatusEvent());
     notificationServices.requestNotificationPermission();
     // notificationServices.forgroundMessage(context);
     notificationServices.firebaseInit(context);
@@ -181,6 +189,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         }
       case 1:
         {
+          BlocProvider.of<DriverRequestsListBloc>(context)
+              .add(const DriverRequestsListLoadEvent(null));
           setState(() {
             title = AppLocalizations.of(context)!.translate('incoming_orders');
             currentScreen = IncomingShippmentLogScreen();
@@ -189,6 +199,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         }
       case 2:
         {
+          BlocProvider.of<UnassignedShipmentListBloc>(context)
+              .add(UnassignedShipmentListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('shipment_search');
             currentScreen = SearchShippmentScreen();
@@ -197,6 +209,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         }
       case 3:
         {
+          BlocProvider.of<DriverActiveShipmentBloc>(context)
+              .add(DriverActiveShipmentLoadEvent("A"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_path');
 
@@ -238,51 +252,69 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       SizedBox(
                         height: 35.h,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: AppColor.deepYellow,
-                            radius: 35.h,
-                            child: userloading
-                                ? const Center(
-                                    child: LoadingIndicator(),
-                                  )
-                                : (_usermodel.image!.isNotEmpty ||
-                                        _usermodel.image! != null)
-                                    ? ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(180),
-                                        child: Image.network(
-                                          _usermodel.image!,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      )
-                                    : Center(
-                                        child: Text(
-                                          "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
-                                          style: TextStyle(
-                                            fontSize: 28.sp,
+                      InkWell(
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          var driver = prefs.getInt("truckuser");
+
+                          // ignore: use_build_context_synchronously
+                          BlocProvider.of<DriverProfileBloc>(context)
+                              .add(DriverProfileLoad(driver!));
+
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    DriverProfileScreen(user: _usermodel),
+                              ));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: AppColor.deepYellow,
+                              radius: 35.h,
+                              child: userloading
+                                  ? Center(
+                                      child: LoadingIndicator(),
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(180),
+                                      child: Image.network(
+                                        _usermodel.image!,
+                                        fit: BoxFit.fill,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Center(
+                                          child: Text(
+                                            "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
+                                            style: TextStyle(
+                                              fontSize: 28.sp,
+                                            ),
                                           ),
                                         ),
                                       ),
-                          ),
-                          userloading
-                              ? Text(
-                                  "",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              : Text(
-                                  "${_usermodel.firstName!} ${_usermodel.lastName!}",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 26.sp,
-                                      fontWeight: FontWeight.bold),
-                                )
-                        ],
+                                    ),
+                            ),
+                            userloading
+                                ? Text(
+                                    "",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                : Text(
+                                    "${_usermodel.firstName!} ${_usermodel.lastName!}",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 15.h,
@@ -380,7 +412,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       InkWell(
                         onTap: () {
                           BlocProvider.of<TruckFixListBloc>(context)
-                              .add(TruckFixListLoad());
+                              .add(TruckFixListLoad(null));
                           Navigator.push(
                               context,
                               MaterialPageRoute(

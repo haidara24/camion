@@ -1,5 +1,4 @@
 import 'package:camion/Localization/app_localizations.dart';
-import 'package:camion/business_logic/bloc/managment/shipment_update_status_bloc.dart';
 import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/truck_model.dart';
@@ -489,7 +488,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                       if (updatestate
                                           is OrderTruckLoadingProgressState) {
                                         return CustomButton(
-                                          title: const LoadingIndicator(),
+                                          title: LoadingIndicator(),
                                           onTap: () {},
                                         );
                                       } else {

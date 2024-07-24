@@ -7,6 +7,13 @@ sealed class TrucksListEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class NearestTrucksListLoadEvent extends TrucksListEvent {
+  final int truckType;
+  final String location;
+
+  NearestTrucksListLoadEvent(this.truckType, this.location);
+}
+
 class TrucksListLoadEvent extends TrucksListEvent {
   final List<int> truckType;
 

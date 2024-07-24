@@ -138,7 +138,7 @@ class _CheckPointShipmentDetailsScreenState
                             ),
                             Text(
                               AppLocalizations.of(context)!
-                                  .translate('merchent'),
+                                  .translate('merchant'),
                               style: TextStyle(
                                 // color: AppColor.lightBlue,
                                 fontSize: 20.sp,

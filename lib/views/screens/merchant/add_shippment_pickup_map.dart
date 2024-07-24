@@ -187,7 +187,7 @@ class _ShippmentPickUpMapScreenState extends State<ShippmentPickUpMapScreen> {
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(30)),
-                            child: const Center(
+                            child: Center(
                               child: LoadingIndicator(),
                             ),
                           )

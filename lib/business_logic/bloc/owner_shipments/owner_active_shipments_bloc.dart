@@ -14,7 +14,8 @@ class OwnerActiveShipmentsBloc
     on<OwnerActiveShipmentsLoadEvent>((event, emit) async {
       emit(OwnerActiveShipmentsLoadingProgress());
       try {
-        var result = await shipmentRepository.getOwnerKShipmentList("A");
+        var result =
+            await shipmentRepository.getDriverRunningShipmentListForOwner("A");
         emit(OwnerActiveShipmentsLoadedSuccess(result));
       } catch (e) {
         emit(OwnerActiveShipmentsLoadedFailed(e.toString()));

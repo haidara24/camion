@@ -13,7 +13,7 @@ class OwnerIncomingShipmentsLoadingProgress
     extends OwnerIncomingShipmentsState {}
 
 class OwnerIncomingShipmentsLoadedSuccess extends OwnerIncomingShipmentsState {
-  final List<ApprovalRequest> requests;
+  final List<OwnerApprovalRequest> requests;
 
   const OwnerIncomingShipmentsLoadedSuccess(this.requests);
 }

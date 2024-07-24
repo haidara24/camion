@@ -22,16 +22,18 @@ class ShipmentRepository {
   List<SubShipment> subshipments = [];
   List<SubShipment> subshipmentsA = [];
   List<SubShipment> subshipmentsR = [];
+  List<OwnerSubShipment> ownersubshipmentsA = [];
+  List<OwnerSubShipment> ownersubshipmentsR = [];
   List<Shipmentv2> kshipments = [];
   List<Shipmentv2> shipmentsC = [];
   List<ManagmentShipment> mshipments = [];
 
-  Future<bool> updateKShipmentStatus(String state, int shipmentId) async {
+  Future<bool> cancelShipment(int shipmentId) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.patch(
-      "$SHIPPMENTSV2_ENDPOINT$shipmentId/",
-      {"shipment_status": state},
+      "$SHIPPMENTSV2_ENDPOINT$shipmentId/cancel/",
+      {},
       apiToken: jwt,
     );
     if (response.statusCode == 200) {
@@ -220,10 +222,10 @@ class ShipmentRepository {
     subshipmentsA = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var driver = prefs.getInt("truckuser") ?? 0;
+    var truck = prefs.getInt("truckId") ?? 0;
 
     var response = await HttpHelper.get(
-      "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status&driver=$driver",
+      "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status&truck=$truck",
       apiToken: jwt,
     );
     print(response.statusCode);
@@ -240,30 +242,6 @@ class ShipmentRepository {
     }
   }
 
-  // Future<List<SubShipment>> getDriverShipmentList(String status) async {
-  //   subshipments = [];
-  //   var prefs = await SharedPreferences.getInstance();
-  //   var jwt = prefs.getString("token");
-  //   var driver = prefs.getInt("truckuser") ?? 0;
-
-  //   var response = await HttpHelper.get(
-  //     "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status&driver=$driver",
-  //     apiToken: jwt,
-  //   );
-  //   print(response.statusCode);
-  //   if (response.statusCode == 200) {
-  //     var myDataString = utf8.decode(response.bodyBytes);
-  //     var json = jsonDecode(myDataString);
-  //     for (var element in json["results"]) {
-  //       subshipments.add(SubShipment.fromJson(element));
-  //     }
-
-  //     return subshipments.reversed.toList();
-  //   } else {
-  //     return subshipments;
-  //   }
-  // }
-
   Future<List<SubShipment>> getDriverShipmentList(
       String status, int? truckId) async {
     subshipmentsR = [];
@@ -275,6 +253,7 @@ class ShipmentRepository {
       apiToken: jwt,
     );
     print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       var myDataString = utf8.decode(response.bodyBytes);
       var json = jsonDecode(myDataString);
@@ -288,33 +267,32 @@ class ShipmentRepository {
     }
   }
 
-  Future<List<SubShipment>> getDriverRunningShipmentListForOwner(
+  Future<List<OwnerSubShipment>> getDriverRunningShipmentListForOwner(
       String status) async {
-    subshipmentsR = [];
+    ownersubshipmentsR = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
     var response = await HttpHelper.get(
-      "${SUB_SHIPPMENTSV2_ENDPOINT}list_for_owner_and_status/",
+      "${SUB_SHIPPMENTSV2_ENDPOINT}list_for_owner_and_status/$status/",
       apiToken: jwt,
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
       var myDataString = utf8.decode(response.bodyBytes);
       var json = jsonDecode(myDataString);
-      for (var element in json["results"]) {
-        subshipmentsR.add(SubShipment.fromJson(element));
+      for (var element in json) {
+        ownersubshipmentsR.add(OwnerSubShipment.fromJson(element));
       }
-
-      return subshipmentsR.reversed.toList();
+      return ownersubshipmentsR.reversed.toList();
     } else {
-      return subshipmentsR;
+      return ownersubshipmentsR;
     }
   }
 
-  Future<List<SubShipment>> getActiveDriverShipmentForOwner(
+  Future<List<OwnerSubShipment>> getActiveDriverShipmentForOwner(
       String status, int driverId) async {
-    subshipments = [];
+    ownersubshipmentsA = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
@@ -326,80 +304,12 @@ class ShipmentRepository {
     var json = jsonDecode(myDataString);
     if (response.statusCode == 200) {
       for (var element in json) {
-        subshipments.add(SubShipment.fromJson(element));
+        ownersubshipmentsA.add(OwnerSubShipment.fromJson(element));
       }
 
-      return subshipments.reversed.toList();
+      return ownersubshipmentsA.reversed.toList();
     } else {
-      return subshipments;
-    }
-  }
-
-  Future<List<Shipmentv2>> getDriverShipmentListForOwner(
-      String status, int driverId) async {
-    kshipments = [];
-    var prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
-    var response = await HttpHelper.get(
-      "$SHIPPMENTSV2_ENDPOINT?shipment_status=$status&merchant=&driver=$driverId",
-      apiToken: jwt,
-    );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
-    if (response.statusCode == 200) {
-      for (var element in json) {
-        kshipments.add(Shipmentv2.fromJson(element));
-      }
-
-      return kshipments.reversed.toList();
-    } else {
-      return kshipments;
-    }
-  }
-
-  Future<List<SubShipment>> getOwnerShipmentList(String status) async {
-    subshipments = [];
-    var prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
-    // var driver = prefs.getInt("truckowner") ?? 0;
-
-    var response = await HttpHelper.get(
-      "${SUB_SHIPPMENTSV2_ENDPOINT}pending_shipments_for_owner/?shipment_status=$status",
-      apiToken: jwt,
-    );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
-    if (response.statusCode == 200) {
-      for (var element in json) {
-        subshipments.add(SubShipment.fromJson(element));
-      }
-
-      return subshipments.reversed.toList();
-    } else {
-      return subshipments;
-    }
-  }
-
-  Future<List<Shipmentv2>> getOwnerKShipmentList(String status) async {
-    kshipments = [];
-    var prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
-    // var driver = prefs.getInt("truckowner") ?? 0;
-
-    var response = await HttpHelper.get(
-      "${SHIPPMENTSV2_ENDPOINT}pending_shipments_for_owner/?shipment_status=$status",
-      apiToken: jwt,
-    );
-    var myDataString = utf8.decode(response.bodyBytes);
-    var json = jsonDecode(myDataString);
-    if (response.statusCode == 200) {
-      for (var element in json) {
-        kshipments.add(Shipmentv2.fromJson(element));
-      }
-
-      return kshipments.reversed.toList();
-    } else {
-      return kshipments;
+      return ownersubshipmentsA;
     }
   }
 
@@ -433,8 +343,6 @@ class ShipmentRepository {
       "${SUB_SHIPPMENTSV2_ENDPOINT}no_driver_shipments/",
       apiToken: jwt,
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       var myDataString = utf8.decode(response.bodyBytes);
       var json = jsonDecode(myDataString);
@@ -587,6 +495,7 @@ class ShipmentRepository {
       apiToken: token,
     );
     print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -607,6 +516,23 @@ class ShipmentRepository {
     } else {
       return false;
     }
+  }
+
+  Future<dynamic> activeShipmentStatus(int id) async {
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var response = await HttpHelper.patch(
+      "$SUB_SHIPPMENTSV2_ENDPOINT$id/active_shipment/",
+      {"shipment_status": "A"},
+      apiToken: jwt,
+    );
+    print(response.statusCode);
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["status"] = response.statusCode;
+    var jsonObject = jsonDecode(response.body);
+
+    data["details"] = jsonObject["details"];
+    return data;
   }
 
   Future<Shipmentv2?> getShipment(int id) async {

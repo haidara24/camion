@@ -8,5 +8,7 @@ sealed class TruckFixListEvent extends Equatable {
 }
 
 class TruckFixListLoad extends TruckFixListEvent {
-  TruckFixListLoad();
+  final int? truckid;
+
+  TruckFixListLoad(this.truckid);
 }

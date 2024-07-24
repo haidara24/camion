@@ -17,7 +17,17 @@ class AuthRegisteringProgressState extends AuthState {}
 
 class AuthResgisteringSuccess extends AuthState {}
 
-// class AuthNotActivatedState extends AuthState {}
+class PhoneAuthSuccessState extends AuthState {
+  final dynamic data;
+
+  PhoneAuthSuccessState(this.data);
+}
+
+class PhoneAuthFailedState extends AuthState {
+  final String? error;
+
+  PhoneAuthFailedState(this.error);
+}
 
 // class AuthActivateLoadingState extends AuthState {}
 
@@ -25,7 +35,7 @@ class AuthDriverSuccessState extends AuthState {}
 
 class AuthOwnerSuccessState extends AuthState {}
 
-class AuthMerchentSuccessState extends AuthState {}
+class AuthMerchantSuccessState extends AuthState {}
 
 class AuthManagmentSuccessState extends AuthState {}
 

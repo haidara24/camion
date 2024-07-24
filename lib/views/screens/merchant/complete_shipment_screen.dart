@@ -1,9 +1,7 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -120,49 +118,49 @@ class CompleteShipmentScreen extends StatelessWidget {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          ShipmentPathWidget(
-                                                            pickupName: state
-                                                                .shipments[
-                                                                    index]
-                                                                .subshipments![
-                                                                    0]
-                                                                .pathpoints!
-                                                                .singleWhere(
-                                                                    (element) =>
-                                                                        element
-                                                                            .pointType ==
-                                                                        "P")
-                                                                .name!,
-                                                            deliveryName: state
-                                                                .shipments[
-                                                                    index]
-                                                                .subshipments![
-                                                                    0]
-                                                                .pathpoints!
-                                                                .singleWhere(
-                                                                    (element) =>
-                                                                        element
-                                                                            .pointType ==
-                                                                        "D")
-                                                                .name!,
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                .66,
-                                                            pathwidth:
-                                                                MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    .56,
-                                                          ).animate().slideX(
-                                                              duration: 300.ms,
-                                                              delay: 0.ms,
-                                                              begin: 1,
-                                                              end: 0,
-                                                              curve: Curves
-                                                                  .easeInOutSine),
+                                                          // ShipmentPathWidget(
+                                                          //   pickupName: state
+                                                          //       .shipments[
+                                                          //           index]
+                                                          //       .subshipments![
+                                                          //           0]
+                                                          //       .pathpoints!
+                                                          //       .singleWhere(
+                                                          //           (element) =>
+                                                          //               element
+                                                          //                   .pointType ==
+                                                          //               "P")
+                                                          //       .name!,
+                                                          //   deliveryName: state
+                                                          //       .shipments[
+                                                          //           index]
+                                                          //       .subshipments![
+                                                          //           0]
+                                                          //       .pathpoints!
+                                                          //       .singleWhere(
+                                                          //           (element) =>
+                                                          //               element
+                                                          //                   .pointType ==
+                                                          //               "D")
+                                                          //       .name!,
+                                                          //   width: MediaQuery.of(
+                                                          //               context)
+                                                          //           .size
+                                                          //           .width *
+                                                          //       .66,
+                                                          //   pathwidth:
+                                                          //       MediaQuery.of(
+                                                          //                   context)
+                                                          //               .size
+                                                          //               .width *
+                                                          //           .56,
+                                                          // ).animate().slideX(
+                                                          //     duration: 300.ms,
+                                                          //     delay: 0.ms,
+                                                          //     begin: 1,
+                                                          //     end: 0,
+                                                          //     curve: Curves
+                                                          //         .easeInOutSine),
                                                           SizedBox(
                                                             height: 7.h,
                                                           ),

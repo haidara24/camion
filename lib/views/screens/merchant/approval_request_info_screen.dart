@@ -103,7 +103,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                     return CustomButton(
                                                       title: SizedBox(
                                                         width: 70.w,
-                                                        child: const Center(
+                                                        child: Center(
                                                           child:
                                                               LoadingIndicator(),
                                                         ),

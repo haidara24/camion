@@ -12,7 +12,7 @@ final class CreateTruckFixInitial extends CreateTruckFixState {}
 class CreateTruckFixLoadingProgress extends CreateTruckFixState {}
 
 class CreateTruckFixLoadedSuccess extends CreateTruckFixState {
-  final TruckExpense fix;
+  final bool fix;
 
   const CreateTruckFixLoadedSuccess(this.fix);
 }

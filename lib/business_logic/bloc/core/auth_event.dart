@@ -16,4 +16,16 @@ class SignInButtonPressed extends AuthEvent {
   const SignInButtonPressed(this.username, this.password);
 }
 
+class PhoneSignInButtonPressed extends AuthEvent {
+  final String phone;
+
+  const PhoneSignInButtonPressed(this.phone);
+}
+
+class VerifyButtonPressed extends AuthEvent {
+  final String otp;
+
+  const VerifyButtonPressed(this.otp);
+}
+
 class UserLoggedOut extends AuthEvent {}

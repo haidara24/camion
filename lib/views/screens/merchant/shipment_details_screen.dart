@@ -3,13 +3,16 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
+import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
@@ -792,6 +795,158 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                 period: shipmentstate.shipment
                                     .subshipments![selectedIndex].period!,
                               ),
+                              const Divider(),
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: BlocConsumer<CancelShipmentBloc,
+                                    CancelShipmentState>(
+                                  listener: (context, cancelstate) {
+                                    if (cancelstate
+                                        is CancelShipmentSuccessState) {
+                                      Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ControlView(),
+                                          ),
+                                          (route) => false);
+                                    }
+                                  },
+                                  builder: (context, cancelstate) {
+                                    if (cancelstate
+                                        is ShippmentLoadingProgressState) {
+                                      return CustomButton(
+                                        title: SizedBox(
+                                          width: 70.w,
+                                          child: Center(
+                                            child: LoadingIndicator(),
+                                          ),
+                                        ),
+                                        onTap: () {},
+                                        color: Colors.white,
+                                      );
+                                    } else {
+                                      return CustomButton(
+                                        title: SizedBox(
+                                          width: 70.w,
+                                          child: Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('cancel'),
+                                              style: const TextStyle(
+                                                  color: Colors.red),
+                                            ),
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          showDialog<void>(
+                                            context: context,
+                                            barrierDismissible:
+                                                false, // user must tap button!
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                backgroundColor: Colors.white,
+                                                title: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate('cancel')),
+                                                // content:
+                                                //     SingleChildScrollView(
+                                                //   child: Form(
+                                                //     key:
+                                                //         _rejectformKey,
+                                                //     child: ListBody(
+                                                //       children: <Widget>[
+                                                //         Text(
+                                                //             "الرجاء تحديد سبب الرفض"),
+                                                //         TextFormField(
+                                                //           controller:
+                                                //               rejectTextController,
+                                                //           onTap: () {
+                                                //             rejectTextController.selection = TextSelection(
+                                                //                 baseOffset:
+                                                //                     0,
+                                                //                 extentOffset: rejectTextController
+                                                //                     .value
+                                                //                     .text
+                                                //                     .length);
+                                                //           },
+                                                //           style: TextStyle(
+                                                //               fontSize:
+                                                //                   18.sp),
+                                                //           scrollPadding:
+                                                //               EdgeInsets.only(
+                                                //                   bottom:
+                                                //                       MediaQuery.of(context).viewInsets.bottom + 50),
+                                                //           decoration:
+                                                //               InputDecoration(
+                                                //             hintText:
+                                                //                 'سبب الرفض',
+                                                //             hintStyle:
+                                                //                 TextStyle(
+                                                //                     fontSize: 18.sp),
+                                                //           ),
+                                                //           validator:
+                                                //               (value) {
+                                                //             if (value!
+                                                //                 .isEmpty) {
+                                                //               return AppLocalizations.of(context)!
+                                                //                   .translate('insert_value_validate');
+                                                //             }
+                                                //             return null;
+                                                //           },
+                                                //           onSaved:
+                                                //               (newValue) {
+                                                //             rejectTextController
+                                                //                     .text =
+                                                //                 newValue!;
+                                                //             rejectText =
+                                                //                 newValue!;
+                                                //           },
+                                                //         ),
+                                                //       ],
+                                                //     ),
+                                                //   ),
+                                                // ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    child: Text(AppLocalizations
+                                                            .of(context)!
+                                                        .translate('cancel')),
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                  TextButton(
+                                                    child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate('ok')),
+                                                    onPressed: () {
+                                                      BlocProvider.of<
+                                                                  CancelShipmentBloc>(
+                                                              context)
+                                                          .add(
+                                                        CancelShipmentButtonPressed(
+                                                          shipmentstate
+                                                              .shipment.id!,
+                                                        ),
+                                                      );
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        },
+                                        color: Colors.white,
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -814,7 +969,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     ),
                   );
                 } else {
-                  return const Center(child: LoadingIndicator());
+                  return Center(child: LoadingIndicator());
                 }
               },
             ),

@@ -4,10 +4,8 @@ import 'dart:convert';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/complete_managment_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/passcharges_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/permissions_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -15,11 +13,8 @@ import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/check_point/check_point_log_screen.dart';
-import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/managment/charges_log_screen.dart';
-import 'package:camion/views/screens/managment/log_screen.dart';
 import 'package:camion/views/screens/managment/permissions_screen.dart';
-import 'package:camion/views/screens/managment/price_request_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +167,7 @@ class _CheckPointHomeScreenState extends State<CheckPointHomeScreen>
                             backgroundColor: AppColor.deepYellow,
                             radius: 35.h,
                             child: userloading
-                                ? const Center(
+                                ? Center(
                                     child: LoadingIndicator(),
                                   )
                                 : (_usermodel.image!.isNotEmpty ||

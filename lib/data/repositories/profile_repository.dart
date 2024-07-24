@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileRepository {
@@ -23,24 +25,155 @@ class ProfileRepository {
     return null;
   }
 
-  Future<Merchant?> updateMerchant(Merchant merchant) async {
+  Future<TruckOwner?> getOwner(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
-    var rs = await HttpHelper.patch(
-        '$MERCHANTS_ENDPOINT${merchant.id}/update_profile/',
-        {
-          "address": merchant.address,
-          "company_name": merchant.companyName,
-          "user": {"email": merchant.user!.email, "phone": merchant.user!.phone}
-        },
-        apiToken: jwt);
-
+    var rs = await HttpHelper.get('$OWNERS_ENDPOINT$id/', apiToken: jwt);
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
+      return TruckOwner.fromJson(result);
+    }
+    return null;
+  }
+
+  Future<Driver?> getDriver(int id) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs = await HttpHelper.get('$DRIVERS_ENDPOINT$id/', apiToken: jwt);
+    print(rs.statusCode);
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+
+      var result = jsonDecode(myDataString);
+      return Driver.fromJson(result);
+    }
+    return null;
+  }
+
+  Future<Driver?> updateDriver(Driver driver, File? file) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var driverId = prefs.getInt("truckuser");
+
+    var request = http.MultipartRequest(
+        'PATCH', Uri.parse('$DRIVERS_ENDPOINT$driverId/update_profile/'));
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: "JWT $jwt",
+      HttpHeaders.contentTypeHeader: "multipart/form-data"
+    });
+
+    if (file != null) {
+      final uploadImages = await http.MultipartFile.fromPath(
+        'files',
+        file.path,
+        filename: file.path.split('/').last,
+      );
+
+      request.files.add(uploadImages);
+    }
+
+    request.fields['user'] = jsonEncode({
+      "first_name": driver.user!.firstName,
+      "last_name": driver.user!.lastName,
+      "email": driver.user!.email
+    });
+
+    var rs = await request.send();
+
+    if (rs.statusCode == 200) {
+      final respStr = await rs.stream.bytesToString();
+
+      var result = jsonDecode(respStr);
+
+      return Driver.fromJson(result);
+    }
+    return null;
+  }
+
+  Future<Merchant?> updateMerchant(Merchant merchant, File? file) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var merchantId = prefs.getInt("merchant");
+    var request = http.MultipartRequest(
+        'PATCH', Uri.parse('$MERCHANTS_ENDPOINT$merchantId/update_profile/'));
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: "JWT $jwt",
+      HttpHeaders.contentTypeHeader: "multipart/form-data"
+    });
+
+    if (file != null) {
+      final uploadImages = await http.MultipartFile.fromPath(
+        'files',
+        file.path,
+        filename: file.path.split('/').last,
+      );
+
+      request.files.add(uploadImages);
+    }
+
+    request.fields['user'] = jsonEncode({
+      "first_name": merchant.user!.firstName,
+      "last_name": merchant.user!.lastName,
+      "email": merchant.user!.email
+    });
+    // request.fields['user[first_name]'] = merchant.user!.firstName!;
+    // request.fields['user[last_name]'] = merchant.user!.lastName!;
+    // request.fields['user[email]'] = merchant.user!.email!;
+    request.fields['address'] = merchant.address!;
+    request.fields['company_name'] = merchant.companyName!;
+
+    var rs = await request.send();
+    print(merchantId);
+    print(rs.statusCode);
+    if (rs.statusCode == 200) {
+      final respStr = await rs.stream.bytesToString();
+
+      var result = jsonDecode(respStr);
       return Merchant.fromJson(result);
+    }
+    return null;
+  }
+
+  Future<TruckOwner?> updateOwner(TruckOwner owner, File? file) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var ownerId = prefs.getInt("truckowner");
+
+    var request = http.MultipartRequest(
+        'PATCH', Uri.parse('$OWNERS_ENDPOINT$ownerId/update_profile/'));
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: "JWT $jwt",
+      HttpHeaders.contentTypeHeader: "multipart/form-data"
+    });
+
+    if (file != null) {
+      final uploadImages = await http.MultipartFile.fromPath(
+        'files',
+        file.path,
+        filename: file.path.split('/').last,
+      );
+
+      request.files.add(uploadImages);
+    }
+
+    request.fields['user'] = jsonEncode({
+      "first_name": owner.user!.firstName,
+      "last_name": owner.user!.lastName,
+      "email": owner.user!.email
+    });
+
+    var rs = await request.send();
+
+    if (rs.statusCode == 200) {
+      final respStr = await rs.stream.bytesToString();
+
+      var result = jsonDecode(respStr);
+      return TruckOwner.fromJson(result);
     }
     return null;
   }
@@ -68,20 +201,5 @@ class ProfileRepository {
     } else {
       return null;
     }
-  }
-
-  Future<Merchant?> getDriver(int id) async {
-    prefs = await SharedPreferences.getInstance();
-    var jwt = prefs.getString("token");
-
-    var rs = await HttpHelper.get('$MERCHANTS_ENDPOINT$id/', apiToken: jwt);
-
-    if (rs.statusCode == 200) {
-      var myDataString = utf8.decode(rs.bodyBytes);
-
-      var result = jsonDecode(myDataString);
-      return Merchant.fromJson(result);
-    }
-    return null;
   }
 }

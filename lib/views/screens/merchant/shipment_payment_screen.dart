@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/Localization/app_localizations.dart';
@@ -6,26 +5,24 @@ import 'package:camion/business_logic/bloc/instructions/payment_create_bloc.dart
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
-import 'package:camion/data/models/stripe_model.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/control_view.dart';
+import 'package:camion/views/screens/merchant/ecash_payment_checkout_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 // import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
-import 'package:camion/views/widgets/shipment_path_widget.dart';
 
 class ShipmentPaymentScreen extends StatefulWidget {
   final SubShipment shipment;
@@ -474,7 +471,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                       return Container(
                         height: MediaQuery.of(context).size.height,
                         color: Colors.white70,
-                        child: const Center(child: LoadingIndicator()),
+                        child: Center(child: LoadingIndicator()),
                       );
                     } else {
                       return const SizedBox.shrink();
@@ -689,6 +686,61 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               //         ),
               //       )
               //     : const SizedBox.shrink()
+              widget.shipment.shipmentpaymentv2 == null
+                  ? SizedBox(
+                      width: MediaQuery.of(context).size.width * .9,
+                      child: CustomButton(
+                        title: _loading
+                            ? LoadingIndicator()
+                            : Text(AppLocalizations.of(context)!
+                                .translate('pay_now')),
+                        onTap: () async {
+                          setState(() {
+                            _loading = true;
+                          });
+                          String merchantId = "XWZXL9";
+                          String terminalKey = "M5NW61";
+                          String merchantSecret =
+                              "MO7YFXNPDNFOEIK0ZCUIBMY90DDTF46IUM5NDS23AQZGZEVYSMCACOAPE2LLKD53";
+                          String amount = "1500";
+                          String orderRef = 35.toString();
+
+                          // Concatenate the values
+                          String concatenatedString =
+                              "$merchantId$merchantSecret$amount$orderRef";
+
+                          // Compute MD5 hash
+                          String md5Hash = md5
+                              .convert(utf8.encode(concatenatedString))
+                              .toString();
+                          String callbackUrl =
+                              "https://matjari.app/camion/callback/"; // Your callback URL
+                          String encodedCallbackUrl =
+                              Uri.encodeComponent(callbackUrl);
+
+                          String redirectUrl = "https://your-redirect-url.com";
+                          String encodedRedirectUrl =
+                              Uri.encodeComponent(redirectUrl);
+
+                          var paymentUrl =
+                              "https://checkout.ecash-pay.co/Checkout/Card/$terminalKey/$merchantId/${md5Hash.toUpperCase()}/SYP/$amount/AR/$orderRef/$encodedRedirectUrl";
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ECashPaymentCheckoutScreen(
+                                  url: paymentUrl,
+                                  shipment: widget.shipment,
+                                ),
+                              ));
+                          print(paymentUrl);
+                          setState(() {
+                            _loading = false;
+                          });
+                        },
+                      ),
+                    )
+                  : const SizedBox.shrink()
             ],
           ),
         );

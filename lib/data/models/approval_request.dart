@@ -256,13 +256,13 @@ class SimpleShipment {
 
 class RMerchant {
   int? id;
-  User? user;
+  UserModel? user;
 
   RMerchant({this.id, this.user});
 
   RMerchant.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'] != null ? User.fromJson(json['user']) : null;
+    user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
   }
 
   Map<String, dynamic> toJson() {

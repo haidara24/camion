@@ -17,6 +17,12 @@ class DriverActiveShipmentLoadedSuccess extends DriverActiveShipmentState {
   const DriverActiveShipmentLoadedSuccess(this.shipments);
 }
 
+class OwnerActiveShipmentLoadedSuccess extends DriverActiveShipmentState {
+  final List<OwnerSubShipment> shipments;
+
+  const OwnerActiveShipmentLoadedSuccess(this.shipments);
+}
+
 class DriverActiveShipmentLoadedFailed extends DriverActiveShipmentState {
   final String error;
 

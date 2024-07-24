@@ -78,7 +78,7 @@ class _CompleteManagmentShipmentDetailsScreenState
                             ),
                             Text(
                               AppLocalizations.of(context)!
-                                  .translate('merchent'),
+                                  .translate('merchant'),
                               style: TextStyle(
                                 // color: AppColor.lightBlue,
                                 fontSize: 20.sp,

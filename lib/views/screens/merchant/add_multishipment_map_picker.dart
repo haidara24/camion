@@ -132,7 +132,7 @@ class _MultiShippmentPickUpMapScreenState
                             decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(30)),
-                            child: const Center(
+                            child: Center(
                               child: LoadingIndicator(),
                             ),
                           )

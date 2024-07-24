@@ -1,3 +1,5 @@
+import 'package:camion/data/models/truck_type_model.dart';
+
 class Truck {
   int? id;
   Truckuser? truckuser;
@@ -40,7 +42,7 @@ class Truck {
 
   Truck.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    truckuser = json['truckuser'] != null
+    truckuser = (json['truckuser'] != null)
         ? Truckuser.fromJson(json['truckuser'])
         : null;
     truckType = json['truck_type'];
@@ -297,7 +299,7 @@ class KTruck {
   int? id;
   KTuckUser? truckuser;
   int? owner;
-  KTuckType? truckType;
+  TruckType? truckType;
   int? location;
   String? locationLat;
   int? height;
@@ -313,6 +315,7 @@ class KTruck {
   int? fees;
   int? extraFees;
   bool? isOn;
+  String? gpsId;
   List<TruckImages>? images;
 
   KTruck({
@@ -335,17 +338,19 @@ class KTruck {
     this.fees,
     this.extraFees,
     this.isOn,
+    this.gpsId,
     this.images,
   });
 
   KTruck.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    truckuser = json['truckuser'] != null
-        ? KTuckUser.fromJson(json['truckuser'])
-        : null;
+    truckuser = (json['truckuser'] == null || json['truckuser'] is int)
+        ? null
+        : KTuckUser.fromJson(json['truckuser']);
+
     owner = json['owner'];
     truckType = json['truck_type'] != null
-        ? KTuckType.fromJson(json['truck_type'])
+        ? TruckType.fromJson(json['truck_type'])
         : null;
     location = json['location'];
     locationLat = json['location_lat'];
@@ -362,6 +367,7 @@ class KTruck {
     fees = json['fees'];
     extraFees = json['extra_fees'];
     isOn = json['isOn'];
+    gpsId = json['gpsId'];
     if (json['images'] != null) {
       images = <TruckImages>[];
       json['images'].forEach((v) {
@@ -389,6 +395,7 @@ class KTruck {
     data['fees'] = fees;
     data['extra_fees'] = extraFees;
     data['isOn'] = isOn;
+    data['gpsId'] = gpsId;
     if (images != null) {
       data['images'] = images!.map((v) => v.toJson()).toList();
     }

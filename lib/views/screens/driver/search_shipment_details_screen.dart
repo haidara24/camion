@@ -11,7 +11,6 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
@@ -20,7 +19,6 @@ import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' as loc;
 import 'package:flutter/services.dart' show rootBundle;
@@ -29,10 +27,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchShipmentDetailsScreen extends StatefulWidget {
   final SubShipment shipment;
+  String userType;
   bool? isOwner;
   SearchShipmentDetailsScreen({
     Key? key,
     required this.shipment,
+    required this.userType,
     this.isOwner = false,
   }) : super(key: key);
 
@@ -265,6 +265,96 @@ class _SearchShipmentDetailsScreenState
     super.dispose();
   }
 
+  showOwnerTrucksSheet(BuildContext context, String lang) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: AbsorbPointer(
+                        absorbing: false,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: lang == 'en'
+                              ? const Icon(Icons.arrow_forward)
+                              : const Icon(Icons.arrow_back),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      AppLocalizations.of(context)!.translate('select_driver'),
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 5.h,
+              ),
+              BlocBuilder<OwnerTrucksBloc, OwnerTrucksState>(
+                builder: (context, state) {
+                  if (state is OwnerTrucksLoadedSuccess) {
+                    return state.trucks.isEmpty
+                        ? Center(
+                            child: Text(AppLocalizations.of(context)!
+                                .translate('no_shipments')),
+                          )
+                        : ListView.separated(
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return index != 0
+                                  ? InkWell(
+                                      onTap: () {
+                                        BlocProvider.of<OrderTruckBloc>(context)
+                                            .add(OrderTruckButtonPressed(
+                                                widget.shipment.id!,
+                                                state.trucks[index].id!));
+                                        Navigator.pop(context);
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          "${state.trucks[index].truckuser!.usertruck!.firstName!} ${state.trucks[index].truckuser!.usertruck!.lastName!}",
+                                          style: TextStyle(
+                                            fontSize: 18.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink();
+                            },
+                            separatorBuilder: (context, index) =>
+                                const Divider(),
+                            itemCount: state.trucks.length);
+                  } else {
+                    return Container();
+                  }
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -413,7 +503,7 @@ class _SearchShipmentDetailsScreenState
                                                 return CustomButton(
                                                   title: SizedBox(
                                                     width: 70.w,
-                                                    child: const Center(
+                                                    child: Center(
                                                       child: LoadingIndicator(),
                                                     ),
                                                   ),
@@ -436,116 +526,12 @@ class _SearchShipmentDetailsScreenState
                                                     ),
                                                   ),
                                                   onTap: () async {
-                                                    if (widget.isOwner ??
-                                                        false) {
-                                                      showModalBottomSheet(
-                                                        context: context,
-                                                        isScrollControlled:
-                                                            true,
-                                                        useSafeArea: true,
-                                                        builder: (context) =>
-                                                            Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: SizedBox(
-                                                            width:
-                                                                double.infinity,
-                                                            child: Column(
-                                                              children: [
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .spaceBetween,
-                                                                    children: [
-                                                                      InkWell(
-                                                                        onTap:
-                                                                            () {
-                                                                          Navigator.pop(
-                                                                              context);
-                                                                        },
-                                                                        child:
-                                                                            AbsorbPointer(
-                                                                          absorbing:
-                                                                              false,
-                                                                          child:
-                                                                              Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(8.0),
-                                                                            child: localeState.value.countryCode == 'en'
-                                                                                ? const Icon(Icons.arrow_forward)
-                                                                                : const Icon(Icons.arrow_back),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        AppLocalizations.of(context)!
-                                                                            .translate('select_driver'),
-                                                                        style:
-                                                                            TextStyle(
-                                                                          fontSize:
-                                                                              18.sp,
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 5.h,
-                                                                ),
-                                                                BlocBuilder<
-                                                                    OwnerTrucksBloc,
-                                                                    OwnerTrucksState>(
-                                                                  builder:
-                                                                      (context,
-                                                                          state) {
-                                                                    if (state
-                                                                        is OwnerTrucksLoadedSuccess) {
-                                                                      return state
-                                                                              .trucks
-                                                                              .isEmpty
-                                                                          ? Center(
-                                                                              child: Text(AppLocalizations.of(context)!.translate('no_shipments')),
-                                                                            )
-                                                                          : ListView.separated(
-                                                                              shrinkWrap: true,
-                                                                              itemBuilder: (context, index) {
-                                                                                return index != 0
-                                                                                    ? InkWell(
-                                                                                        onTap: () {
-                                                                                          BlocProvider.of<OrderTruckBloc>(context).add(OrderTruckButtonPressed(widget.shipment.id!, state.trucks[index].truckuser!.id!));
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                        child: Padding(
-                                                                                          padding: const EdgeInsets.all(8.0),
-                                                                                          child: Text(
-                                                                                            "${state.trucks[index].truckuser!.usertruck!.firstName!} ${state.trucks[index].truckuser!.usertruck!.lastName!}",
-                                                                                            style: TextStyle(
-                                                                                              fontSize: 18.sp,
-                                                                                            ),
-                                                                                          ),
-                                                                                        ),
-                                                                                      )
-                                                                                    : const SizedBox.shrink();
-                                                                              },
-                                                                              separatorBuilder: (context, index) => const Divider(),
-                                                                              itemCount: state.trucks.length);
-                                                                    } else {
-                                                                      return Container();
-                                                                    }
-                                                                  },
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ),
+                                                    if (widget.userType ==
+                                                        "Owner") {
+                                                      showOwnerTrucksSheet(
+                                                        context,
+                                                        localeState
+                                                            .value.languageCode,
                                                       );
                                                     } else {
                                                       showDialog<void>(
@@ -596,20 +582,21 @@ class _SearchShipmentDetailsScreenState
                                                                       prefs =
                                                                       await SharedPreferences
                                                                           .getInstance();
-                                                                  var driver =
+                                                                  var truck =
                                                                       prefs.getInt(
-                                                                          "truckuser");
+                                                                          "truckId");
                                                                   BlocProvider.of<
                                                                               OrderTruckBloc>(
                                                                           context)
-                                                                      .add(OrderTruckButtonPressed(
-                                                                          widget
-                                                                              .shipment
-                                                                              .id!,
-                                                                          driver!));
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
+                                                                      .add(
+                                                                    OrderTruckButtonPressed(
+                                                                        widget
+                                                                            .shipment
+                                                                            .id!,
+                                                                        truck!),
+                                                                  );
+                                                                  Navigator.pop(
+                                                                      context);
                                                                 },
                                                               ),
                                                             ],
@@ -635,7 +622,7 @@ class _SearchShipmentDetailsScreenState
                       ],
                     );
                   } else {
-                    return const Center(child: LoadingIndicator());
+                    return Center(child: LoadingIndicator());
                   }
                 },
               ),

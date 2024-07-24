@@ -371,10 +371,6 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                           20,
                                 ),
                                 textInputAction: TextInputAction.done,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  DecimalFormatter(),
-                                ],
                                 decoration: InputDecoration(
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 11.0, horizontal: 9.0),
@@ -424,7 +420,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                       duration: const Duration(seconds: 5),
                                     ));
                                     BlocProvider.of<TruckFixListBloc>(context)
-                                        .add(TruckFixListLoad());
+                                        .add(TruckFixListLoad(null));
                                     Navigator.pop(context);
                                   }
                                   if (state is CreateTruckFixLoadedFailed) {
@@ -434,7 +430,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                 builder: (context, state) {
                                   if (state is CreateTruckFixLoadingProgress) {
                                     return CustomButton(
-                                      title: const LoadingIndicator(),
+                                      title: LoadingIndicator(),
                                       onTap: () {},
                                     );
                                   } else {

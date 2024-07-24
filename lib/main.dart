@@ -8,7 +8,9 @@ import 'package:camion/business_logic/bloc/check_point/permission_details_bloc.d
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
+import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/create_price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/incoming_shipments_bloc.dart';
@@ -31,6 +33,10 @@ import 'package:camion/business_logic/bloc/managment/shipment_update_status_bloc
 import 'package:camion/business_logic/bloc/managment/simple_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_active_shipments_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/driver_update_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/owner_update_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/package_type_bloc.dart';
@@ -46,16 +52,19 @@ import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.
 import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_multi_create_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shippment_create_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_details_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/trucks_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_active_status_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/create_truck_fix_bloc.dart';
@@ -66,12 +75,14 @@ import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
+import 'package:camion/data/providers/truck_active_status_provider.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/providers/shipment_instructions_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/data/providers/truck_provider.dart';
+import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/auth_repository.dart';
 import 'package:camion/data/repositories/category_repository.dart';
 import 'package:camion/data/repositories/check_point_repository.dart';
@@ -151,384 +162,468 @@ class MyApp extends StatelessWidget {
           minTextAdapt: true,
           splitScreenMode: true,
           builder: (context, child) {
-            return MultiRepositoryProvider(
+            return MultiProvider(
               providers: [
-                RepositoryProvider(
-                  create: (context) => AuthRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => PostRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => NotificationRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => ShipmentRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => InstructionRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => TruckRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => PriceRequestRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => ProfileRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => CategoryRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => CheckPointRepository(),
-                ),
-                RepositoryProvider(
-                  create: (context) => RequestRepository(),
-                ),
+                ChangeNotifierProvider(create: (_) => TaskNumProvider()),
+                ChangeNotifierProvider(
+                    create: (_) => ShipmentInstructionsProvider()),
+                ChangeNotifierProvider(create: (_) => NotificationProvider()),
+                ChangeNotifierProvider(create: (_) => AddShippmentProvider()),
+                ChangeNotifierProvider(
+                    create: (_) => AddMultiShipmentProvider()),
+                ChangeNotifierProvider(
+                    create: (_) => ActiveShippmentProvider()),
+                ChangeNotifierProvider(
+                    create: (_) => TruckActiveStatusProvider()),
+                ChangeNotifierProvider(create: (_) => UserProvider()),
+                ChangeNotifierProvider(create: (_) => TruckProvider()),
               ],
-              child: MultiBlocProvider(
+              child: MultiRepositoryProvider(
                 providers: [
-                  BlocProvider(
-                    create: (context) => AuthBloc(
-                      authRepository:
-                          RepositoryProvider.of<AuthRepository>(context),
-                    ),
+                  RepositoryProvider(
+                    create: (context) => AuthRepository(context),
                   ),
-                  BlocProvider(
-                    create: (context) => MerchantProfileBloc(
-                      profileRepository:
-                          RepositoryProvider.of<ProfileRepository>(context),
-                    ),
+                  RepositoryProvider(
+                    create: (context) => PostRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => CreateStoreBloc(
-                      profileRepository:
-                          RepositoryProvider.of<ProfileRepository>(context),
-                    ),
+                  RepositoryProvider(
+                    create: (context) => NotificationRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => MerchantUpdateProfileBloc(
-                      profileRepository:
-                          RepositoryProvider.of<ProfileRepository>(context),
-                    ),
+                  RepositoryProvider(
+                    create: (context) => ShipmentRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => NotificationBloc(
-                      notificationRepository:
-                          RepositoryProvider.of<NotificationRepository>(
-                              context),
-                    ),
+                  RepositoryProvider(
+                    create: (context) => InstructionRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => PostBloc(
-                        postRepository:
-                            RepositoryProvider.of<PostRepository>(context)),
+                  RepositoryProvider(
+                    create: (context) => TruckRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => CheckPointListBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
+                  RepositoryProvider(
+                    create: (context) => PriceRequestRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => DriverRequestsListBloc(
-                        requestRepository:
-                            RepositoryProvider.of<RequestRepository>(context)),
+                  RepositoryProvider(
+                    create: (context) => ProfileRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => MerchantRequestsListBloc(
-                        requestRepository:
-                            RepositoryProvider.of<RequestRepository>(context)),
+                  RepositoryProvider(
+                    create: (context) => CategoryRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => RequestDetailsBloc(
-                        requestRepository:
-                            RepositoryProvider.of<RequestRepository>(context)),
+                  RepositoryProvider(
+                    create: (context) => CheckPointRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => AcceptRequestForMerchantBloc(
-                        requestRepository:
-                            RepositoryProvider.of<RequestRepository>(context)),
+                  RepositoryProvider(
+                    create: (context) => RequestRepository(),
                   ),
-                  BlocProvider(
-                    create: (context) => RejectRequestForMerchantBloc(
-                        requestRepository:
-                            RepositoryProvider.of<RequestRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ChargeTypesListBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => PermissionsListBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CreatePermissionBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CreatePassChargesBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => PasschargesListBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => PassChargeDetailsBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => PermissionDetailsBloc(
-                        checkPointRepository:
-                            RepositoryProvider.of<CheckPointRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => TrucksListBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => PriceRequestBloc(
-                        priceRepository:
-                            RepositoryProvider.of<PriceRequestRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CreatePriceRequestBloc(
-                        priceRequestRepository:
-                            RepositoryProvider.of<PriceRequestRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CreateCategoryBloc(
-                        categoryRepository:
-                            RepositoryProvider.of<CategoryRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => SimpleCategoryListBloc(
-                        categoryRepository:
-                            RepositoryProvider.of<CategoryRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => TruckFixListBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CreateTruckFixBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => FixTypeListBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => OwnerTrucksBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => TruckDetailsBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => TruckPapersBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CreateTruckPaperBloc(
-                        truckRepository:
-                            RepositoryProvider.of<TruckRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => SearchCategoryListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ShipmentUpdateStatusBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ManagmentShipmentUpdateStatusBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => TruckTypeBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CommodityCategoryBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => KCommodityCategoryBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => PackageTypeBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ShippmentCreateBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ShipmentMultiCreateBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => InstructionCreateBloc(
-                        instructionRepository:
-                            RepositoryProvider.of<InstructionRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ReadInstructionBloc(
-                        instructionRepository:
-                            RepositoryProvider.of<InstructionRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => PaymentCreateBloc(
-                        instructionRepository:
-                            RepositoryProvider.of<InstructionRepository>(
-                                context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => OrderTruckBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ShipmentListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ManagmentShipmentListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => CompleteManagmentShipmentListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => OwnerShipmentListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ShipmentCompleteListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => IncomingShipmentsBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => OwnerIncomingShipmentsBloc(
-                        requestRepository:
-                            RepositoryProvider.of<RequestRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => InprogressShipmentsBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ActiveShipmentListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => DriverActiveShipmentBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => OwnerActiveShipmentsBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => UnassignedShipmentListBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => DriverShipmentUpdateStatusBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ShipmentDetailsBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => SubShipmentDetailsBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(
-                    create: (context) => ShipmentRunningBloc(
-                        shipmentRepository:
-                            RepositoryProvider.of<ShipmentRepository>(context)),
-                  ),
-                  BlocProvider(create: (context) => DrawRouteBloc()),
-                  BlocProvider(create: (context) => BottomNavBarCubit()),
-                  BlocProvider(
-                      create: (context) =>
-                          InternetCubit(connectivity: connectivity)),
-                  BlocProvider(create: (context) => LocaleCubit()),
                 ],
-                child: MultiProvider(
+                child: MultiBlocProvider(
                   providers: [
-                    ChangeNotifierProvider(create: (_) => TaskNumProvider()),
-                    ChangeNotifierProvider(
-                        create: (_) => ShipmentInstructionsProvider()),
-                    ChangeNotifierProvider(
-                        create: (_) => NotificationProvider()),
-                    ChangeNotifierProvider(
-                        create: (_) => AddShippmentProvider()),
-                    ChangeNotifierProvider(
-                        create: (_) => AddMultiShipmentProvider()),
-                    ChangeNotifierProvider(
-                        create: (_) => ActiveShippmentProvider()),
-                    ChangeNotifierProvider(create: (_) => TruckProvider()),
+                    BlocProvider(
+                      create: (context) => AuthBloc(
+                        authRepository:
+                            RepositoryProvider.of<AuthRepository>(context),
+                        userProvider:
+                            Provider.of<UserProvider>(context, listen: false),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => OwnerProfileBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => MerchantProfileBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => DriverProfileBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreateStoreBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreateTruckBloc(
+                        truckRepository:
+                            RepositoryProvider.of<TruckRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => MerchantUpdateProfileBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => OwnerUpdateProfileBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => DriverUpdateProfileBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => NotificationBloc(
+                        notificationRepository:
+                            RepositoryProvider.of<NotificationRepository>(
+                                context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => OwnerNotificationsBloc(
+                        notificationRepository:
+                            RepositoryProvider.of<NotificationRepository>(
+                                context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => PostBloc(
+                          postRepository:
+                              RepositoryProvider.of<PostRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CheckPointListBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => DriverRequestsListBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => MerchantRequestsListBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => RequestDetailsBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => AcceptRequestForMerchantBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => RejectRequestForMerchantBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ChargeTypesListBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => PermissionsListBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreatePermissionBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreatePassChargesBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => PasschargesListBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => PassChargeDetailsBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => PermissionDetailsBloc(
+                          checkPointRepository:
+                              RepositoryProvider.of<CheckPointRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TrucksListBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => PriceRequestBloc(
+                          priceRepository:
+                              RepositoryProvider.of<PriceRequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreatePriceRequestBloc(
+                          priceRequestRepository:
+                              RepositoryProvider.of<PriceRequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreateCategoryBloc(
+                          categoryRepository:
+                              RepositoryProvider.of<CategoryRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => SimpleCategoryListBloc(
+                          categoryRepository:
+                              RepositoryProvider.of<CategoryRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TruckFixListBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreateTruckFixBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => FixTypeListBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => OwnerTrucksBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TruckActiveStatusBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TruckDetailsBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TruckPapersBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreateTruckPaperBloc(
+                          truckRepository:
+                              RepositoryProvider.of<TruckRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => SearchCategoryListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShipmentUpdateStatusBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CancelShipmentBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ActivateShipmentBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TruckTypeBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CommodityCategoryBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => KCommodityCategoryBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => PackageTypeBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShippmentCreateBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShipmentMultiCreateBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => InstructionCreateBloc(
+                          instructionRepository:
+                              RepositoryProvider.of<InstructionRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ReadInstructionBloc(
+                          instructionRepository:
+                              RepositoryProvider.of<InstructionRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => PaymentCreateBloc(
+                          instructionRepository:
+                              RepositoryProvider.of<InstructionRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => OrderTruckBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShipmentListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ManagmentShipmentListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => CompleteManagmentShipmentListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => OwnerShipmentListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShipmentCompleteListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => IncomingShipmentsBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => OwnerIncomingShipmentsBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => InprogressShipmentsBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ActiveShipmentListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => DriverActiveShipmentBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => OwnerActiveShipmentsBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => UnassignedShipmentListBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => DriverShipmentUpdateStatusBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShipmentDetailsBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => SubShipmentDetailsBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShipmentRunningBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(create: (context) => DrawRouteBloc()),
+                    BlocProvider(create: (context) => BottomNavBarCubit()),
+                    BlocProvider(
+                        create: (context) =>
+                            InternetCubit(connectivity: connectivity)),
+                    BlocProvider(create: (context) => LocaleCubit()),
                   ],
                   child: BlocBuilder<LocaleCubit, LocaleState>(
                     buildWhen: (previous, current) => previous != current,

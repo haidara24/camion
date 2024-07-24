@@ -27,7 +27,7 @@ class DriverActiveShipmentBloc
       try {
         var result = await shipmentRepository.getActiveDriverShipmentForOwner(
             event.state, event.driver);
-        emit(DriverActiveShipmentLoadedSuccess(result));
+        emit(OwnerActiveShipmentLoadedSuccess(result));
       } catch (e) {
         emit(DriverActiveShipmentLoadedFailed(e.toString()));
       }

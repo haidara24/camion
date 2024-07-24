@@ -1,13 +1,10 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/managment/complete_managment_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/managment/complete_shipmenet_details.dart';
 import 'package:camion/views/screens/managment/log_shipment_details_screen.dart';
-import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -309,39 +306,39 @@ class _ManagmentLogScreenState extends State<ManagmentLogScreen>
                                                                         .bold),
                                                           ),
                                                           Spacer(),
-                                                          ShipmentPathWidget(
-                                                            pickupName: state
-                                                                .shipments[
-                                                                    index]
-                                                                .pathPoints!
-                                                                .singleWhere(
-                                                                    (element) =>
-                                                                        element
-                                                                            .pointType ==
-                                                                        "P")
-                                                                .name!,
-                                                            deliveryName: state
-                                                                .shipments[
-                                                                    index]
-                                                                .pathPoints!
-                                                                .singleWhere(
-                                                                    (element) =>
-                                                                        element
-                                                                            .pointType ==
-                                                                        "D")
-                                                                .name!,
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                .66,
-                                                            pathwidth:
-                                                                MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .width *
-                                                                    .56,
-                                                          )
+                                                          // ShipmentPathWidget(
+                                                          //   pickupName: state
+                                                          //       .shipments[
+                                                          //           index]
+                                                          //       .pathPoints!
+                                                          //       .singleWhere(
+                                                          //           (element) =>
+                                                          //               element
+                                                          //                   .pointType ==
+                                                          //               "P")
+                                                          //       .name!,
+                                                          //   deliveryName: state
+                                                          //       .shipments[
+                                                          //           index]
+                                                          //       .pathPoints!
+                                                          //       .singleWhere(
+                                                          //           (element) =>
+                                                          //               element
+                                                          //                   .pointType ==
+                                                          //               "D")
+                                                          //       .name!,
+                                                          //   width: MediaQuery.of(
+                                                          //               context)
+                                                          //           .size
+                                                          //           .width *
+                                                          //       .66,
+                                                          //   pathwidth:
+                                                          //       MediaQuery.of(
+                                                          //                   context)
+                                                          //               .size
+                                                          //               .width *
+                                                          //           .56,
+                                                          // )
                                                         ],
                                                       ),
                                                     ),

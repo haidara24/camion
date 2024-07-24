@@ -9,6 +9,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
+import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
@@ -143,7 +144,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
             width: double.infinity,
             child: ListView(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -156,7 +157,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                         absorbing: false,
                         child: Container(
                           width: MediaQuery.of(context).size.width * .8,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Center(
                             child: SizedBox(
                               height: 8.h,
@@ -452,7 +453,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                           boxShadow: selectedTruck == index
                               ? [
                                   BoxShadow(
-                                      offset: Offset(1, 2),
+                                      offset: const Offset(1, 2),
                                       color: Colors.grey[400]!)
                                 ]
                               : null,
@@ -545,6 +546,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   late bool truckLocationassign;
   Set<Marker> markers = Set();
   final TruckRepository _truckRepository = TruckRepository();
+  dynamic truckData;
 
   createMarkerIcons() async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
@@ -570,8 +572,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(Duration(minutes: 1), (timer) {
-      // _fetchTruckLocation(subshipment!.truck!.id!);
+    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      _fetchTruckLocation(subshipment!.truck!);
       if (startTracking) {
         mymap();
       }
@@ -604,11 +606,19 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
             zoom: 14.47)));
   }
 
-  Future<void> _fetchTruckLocation(int truckId) async {
+  Future<void> _fetchTruckLocation(ShipmentTruck truck) async {
     try {
-      final location = await _truckRepository.getTruckLocation(truckId);
+      String? location;
+      dynamic data;
+      if (truck.gpsId!.isEmpty) {
+        location = await _truckRepository.getTruckLocation(truck.id!);
+      } else {
+        data = await GpsRepository.getCarInfo(truck.gpsId!);
+        location = '${data["carStatus"]["lat"]},${data["carStatus"]["lon"]}';
+      }
       print(location);
       setState(() {
+        truckData = data;
         truckLocation = location;
       });
     } catch (e) {
@@ -649,7 +659,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                     }
                     return Visibility(
                       visible: state.shipments.isNotEmpty,
-                      replacement: Center(child: Text("no active shipments")),
+                      replacement: const Center(
+                          child: Text("There are no active shipments")),
                       child: Stack(
                         children: [
                           GoogleMap(
@@ -824,10 +835,10 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                 var truckMarker = Marker(
                                   markerId: const MarkerId("truck"),
                                   position: LatLng(
-                                      double.parse(
-                                          truckLocation!.split(",")[0]),
-                                      double.parse(
-                                          truckLocation!.split(",")[1])),
+                                    double.parse(truckLocation!.split(",")[0]),
+                                    double.parse(truckLocation!.split(",")[1]),
+                                  ),
+                                  infoWindow: InfoWindow(),
                                   icon: truckicon,
                                 );
                                 markers.add(truckMarker);
@@ -864,7 +875,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                       ),
                     );
                   } else {
-                    return const Center(
+                    return Center(
                       child: LoadingIndicator(),
                     );
                   }

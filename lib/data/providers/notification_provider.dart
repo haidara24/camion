@@ -5,6 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 class NotificationProvider extends ChangeNotifier {
   List<NotificationModel> _notifications = [];
   List<NotificationModel> get notifications => _notifications;
+
+  List<NotificationModel> _ownernotifications = [];
+  List<NotificationModel> get ownernotifications => _ownernotifications;
+
   int _notreadednotifications = 0;
   int get notreadednotifications => _notreadednotifications;
 
@@ -13,6 +17,12 @@ class NotificationProvider extends ChangeNotifier {
     _notifications = noti;
     var prefs = await SharedPreferences.getInstance();
     _notreadednotifications = prefs.getInt("notreaded") ?? 0;
+    notifyListeners();
+  }
+
+  initOwnerNotifications(List<NotificationModel> noti) async {
+    _ownernotifications = [];
+    _ownernotifications = noti;
     notifyListeners();
   }
 
@@ -45,6 +55,19 @@ class NotificationProvider extends ChangeNotifier {
     for (var element in templist) {
       if (element.id! == id) {
         _notifications
+            .singleWhere((it) => it.id == element.id,
+                orElse: () => NotificationModel())
+            .isread = true;
+      }
+    }
+    notifyListeners();
+  }
+
+  markOwnerNotificationAsRead(int id) {
+    var templist = _ownernotifications;
+    for (var element in templist) {
+      if (element.id! == id) {
+        _ownernotifications
             .singleWhere((it) => it.id == element.id,
                 orElse: () => NotificationModel())
             .isread = true;

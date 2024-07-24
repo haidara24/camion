@@ -103,13 +103,15 @@ class InstructionRepository {
     request.fields['extra_fees'] = shipment.extraFees!.toString();
     request.fields['payment_method'] = shipment.paymentMethod!.toString();
 
-    var image = await http.MultipartFile.fromPath(
-      'file',
-      file!.path,
-      filename: file!.path.split('/').last,
-    );
+    if (file != null) {
+      var image = await http.MultipartFile.fromPath(
+        'file',
+        file!.path,
+        filename: file!.path.split('/').last,
+      );
 
-    request.files.add(image);
+      request.files.add(image);
+    }
 
     var response = await request.send();
     if (response.statusCode == 201) {

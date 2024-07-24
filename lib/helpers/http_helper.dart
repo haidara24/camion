@@ -8,6 +8,11 @@ import 'package:http/http.dart' as http;
 const DOMAIN = 'https://matjari.app/';
 
 const LOGIN_ENDPOINT = '${DOMAIN}camionauth/jwt/create/';
+const PHONE_LOGIN_ENDPOINT = '${DOMAIN}login/';
+const VERIFY_OTP_ENDPOINT = '${DOMAIN}verify-otp/';
+const RESEND_OTP_ENDPOINT = '${DOMAIN}resend-otp/';
+
+const LOGOUT_ENDPOINT = '${DOMAIN}logout/';
 const USERS_ENDPOINT = '${DOMAIN}auth/users/';
 const PROFILE_ENDPOINT = '${DOMAIN}auth/users/me';
 const POSTS_ENDPOINT = '${DOMAIN}camion/posts/';
@@ -25,6 +30,7 @@ const CHARGES_ENDPOINT = '${DOMAIN}camion/passcharges/';
 const CHARGETYPE_ENDPOINT = '${DOMAIN}camion/chargestypes/';
 const DRIVERS_ENDPOINT = '${DOMAIN}camion/drivers/';
 const MERCHANTS_ENDPOINT = '${DOMAIN}camion/merchants/';
+const OWNERS_ENDPOINT = '${DOMAIN}camion/owners/';
 const STORES_ENDPOINT = '${DOMAIN}camion/storehouses/';
 const TRUCKS_ENDPOINT = '${DOMAIN}camion/trucks2/';
 const TRUCK_PAPERS_ENDPOINT = '${DOMAIN}camion/truckpapers/';
@@ -38,6 +44,10 @@ const SHIPPMENTS_PAYMENT_ENDPOINT = '${DOMAIN}camion/shipmentpayment/';
 const SHIPPMENTS_INSTRUCTION_ENDPOINT =
     '${DOMAIN}camion/shippmentinstructions/';
 const NOTIFICATIONS_ENDPOINT = '${DOMAIN}camion/notifecations/';
+
+const GPS_DOMAIN = 'https://www.whatsgps.com/';
+const GPS_LOGIN = '${GPS_DOMAIN}user/login.do?name=Acrossmena&password=abc123';
+const GPS_CARINFO = '${GPS_DOMAIN}car/getByImei.do?token=';
 
 class HttpHelper {
   static Future<http.Response> post(String url, Map<String, dynamic> body,

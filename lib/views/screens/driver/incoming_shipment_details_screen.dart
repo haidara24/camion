@@ -436,7 +436,7 @@ class _IncomingShipmentDetailsScreenState
                                                 return CustomButton(
                                                   title: SizedBox(
                                                     width: 70.w,
-                                                    child: const Center(
+                                                    child: Center(
                                                       child: LoadingIndicator(),
                                                     ),
                                                   ),
@@ -609,7 +609,11 @@ class _IncomingShipmentDetailsScreenState
                                                                     widget
                                                                         .requestId,
                                                                     extraTextController
-                                                                        .text,
+                                                                            .text
+                                                                            .isEmpty
+                                                                        ? "_"
+                                                                        : extraTextController
+                                                                            .text,
                                                                     extraValue,
                                                                   ),
                                                                 );
@@ -649,7 +653,7 @@ class _IncomingShipmentDetailsScreenState
                                                 return CustomButton(
                                                   title: SizedBox(
                                                     width: 70.w,
-                                                    child: const Center(
+                                                    child: Center(
                                                       child: LoadingIndicator(),
                                                     ),
                                                   ),
@@ -808,7 +812,7 @@ class _IncomingShipmentDetailsScreenState
                       ],
                     );
                   } else {
-                    return const Center(child: LoadingIndicator());
+                    return Center(child: LoadingIndicator());
                   }
                 },
               ),

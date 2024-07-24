@@ -2,12 +2,10 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/truck/trucks_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/truck_details_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SelectTruckScreen extends StatelessWidget {

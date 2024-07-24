@@ -2,20 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoadingIndicator extends StatelessWidget {
-  const LoadingIndicator({Key? key}) : super(key: key);
+  Color? color;
+  LoadingIndicator({Key? key, this.color = Colors.black}) : super(key: key);
 
   /// Returns the appropriate "loading indicator" icon for the given `platform`.
   Widget _getIndicatorWidget(TargetPlatform platform) {
     switch (platform) {
       case TargetPlatform.iOS:
       case TargetPlatform.macOS:
-        return const CupertinoActivityIndicator();
+        return CupertinoActivityIndicator(
+          color: color,
+        );
       case TargetPlatform.android:
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
       case TargetPlatform.windows:
       default:
-        return const CupertinoActivityIndicator();
+        return CupertinoActivityIndicator(
+          color: color,
+        );
     }
   }
 

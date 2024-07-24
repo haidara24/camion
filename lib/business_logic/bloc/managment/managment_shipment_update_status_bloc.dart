@@ -15,13 +15,13 @@ class ManagmentShipmentUpdateStatusBloc extends Bloc<
       (event, emit) async {
         emit(ManagmentShipmentUpdateStatusLoadingProgress());
         try {
-          var data = await shipmentRepository.updateKShipmentStatus(
-              event.state, event.offerId);
-          if (data) {
-            emit(ManagmentShipmentUpdateStatusLoadedSuccess());
-          } else {
-            emit(const ManagmentShipmentUpdateStatusLoadedFailed("خطأ"));
-          }
+          // var data = await shipmentRepository.updateKShipmentStatus(
+          //     event.state, event.offerId);
+          // if (data) {
+          //   emit(ManagmentShipmentUpdateStatusLoadedSuccess());
+          // } else {
+          //   emit(const ManagmentShipmentUpdateStatusLoadedFailed("خطأ"));
+          // }
         } catch (e) {
           emit(ManagmentShipmentUpdateStatusLoadedFailed(e.toString()));
         }

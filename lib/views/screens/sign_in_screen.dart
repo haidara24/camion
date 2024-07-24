@@ -245,7 +245,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     listener: (context, state) async {
                                       if (state is AuthDriverSuccessState ||
                                           state is AuthOwnerSuccessState ||
-                                          state is AuthMerchentSuccessState ||
+                                          state is AuthMerchantSuccessState ||
                                           state is AuthManagmentSuccessState ||
                                           state is AuthCheckPointSuccessState) {
                                         ScaffoldMessenger.of(context)
@@ -291,8 +291,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                           if (userType.isNotEmpty) {
                                             var myDataString = utf8
                                                 .decode(userresponse.bodyBytes);
-                                            print("myDataString");
-                                            print(myDataString);
+
                                             prefs.setString(
                                                 "userProfile", myDataString);
                                             var result =
@@ -307,12 +306,12 @@ class _SignInScreenState extends State<SignInScreen> {
                                                 null) {
                                               prefs.setInt("truckowner",
                                                   userProfile.truckowner!);
+                                              print("userProfile.truckowner");
+                                              print(userProfile.truckowner);
                                             }
                                             if (userProfile.truckuser != null) {
                                               prefs.setInt("truckuser",
                                                   userProfile.truckuser!);
-                                              print("userProfile.truckuser");
-                                              print(userProfile.truckuser);
                                               Response driverResponse =
                                                   await HttpHelper.get(
                                                       '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
@@ -358,7 +357,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     builder: (context, state) {
                                       if (state is AuthLoggingInProgressState) {
                                         return CustomButton(
-                                          title: const LoadingIndicator(),
+                                          title: LoadingIndicator(),
                                           onTap: () {},
                                         );
                                       } else {

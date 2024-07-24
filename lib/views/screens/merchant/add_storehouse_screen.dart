@@ -113,7 +113,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen> {
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(30)),
-                                child: const Center(
+                                child: Center(
                                   child: LoadingIndicator(),
                                 ),
                               )
@@ -136,7 +136,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen> {
                                           color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(30)),
-                                      child: const Center(
+                                      child: Center(
                                         child: LoadingIndicator(),
                                       ),
                                     );

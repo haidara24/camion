@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/check_point/check_point_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/create_permission_bloc.dart';
@@ -613,7 +615,7 @@ class _AddPermissionScreenState extends State<AddPermissionScreen> {
                                       if (state
                                           is CreatePermissionLoadingProgress) {
                                         return CustomButton(
-                                          title: const LoadingIndicator(),
+                                          title: LoadingIndicator(),
                                           onTap: () {},
                                         );
                                       } else {

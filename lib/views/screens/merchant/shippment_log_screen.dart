@@ -1,21 +1,16 @@
 import 'dart:convert';
 import 'dart:core';
-import 'dart:math';
 
 import 'package:camion/Localization/app_localizations.dart';
-import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
-import 'package:camion/views/widgets/shipment_path_widget.dart';
 import 'package:camion/views/screens/merchant/shipment_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -385,10 +380,16 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                 if (state is ShipmentListLoadedSuccess &&
                                     pickupicon != null) {
                                   return state.shipments.isEmpty
-                                      ? Center(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('no_shipments')),
+                                      ? SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .75,
+                                          child: Center(
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate('no_shipments')),
+                                          ),
                                         )
                                       : ListView.builder(
                                           itemCount: state.shipments.length,
@@ -645,10 +646,16 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                 if (state
                                     is MerchantRequestsListLoadedSuccess) {
                                   return state.requests.isEmpty
-                                      ? Center(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('no_shipments')),
+                                      ? SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              .75,
+                                          child: Center(
+                                            child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate('no_shipments')),
+                                          ),
                                         )
                                       : ListView.builder(
                                           itemCount: state.requests.length,
@@ -656,120 +663,107 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                               const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) {
-                                            return state.requests[index]
-                                                        .responseTurn ==
-                                                    "D"
-                                                ? InkWell(
-                                                    onTap: () {
-                                                      BlocProvider.of<
-                                                                  RequestDetailsBloc>(
-                                                              context)
-                                                          .add(
-                                                              RequestDetailsLoadEvent(
-                                                                  state
-                                                                      .requests[
-                                                                          index]
-                                                                      .id!));
+                                            return InkWell(
+                                              onTap: () {
+                                                BlocProvider.of<
+                                                            RequestDetailsBloc>(
+                                                        context)
+                                                    .add(
+                                                        RequestDetailsLoadEvent(
+                                                            state
+                                                                .requests[index]
+                                                                .id!));
 
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ApprovalRequestDetailsScreen(
-                                                            type: state
-                                                                    .requests[
-                                                                        index]
-                                                                    .isApproved!
-                                                                ? "A"
-                                                                : "J",
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: AbsorbPointer(
-                                                      absorbing: false,
-                                                      child: Card(
-                                                        shape:
-                                                            const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                            Radius.circular(10),
-                                                          ),
-                                                        ),
-                                                        child: Column(
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ApprovalRequestDetailsScreen(
+                                                      type: state
+                                                              .requests[index]
+                                                              .isApproved!
+                                                          ? "A"
+                                                          : "J",
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: AbsorbPointer(
+                                                absorbing: false,
+                                                child: Card(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: double.infinity,
+                                                        height: 48.h,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                        child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .start,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
+                                                                  .spaceBetween,
                                                           children: [
-                                                            Container(
-                                                              width: double
-                                                                  .infinity,
-                                                              height: 48.h,
-                                                              color: AppColor
-                                                                  .deepYellow,
-                                                              child: Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    style:
-                                                                        TextStyle(
-                                                                      // color: AppColor.lightBlue,
-                                                                      fontSize:
-                                                                          17.sp,
-                                                                    ),
-                                                                  ),
-                                                                  Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .symmetric(
-                                                                        horizontal:
-                                                                            11),
-                                                                    child: Text(
-                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
-                                                                      style: TextStyle(
-                                                                          // color: AppColor.lightBlue,
-                                                                          fontSize: 18.sp,
-                                                                          fontWeight: FontWeight.bold),
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                                            Text(
+                                                              "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style: TextStyle(
+                                                                // color: AppColor.lightBlue,
+                                                                fontSize: 17.sp,
                                                               ),
                                                             ),
-                                                            ShipmentPathVerticalWidget(
-                                                              pathpoints: state
-                                                                  .requests[
-                                                                      index]
-                                                                  .subshipment!
-                                                                  .pathpoints!,
-                                                              pickupDate: state
-                                                                  .requests[
-                                                                      index]
-                                                                  .subshipment!
-                                                                  .pickupDate!,
-                                                              deliveryDate: state
-                                                                  .requests[
-                                                                      index]
-                                                                  .subshipment!
-                                                                  .pickupDate!,
-                                                              langCode: localeState
-                                                                  .value
-                                                                  .languageCode,
-                                                              mini: true,
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          11),
+                                                              child: Text(
+                                                                '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                                style: TextStyle(
+                                                                    // color: AppColor.lightBlue,
+                                                                    fontSize: 18.sp,
+                                                                    fontWeight: FontWeight.bold),
+                                                              ),
                                                             ),
                                                           ],
                                                         ),
                                                       ),
-                                                    ),
-                                                  )
-                                                : const SizedBox.shrink();
+                                                      ShipmentPathVerticalWidget(
+                                                        pathpoints: state
+                                                            .requests[index]
+                                                            .subshipment!
+                                                            .pathpoints!,
+                                                        pickupDate: state
+                                                            .requests[index]
+                                                            .subshipment!
+                                                            .pickupDate!,
+                                                        deliveryDate: state
+                                                            .requests[index]
+                                                            .subshipment!
+                                                            .pickupDate!,
+                                                        langCode: localeState
+                                                            .value.languageCode,
+                                                        mini: true,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            );
                                           },
                                         );
                                 } else {

@@ -1,4 +1,5 @@
 import 'package:camion/data/models/truck_model.dart';
+import 'package:camion/data/models/truck_type_model.dart';
 
 class KShipment {
   int? id;
@@ -8,7 +9,7 @@ class KShipment {
   String? shipmentStatus;
   int? totalWeight;
   Null? commodityImage;
-  KTuckType? truckType;
+  TruckType? truckType;
   DateTime? pickupDate;
   List<PathPoint>? pathPoints;
   List<ShipmentItems>? shipmentItems;
@@ -35,7 +36,7 @@ class KShipment {
     totalWeight = json['total_weight'];
     commodityImage = json['commodity_image'];
     truckType = json['truck_type'] != null
-        ? KTuckType.fromJson(json['truck_type'])
+        ? TruckType.fromJson(json['truck_type'])
         : null;
     pickupDate = json['pickup_date'] != null
         ? DateTime.parse(json['pickup_date'])

@@ -2,7 +2,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/user_type.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/sign_in_screen.dart';
+import 'package:camion/views/screens/phone_login_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -198,7 +198,7 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                         ),
                                         Text(
                                           AppLocalizations.of(context)!
-                                              .translate('merchent'),
+                                              .translate('merchant'),
                                           style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 16,
@@ -207,7 +207,7 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                         Transform.scale(
                                           scale: 1.4,
                                           child: Radio(
-                                            value: UserType.merchent,
+                                            value: UserType.merchant,
                                             groupValue: userType,
                                             activeColor: AppColor.deepYellow,
                                             fillColor: MaterialStateProperty
@@ -223,7 +223,7 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                             }),
                                             onChanged: (value) {
                                               setState(() {
-                                                userType = UserType.merchent;
+                                                userType = UserType.merchant;
                                               });
                                             },
                                           ),
@@ -246,10 +246,11 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                 isEnabled: userType != UserType.none,
                                 onTap: () async {
                                   Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SignInScreen(),
-                                      ));
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PhoneSignInScreen(),
+                                    ),
+                                  );
                                   SharedPreferences prefs =
                                       await SharedPreferences.getInstance();
 
@@ -261,8 +262,8 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                     case UserType.owner:
                                       usertype = "Owner";
                                       break;
-                                    case UserType.merchent:
-                                      usertype = "Merchent";
+                                    case UserType.merchant:
+                                      usertype = "Merchant";
                                       break;
                                     default:
                                   }
@@ -270,7 +271,6 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                   prefs.setString("userType", usertype);
                                 },
                               ),
-                              
                             ],
                           ),
                         ),

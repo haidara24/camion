@@ -543,7 +543,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                     });
                   }
                 } else {
-                  return const Center(child: LoadingIndicator());
+                  return Center(child: LoadingIndicator());
                 }
               },
             ),

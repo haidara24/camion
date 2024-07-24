@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/inprogress_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
@@ -36,6 +37,7 @@ class _AllIncomingShippmentLogScreenState
   late TabController _tabController;
   int tabIndex = 0;
   int truckId = 0;
+  int selectedTruck = 0;
   final TextEditingController _driverController = TextEditingController();
 
   var f = intel.NumberFormat("#,###", "en_US");
@@ -113,6 +115,121 @@ class _AllIncomingShippmentLogScreenState
     }
   }
 
+  Widget pathList(List<KTruck> trucks) {
+    return SizedBox(
+      height: 100.h,
+      child: ListView.builder(
+        itemCount: trucks.length,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return InkWell(
+            onTap: () {
+              setState(() {
+                truckId = trucks[index].id!;
+                selectedTruck = index;
+              });
+              if (truckId != 0) {
+                if (tabIndex == 0) {
+                  BlocProvider.of<DriverRequestsListBloc>(context)
+                      .add(DriverRequestsListLoadEvent(truckId));
+                } else {
+                  BlocProvider.of<InprogressShipmentsBloc>(context)
+                      .add(InprogressShipmentsLoadEvent("R", truckId));
+                }
+              } else {
+                if (tabIndex == 0) {
+                  BlocProvider.of<OwnerIncomingShipmentsBloc>(context)
+                      .add(OwnerIncomingShipmentsLoadEvent());
+                } else {
+                  BlocProvider.of<OwnerShipmentListBloc>(context)
+                      .add(OwnerShipmentListLoadEvent("R"));
+                }
+              }
+            },
+            child: index == 0
+                ? Container(
+                    width: 100.w,
+                    margin: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(11),
+                      border: Border.all(
+                        color: selectedTruck == index
+                            ? AppColor.deepYellow
+                            : Colors.grey[400]!,
+                      ),
+                    ),
+                    child: Center(
+                        child: Text(
+                      "All",
+                      style: TextStyle(
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )),
+                  )
+                : Container(
+                    width: 110.w,
+                    margin: const EdgeInsets.all(5),
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(11),
+                      border: Border.all(
+                        color: selectedTruck == index
+                            ? AppColor.deepYellow
+                            : Colors.grey[400]!,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 40.h,
+                          width: 110.w,
+                          child: CachedNetworkImage(
+                            imageUrl: trucks[index].truckType!.image!,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    Shimmer.fromColors(
+                              baseColor: (Colors.grey[300])!,
+                              highlightColor: (Colors.grey[100])!,
+                              enabled: true,
+                              child: Container(
+                                height: 40.h,
+                                width: 100.w,
+                                color: Colors.white,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              height: 40.h,
+                              width: 100.w,
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: Text(AppLocalizations.of(context)!
+                                    .translate('image_load_error')),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Text(
+                          "${trucks[index].truckuser!.usertruck!.firstName!} ${trucks[index].truckuser!.usertruck!.lastName!}",
+                          style: TextStyle(
+                            fontSize: 17.sp,
+                            color: AppColor.deepBlack,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          );
+        },
+      ),
+    );
+  }
+
   Future<void> onRefresh() async {}
   @override
   Widget build(BuildContext context) {
@@ -143,13 +260,12 @@ class _AllIncomingShippmentLogScreenState
                         switch (value) {
                           case 0:
                             if (truckId == 0) {
-                              BlocProvider.of<OwnerShipmentListBloc>(context)
-                                  .add(OwnerShipmentListLoadEvent("P"));
+                              BlocProvider.of<OwnerIncomingShipmentsBloc>(
+                                      context)
+                                  .add(OwnerIncomingShipmentsLoadEvent());
                             } else {
-                              // BlocProvider.of<OwnerIncomingShipmentsBloc>(
-                              //         context)
-                              //     .add(OwnerIncomingShipmentsLoadEvent(
-                              //         "P", truckId));
+                              BlocProvider.of<DriverRequestsListBloc>(context)
+                                  .add(DriverRequestsListLoadEvent(truckId));
                             }
                             break;
                           case 1:
@@ -157,10 +273,9 @@ class _AllIncomingShippmentLogScreenState
                               BlocProvider.of<OwnerShipmentListBloc>(context)
                                   .add(OwnerShipmentListLoadEvent("R"));
                             } else {
-                              // BlocProvider.of<OwnerIncomingShipmentsBloc>(
-                              //         context)
-                              //     .add(OwnerIncomingShipmentsLoadEvent(
-                              //         "R", truckId));
+                              BlocProvider.of<InprogressShipmentsBloc>(context)
+                                  .add(InprogressShipmentsLoadEvent(
+                                      "R", truckId));
                             }
                             break;
                           default:
@@ -200,185 +315,183 @@ class _AllIncomingShippmentLogScreenState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                DropdownButtonHideUnderline(
-                                  child: DropdownButton2<KTruck?>(
-                                    isExpanded: true,
-                                    barrierLabel: AppLocalizations.of(context)!
-                                        .translate('select_driver'),
-                                    hint: Text(
-                                      AppLocalizations.of(context)!
-                                          .translate('select_driver'),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Theme.of(context).hintColor,
-                                      ),
-                                    ),
-                                    items: state.trucks
-                                        .map((KTruck item) =>
-                                            DropdownMenuItem<KTruck>(
-                                              value: item,
-                                              child: Text(
-                                                "${item.truckuser!.usertruck!.firstName!} ${item.truckuser!.usertruck!.lastName!}",
-                                                style: const TextStyle(
-                                                  fontSize: 17,
-                                                ),
-                                              ),
-                                            ))
-                                        .toList(),
-                                    value: truckProvider.selectedTruck,
-                                    onChanged: (KTruck? value) {
-                                      truckProvider.setSelectedTruck(value!);
-                                      setState(() {
-                                        truckId = value.truckuser!.id!;
-                                      });
-                                      if (truckId != 0) {
-                                        if (tabIndex == 0) {
-                                          BlocProvider.of<
-                                                      DriverRequestsListBloc>(
-                                                  context)
-                                              .add(DriverRequestsListLoadEvent(
-                                                  truckId));
-                                        } else {
-                                          BlocProvider.of<
-                                                      InprogressShipmentsBloc>(
-                                                  context)
-                                              .add(InprogressShipmentsLoadEvent(
-                                                  "R", truckId));
-                                        }
-                                      } else {
-                                        if (tabIndex == 0) {
-                                          BlocProvider.of<
-                                                      OwnerIncomingShipmentsBloc>(
-                                                  context)
-                                              .add(
-                                                  OwnerIncomingShipmentsLoadEvent());
-                                        } else {
-                                          BlocProvider.of<
-                                                      OwnerShipmentListBloc>(
-                                                  context)
-                                              .add(OwnerShipmentListLoadEvent(
-                                                  "R"));
-                                        }
-                                      }
-                                    },
-                                    buttonStyleData: ButtonStyleData(
-                                      height: 50,
-                                      width: double.infinity,
+                                pathList(state.trucks),
+                                // DropdownButtonHideUnderline(
+                                //   child: DropdownButton2<KTruck?>(
+                                //     isExpanded: true,
+                                //     barrierLabel: AppLocalizations.of(context)!
+                                //         .translate('select_driver'),
+                                //     hint: Text(
+                                //       AppLocalizations.of(context)!
+                                //           .translate('select_driver'),
+                                //       style: TextStyle(
+                                //         fontSize: 18,
+                                //         color: Theme.of(context).hintColor,
+                                //       ),
+                                //     ),
+                                //     items: state.trucks
+                                //         .map((KTruck item) =>
+                                //             DropdownMenuItem<KTruck>(
+                                //               value: item,
+                                //               child: Text(
+                                //                 "${item.truckuser!.usertruck!.firstName!} ${item.truckuser!.usertruck!.lastName!}",
+                                //                 style: const TextStyle(
+                                //                   fontSize: 17,
+                                //                 ),
+                                //               ),
+                                //             ))
+                                //         .toList(),
+                                //     value: truckProvider.selectedTruck,
+                                //     onChanged: (KTruck? value) {
+                                //       truckProvider.setSelectedTruck(value!);
+                                //       setState(() {
+                                //         truckId = value.id!;
+                                //       });
+                                //       if (truckId != 0) {
+                                //         if (tabIndex == 0) {
+                                //           BlocProvider.of<
+                                //                       DriverRequestsListBloc>(
+                                //                   context)
+                                //               .add(DriverRequestsListLoadEvent(
+                                //                   truckId));
+                                //         } else {
+                                //           BlocProvider.of<
+                                //                       InprogressShipmentsBloc>(
+                                //                   context)
+                                //               .add(InprogressShipmentsLoadEvent(
+                                //                   "R", truckId));
+                                //         }
+                                //       } else {
+                                //         if (tabIndex == 0) {
+                                //           BlocProvider.of<
+                                //                       OwnerIncomingShipmentsBloc>(
+                                //                   context)
+                                //               .add(
+                                //                   OwnerIncomingShipmentsLoadEvent());
+                                //         } else {
+                                //           BlocProvider.of<
+                                //                       OwnerShipmentListBloc>(
+                                //                   context)
+                                //               .add(OwnerShipmentListLoadEvent(
+                                //                   "R"));
+                                //         }
+                                //       }
+                                //     },
+                                //     buttonStyleData: ButtonStyleData(
+                                //       height: 50,
+                                //       width: double.infinity,
 
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 9.0,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                          color: Colors.black26,
-                                        ),
-                                        color: Colors.white,
-                                      ),
-                                      // elevation: 2,
-                                    ),
-                                    iconStyleData: IconStyleData(
-                                      icon: const Icon(
-                                        Icons.keyboard_arrow_down_sharp,
-                                      ),
-                                      iconSize: 20,
-                                      iconEnabledColor: AppColor.lightYellow,
-                                      iconDisabledColor: Colors.grey,
-                                    ),
-                                    dropdownSearchData: DropdownSearchData(
-                                      searchController: _driverController,
-                                      searchInnerWidgetHeight: 60,
-                                      searchInnerWidget: Container(
-                                        height: 60,
-                                        padding: const EdgeInsets.only(
-                                          top: 8,
-                                          bottom: 4,
-                                          right: 8,
-                                          left: 8,
-                                        ),
-                                        child: TextFormField(
-                                          expands: true,
-                                          maxLines: null,
-                                          controller: _driverController,
-                                          onTapOutside: (event) {
-                                            BlocProvider.of<BottomNavBarCubit>(
-                                                    context)
-                                                .emitShow();
-                                          },
-                                          onTap: () {
-                                            BlocProvider.of<BottomNavBarCubit>(
-                                                    context)
-                                                .emitHide();
-                                            _driverController.selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        _driverController
-                                                            .value.text.length);
-                                          },
-                                          decoration: InputDecoration(
-                                            isDense: true,
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                              horizontal: 10,
-                                              vertical: 8,
-                                            ),
-                                            hintText:
-                                                AppLocalizations.of(context)!
-                                                    .translate('select_driver'),
-                                            hintStyle:
-                                                const TextStyle(fontSize: 17),
-                                            border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                            ),
-                                          ),
-                                          onFieldSubmitted: (value) {
-                                            BlocProvider.of<BottomNavBarCubit>(
-                                                    context)
-                                                .emitShow();
-                                          },
-                                        ),
-                                      ),
-                                      searchMatchFn: (item, searchValue) {
-                                        return item.value!.truckuser!.usertruck!
-                                            .firstName!
-                                            .contains(searchValue);
-                                      },
-                                    ),
-                                    onMenuStateChange: (isOpen) {
-                                      if (!isOpen) {
-                                        _driverController.clear();
-                                      }
-                                    },
-                                    dropdownStyleData: DropdownStyleData(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(14),
-                                        color: Colors.white,
-                                      ),
-                                      scrollbarTheme: ScrollbarThemeData(
-                                        radius: const Radius.circular(40),
-                                        thickness: MaterialStateProperty.all(6),
-                                        thumbVisibility:
-                                            MaterialStateProperty.all(true),
-                                      ),
-                                    ),
-                                    menuItemStyleData: MenuItemStyleData(
-                                      height: 40.h,
-                                    ),
-                                  ),
-                                ),
+                                //       padding: const EdgeInsets.symmetric(
+                                //         horizontal: 9.0,
+                                //       ),
+                                //       decoration: BoxDecoration(
+                                //         borderRadius: BorderRadius.circular(12),
+                                //         border: Border.all(
+                                //           color: Colors.black26,
+                                //         ),
+                                //         color: Colors.white,
+                                //       ),
+                                //       // elevation: 2,
+                                //     ),
+                                //     iconStyleData: IconStyleData(
+                                //       icon: const Icon(
+                                //         Icons.keyboard_arrow_down_sharp,
+                                //       ),
+                                //       iconSize: 20,
+                                //       iconEnabledColor: AppColor.lightYellow,
+                                //       iconDisabledColor: Colors.grey,
+                                //     ),
+                                //     dropdownSearchData: DropdownSearchData(
+                                //       searchController: _driverController,
+                                //       searchInnerWidgetHeight: 60,
+                                //       searchInnerWidget: Container(
+                                //         height: 60,
+                                //         padding: const EdgeInsets.only(
+                                //           top: 8,
+                                //           bottom: 4,
+                                //           right: 8,
+                                //           left: 8,
+                                //         ),
+                                //         child: TextFormField(
+                                //           expands: true,
+                                //           maxLines: null,
+                                //           controller: _driverController,
+                                //           onTapOutside: (event) {
+                                //             BlocProvider.of<BottomNavBarCubit>(
+                                //                     context)
+                                //                 .emitShow();
+                                //           },
+                                //           onTap: () {
+                                //             BlocProvider.of<BottomNavBarCubit>(
+                                //                     context)
+                                //                 .emitHide();
+                                //             _driverController.selection =
+                                //                 TextSelection(
+                                //                     baseOffset: 0,
+                                //                     extentOffset:
+                                //                         _driverController
+                                //                             .value.text.length);
+                                //           },
+                                //           decoration: InputDecoration(
+                                //             isDense: true,
+                                //             contentPadding:
+                                //                 const EdgeInsets.symmetric(
+                                //               horizontal: 10,
+                                //               vertical: 8,
+                                //             ),
+                                //             hintText:
+                                //                 AppLocalizations.of(context)!
+                                //                     .translate('select_driver'),
+                                //             hintStyle:
+                                //                 const TextStyle(fontSize: 17),
+                                //             border: OutlineInputBorder(
+                                //               borderRadius:
+                                //                   BorderRadius.circular(8),
+                                //             ),
+                                //           ),
+                                //           onFieldSubmitted: (value) {
+                                //             BlocProvider.of<BottomNavBarCubit>(
+                                //                     context)
+                                //                 .emitShow();
+                                //           },
+                                //         ),
+                                //       ),
+                                //       searchMatchFn: (item, searchValue) {
+                                //         return item.value!.truckuser!.usertruck!
+                                //             .firstName!
+                                //             .contains(searchValue);
+                                //       },
+                                //     ),
+                                //     onMenuStateChange: (isOpen) {
+                                //       if (!isOpen) {
+                                //         _driverController.clear();
+                                //       }
+                                //     },
+                                //     dropdownStyleData: DropdownStyleData(
+                                //       decoration: BoxDecoration(
+                                //         borderRadius: BorderRadius.circular(14),
+                                //         color: Colors.white,
+                                //       ),
+                                //       scrollbarTheme: ScrollbarThemeData(
+                                //         radius: const Radius.circular(40),
+                                //         thickness: MaterialStateProperty.all(6),
+                                //         thumbVisibility:
+                                //             MaterialStateProperty.all(true),
+                                //       ),
+                                //     ),
+                                //     menuItemStyleData: MenuItemStyleData(
+                                //       height: 40.h,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             );
                           } else if (state is OwnerTrucksLoadedFailed) {
                             return Center(
                               child: InkWell(
                                 onTap: () {
-                                  // BlocProvider.of<
-                                  //             OwnerTrucksBloc>(
-                                  //         context)
-                                  //     .add(
-                                  //         OwnerTrucksLoadEvent());
+                                  BlocProvider.of<OwnerTrucksBloc>(context)
+                                      .add(OwnerTrucksLoadEvent());
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -473,7 +586,7 @@ class _AllIncomingShippmentLogScreenState
                                                                 Container(
                                                                   width: double
                                                                       .infinity,
-                                                                  height: 48.h,
+                                                                  height: 70.h,
                                                                   color: AppColor
                                                                       .deepYellow,
                                                                   child: Row(
@@ -481,15 +594,32 @@ class _AllIncomingShippmentLogScreenState
                                                                         MainAxisAlignment
                                                                             .spaceBetween,
                                                                     children: [
-                                                                      Text(
-                                                                        "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
-                                                                        overflow:
-                                                                            TextOverflow.ellipsis,
-                                                                        style:
-                                                                            TextStyle(
-                                                                          // color: AppColor.lightBlue,
-                                                                          fontSize:
-                                                                              17.sp,
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child:
+                                                                            Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              style: TextStyle(
+                                                                                // color: AppColor.lightBlue,
+                                                                                fontSize: 17.sp,
+                                                                              ),
+                                                                            ),
+                                                                            Text(
+                                                                              "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              style: TextStyle(
+                                                                                // color: AppColor.lightBlue,
+                                                                                fontSize: 17.sp,
+                                                                              ),
+                                                                            ),
+                                                                          ],
                                                                         ),
                                                                       ),
                                                                       Padding(
@@ -607,18 +737,16 @@ class _AllIncomingShippmentLogScreenState
                                                     //                       index]),
                                                     //     ));
                                                   },
-                                                  child: Card(
-                                                    shape:
-                                                        const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(10),
+                                                  child: AbsorbPointer(
+                                                    absorbing: false,
+                                                    child: Card(
+                                                      shape:
+                                                          const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                          Radius.circular(10),
+                                                        ),
                                                       ),
-                                                    ),
-                                                    child: Padding(
-                                                      padding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 5.h),
                                                       child: Column(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -627,147 +755,85 @@ class _AllIncomingShippmentLogScreenState
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        11),
-                                                            child: Text(
-                                                              '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
-                                                              style: TextStyle(
-                                                                  // color: AppColor.lightBlue,
-                                                                  fontSize:
-                                                                      18.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ),
-                                                          ListTile(
-                                                            contentPadding:
-                                                                EdgeInsets.zero,
-                                                            enabled: false,
-                                                            leading: Container(
-                                                              height: 75.h,
-                                                              width: 75.w,
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                      // color: AppColor.lightGoldenYellow,
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              5)),
-                                                              child: Center(
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: localeState
-                                                                              .value
-                                                                              .languageCode ==
-                                                                          'en'
-                                                                      ? SvgPicture
-                                                                              .asset(
-                                                                          "assets/icons/truck_en.svg",
-                                                                          height:
-                                                                              55.h,
-                                                                          width:
-                                                                              55.w,
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        )
-                                                                          .animate(
-                                                                              delay: 600
-                                                                                  .ms)
-                                                                          .shimmer(
-                                                                              duration: playDuration -
-                                                                                  200
-                                                                                      .ms)
-                                                                          .flip()
-                                                                      : SvgPicture
-                                                                              .asset(
-                                                                          "assets/icons/truck_ar.svg",
-                                                                          height:
-                                                                              55.h,
-                                                                          width:
-                                                                              55.w,
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        )
-                                                                          .animate(
-                                                                              delay: 600.ms)
-                                                                          .shimmer(duration: playDuration - 200.ms)
-                                                                          .flip(),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            title: Row(
+                                                          Container(
+                                                            width:
+                                                                double.infinity,
+                                                            height: 70.h,
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
                                                                       .spaceBetween,
                                                               children: [
-                                                                Column(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .start,
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    ShipmentPathVerticalWidget(
-                                                                      pathpoints: state
-                                                                          .shipments[
-                                                                              index]
-                                                                          .pathpoints!,
-                                                                      pickupDate: state
-                                                                          .shipments[
-                                                                              index]
-                                                                          .pickupDate!,
-                                                                      deliveryDate: state
-                                                                          .shipments[
-                                                                              index]
-                                                                          .deliveryDate!,
-                                                                      langCode: localeState
-                                                                          .value
-                                                                          .languageCode,
-                                                                      mini:
-                                                                          true,
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          7.h,
-                                                                    ),
-                                                                    Text(
-                                                                      '${AppLocalizations.of(context)!.translate('commodity_type')}: ${state.shipments[index].shipmentItems![0].commodityName!}',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        // color: AppColor.lightBlue,
-                                                                        fontSize:
-                                                                            17.sp,
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      Text(
+                                                                        "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.shipments[index].shipment!.merchant!.user!.firstName!} ${state.shipments[index].shipment!.merchant!.user!.lastName!}",
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          // color: AppColor.lightBlue,
+                                                                          fontSize:
+                                                                              17.sp,
+                                                                        ),
                                                                       ),
-                                                                    ),
-                                                                    SizedBox(
-                                                                      height:
-                                                                          7.h,
-                                                                    ),
-                                                                    Text(
-                                                                      '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${f.format(state.shipments[index].shipmentItems![0].commodityWeight!)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
-                                                                      style:
-                                                                          TextStyle(
-                                                                        // color: AppColor.lightBlue,
-                                                                        fontSize:
-                                                                            17.sp,
+                                                                      Text(
+                                                                        "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.shipments[index].truck!.truckuser!.user!.firstName!} ${state.shipments[index].truck!.truckuser!.user!.lastName!}",
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style:
+                                                                            TextStyle(
+                                                                          // color: AppColor.lightBlue,
+                                                                          fontSize:
+                                                                              17.sp,
+                                                                        ),
                                                                       ),
-                                                                    ),
-
-                                                                    // // Text(
-                                                                    //     'نوع البضاعة: ${state.offers[index].product!.label!}'),
-                                                                  ],
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          11),
+                                                                  child: Text(
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!.id!}',
+                                                                    style: TextStyle(
+                                                                        // color: AppColor.lightBlue,
+                                                                        fontSize: 18.sp,
+                                                                        fontWeight: FontWeight.bold),
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),
-                                                            dense: false,
+                                                          ),
+                                                          ShipmentPathVerticalWidget(
+                                                            pathpoints: state
+                                                                .shipments[
+                                                                    index]
+                                                                .pathpoints!,
+                                                            pickupDate: state
+                                                                .shipments[
+                                                                    index]
+                                                                .pickupDate!,
+                                                            deliveryDate: state
+                                                                .shipments[
+                                                                    index]
+                                                                .pickupDate!,
+                                                            langCode: localeState
+                                                                .value
+                                                                .languageCode,
+                                                            mini: true,
                                                           ),
                                                         ],
                                                       ),

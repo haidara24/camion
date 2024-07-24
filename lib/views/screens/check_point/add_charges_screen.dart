@@ -545,7 +545,7 @@ class _AddChargesScreenState extends State<AddChargesScreen> {
                                   if (state
                                       is CreatePassChargesLoadingProgress) {
                                     return CustomButton(
-                                      title: const LoadingIndicator(),
+                                      title: LoadingIndicator(),
                                       onTap: () {},
                                     );
                                   } else {

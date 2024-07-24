@@ -232,7 +232,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .75,
-                      child: const Center(
+                      child: Center(
                         child: LoadingIndicator(),
                       ),
                     )

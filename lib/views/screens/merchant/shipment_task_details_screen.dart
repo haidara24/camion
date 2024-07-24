@@ -2901,7 +2901,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                             if (state
                                                 is InstructionLoadingProgressState) {
                                               return CustomButton(
-                                                title: const LoadingIndicator(),
+                                                title: LoadingIndicator(),
                                                 onTap: () {},
                                               );
                                             } else {

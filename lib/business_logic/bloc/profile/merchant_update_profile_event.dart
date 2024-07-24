@@ -9,6 +9,7 @@ sealed class MerchantUpdateProfileEvent extends Equatable {
 
 class MerchantUpdateProfileButtonPressed extends MerchantUpdateProfileEvent {
   final Merchant merchant;
+  final File? file;
 
-  MerchantUpdateProfileButtonPressed(this.merchant);
+  MerchantUpdateProfileButtonPressed(this.merchant, this.file);
 }

@@ -15,7 +15,7 @@ class CreateTruckFixBloc
       emit(CreateTruckFixLoadingProgress());
       try {
         var result = await truckRepository.createTruckExpense(event.fix);
-        if (result != null) {
+        if (result) {
           emit(CreateTruckFixLoadedSuccess(result));
         } else {
           emit(CreateTruckFixLoadedFailed("errorstring"));

@@ -4,15 +4,22 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
+import 'package:camion/business_logic/bloc/package_type_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/merchant_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
+import 'package:camion/data/providers/user_provider.dart';
+import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/active_shipment_screen.dart';
@@ -48,30 +55,41 @@ class _HomeScreenState extends State<HomeScreen>
   NotificationServices notificationServices = NotificationServices();
   late TabController _tabController;
   AddShippmentProvider? addShippmentProvider;
+  UserProvider? userProvider;
   late SharedPreferences prefs;
 
-  bool userloading = true;
-  late UserModel _usermodel;
-  getUserData() async {
-    prefs = await SharedPreferences.getInstance();
-    _usermodel =
-        UserModel.fromJson(jsonDecode(prefs.getString("userProfile")!));
-    setState(() {
-      userloading = false;
-    });
-  }
+  // bool userloading = true;
+  // late UserModel _usermodel;
+
+  // getUserData() async {
+  //   prefs = await SharedPreferences.getInstance();
+  //   _usermodel =
+  //       UserModel.fromJson(jsonDecode(prefs.getString("userProfile")!));
+  //   setState(() {
+  //     userloading = false;
+  //   });
+  // }
 
   @override
   void initState() {
     super.initState();
+    GpsRepository.getTokenForGps();
 
-    getUserData();
+    // getUserData();
     BlocProvider.of<CommodityCategoryBloc>(context)
         .add(CommodityCategoryLoadEvent());
     BlocProvider.of<KCommodityCategoryBloc>(context)
         .add(KCommodityCategoryLoadEvent());
+    BlocProvider.of<ShipmentListBloc>(context).add(ShipmentListLoadEvent("P"));
+    BlocProvider.of<MerchantRequestsListBloc>(context)
+        .add(MerchantRequestsListLoadEvent());
+    BlocProvider.of<ShipmentRunningBloc>(context)
+        .add(ShipmentRunningLoadEvent("R"));
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
-
+    BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
+    BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
+    BlocProvider.of<ActiveShipmentListBloc>(context)
+        .add(ActiveShipmentListLoadEvent());
     notificationServices.requestNotificationPermission();
     // notificationServices.forgroundMessage(context);
     notificationServices.firebaseInit(context);
@@ -87,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       addShippmentProvider =
           Provider.of<AddShippmentProvider>(context, listen: false);
+      userProvider = Provider.of<UserProvider>(context, listen: false);
       setState(() {
         title = AppLocalizations.of(context)!.translate('home');
       });
@@ -200,8 +219,7 @@ class _HomeScreenState extends State<HomeScreen>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    MerchantProfileScreen(user: _usermodel),
+                                builder: (context) => MerchantProfileScreen(),
                               ));
                         },
                         child: Row(
@@ -210,20 +228,20 @@ class _HomeScreenState extends State<HomeScreen>
                             CircleAvatar(
                               backgroundColor: AppColor.deepYellow,
                               radius: 35.h,
-                              child: userloading
-                                  ? const Center(
+                              child: userProvider!.merchant == null
+                                  ? Center(
                                       child: LoadingIndicator(),
                                     )
                                   : ClipRRect(
                                       borderRadius: BorderRadius.circular(180),
                                       child: Image.network(
-                                        _usermodel.image!,
+                                        userProvider!.merchant!.user!.image!,
                                         fit: BoxFit.fill,
                                         errorBuilder:
                                             (context, error, stackTrace) =>
                                                 Center(
                                           child: Text(
-                                            "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
+                                            "${userProvider!.merchant!.user!.firstName![0].toUpperCase()} ${userProvider!.merchant!.user!.lastName![0].toUpperCase()}",
                                             style: TextStyle(
                                               fontSize: 28.sp,
                                             ),
@@ -232,7 +250,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       ),
                                     ),
                             ),
-                            userloading
+                            userProvider!.merchant == null
                                 ? Text(
                                     "",
                                     style: TextStyle(
@@ -241,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         fontWeight: FontWeight.bold),
                                   )
                                 : Text(
-                                    "${_usermodel.firstName!} ${_usermodel.lastName!}",
+                                    "${userProvider!.merchant!.user!.firstName!} ${userProvider!.merchant!.user!.lastName!}",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 26.sp,
@@ -258,7 +276,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       InkWell(
                         onTap: () async {
-                          if (AppLocalizations.of(context)!.isEnLocale!) {
+                          if (AppLocalizations.of(context)!.isEnLocale) {
                             BlocProvider.of<LocaleCubit>(context).toArabic();
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
@@ -532,7 +550,6 @@ class _HomeScreenState extends State<HomeScreen>
                                       ),
                               ),
                               Tab(
-                                // text: "الحاسبة",
                                 height: 66.h,
                                 icon: navigationValue == 1
                                     ? Column(
@@ -549,12 +566,15 @@ class _HomeScreenState extends State<HomeScreen>
                                                   height: 4,
                                                 )
                                               : const SizedBox.shrink(),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('myshipments'),
-                                            style: TextStyle(
-                                                color: AppColor.deepYellow,
-                                                fontSize: 15.sp),
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('myshipments'),
+                                              style: TextStyle(
+                                                  color: AppColor.deepYellow,
+                                                  fontSize: 15.sp),
+                                            ),
                                           )
                                         ],
                                       )
@@ -572,12 +592,16 @@ class _HomeScreenState extends State<HomeScreen>
                                                   height: 4,
                                                 )
                                               : const SizedBox.shrink(),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('myshipments'),
-                                            style: TextStyle(
+                                          FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('myshipments'),
+                                              style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 15.sp),
+                                                fontSize: 15.sp,
+                                              ),
+                                            ),
                                           )
                                         ],
                                       ),
