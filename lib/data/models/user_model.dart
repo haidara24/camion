@@ -174,19 +174,28 @@ class TruckOwner {
 
 class Truckuser {
   int? id;
-  bool? isTruckowner;
+  UserModel? user;
+  int? truck;
 
-  Truckuser({this.id, this.isTruckowner});
+  Truckuser({
+    this.id,
+    this.user,
+    this.truck,
+  });
 
   Truckuser.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    isTruckowner = json['is_truckowner'];
+    user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
+    truck = json['truck2'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['is_truckowner'] = isTruckowner;
+    data['truck'] = truck;
+    if (user != null) {
+      data['user'] = user!.toJson();
+    }
     return data;
   }
 }

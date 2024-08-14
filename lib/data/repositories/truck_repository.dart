@@ -336,7 +336,7 @@ class TruckRepository {
     request.fields['truckuser'] = truck.truckuser!.id!.toString();
     request.fields['owner'] = truck.owner!.toString();
     request.fields['truck_type'] = truck.truckType!.id!.toString();
-    request.fields['location_lat'] = truck.locationLat!;
+    request.fields['location_lat'] = "0,0";
     request.fields['height'] = truck.height!.toString();
     request.fields['width'] = truck.width!.toString();
     request.fields['long'] = truck.long!.toString();
@@ -345,11 +345,13 @@ class TruckRepository {
     request.fields['empty_weight'] = truck.emptyWeight!.toString();
     request.fields['gross_weight'] = truck.grossWeight!.toString();
     request.fields['traffic'] = truck.traffic!.toString();
+    request.fields['gpsId'] = truck.gpsId!.toString();
 
     var response = await request.send();
     print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
+      print(respStr);
       return KTruck.fromJson(jsonDecode(respStr));
     } else {
       final respStr = await response.stream.bytesToString();

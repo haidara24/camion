@@ -22,6 +22,7 @@ class ShipmentRepository {
   List<SubShipment> subshipments = [];
   List<SubShipment> subshipmentsA = [];
   List<SubShipment> subshipmentsR = [];
+  List<SubShipment> taskSubshipments = [];
   List<OwnerSubShipment> ownersubshipmentsA = [];
   List<OwnerSubShipment> ownersubshipmentsR = [];
   List<Shipmentv2> kshipments = [];
@@ -133,9 +134,13 @@ class ShipmentRepository {
             "${SUB_SHIPPMENTSV2_ENDPOINT}merchant/$merchant/status/$status/",
             apiToken: jwt,
           );
-          var myDataString = utf8.decode(response.bodyBytes);
-          var json = jsonDecode(myDataString);
+          print(response.statusCode);
+          print(
+              "${SUB_SHIPPMENTSV2_ENDPOINT}merchant/$merchant/status/$status/");
           if (response.statusCode == 200) {
+            var myDataString = utf8.decode(response.bodyBytes);
+            var json = jsonDecode(myDataString);
+            print(json.length);
             for (var element in json) {
               subshipmentsR.add(SubShipment.fromJson(element));
             }
@@ -167,6 +172,53 @@ class ShipmentRepository {
             return subshipments;
           }
         }
+    }
+  }
+
+  Future<List<SubShipment>> getSubShipmentListForTasks() async {
+    taskSubshipments = [];
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var response = await HttpHelper.get(
+      "${SUB_SHIPPMENTSV2_ENDPOINT}list_for_tasks/",
+      apiToken: jwt,
+    );
+
+    if (response.statusCode == 200) {
+      var myDataString = utf8.decode(response.bodyBytes);
+      var json = jsonDecode(myDataString);
+      print(json.length);
+      for (var element in json) {
+        taskSubshipments.add(SubShipment.fromJson(element));
+      }
+      return taskSubshipments.reversed.toList();
+    } else {
+      return taskSubshipments;
+    }
+  }
+
+  Future<List<Shipmentv2>> getLogShipmentList() async {
+    shipmentsC = [];
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var response = await HttpHelper.get(
+      "${SHIPPMENTSV2_ENDPOINT}list_for_log/",
+      apiToken: jwt,
+    );
+
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      var myDataString = utf8.decode(response.bodyBytes);
+      var json = jsonDecode(myDataString);
+      for (var element in json) {
+        shipmentsC.add(Shipmentv2.fromJson(element));
+      }
+
+      return shipmentsC.reversed.toList();
+    } else {
+      return shipmentsC;
     }
   }
 
@@ -218,27 +270,27 @@ class ShipmentRepository {
     }
   }
 
-  Future<List<SubShipment>> getDriverActiveShipmentList(String status) async {
-    subshipmentsA = [];
+  Future<List<OwnerSubShipment>> getDriverActiveShipmentList(
+      String status) async {
+    ownersubshipmentsA = [];
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var truck = prefs.getInt("truckId") ?? 0;
 
     var response = await HttpHelper.get(
-      "$SUB_SHIPPMENTSV2_ENDPOINT?shipment_status=$status&truck=$truck",
+      "${SUB_SHIPPMENTSV2_ENDPOINT}list_for_driver_and_status/$status/",
       apiToken: jwt,
     );
     print(response.statusCode);
     if (response.statusCode == 200) {
       var myDataString = utf8.decode(response.bodyBytes);
       var json = jsonDecode(myDataString);
-      for (var element in json["results"]) {
-        subshipmentsA.add(SubShipment.fromJson(element));
+      for (var element in json) {
+        ownersubshipmentsA.add(OwnerSubShipment.fromJson(element));
       }
 
-      return subshipmentsA.reversed.toList();
+      return ownersubshipmentsA.reversed.toList();
     } else {
-      return subshipmentsA;
+      return ownersubshipmentsA;
     }
   }
 

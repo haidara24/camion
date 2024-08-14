@@ -20,7 +20,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddNewTruckScreen extends StatefulWidget {
-  AddNewTruckScreen({Key? key}) : super(key: key);
+  final int ownerId;
+  AddNewTruckScreen({Key? key, required this.ownerId}) : super(key: key);
 
   @override
   State<AddNewTruckScreen> createState() => _AddNewTruckScreenState();
@@ -178,7 +179,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           BlocBuilder<TruckTypeBloc, TruckTypeState>(
                             builder: (context, state2) {
@@ -290,74 +291,6 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                           SizedBox(
                             height: 4.h,
                           ),
-                          location.isEmpty
-                              ? Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    const SectionTitle(
-                                        text: "اختر موقع الشاحنة"),
-                                    InkWell(
-                                      onTap: () {},
-                                      child: Card(
-                                        color: AppColor.deepYellow,
-                                        elevation: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Center(
-                                            child: SizedBox(
-                                              height: 40.h,
-                                              width: 50.w,
-                                              child: Icon(
-                                                Icons.location_on,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : SizedBox(
-                                  height: 200.h,
-                                  child: GoogleMap(
-                                    onMapCreated:
-                                        (GoogleMapController controller) async {
-                                      setState(() {
-                                        _controller = controller;
-                                        // _controller.setMapStyle(_mapStyle);
-                                      });
-                                    },
-                                    myLocationButtonEnabled: false,
-                                    zoomGesturesEnabled: false,
-                                    scrollGesturesEnabled: false,
-                                    tiltGesturesEnabled: false,
-                                    rotateGesturesEnabled: false,
-                                    zoomControlsEnabled: false,
-                                    initialCameraPosition: CameraPosition(
-                                        target: LatLng(
-                                          double.parse(location.split(',')[0]),
-                                          double.parse(location.split(',')[1]),
-                                        ),
-                                        zoom: 14.47),
-                                    gestureRecognizers: {},
-                                    markers: {
-                                      Marker(
-                                        markerId: const MarkerId("truck"),
-                                        position: LatLng(
-                                          double.parse(location.split(',')[0]),
-                                          double.parse(location.split(',')[1]),
-                                        ),
-                                      )
-                                    },
-
-                                    // mapType: shipmentProvider.mapType,
-                                  ),
-                                ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
                           TextFormField(
                             controller: heightController,
                             onTap: () {
@@ -373,8 +306,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "ارتفاع المركبة",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('height'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -398,7 +332,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           TextFormField(
                             controller: widthController,
@@ -415,8 +349,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "عرض المركبة",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('width'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -440,7 +375,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           TextFormField(
                             controller: longController,
@@ -457,8 +392,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "طول المركبة",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('long'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -482,7 +418,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           TextFormField(
                             controller: numberOfAxelsController,
@@ -499,8 +435,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "عدد المحاور",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('number_of_axels'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -524,7 +461,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           TextFormField(
                             controller: truckNumberController,
@@ -541,8 +478,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "رقم المركبة",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('truck_number'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -566,7 +504,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           TextFormField(
                             controller: trafficController,
@@ -583,8 +521,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "رقم المرور",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('traffic_number'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -608,7 +547,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           TextFormField(
                             controller: emptyWeightController,
@@ -625,8 +564,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "الوزن الفارغ للمركبة",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('empty_weight'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -650,7 +590,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           TextFormField(
                             controller: grossWeightController,
@@ -667,8 +607,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             textInputAction: TextInputAction.done,
                             keyboardType: TextInputType.phone,
                             style: const TextStyle(fontSize: 18),
-                            decoration: const InputDecoration(
-                              labelText: "الوزن القائم للمركبة",
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('grosss_weight'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -692,7 +633,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 4,
+                            height: 12,
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 3),
@@ -765,13 +706,13 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                         .value.languageCode ==
                                                     'en'
                                                 ? const Text(
-                                                    'shipment instruction has been created successfully.',
+                                                    'Truck has been created successfully.',
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                     ),
                                                   )
                                                 : const Text(
-                                                    'تم اضافة تعليمات الشحن بنجاح..',
+                                                    'تم اضافة مركبة جديدة..',
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                     ),
@@ -860,6 +801,8 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                         location;
                                                     truck.truckuser = KTuckUser(
                                                         id: truckuser);
+                                                    truck.owner =
+                                                        widget.ownerId;
                                                     truck.truckType = trucktype;
                                                     BlocProvider.of<
                                                                 CreateTruckBloc>(

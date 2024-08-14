@@ -17,6 +17,7 @@ import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -364,13 +365,9 @@ class _IncomingShipmentDetailsScreenState
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      "مسار الشحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("shipment_route"),
                                     ),
                                     ShipmentPathVerticalWidget(
                                       pathpoints:
@@ -383,25 +380,18 @@ class _IncomingShipmentDetailsScreenState
                                       mini: false,
                                     ),
                                     const Divider(),
-                                    Text(
-                                      "تفاصيل بضاعة الشاحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("commodity_info"),
                                     ),
                                     Commodity_info_widget(
                                         shipmentItems: shipmentstate
                                             .shipment.shipmentItems!),
                                     const Divider(),
-                                    Text(
-                                      "احصائيات مسار الشاحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate(
+                                              "shipment_route_statistics"),
                                     ),
                                     PathStatisticsWidget(
                                       distance:
@@ -482,8 +472,10 @@ class _IncomingShipmentDetailsScreenState
                                                               child: ListBody(
                                                                 children: <Widget>[
                                                                   SectionBody(
-                                                                      text:
-                                                                          "إضافة تكاليف اضافيةإن وجدت\n ملاحظة: يمكن قبول الطلب دون تعبئة الفورم."),
+                                                                      text: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'approval_request_note')),
                                                                   TextFormField(
                                                                     controller:
                                                                         extraTextController,
@@ -506,10 +498,14 @@ class _IncomingShipmentDetailsScreenState
                                                                                 MediaQuery.of(context).viewInsets.bottom + 50),
                                                                     decoration:
                                                                         InputDecoration(
-                                                                      labelText:
-                                                                          'وصف التكاليف الإضافية',
-                                                                      hintText:
-                                                                          'وصف التكاليف الإضافية',
+                                                                      labelText: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'extra_cost_discription'),
+                                                                      hintText: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'extra_cost_discription'),
                                                                       hintStyle:
                                                                           TextStyle(
                                                                               fontSize: 18.sp),
@@ -553,10 +549,14 @@ class _IncomingShipmentDetailsScreenState
                                                                                 MediaQuery.of(context).viewInsets.bottom + 50),
                                                                     decoration:
                                                                         InputDecoration(
-                                                                      labelText:
-                                                                          'قيمة التكاليف الإضافية',
-                                                                      hintText:
-                                                                          'قيمة التكاليف الإضافية',
+                                                                      labelText: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'extra_cost_value'),
+                                                                      hintText: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'extra_cost_value'),
                                                                       hintStyle:
                                                                           TextStyle(
                                                                               fontSize: 18.sp),
@@ -609,11 +609,7 @@ class _IncomingShipmentDetailsScreenState
                                                                     widget
                                                                         .requestId,
                                                                     extraTextController
-                                                                            .text
-                                                                            .isEmpty
-                                                                        ? "_"
-                                                                        : extraTextController
-                                                                            .text,
+                                                                        .text,
                                                                     extraValue,
                                                                   ),
                                                                 );

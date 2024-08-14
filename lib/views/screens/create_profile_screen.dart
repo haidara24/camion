@@ -1,16 +1,24 @@
+import 'dart:convert';
+
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/profile/driver_update_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/merchant_update_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_update_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
+import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/control_view.dart';
+import 'package:camion/views/screens/driver/create_truck_for%20driver.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateProfileScreen extends StatefulWidget {
@@ -39,9 +47,13 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
 
   TextEditingController companyNameController = TextEditingController();
 
+  UserProvider? userProvider;
+  bool btnLoading = false;
   getUserType() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    userType = prefs.getString("userType") ?? "";
+    setState(() {
+      userType = prefs.getString("userType") ?? "";
+    });
     switch (userType) {
       case "Merchant":
         profileId = prefs.getInt("merchant")!;
@@ -57,6 +69,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      userProvider = Provider.of<UserProvider>(context, listen: false);
+    });
     getUserType();
   }
 
@@ -140,8 +155,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
                                   controller: firstNameController,
-                                  decoration: const InputDecoration(
-                                    labelText: "الاسم الأول",
+                                  decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('first_name'),
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 11.0, horizontal: 9.0),
                                   ),
@@ -159,8 +175,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
                                   controller: lastNameController,
-                                  decoration: const InputDecoration(
-                                    labelText: "الاسم الأخير",
+                                  decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('last_name'),
                                     contentPadding: EdgeInsets.symmetric(
                                         vertical: 11.0, horizontal: 9.0),
                                   ),
@@ -180,8 +197,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: TextFormField(
                             controller: emailController,
-                            decoration: const InputDecoration(
-                              labelText: "البريد الالكتروني",
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: InputDecoration(
+                              labelText: AppLocalizations.of(context)!
+                                  .translate('email'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -199,8 +218,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
                               controller: addressController,
-                              decoration: const InputDecoration(
-                                labelText: "العنوان",
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .translate('address'),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 11.0, horizontal: 9.0),
                               ),
@@ -218,8 +238,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
                               controller: companyNameController,
-                              decoration: const InputDecoration(
-                                labelText: "اسم الشركة",
+                              decoration: InputDecoration(
+                                labelText: AppLocalizations.of(context)!
+                                    .translate('company_name'),
                                 contentPadding: EdgeInsets.symmetric(
                                     vertical: 11.0, horizontal: 9.0),
                               ),
@@ -254,9 +275,40 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       case "Merchant":
         return BlocConsumer<MerchantUpdateProfileBloc,
             MerchantUpdateProfileState>(
-          listener: (context, btnstate) {
+          listener: (context, btnstate) async {
             print(btnstate);
             if (btnstate is MerchantUpdateProfileLoadedSuccess) {
+              setState(() {
+                btnLoading = true;
+              });
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              var jwt = prefs.getString("token");
+              Response userresponse =
+                  await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
+              print("userresponse.statusCode${userresponse.statusCode}");
+              var myDataString = utf8.decode(userresponse.bodyBytes);
+
+              prefs.setString("userProfile", myDataString);
+              // print("userProfile${myDataString}");
+              var result = jsonDecode(myDataString);
+              var userProfile = UserModel.fromJson(result);
+              if (userresponse.statusCode == 200) {
+                if (userType.isNotEmpty) {
+                  prefs.setInt("merchant", userProfile.merchant!);
+                  Response merchantResponse = await HttpHelper.get(
+                      '$MERCHANTS_ENDPOINT${userProfile.merchant}/',
+                      apiToken: jwt);
+                  if (merchantResponse.statusCode == 200) {
+                    var merchantDataString =
+                        utf8.decode(merchantResponse.bodyBytes);
+                    var res = jsonDecode(merchantDataString);
+                    userProvider!.setMerchant(Merchant.fromJson(res));
+                  }
+                }
+              }
+              setState(() {
+                btnLoading = false;
+              });
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -267,21 +319,22 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
             }
           },
           builder: (context, btnstate) {
-            if (btnstate is MerchantUpdateProfileLoadingProgress) {
+            if (btnstate is MerchantUpdateProfileLoadingProgress ||
+                btnLoading) {
               return CustomButton(
                 title: LoadingIndicator(),
                 onTap: () {},
               );
             } else {
               return CustomButton(
-                title: Text("حفظ التغيرات"),
+                title: Text(AppLocalizations.of(context)!.translate('save')),
                 onTap: () {
                   _profileFormKey.currentState!.save();
                   if (_profileFormKey.currentState!.validate()) {
                     print(profileId);
                     Merchant merchant = Merchant();
                     // merchant.id = state.merchant.id!;
-                    // merchant.id = profileId;
+                    merchant.id = profileId;
                     merchant.address = addressController.text;
                     merchant.companyName = companyNameController.text;
                     merchant.user = UserModel();
@@ -299,27 +352,58 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         );
       case "Driver":
         return BlocConsumer<DriverUpdateProfileBloc, DriverUpdateProfileState>(
-          listener: (context, btnstate) {
+          listener: (context, btnstate) async {
             print(btnstate);
             if (btnstate is DriverUpdateProfileLoadedSuccess) {
+              setState(() {
+                btnLoading = true;
+              });
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              var jwt = prefs.getString("token");
+              Response userresponse =
+                  await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
+              print("userresponse.statusCode${userresponse.statusCode}");
+              var myDataString = utf8.decode(userresponse.bodyBytes);
+
+              prefs.setString("userProfile", myDataString);
+              print("userProfile${myDataString}");
+              var result = jsonDecode(myDataString);
+              var userProfile = UserModel.fromJson(result);
+              prefs.setInt("truckuser", userProfile.truckuser!);
+              Response driverResponse = await HttpHelper.get(
+                  '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
+                  apiToken: jwt);
+              if (driverResponse.statusCode == 200) {
+                var driverDataString = utf8.decode(driverResponse.bodyBytes);
+                var res = jsonDecode(driverDataString);
+                userProvider!.setDriver(Driver.fromJson(res));
+                // prefs.setInt("truckId", res['truck2']["id"]);
+                // prefs.setString("gpsId", res['truck2']["gpsId"]);
+              }
+              BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
+
+              setState(() {
+                btnLoading = false;
+              });
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ControlView(),
+                  builder: (context) =>
+                      CreateTruckForDriverScreen(driverId: btnstate.driver.id!),
                 ),
                 (route) => false,
               );
             }
           },
           builder: (context, btnstate) {
-            if (btnstate is DriverUpdateProfileLoadingProgress) {
+            if (btnstate is DriverUpdateProfileLoadingProgress || btnLoading) {
               return CustomButton(
                 title: LoadingIndicator(),
                 onTap: () {},
               );
             } else {
               return CustomButton(
-                title: Text("حفظ التغيرات"),
+                title: Text(AppLocalizations.of(context)!.translate('save')),
                 onTap: () {
                   _profileFormKey.currentState!.save();
                   if (_profileFormKey.currentState!.validate()) {
@@ -340,9 +424,38 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         );
       case "Owner":
         return BlocConsumer<OwnerUpdateProfileBloc, OwnerUpdateProfileState>(
-          listener: (context, btnstate) {
+          listener: (context, btnstate) async {
             print(btnstate);
             if (btnstate is OwnerUpdateProfileLoadedSuccess) {
+              setState(() {
+                btnLoading = true;
+              });
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              var jwt = prefs.getString("token");
+              Response userresponse =
+                  await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
+              print("userresponse.statusCode${userresponse.statusCode}");
+              var myDataString = utf8.decode(userresponse.bodyBytes);
+
+              prefs.setString("userProfile", myDataString);
+              // print("userProfile${myDataString}");
+              var result = jsonDecode(myDataString);
+              var userProfile = UserModel.fromJson(result);
+              print(userProfile.truckowner!);
+
+              prefs.setInt("truckowner", userProfile.truckowner!);
+              Response ownerResponse = await HttpHelper.get(
+                  '$OWNERS_ENDPOINT${userProfile.truckowner}/',
+                  apiToken: jwt);
+              if (ownerResponse.statusCode == 200) {
+                var ownerDataString = utf8.decode(ownerResponse.bodyBytes);
+                print(ownerDataString);
+                var res = jsonDecode(ownerDataString);
+                userProvider!.setTruckOwner(TruckOwner.fromJson(res));
+              }
+              setState(() {
+                btnLoading = false;
+              });
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
@@ -353,14 +466,14 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
             }
           },
           builder: (context, btnstate) {
-            if (btnstate is OwnerUpdateProfileLoadingProgress) {
+            if (btnstate is OwnerUpdateProfileLoadingProgress || btnLoading) {
               return CustomButton(
                 title: LoadingIndicator(),
                 onTap: () {},
               );
             } else {
               return CustomButton(
-                title: const Text("حفظ التغيرات"),
+                title: Text(AppLocalizations.of(context)!.translate('save')),
                 onTap: () {
                   _profileFormKey.currentState!.save();
                   if (_profileFormKey.currentState!.validate()) {

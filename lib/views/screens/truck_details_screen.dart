@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -13,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class TruckDetailsScreen extends StatefulWidget {
   final KTruck truck;
@@ -35,6 +38,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
   late GoogleMapController _controller;
 
   String _mapStyle = "";
+  String position_name = "";
 
   String getTruckType(int type) {
     switch (type) {
@@ -75,9 +79,32 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getAddressForPickupFromLatLng(widget.truck.locationLat!);
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void getAddressForPickupFromLatLng(String location) {
+    http
+        .get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${location.split(',')[0]},${location.split(',')[1]}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    )
+        .then((value) {
+      var result = jsonDecode(value.body);
+
+      setState(() {
+        position_name =
+            '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      });
+    });
   }
 
   @override
@@ -93,7 +120,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
               resizeToAvoidBottomInset: false,
               backgroundColor: AppColor.lightGrey200,
               appBar: CustomAppBar(
-                title: AppLocalizations.of(context)!.translate('search_result'),
+                title: AppLocalizations.of(context)!.translate('truck_info'),
               ),
               body: SingleChildScrollView(
                 child: SizedBox(
@@ -165,16 +192,6 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == 'en' ? widget.truck.truckType!.name! : widget.truck.truckType!.nameAr!}',
-                                    style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
                                   SizedBox(
                                     height: 175.h,
                                     child: GoogleMap(
@@ -222,39 +239,27 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                   SizedBox(
                                     height: 7.h,
                                   ),
-                                  Row(
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.translate('truck_location')}: ${widget.truck.location!}',
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                          ),
-                                        ),
+                                  Text(
+                                    '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == 'en' ? widget.truck.truckType!.name! : widget.truck.truckType!.nameAr!}',
+                                    style: TextStyle(
+                                        // color: AppColor.lightBlue,
+                                        fontSize: 18.sp,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  SizedBox(
+                                    // width:
+                                    //     MediaQuery.of(context).size.width *
+                                    //         .4,
+                                    child: Text(
+                                      '${AppLocalizations.of(context)!.translate('truck_location')}: $position_name',
+                                      style: TextStyle(
+                                        // color: AppColor.lightBlue,
+                                        fontSize: 17.sp,
                                       ),
-                                      SizedBox(
-                                        height: 40.h,
-                                        child: VerticalDivider(
-                                          color: Colors.grey[300],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                   const Divider(),
                                   Row(
@@ -264,7 +269,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                             MediaQuery.of(context).size.width *
                                                 .4,
                                         child: Text(
-                                          '${AppLocalizations.of(context)!.translate('empty_weight')}: ${widget.truck.emptyWeight!}',
+                                          '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
                                           style: TextStyle(
                                             // color: AppColor.lightBlue,
                                             fontSize: 17.sp,

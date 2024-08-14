@@ -482,8 +482,8 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddNewTruckScreen(),
+                                        builder: (context) => AddNewTruckScreen(
+                                            ownerId: state.owner.id!),
                                       ),
                                     );
                                   },

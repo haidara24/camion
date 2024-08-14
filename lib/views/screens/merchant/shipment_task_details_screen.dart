@@ -501,12 +501,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                       MainAxisAlignment
                                                           .spaceAround,
                                                   children: [
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              .23,
+                                                    Expanded(
                                                       child: Theme(
                                                         data: Theme.of(context)
                                                             .copyWith(
@@ -523,22 +518,20 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           value: "C",
                                                           groupValue:
                                                               selectedRadioTile,
-                                                          title: Container(
-                                                            child: FittedBox(
-                                                              fit: BoxFit
-                                                                  .scaleDown,
-                                                              child: Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'charger'),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .fade,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 16,
-                                                                ),
+                                                          title: FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'charger'),
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .fade,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
                                                               ),
                                                             ),
                                                           ),
@@ -558,12 +551,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         ),
                                                       ),
                                                     ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              .23,
+                                                    Expanded(
                                                       child: RadioListTile(
                                                         contentPadding:
                                                             EdgeInsets.zero,
@@ -601,12 +589,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                 "M",
                                                       ),
                                                     ),
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              .23,
+                                                    Expanded(
                                                       child: RadioListTile(
                                                         contentPadding:
                                                             EdgeInsets.zero,
@@ -2189,6 +2172,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                 'weight_info'),
                                                       ),
                                                     ]),
+                                                SizedBox(height: 8),
                                                 Padding(
                                                   padding: const EdgeInsets
                                                       .symmetric(
@@ -2679,9 +2663,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                     MainAxisAlignment
                                                         .spaceAround,
                                                 children: [
-                                                  const SectionTitle(
-                                                      text:
-                                                          "ارفع الصور والملفات"),
+                                                  SectionTitle(
+                                                    text: AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'upload_files'),
+                                                  ),
                                                   InkWell(
                                                     onTap: () async {
                                                       var pickedImages =
@@ -2731,58 +2718,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                       builder: (context, state) {
                                         if (state
                                             is ReadInstructionLoadedSuccess) {
-                                          return Card(
-                                            margin: const EdgeInsets.symmetric(
-                                                vertical: 4),
-                                            color: Colors.white,
-                                            child: SizedBox(
-                                              width: double.infinity,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SectionTitle(
-                                                          text: AppLocalizations
-                                                                  .of(context)!
-                                                              .translate(
-                                                                  'weight_info'),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    SectionBody(
-                                                        text:
-                                                            '${AppLocalizations.of(context)!.translate('first_weight')}: ${state.instruction.netWeight!.toString()}'),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    SectionBody(
-                                                        text:
-                                                            '${AppLocalizations.of(context)!.translate('second_weight')}: ${state.instruction.truckWeight!.toString()}'),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    SectionBody(
-                                                        text:
-                                                            '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${state.instruction.finalWeight!.toString()}'),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          );
+                                          return SizedBox.shrink();
                                         } else {
                                           return Shimmer.fromColors(
                                             baseColor: (Colors.grey[300])!,
@@ -2971,23 +2907,29 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                             reciever_phone_controller
                                                                 .text;
                                                         shipmentInstruction
-                                                                .netWeight =
-                                                            double.parse(
-                                                                    net_weight_controller
-                                                                        .text)
-                                                                .toInt();
+                                                            .netWeight = double.parse(
+                                                                net_weight_controller
+                                                                    .text
+                                                                    .replaceAll(
+                                                                        ",",
+                                                                        ""))
+                                                            .toInt();
                                                         shipmentInstruction
-                                                                .truckWeight =
-                                                            double.parse(
-                                                                    truck_weight_controller
-                                                                        .text)
-                                                                .toInt();
+                                                            .truckWeight = double.parse(
+                                                                truck_weight_controller
+                                                                    .text
+                                                                    .replaceAll(
+                                                                        ",",
+                                                                        ""))
+                                                            .toInt();
                                                         shipmentInstruction
-                                                                .finalWeight =
-                                                            double.parse(
-                                                                    final_weight_controller
-                                                                        .text)
-                                                                .toInt();
+                                                            .finalWeight = double.parse(
+                                                                final_weight_controller
+                                                                    .text
+                                                                    .replaceAll(
+                                                                        ",",
+                                                                        ""))
+                                                            .toInt();
 
                                                         List<CommodityItems>
                                                             items = [];

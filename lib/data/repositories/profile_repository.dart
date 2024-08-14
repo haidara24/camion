@@ -60,8 +60,8 @@ class ProfileRepository {
     var jwt = prefs.getString("token");
     var driverId = prefs.getInt("truckuser");
 
-    var request = http.MultipartRequest(
-        'PATCH', Uri.parse('$DRIVERS_ENDPOINT$driverId/update_profile/'));
+    var request = http.MultipartRequest('PATCH',
+        Uri.parse('$DRIVERS_ENDPOINT${driverId ?? driver.id}/update_profile/'));
     request.headers.addAll({
       HttpHeaders.authorizationHeader: "JWT $jwt",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
@@ -84,7 +84,8 @@ class ProfileRepository {
     });
 
     var rs = await request.send();
-
+    print('$DRIVERS_ENDPOINT${driverId ?? driver.id}/update_profile/');
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       final respStr = await rs.stream.bytesToString();
 
@@ -144,8 +145,8 @@ class ProfileRepository {
     var jwt = prefs.getString("token");
     var ownerId = prefs.getInt("truckowner");
 
-    var request = http.MultipartRequest(
-        'PATCH', Uri.parse('$OWNERS_ENDPOINT$ownerId/update_profile/'));
+    var request = http.MultipartRequest('PATCH',
+        Uri.parse('$OWNERS_ENDPOINT${ownerId ?? owner.id}/update_profile/'));
     request.headers.addAll({
       HttpHeaders.authorizationHeader: "JWT $jwt",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
@@ -168,6 +169,7 @@ class ProfileRepository {
     });
 
     var rs = await request.send();
+    print(rs.statusCode);
 
     if (rs.statusCode == 200) {
       final respStr = await rs.stream.bytesToString();

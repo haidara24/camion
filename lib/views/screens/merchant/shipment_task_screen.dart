@@ -1,6 +1,8 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/shipment_instructions_provider.dart';
@@ -102,8 +104,8 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
   }
 
   Future<void> onRefresh() async {
-    BlocProvider.of<ShipmentRunningBloc>(context)
-        .add(ShipmentRunningLoadEvent("R"));
+    BlocProvider.of<ShipmentTaskListBloc>(context)
+        .add(ShipmentTaskListLoadEvent());
   }
 
   @override
@@ -131,10 +133,10 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                         vertical: 8.0,
                         horizontal: 10.0,
                       ),
-                      child: BlocBuilder<ShipmentRunningBloc,
-                          ShipmentRunningState>(
+                      child: BlocBuilder<ShipmentTaskListBloc,
+                          ShipmentTaskListState>(
                         builder: (context, state) {
-                          if (state is ShipmentRunningLoadedSuccess) {
+                          if (state is ShipmentTaskListLoadedSuccess) {
                             return state.shipments.isEmpty
                                 ? ListView(
                                     physics:
@@ -170,11 +172,18 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                 .add(ReadInstructionLoadEvent(
                                                     state.shipments[index]
                                                         .shipmentinstructionv2!));
-
-                                            print(state.shipments[index]
-                                                .shipmentinstructionv2!
-                                                .toString());
                                           }
+                                          if (state.shipments[index]
+                                                  .shipmentpaymentv2 !=
+                                              null) {
+                                            BlocProvider.of<
+                                                        ReadPaymentInstructionBloc>(
+                                                    context)
+                                                .add(ReadPaymentInstructionLoadEvent(
+                                                    state.shipments[index]
+                                                        .shipmentpaymentv2!));
+                                          }
+
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(

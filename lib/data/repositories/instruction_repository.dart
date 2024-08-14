@@ -68,6 +68,24 @@ class InstructionRepository {
     }
   }
 
+  Future<ShipmentPayment?> getShipmentPayment(int id) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    print("object1");
+
+    var rs =
+        await HttpHelper.get('$SHIPPMENTS_PAYMENT_ENDPOINT$id/', apiToken: jwt);
+
+    print(rs.statusCode);
+    if (rs.statusCode == 200) {
+      var myDataString = utf8.decode(rs.bodyBytes);
+
+      var result = jsonDecode(myDataString);
+      return ShipmentPayment.fromJson(result);
+    }
+    return null;
+  }
+
   Future<Shipmentinstruction?> getShipmentInstruction(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");

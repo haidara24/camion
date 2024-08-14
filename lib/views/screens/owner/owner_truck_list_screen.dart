@@ -9,10 +9,30 @@ import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
-class OwnerTruckListScreen extends StatelessWidget {
+class OwnerTruckListScreen extends StatefulWidget {
   const OwnerTruckListScreen({Key? key}) : super(key: key);
+
+  @override
+  State<OwnerTruckListScreen> createState() => _OwnerTruckListScreenState();
+}
+
+class _OwnerTruckListScreenState extends State<OwnerTruckListScreen> {
+  int ownerId = 0;
+  late SharedPreferences prefs;
+
+  void getOwnerId() async {
+    prefs = await SharedPreferences.getInstance();
+    ownerId = prefs.getInt("truckowner") ?? 0;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getOwnerId();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +49,7 @@ class OwnerTruckListScreen extends StatelessWidget {
                 onPressed: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddNewTruckScreen(),
+                    builder: (context) => AddNewTruckScreen(ownerId: ownerId),
                   ),
                 ),
                 child: const Icon(

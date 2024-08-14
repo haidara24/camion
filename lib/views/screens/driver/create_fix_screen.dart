@@ -142,7 +142,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
             child: Scaffold(
               backgroundColor: AppColor.lightGrey200,
               appBar: DriverAppBar(
-                title: "إضافة مصروف",
+                title: AppLocalizations.of(context)!.translate('add_spending'),
               ),
               body: SingleChildScrollView(
                 // physics: const NeverScrollableScrollPhysics(),
@@ -162,7 +162,9 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                             const SizedBox(
                               height: 8,
                             ),
-                            SectionTitle(text: "اختر المصروف"),
+                            SectionTitle(
+                                text: AppLocalizations.of(context)!
+                                    .translate('select_spending')),
                             BlocBuilder<FixTypeListBloc, FixTypeListState>(
                               builder: (context, state) {
                                 if (state is FixTypeListLoadedSuccess) {
@@ -170,7 +172,8 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                     child: DropdownButton2<ExpenseType>(
                                       isExpanded: true,
                                       hint: Text(
-                                        "اختر نوع المصروف",
+                                        AppLocalizations.of(context)!
+                                            .translate('select_spending'),
                                         style: TextStyle(
                                           fontSize: 18,
                                           color: Theme.of(context).hintColor,
@@ -253,7 +256,9 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                             const SizedBox(
                               height: 8,
                             ),
-                            SectionTitle(text: "التكلفة"),
+                            SectionTitle(
+                                text: AppLocalizations.of(context)!
+                                    .translate('costs')),
                             SizedBox(
                               // width: 350.w,
                               child: TextFormField(
@@ -286,7 +291,8 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                     color: Colors.grey[900],
                                     fontSize: 18,
                                   ),
-                                  hintText: "أدخل تكلفة المصروف",
+                                  hintText: AppLocalizations.of(context)!
+                                      .translate('enter_spending'),
                                   // filled: true,
                                   // fillColor: Colors.white,
                                 ),
@@ -323,7 +329,8 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                     color: Colors.black,
                                   ),
                                   decoration: InputDecoration(
-                                    labelText: "أدخل تاريخ المصروف",
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('enter_spending_date'),
                                     floatingLabelStyle: const TextStyle(
                                       fontSize: 18,
                                       color: Colors.black,
@@ -348,7 +355,9 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                             const SizedBox(
                               height: 8,
                             ),
-                            SectionTitle(text: "تفاصيل إضافية"),
+                            SectionTitle(
+                                text: AppLocalizations.of(context)!
+                                    .translate('extra_details')),
                             SizedBox(
                               // width: 350.w,
                               child: TextFormField(
@@ -378,8 +387,8 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                     color: Colors.grey[900],
                                     fontSize: 18,
                                   ),
-                                  hintText:
-                                      "أدخل أية تكاليف إضافية\n مثال: دواليب ماركة Dunlop.",
+                                  hintText: AppLocalizations.of(context)!
+                                      .translate('extra_details_hint'),
                                 ),
                                 validator: (value) {
                                   if (value!.isEmpty) {
@@ -416,7 +425,9 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                               150,
                                           left: 10,
                                           right: 10),
-                                      content: Text("تم إنشاء مصروف جديد"),
+                                      content: Text(AppLocalizations.of(
+                                              context)!
+                                          .translate('new_spending_created')),
                                       duration: const Duration(seconds: 5),
                                     ));
                                     BlocProvider.of<TruckFixListBloc>(context)
@@ -436,7 +447,8 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                   } else {
                                     return CustomButton(
                                       title: Text(
-                                        "إنشاء مصروف جديد",
+                                        AppLocalizations.of(context)!
+                                            .translate('create_new_spending'),
                                         style: TextStyle(
                                           fontSize: 20.sp,
                                         ),

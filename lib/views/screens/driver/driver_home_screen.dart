@@ -14,6 +14,7 @@ import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart'
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
+import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:location/location.dart' as loc;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DriverHomeScreen extends StatefulWidget {
@@ -78,33 +80,33 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
 
   Future<void> _listenLocation() async {
     prefs = await SharedPreferences.getInstance();
-    var userprofile =
-        UserModel.fromJson(jsonDecode(prefs.getString("userProfile")!));
-    var driverId = prefs.getInt("truckuser");
+    int truckId = prefs.getInt("truckId") ?? 0;
+    String gpsId = prefs.getString("gpsId") ?? "";
     _locationSubscription?.cancel();
     _timer?.cancel();
 
-    _locationSubscription = location.onLocationChanged.handleError((onError) {
-      print(onError);
-      _locationSubscription?.cancel();
-      setState(() {
-        _locationSubscription = null;
+    if (gpsId.isEmpty || gpsId.length < 4) {
+      _locationSubscription = location.onLocationChanged.handleError((onError) {
+        _locationSubscription?.cancel();
+        setState(() {
+          _locationSubscription = null;
+        });
+      }).listen((loc.LocationData currentlocation) async {
+        if (_timer == null || !_timer!.isActive) {
+          if (truckId != 0) {
+            var jwt = prefs.getString("token");
+            var rs = await HttpHelper.patch(
+                '$TRUCKS_ENDPOINT$truckId/',
+                {
+                  'location_lat':
+                      '${currentlocation.latitude},${currentlocation.longitude}'
+                },
+                apiToken: jwt);
+            _timer = Timer(const Duration(minutes: 1), () {});
+          }
+        }
       });
-    }).listen((loc.LocationData currentlocation) async {
-      if (_timer == null || !_timer!.isActive) {
-        print(currentlocation);
-
-        var jwt = prefs.getString("token");
-        var rs = await HttpHelper.patch(
-            '$TRUCKS_ENDPOINT${2}/',
-            {
-              'location_lat':
-                  '${currentlocation.latitude},${currentlocation.longitude}'
-            },
-            apiToken: jwt);
-        _timer = Timer(const Duration(minutes: 1), () {});
-      }
-    });
+    }
   }
 
   _stopListening() {
@@ -114,17 +116,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     // });
   }
 
-  bool userloading = true;
-  late UserModel _usermodel;
-  getUserData() async {
-    prefs = await SharedPreferences.getInstance();
-    _usermodel =
-        UserModel.fromJson(jsonDecode(prefs.getString("userProfile")!));
-    setState(() {
-      userloading = false;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -132,13 +123,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
 
     // _getLocation();
     _listenLocation();
-    getUserData();
-    // BlocProvider.of<UnassignedShipmentListBloc>(context)
-    //     .add(UnassignedShipmentListLoadEvent());
-    // BlocProvider.of<DriverActiveShipmentBloc>(context)
-    //     .add(DriverActiveShipmentLoadEvent("A"));
-    // BlocProvider.of<DriverRequestsListBloc>(context)
-    //     .add(const DriverRequestsListLoadEvent(null));
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
     BlocProvider.of<TruckActiveStatusBloc>(context)
@@ -252,70 +236,74 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       SizedBox(
                         height: 35.h,
                       ),
-                      InkWell(
-                        onTap: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          var driver = prefs.getInt("truckuser");
+                      Consumer<UserProvider>(
+                          builder: (context, userProvider, child) {
+                        return InkWell(
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            var driver = prefs.getInt("truckuser");
 
-                          // ignore: use_build_context_synchronously
-                          BlocProvider.of<DriverProfileBloc>(context)
-                              .add(DriverProfileLoad(driver!));
+                            // ignore: use_build_context_synchronously
+                            BlocProvider.of<DriverProfileBloc>(context)
+                                .add(DriverProfileLoad(driver!));
 
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    DriverProfileScreen(user: _usermodel),
-                              ));
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: AppColor.deepYellow,
-                              radius: 35.h,
-                              child: userloading
-                                  ? Center(
-                                      child: LoadingIndicator(),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(180),
-                                      child: Image.network(
-                                        _usermodel.image!,
-                                        fit: BoxFit.fill,
-                                        errorBuilder:
-                                            (context, error, stackTrace) =>
-                                                Center(
-                                          child: Text(
-                                            "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
-                                            style: TextStyle(
-                                              fontSize: 28.sp,
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DriverProfileScreen(
+                                      user: userProvider.driver!.user!),
+                                ));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              CircleAvatar(
+                                backgroundColor: AppColor.deepYellow,
+                                radius: 35.h,
+                                child: (userProvider.driver == null)
+                                    ? Center(
+                                        child: LoadingIndicator(),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(180),
+                                        child: Image.network(
+                                          userProvider.driver!.user!.image!,
+                                          fit: BoxFit.fill,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Center(
+                                            child: Text(
+                                              "${userProvider.driver!.user!.firstName![0].toUpperCase()} ${userProvider.driver!.user!.lastName![0].toUpperCase()}",
+                                              style: TextStyle(
+                                                fontSize: 28.sp,
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                            ),
-                            userloading
-                                ? Text(
-                                    "",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                : Text(
-                                    "${_usermodel.firstName!} ${_usermodel.lastName!}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                          ],
-                        ),
-                      ),
+                              ),
+                              (userProvider.driver == null)
+                                  ? Text(
+                                      "",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 26.sp,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : Text(
+                                      "${userProvider.driver!.user!.firstName!} ${userProvider.driver!.user!.lastName!}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 26.sp,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                            ],
+                          ),
+                        );
+                      }),
                       SizedBox(
                         height: 15.h,
                       ),
@@ -376,8 +364,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/settings.svg",
+                            "assets/icons/translate_camion.svg",
                             height: 20.h,
+                            width: 20.h,
                           ),
                           title: Text(
                             localeState.value.languageCode != 'en'
@@ -388,22 +377,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold),
                           ),
-                          // trailing: Container(
-                          //   width: 35.w,
-                          //   height: 20.h,
-                          //   decoration: BoxDecoration(
-                          //       color: AppColor.deepYellow,
-                          //       borderRadius: BorderRadius.circular(2)),
-                          //   child: Center(
-                          //     child: Text(
-                          //       "soon",
-                          //       style: TextStyle(
-                          //         color: Colors.white,
-                          //         fontSize: 12.sp,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ),
                       ),
                       const Divider(
@@ -424,9 +397,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                           leading: SvgPicture.asset(
                             "assets/icons/help_info.svg",
                             height: 20.h,
+                            width: 20.h,
                           ),
                           title: Text(
-                            "إصلاحاتي",
+                            AppLocalizations.of(context)!.translate('my_fixes'),
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.sp,
@@ -441,6 +415,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         leading: SvgPicture.asset(
                           "assets/icons/help_info.svg",
                           height: 20.h,
+                          width: 20.h,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.translate('help'),
@@ -513,6 +488,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                           leading: SvgPicture.asset(
                             "assets/icons/log_out.svg",
                             height: 20.h,
+                            width: 20.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!.translate('log_out'),
@@ -532,7 +508,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                     builder: (context, state) {
                       if (state is BottomNavBarShown) {
                         return Container(
-                          height: 75.h,
+                          height: 65.h,
                           color: AppColor.deepBlack,
                           child: TabBar(
                             labelPadding: EdgeInsets.zero,
@@ -540,7 +516,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             indicatorColor: AppColor.deepYellow,
                             labelColor: AppColor.deepYellow,
                             unselectedLabelColor: Colors.white,
-                            labelStyle: TextStyle(fontSize: 15.sp),
+                            labelStyle: TextStyle(fontSize: 12.sp),
                             unselectedLabelStyle: TextStyle(fontSize: 14.sp),
                             padding: EdgeInsets.zero,
                             onTap: (value) {
@@ -550,7 +526,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             tabs: [
                               Tab(
                                 // text: "طلب مخلص",
-                                height: 66.h,
+                                height: 64.h,
                                 icon: navigationValue == 0
                                     ? Column(
                                         mainAxisAlignment:
@@ -558,8 +534,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/home_selected.svg",
-                                            width: 34.w,
-                                            height: 34.w,
+                                            width: 38.w,
+                                            height: 38.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -571,7 +547,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                 .translate('home'),
                                             style: TextStyle(
                                                 color: AppColor.deepYellow,
-                                                fontSize: 15.sp),
+                                                fontSize: 12.sp),
                                           )
                                         ],
                                       )
@@ -581,8 +557,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/home.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            width: 35.w,
+                                            height: 35.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -594,22 +570,22 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                 .translate('home'),
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 15.sp),
+                                                fontSize: 12.sp),
                                           )
                                         ],
                                       ),
                               ),
                               Tab(
-                                height: 66.h,
+                                height: 64.h,
                                 icon: navigationValue == 1
                                     ? Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/listalt_selected.svg",
-                                            width: 34.w,
-                                            height: 34.w,
+                                            "assets/icons/my_shipments_selected.svg",
+                                            width: 38.w,
+                                            height: 38.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -630,7 +606,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     color: AppColor.deepYellow,
-                                                    fontSize: 15.sp),
+                                                    fontSize: 12.sp),
                                               ),
                                             ),
                                           )
@@ -641,9 +617,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/listalt.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            "assets/icons/my_shipments.svg",
+                                            width: 35.w,
+                                            height: 35.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -663,7 +639,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                         'incoming_orders'),
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 15.sp),
+                                                    fontSize: 12.sp),
                                               ),
                                             ),
                                           )
@@ -672,16 +648,16 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                               ),
                               Tab(
                                 // text: "الرئيسية",
-                                height: 66.h,
+                                height: 64.h,
                                 icon: navigationValue == 2
                                     ? Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/truck_order_selected.svg",
-                                            width: 34.w,
-                                            height: 34.w,
+                                            "assets/icons/search_for_truck_selected.svg",
+                                            width: 38.w,
+                                            height: 38.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -700,7 +676,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                         'shipment_search'),
                                                 style: TextStyle(
                                                     color: AppColor.deepYellow,
-                                                    fontSize: 15.sp),
+                                                    fontSize: 12.sp),
                                               ),
                                             ),
                                           )
@@ -711,9 +687,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/truck_order.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            "assets/icons/search_for_truck.svg",
+                                            width: 35.w,
+                                            height: 35.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -732,7 +708,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                         'shipment_search'),
                                                 style: TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 15.sp),
+                                                    fontSize: 12.sp),
                                               ),
                                             ),
                                           )
@@ -741,7 +717,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                               ),
                               Tab(
                                 // text: "التعرفة",
-                                height: 66.h,
+                                height: 64.h,
                                 icon: navigationValue == 3
                                     ? Column(
                                         mainAxisAlignment:
@@ -749,8 +725,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/location_selected.svg",
-                                            width: 34.w,
-                                            height: 34.w,
+                                            width: 38.w,
+                                            height: 38.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -762,7 +738,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                 .translate('my_path'),
                                             style: TextStyle(
                                                 color: AppColor.deepYellow,
-                                                fontSize: 15.sp),
+                                                fontSize: 12.sp),
                                           )
                                         ],
                                       )
@@ -772,8 +748,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/location.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            width: 35.w,
+                                            height: 35.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -785,7 +761,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                 .translate('my_path'),
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 15.sp),
+                                                fontSize: 12.sp),
                                           )
                                         ],
                                       ),

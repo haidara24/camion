@@ -26,12 +26,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthInProgressState());
         try {
           prefs = await SharedPreferences.getInstance();
-          var userType = prefs.getString("userType");
-          var jwt = prefs.getString("token");
+          var userType = prefs.getString("userType") ?? "";
 
           final hastoken = await authRepository.isAuthenticated();
-          if (userType != null) {
-            if (hastoken) {
+          if (hastoken) {
+            if (userType != null) {
               switch (userType) {
                 case "Managment":
                   emit(AuthManagmentSuccessState());
@@ -50,11 +49,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                   break;
                 default:
               }
+              var jwt = prefs.getString("token");
+
               Response userresponse =
                   await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
               if (userresponse.statusCode == 200) {
                 var prefs = await SharedPreferences.getInstance();
-                var userType = prefs.getString("userType") ?? "";
+
                 if (userType.isNotEmpty) {
                   var myDataString = utf8.decode(userresponse.bodyBytes);
 
@@ -96,8 +97,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                       var res = jsonDecode(driverDataString);
                       userProvider.setDriver(Driver.fromJson(res));
 
-                      prefs.setInt("truckId", res['truck2']["id"]);
-                      prefs.setString("gpsId", res['truck2']["gpsId"]);
+                      if (res['truck2'] != null) {
+                        prefs.setInt("truckId", res['truck2']["id"]);
+                        prefs.setString("gpsId", res['truck2']["gpsId"]);
+                      }
                     }
                   }
                 }
@@ -132,20 +135,72 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoggingInProgressState());
       try {
         prefs = await SharedPreferences.getInstance();
-        var userType = prefs.getString("userType");
-        var jwt = prefs.getString("token");
+        var userType = prefs.getString("userType") ?? "";
 
         var data = await authRepository.verifyOtp(
           otp: event.otp,
         );
         if (data["status"] == 200) {
+          // var jwt = prefs.getString("token");
+
+          // bool isLogin = prefs.getBool("isLogin") ?? false;
+          // Response userresponse =
+          //     await HttpHelper.get(PROFILE_ENDPOINT, apiToken: data["token"]);
+          // print("userresponse.statusCode${userresponse.statusCode}");
+
+          // if (userresponse.statusCode == 200 && isLogin) {
+          //   if (userType.isNotEmpty) {
+          //     var myDataString = utf8.decode(userresponse.bodyBytes);
+
+          //     prefs.setString("userProfile", myDataString);
+          //     // print("userProfile${myDataString}");
+          //     var result = jsonDecode(myDataString);
+          //     var userProfile = UserModel.fromJson(result);
+          //     if (userProfile.merchant != null) {
+          //       prefs.setInt("merchant", userProfile.merchant!);
+          //       Response merchantResponse = await HttpHelper.get(
+          //           '$MERCHANTS_ENDPOINT${userProfile.merchant}/',
+          //           apiToken: data["token"]);
+          //       if (merchantResponse.statusCode == 200) {
+          //         var merchantDataString =
+          //             utf8.decode(merchantResponse.bodyBytes);
+          //         var res = jsonDecode(merchantDataString);
+          //         userProvider.setMerchant(Merchant.fromJson(res));
+          //       }
+          //     }
+          //     if (userProfile.truckowner != null) {
+          //       print(userProfile.truckowner!);
+
+          //       prefs.setInt("truckowner", userProfile.truckowner!);
+          //       Response ownerResponse = await HttpHelper.get(
+          //           '$OWNERS_ENDPOINT${userProfile.truckowner}/',
+          //           apiToken: data["token"]);
+          //       if (ownerResponse.statusCode == 200) {
+          //         var ownerDataString = utf8.decode(ownerResponse.bodyBytes);
+          //         print(ownerDataString);
+          //         var res = jsonDecode(ownerDataString);
+          //         userProvider.setTruckOwner(TruckOwner.fromJson(res));
+          //       }
+          //     }
+          //     if (userProfile.truckuser != null) {
+          //       prefs.setInt("truckuser", userProfile.truckuser!);
+          //       Response driverResponse = await HttpHelper.get(
+          //           '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
+          //           apiToken: data["token"]);
+          //       if (driverResponse.statusCode == 200) {
+          //         var driverDataString = utf8.decode(driverResponse.bodyBytes);
+          //         var res = jsonDecode(driverDataString);
+          //         userProvider.setDriver(Driver.fromJson(res));
+          //         if (isLogin) {
+          //           prefs.setInt("truckId", res['truck2']["id"]);
+          //           prefs.setString("gpsId", res['truck2']["gpsId"]);
+          //         }
+          //       }
+          //     }
+          //   }
+          // }
+
           switch (userType) {
-            case "Managment":
-              emit(AuthManagmentSuccessState());
-              break;
-            case "CheckPoint":
-              emit(AuthCheckPointSuccessState());
-              break;
             case "Driver":
               emit(AuthDriverSuccessState());
               break;
@@ -157,56 +212,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               break;
             default:
               emit(const AuthFailureState("خطأ في نوع المستخدم."));
-          }
-          Response userresponse =
-              await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
-          if (userresponse.statusCode == 200) {
-            var prefs = await SharedPreferences.getInstance();
-            var userType = prefs.getString("userType") ?? "";
-            if (userType.isNotEmpty) {
-              var myDataString = utf8.decode(userresponse.bodyBytes);
-
-              prefs.setString("userProfile", myDataString);
-              var result = jsonDecode(myDataString);
-              var userProfile = UserModel.fromJson(result);
-              if (userProfile.merchant != null) {
-                prefs.setInt("merchant", userProfile.merchant!);
-                Response merchantResponse = await HttpHelper.get(
-                    '$MERCHANTS_ENDPOINT${userProfile.merchant}/',
-                    apiToken: jwt);
-                if (merchantResponse.statusCode == 200) {
-                  var merchantDataString =
-                      utf8.decode(merchantResponse.bodyBytes);
-                  var res = jsonDecode(merchantDataString);
-                  userProvider.setMerchant(Merchant.fromJson(res));
-                }
-              }
-              if (userProfile.truckowner != null) {
-                prefs.setInt("truckowner", userProfile.truckowner!);
-                Response ownerResponse = await HttpHelper.get(
-                    '$OWNERS_ENDPOINT${userProfile.truckowner}/',
-                    apiToken: jwt);
-                if (ownerResponse.statusCode == 200) {
-                  var ownerDataString = utf8.decode(ownerResponse.bodyBytes);
-                  var res = jsonDecode(ownerDataString);
-                  userProvider.setTruckOwner(TruckOwner.fromJson(res));
-                }
-              }
-              if (userProfile.truckuser != null) {
-                prefs.setInt("truckuser", userProfile.truckuser!);
-                Response driverResponse = await HttpHelper.get(
-                    '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
-                    apiToken: jwt);
-                if (driverResponse.statusCode == 200) {
-                  var driverDataString = utf8.decode(driverResponse.bodyBytes);
-                  var res = jsonDecode(driverDataString);
-                  userProvider.setDriver(Driver.fromJson(res));
-
-                  prefs.setInt("truckId", res['truck2']["id"]);
-                  prefs.setString("gpsId", res['truck2']["gpsId"]);
-                }
-              }
-            }
           }
         } else if (data["status"] == 401) {
           String? details = "";

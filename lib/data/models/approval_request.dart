@@ -101,7 +101,7 @@ class OwnerApprovalRequest {
 
 class MerchantApprovalRequest {
   int? id;
-  Driver? driver;
+  Truckuser? driver;
   SimpleMerchantSubshipment? subshipment;
   String? responseTurn;
   bool? isApproved;
@@ -121,7 +121,7 @@ class MerchantApprovalRequest {
 
   MerchantApprovalRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    driver = json['driver'] != null ? Driver.fromJson(json['driver']) : null;
+    driver = json['driver'] != null ? Truckuser.fromJson(json['driver']) : null;
     subshipment = json['subshipment'] != null
         ? SimpleMerchantSubshipment.fromJson(json['subshipment'])
         : null;

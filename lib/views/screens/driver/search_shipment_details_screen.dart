@@ -15,6 +15,7 @@ import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -446,13 +447,9 @@ class _SearchShipmentDetailsScreenState
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      "مسار الشحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("shipment_route"),
                                     ),
                                     ShipmentPathVerticalWidget(
                                       pathpoints:
@@ -465,14 +462,11 @@ class _SearchShipmentDetailsScreenState
                                       mini: false,
                                     ),
                                     const Divider(),
-                                    Text(
-                                      "تفاصيل بضاعة الشاحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("commodity_info"),
                                     ),
+                                    const SizedBox(height: 4),
                                     Commodity_info_widget(
                                         shipmentItems: shipmentstate
                                             .shipment.shipmentItems!),
@@ -549,12 +543,14 @@ class _SearchShipmentDetailsScreenState
                                                                     .translate(
                                                                         'accept')),
                                                             content:
-                                                                const SingleChildScrollView(
+                                                                SingleChildScrollView(
                                                               child: ListBody(
                                                                 children: <Widget>[
                                                                   SectionBody(
-                                                                    text:
-                                                                        "هل أنت متأكد أنك تريد تخديم هذه الشحنة.",
+                                                                    text: AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'serve_shipment_confirm'),
                                                                   ),
                                                                 ],
                                                               ),

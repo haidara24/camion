@@ -1,11 +1,5 @@
-import 'package:camion/business_logic/bloc/package_type_bloc.dart';
-import 'package:camion/business_logic/bloc/post_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {

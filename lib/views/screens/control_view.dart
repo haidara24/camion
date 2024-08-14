@@ -1,14 +1,8 @@
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/complete_managment_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/price_request_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/simple_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/views/screens/check_point/home_screen.dart';
 import 'package:camion/views/screens/driver/driver_home_screen.dart';
-import 'package:camion/views/screens/managment/managment_home_screen.dart';
 import 'package:camion/views/screens/merchant/home_screen.dart';
 import 'package:camion/views/screens/owner/owner_home_screen.dart';
 import 'package:camion/views/screens/select_user_type.dart';

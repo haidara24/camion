@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class LoadingIndicator extends StatelessWidget {
   Color? color;
   LoadingIndicator({Key? key, this.color = Colors.black}) : super(key: key);

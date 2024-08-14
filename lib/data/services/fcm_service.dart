@@ -45,7 +45,7 @@ class NotificationServices {
         // showNotification(message);
       }
       if (notificationProvider != null) {
-        notificationProvider!.addNotReadedNotification();
+        // notificationProvider!.addNotReadedNotification();
         BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
       }
     });
@@ -154,24 +154,12 @@ class NotificationServices {
                 requestId: message.data['requestId']),
           ));
     }
-    // if (message.data['notefication_type'] == "A") {
-    //   BlocProvider.of<ShipmentDetailsBloc>(context)
-    //       .add(ShipmentDetailsLoadEvent(int.parse(message.data['shipmentId'])));
-
-    //   Navigator.push(
-    //       context,
-    //       MaterialPageRoute(
-    //         builder: (context) => ActiveShipmentDetailsFromNotificationScreen(
-    //           user_id: 'driver${int.parse(message.data['sender'])}',
-    //         ),
-    //       ));
-    // }
   }
 
   Future forgroundMessage(
       BuildContext context, NotificationProvider provider) async {
     if (notificationProvider != null) {
-      notificationProvider!.addNotReadedNotification();
+      // notificationProvider!.addNotReadedNotification();
       BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
     }
     await FirebaseMessaging.instance

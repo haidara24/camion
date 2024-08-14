@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/payment_create_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -22,6 +23,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
+import 'package:intl/intl.dart' as intel;
+import 'package:shimmer/shimmer.dart';
+
 // import 'package:flutter_stripe/flutter_stripe.dart' as stripe;
 
 class ShipmentPaymentScreen extends StatefulWidget {
@@ -43,6 +47,8 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
   String selectedPaymentType = "B";
   File? barakah_image;
   File? haram_image;
+
+  var f = intel.NumberFormat("#,###", "en_US");
 
   final ImagePicker _picker = ImagePicker();
 
@@ -122,6 +128,15 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
     }
   }
 
+  int calculatePrice(
+    double distance,
+    double weight,
+  ) {
+    double result = 0.0;
+    result = distance * (weight / 1000) * 550;
+    return result.toInt();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -198,69 +213,82 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                             height: 7.h,
                           ),
                           Text(
-                            '${AppLocalizations.of(context)!.translate('price')}: ${widget.shipment.truck!.fees!}',
+                            '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(widget.shipment.distance!, widget.shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
                             style: TextStyle(
                               // color: AppColor.lightBlue,
                               fontSize: 17.sp,
                             ),
                           ),
-                          Divider(
-                            height: 7.h,
-                          ),
-                          Text(
-                            '${AppLocalizations.of(context)!.translate('extra_fees')}: ${widget.shipment.truck!.extra_fees!}',
-                            style: TextStyle(
-                              // color: AppColor.lightBlue,
-                              fontSize: 17.sp,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 7.h,
-                          ),
+                          // Divider(
+                          //   height: 7.h,
+                          // ),
                           widget.shipment.shipmentpaymentv2 != null
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                      width: double.infinity,
-                                    ),
-                                    Divider(
-                                      height: 7.h,
-                                    ),
-                                    Text(
-                                      '${AppLocalizations.of(context)!.translate('total_amount')}: ${(widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2! + widget.shipment.shipmentpaymentv2!)}',
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 17.sp,
-                                      ),
-                                    ),
-                                    Divider(
-                                      height: 7.h,
-                                    ),
-                                    Text(
-                                      '${AppLocalizations.of(context)!.translate('payment_date')}: }',
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 17.sp,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 7.h,
-                                    ),
-                                    Divider(
-                                      height: 7.h,
-                                    ),
-                                    Text(
-                                      '${AppLocalizations.of(context)!.translate('payment_method')}: VISA Card',
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 17.sp,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 7.h,
-                                    ),
-                                  ],
+                              ? BlocBuilder<ReadPaymentInstructionBloc,
+                                  ReadPaymentInstructionState>(
+                                  builder: (context, state) {
+                                    if (state
+                                        is ReadPaymentInstructionLoadedSuccess) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            height: 7.h,
+                                          ),
+                                          Text(
+                                            '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
+                                            style: TextStyle(
+                                              // color: AppColor.lightBlue,
+                                              fontSize: 17.sp,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 7.h,
+                                          ),
+                                          Text(
+                                            '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
+                                            style: TextStyle(
+                                              // color: AppColor.lightBlue,
+                                              fontSize: 17.sp,
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      return Shimmer.fromColors(
+                                        baseColor: (Colors.grey[300])!,
+                                        highlightColor: (Colors.grey[100])!,
+                                        enabled: true,
+                                        direction: ShimmerDirection.ttb,
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemBuilder: (_, __) => Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 5),
+                                                height: 150.h,
+                                                width: double.infinity,
+                                                clipBehavior: Clip.antiAlias,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          itemCount: 1,
+                                        ),
+                                      );
+                                    }
+                                  },
                                 )
                               : const SizedBox.shrink(),
                         ],
@@ -702,8 +730,11 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                           String terminalKey = "M5NW61";
                           String merchantSecret =
                               "MO7YFXNPDNFOEIK0ZCUIBMY90DDTF46IUM5NDS23AQZGZEVYSMCACOAPE2LLKD53";
-                          String amount = "1500";
-                          String orderRef = 35.toString();
+                          String amount = calculatePrice(
+                                  widget.shipment.distance!,
+                                  widget.shipment.totalWeight!.toDouble())
+                              .toString();
+                          String orderRef = widget.shipment.id.toString();
 
                           // Concatenate the values
                           String concatenatedString =
@@ -731,6 +762,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                     ECashPaymentCheckoutScreen(
                                   url: paymentUrl,
                                   shipment: widget.shipment,
+                                  amount: amount,
                                 ),
                               ));
                           print(paymentUrl);

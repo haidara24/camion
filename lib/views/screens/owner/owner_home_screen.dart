@@ -14,6 +14,7 @@ import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
+import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/main_screen.dart';
@@ -29,6 +30,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:location/location.dart' as loc;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OwnerHomeScreen extends StatefulWidget {
@@ -51,7 +53,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   NotificationServices notificationServices = NotificationServices();
   late TabController _tabController;
-
   bool userloading = true;
   late UserModel _usermodel;
   getUserData() async {
@@ -198,70 +199,75 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                       SizedBox(
                         height: 35.h,
                       ),
-                      InkWell(
-                        onTap: () async {
-                          SharedPreferences prefs =
-                              await SharedPreferences.getInstance();
-                          var owner = prefs.getInt("truckowner");
-                          print(owner);
-                          // ignore: use_build_context_synchronously
-                          BlocProvider.of<OwnerProfileBloc>(context)
-                              .add(OwnerProfileLoad(owner!));
+                      Consumer<UserProvider>(
+                          builder: (context, userProvider, child) {
+                        return InkWell(
+                          onTap: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            var owner = prefs.getInt("truckowner");
+                            print(owner);
+                            // ignore: use_build_context_synchronously
+                            BlocProvider.of<OwnerProfileBloc>(context)
+                                .add(OwnerProfileLoad(owner!));
+                            print(userProvider.owner!.user!.firstName!);
+                            print(userProvider.owner!.user!.lastName!);
 
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    OwnerProfileScreen(user: _usermodel),
-                              ));
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            CircleAvatar(
-                                backgroundColor: AppColor.deepYellow,
-                                radius: 35.h,
-                                child: userloading
-                                    ? Center(
-                                        child: LoadingIndicator(),
-                                      )
-                                    : ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(180),
-                                        child: Image.network(
-                                          _usermodel.image!,
-                                          fit: BoxFit.fill,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Center(
-                                            child: Text(
-                                              "${_usermodel.firstName![0].toUpperCase()} ${_usermodel.lastName![0].toUpperCase()}",
-                                              style: TextStyle(
-                                                fontSize: 28.sp,
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      OwnerProfileScreen(user: _usermodel),
+                                ));
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              CircleAvatar(
+                                  backgroundColor: AppColor.deepYellow,
+                                  radius: 35.h,
+                                  child: (userProvider.owner == null)
+                                      ? Center(
+                                          child: LoadingIndicator(),
+                                        )
+                                      : ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(180),
+                                          child: Image.network(
+                                            userProvider.owner!.user!.image!,
+                                            fit: BoxFit.fill,
+                                            errorBuilder:
+                                                (context, error, stackTrace) =>
+                                                    Center(
+                                              child: Text(
+                                                "${userProvider.owner!.user!.firstName![0].toUpperCase()} ${userProvider.owner!.user!.lastName![0].toUpperCase()}",
+                                                style: TextStyle(
+                                                  fontSize: 28.sp,
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      )),
-                            userloading
-                                ? Text(
-                                    "",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                                : Text(
-                                    "${_usermodel.firstName!} ${_usermodel.lastName!}",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 26.sp,
-                                        fontWeight: FontWeight.bold),
-                                  )
-                          ],
-                        ),
-                      ),
+                                        )),
+                              (userProvider.owner == null)
+                                  ? Text(
+                                      "",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 26.sp,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                                  : Text(
+                                      "${userProvider.owner!.user!.firstName!} ${userProvider.owner!.user!.lastName!}",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 26.sp,
+                                          fontWeight: FontWeight.bold),
+                                    )
+                            ],
+                          ),
+                        );
+                      }),
                       SizedBox(
                         height: 15.h,
                       ),
@@ -330,8 +336,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/settings.svg",
+                            "assets/icons/translate_camion.svg",
                             height: 20.h,
+                            width: 20.h,
                           ),
                           title: Text(
                             localeState.value.languageCode != 'en'
@@ -367,6 +374,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                         leading: SvgPicture.asset(
                           "assets/icons/help_info.svg",
                           height: 20.h,
+                          width: 20.h,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.translate('help'),
@@ -439,6 +447,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                           leading: SvgPicture.asset(
                             "assets/icons/log_out.svg",
                             height: 20.h,
+                            width: 20.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!.translate('log_out'),
@@ -457,7 +466,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                   builder: (context, state) {
                     if (state is BottomNavBarShown) {
                       return Container(
-                        height: 88.h,
+                        height: 65.h,
                         color: AppColor.deepBlack,
                         child: TabBar(
                           labelPadding: EdgeInsets.zero,
@@ -475,15 +484,15 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                           tabs: [
                             Tab(
                               // text: "طلب مخلص",
-                              height: 66.h,
+                              height: 64.h,
                               icon: navigationValue == 0
                                   ? Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/home_selected.svg",
-                                          width: 36.w,
-                                          height: 36.h,
+                                          width: 38.w,
+                                          height: 38.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -504,8 +513,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/home.svg",
-                                          width: 30.w,
-                                          height: 30.h,
+                                          width: 35.w,
+                                          height: 35.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -524,15 +533,15 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                             ),
                             Tab(
                               // text: "الحاسبة",
-                              height: 66.h,
+                              height: 64.h,
                               icon: navigationValue == 1
                                   ? Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/listalt_selected.svg",
-                                          width: 36.w,
-                                          height: 36.h,
+                                          width: 38.w,
+                                          height: 38.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -561,8 +570,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/listalt.svg",
-                                          width: 30.w,
-                                          height: 30.h,
+                                          width: 35.w,
+                                          height: 35.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -588,15 +597,15 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                     ),
                             ),
                             Tab(
-                              height: 66.h,
+                              height: 64.h,
                               icon: navigationValue == 2
                                   ? Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/truck_order_selected.svg",
-                                          width: 36.w,
-                                          height: 36.h,
+                                          width: 38.w,
+                                          height: 38.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -625,8 +634,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/truck_order.svg",
-                                          width: 30.w,
-                                          height: 30.h,
+                                          width: 35.w,
+                                          height: 35.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -653,15 +662,15 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                             ),
                             Tab(
                               // text: "التعرفة",
-                              height: 66.h,
+                              height: 64.h,
                               icon: navigationValue == 3
                                   ? Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/location_selected.svg",
-                                          width: 36.w,
-                                          height: 36.h,
+                                          width: 38.w,
+                                          height: 38.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -682,8 +691,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/location.svg",
-                                          width: 30.w,
-                                          height: 30.h,
+                                          width: 35.w,
+                                          height: 35.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -702,15 +711,15 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                             ),
                             Tab(
                               // text: "التعرفة",
-                              height: 66.h,
+                              height: 64.h,
                               icon: navigationValue == 4
                                   ? Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/location_selected.svg",
-                                          width: 36.w,
-                                          height: 36.h,
+                                          width: 38.w,
+                                          height: 38.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(
@@ -731,8 +740,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/location.svg",
-                                          width: 30.w,
-                                          height: 30.h,
+                                          width: 35.w,
+                                          height: 35.w,
                                         ),
                                         localeState.value.languageCode == 'en'
                                             ? const SizedBox(

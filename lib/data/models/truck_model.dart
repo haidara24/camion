@@ -344,14 +344,19 @@ class KTruck {
 
   KTruck.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    truckuser = (json['truckuser'] == null || json['truckuser'] is int)
-        ? null
-        : KTuckUser.fromJson(json['truckuser']);
+    if (json['truckuser'] is int) {
+      truckuser = null;
+    } else if (json['truckuser'] != null) {
+      truckuser = KTuckUser.fromJson(json['truckuser']);
+    }
 
+    if (json['truck_type'] is int) {
+      truckType = null;
+    } else if (json['truck_type'] != null) {
+      truckType = TruckType.fromJson(json['truck_type']);
+    }
     owner = json['owner'];
-    truckType = json['truck_type'] != null
-        ? TruckType.fromJson(json['truck_type'])
-        : null;
+
     location = json['location'];
     locationLat = json['location_lat'];
     height = json['height'];

@@ -3,6 +3,7 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/data/services/users_services.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/create_profile_screen.dart';
@@ -16,7 +17,9 @@ import 'package:pinput/pinput.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   final bool isLogin;
-  VerifyOtpScreen({Key? key, required this.isLogin}) : super(key: key);
+  final String phone;
+  VerifyOtpScreen({Key? key, required this.isLogin, required this.phone})
+      : super(key: key);
 
   @override
   State<VerifyOtpScreen> createState() => _VerifyOtpScreenState();
@@ -75,131 +78,142 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              image: DecorationImage(
-                image: AssetImage("assets/images/camion_backgroung_image.png"),
-                fit: BoxFit.cover,
+          child: SafeArea(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                image: DecorationImage(
+                  image:
+                      AssetImage("assets/images/camion_backgroung_image.png"),
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: SingleChildScrollView(
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 150.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 17.w),
-                      child: Card(
-                        elevation: 1,
-                        clipBehavior: Clip.antiAlias,
-                        color: AppColor.deepBlack,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(45),
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                body: SingleChildScrollView(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 150.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 17.w),
+                        child: Card(
+                          elevation: 1,
+                          clipBehavior: Clip.antiAlias,
+                          color: AppColor.deepBlack,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(45),
+                            ),
                           ),
-                        ),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 60.h, horizontal: 20.w),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 75.h,
-                                  width: 150.w,
-                                  child: SvgPicture.asset(
-                                      "assets/images/camion_logo_sm.svg"),
-                                ),
-                                SizedBox(
-                                  height: 110.h,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('please_verify'),
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 19.sp,
-                                    fontWeight: FontWeight.bold,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 60.h, horizontal: 20.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 75.h,
+                                    width: 150.w,
+                                    child: SvgPicture.asset(
+                                        "assets/images/camion_logo_sm.svg"),
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 20.h,
-                                ),
-                                BlocConsumer<AuthBloc, AuthState>(
-                                  listener: (context, state) async {
-                                    if (state is AuthDriverSuccessState ||
-                                        state is AuthOwnerSuccessState ||
-                                        state is AuthMerchantSuccessState ||
-                                        state is AuthManagmentSuccessState ||
-                                        state is AuthCheckPointSuccessState) {
-                                      showCustomSnackBar(
-                                        context: context,
-                                        message: localeState
-                                                    .value.languageCode ==
-                                                'en'
-                                            ? 'sign in successfully, welcome.'
-                                            : 'تم تسجيل الدخول بنجاح! أهلا بك.',
-                                      );
-
-                                      if (widget.isLogin) {
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ControlView(),
-                                          ),
-                                          (route) => false,
+                                  SizedBox(
+                                    height: 110.h,
+                                  ),
+                                  Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('please_verify'),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  BlocConsumer<AuthBloc, AuthState>(
+                                    listener: (context, state) async {
+                                      if (state is AuthDriverSuccessState ||
+                                          state is AuthOwnerSuccessState ||
+                                          state is AuthMerchantSuccessState ||
+                                          state is AuthManagmentSuccessState ||
+                                          state is AuthCheckPointSuccessState) {
+                                        showCustomSnackBar(
+                                          context: context,
+                                          message: localeState
+                                                      .value.languageCode ==
+                                                  'en'
+                                              ? 'sign in successfully, welcome.'
+                                              : 'تم تسجيل الدخول بنجاح! أهلا بك.',
                                         );
-                                      } else {
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CreateProfileScreen(),
-                                          ),
-                                          (route) => false,
+
+                                        if (widget.isLogin) {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ControlView(),
+                                            ),
+                                            (route) => false,
+                                          );
+                                        } else {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CreateProfileScreen(),
+                                            ),
+                                            (route) => false,
+                                          );
+                                        }
+                                      }
+
+                                      if (state is AuthLoginErrorState) {
+                                        showCustomSnackBar(
+                                          context: context,
+                                          backgroundColor: Colors.red[300]!,
+                                          message: state.error!,
                                         );
                                       }
-                                    }
-
-                                    if (state is AuthLoginErrorState) {
-                                      showCustomSnackBar(
-                                        context: context,
-                                        backgroundColor: Colors.red[300]!,
-                                        message: state.error!,
-                                      );
-                                    }
-                                  },
-                                  builder: (context, state) {
-                                    if (state is AuthLoggingInProgressState) {
-                                      return LoadingIndicator(
-                                        color: Colors.white,
-                                      );
-                                    } else {
-                                      return Pinput(
-                                        defaultPinTheme: defaultPinTheme,
-                                        focusedPinTheme: focusedPinTheme,
-                                        submittedPinTheme: submittedPinTheme,
-                                        onCompleted: (pin) => _verify(pin),
-                                      );
-                                    }
-                                  },
-                                ),
-                              ],
+                                    },
+                                    builder: (context, state) {
+                                      if (state is AuthLoggingInProgressState) {
+                                        return LoadingIndicator(
+                                          color: Colors.white,
+                                        );
+                                      } else {
+                                        return Pinput(
+                                          defaultPinTheme: defaultPinTheme,
+                                          focusedPinTheme: focusedPinTheme,
+                                          submittedPinTheme: submittedPinTheme,
+                                          onCompleted: (pin) => _verify(pin),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                  SizedBox(
+                                    height: 8,
+                                  ),
+                                  TextButton(
+                                      onPressed: () {
+                                        UserService.resendOtp(widget.phone);
+                                      },
+                                      child: Text("resend otp"))
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

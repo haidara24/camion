@@ -8,11 +8,12 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 class ECashPaymentCheckoutScreen extends StatefulWidget {
   final String url;
   final SubShipment shipment;
-
+  final String amount;
   ECashPaymentCheckoutScreen({
     Key? key,
     required this.url,
     required this.shipment,
+    required this.amount,
   }) : super(key: key);
 
   @override
@@ -57,7 +58,7 @@ class _ECashPaymentCheckoutScreenState
                   ShipmentPayment payment = ShipmentPayment();
 
                   payment.shipment = widget.shipment.id!;
-                  payment.amount = widget.shipment.truck!.fees;
+                  payment.amount = int.parse(widget.amount);
                   payment.paymentMethod = "E";
                   payment.fees = widget.shipment.truck!.fees;
                   payment.extraFees = widget.shipment.truck!.extra_fees;

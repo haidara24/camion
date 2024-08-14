@@ -58,6 +58,7 @@ class AuthRepository {
         data["details"] = jsonObject["details"];
         data["success"] = jsonObject["isSuccess"];
         data["isLogin"] = jsonObject["isLogin"];
+        prefs.setBool("isLogin", data["isLogin"]);
       } else {
         data["details"] = jsonObject["details"];
         data["success"] = jsonObject["isSuccess"];
@@ -88,6 +89,60 @@ class AuthRepository {
         presisteToken(jsonObject);
 
         data["token"] = jsonObject["access"];
+        prefs = await SharedPreferences.getInstance();
+
+        var userType = prefs.getString("userType") ?? "";
+        bool isLogin = prefs.getBool("isLogin") ?? false;
+        Response userresponse =
+            await HttpHelper.get(PROFILE_ENDPOINT, apiToken: data["token"]);
+        if (userresponse.statusCode == 200) {
+          if (userType.isNotEmpty) {
+            var myDataString = utf8.decode(userresponse.bodyBytes);
+
+            prefs.setString("userProfile", myDataString);
+            print("userProfile${myDataString}");
+            var result = jsonDecode(myDataString);
+            var userProfile = UserModel.fromJson(result);
+            if (userProfile.merchant != null) {
+              prefs.setInt("merchant", userProfile.merchant!);
+              Response merchantResponse = await HttpHelper.get(
+                  '$MERCHANTS_ENDPOINT${userProfile.merchant}/',
+                  apiToken: data["token"]);
+              if (merchantResponse.statusCode == 200) {
+                var merchantDataString =
+                    utf8.decode(merchantResponse.bodyBytes);
+                var res = jsonDecode(merchantDataString);
+                userProvider.setMerchant(Merchant.fromJson(res));
+              }
+            }
+            if (userProfile.truckowner != null) {
+              prefs.setInt("truckowner", userProfile.truckowner!);
+              Response ownerResponse = await HttpHelper.get(
+                  '$OWNERS_ENDPOINT${userProfile.truckowner}/',
+                  apiToken: data["token"]);
+              if (ownerResponse.statusCode == 200) {
+                var ownerDataString = utf8.decode(ownerResponse.bodyBytes);
+                var res = jsonDecode(ownerDataString);
+                userProvider.setTruckOwner(TruckOwner.fromJson(res));
+              }
+            }
+            if (userProfile.truckuser != null) {
+              prefs.setInt("truckuser", userProfile.truckuser!);
+              Response driverResponse = await HttpHelper.get(
+                  '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
+                  apiToken: data["token"]);
+              if (driverResponse.statusCode == 200) {
+                var driverDataString = utf8.decode(driverResponse.bodyBytes);
+                var res = jsonDecode(driverDataString);
+                userProvider.setDriver(Driver.fromJson(res));
+                if (isLogin) {
+                  prefs.setInt("truckId", res['truck2']["id"]);
+                  prefs.setString("gpsId", res['truck2']["gpsId"]);
+                }
+              }
+            }
+          }
+        }
       }
       return data;
     } catch (e) {

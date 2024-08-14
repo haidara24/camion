@@ -241,14 +241,23 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            Text(
-                                                              "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                // color: AppColor.lightBlue,
-                                                                fontSize: 17.sp,
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          4),
+                                                              child: Text(
+                                                                "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  // color: AppColor.lightBlue,
+                                                                  fontSize:
+                                                                      17.sp,
+                                                                ),
                                                               ),
                                                             ),
                                                             Padding(
@@ -256,13 +265,18 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                                   const EdgeInsets
                                                                       .symmetric(
                                                                       horizontal:
-                                                                          11),
+                                                                          4),
                                                               child: Text(
                                                                 '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
-                                                                style: TextStyle(
-                                                                    // color: AppColor.lightBlue,
-                                                                    fontSize: 18.sp,
-                                                                    fontWeight: FontWeight.bold),
+                                                                style:
+                                                                    TextStyle(
+                                                                  // color: AppColor.lightBlue,
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
                                                               ),
                                                             ),
                                                           ],

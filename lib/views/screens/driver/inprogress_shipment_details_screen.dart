@@ -4,26 +4,22 @@ import 'dart:math';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
-import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
-import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
-import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
@@ -355,13 +351,9 @@ class _InprogressShipmentDetailsScreenState
                                     const SizedBox(
                                       height: 5,
                                     ),
-                                    Text(
-                                      "مسار الشحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("shipment_route"),
                                     ),
                                     ShipmentPathVerticalWidget(
                                       pathpoints:
@@ -374,26 +366,21 @@ class _InprogressShipmentDetailsScreenState
                                       mini: false,
                                     ),
                                     const Divider(),
-                                    Text(
-                                      "تفاصيل بضاعة الشاحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("commodity_info"),
                                     ),
+                                    const SizedBox(height: 4),
                                     Commodity_info_widget(
                                         shipmentItems: shipmentstate
                                             .shipment.shipmentItems!),
                                     const Divider(),
-                                    Text(
-                                      "احصائيات مسار الشاحنة",
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 19.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate(
+                                              "shipment_route_statistics"),
                                     ),
+                                    const SizedBox(height: 4),
                                     PathStatisticsWidget(
                                       distance:
                                           shipmentstate.shipment.distance!,
@@ -420,7 +407,7 @@ class _InprogressShipmentDetailsScreenState
                                             showCustomSnackBar(
                                               context: context,
                                               backgroundColor: Colors.red[300]!,
-                                              message: activestate.error!,
+                                              message: activestate.error,
                                             );
                                           }
                                         },

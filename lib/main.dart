@@ -11,6 +11,7 @@ import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/create_price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/incoming_shipments_bloc.dart';
@@ -25,7 +26,6 @@ import 'package:camion/business_logic/bloc/managment/create_category_bloc.dart';
 import 'package:camion/business_logic/bloc/check_point/create_pass_charges_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/create_permission_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/managment_shipment_update_status_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/passcharges_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/permissions_list_bloc.dart';
 import 'package:camion/business_logic/bloc/managment/price_request_bloc.dart';
@@ -58,6 +58,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart'
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_multi_create_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shippment_create_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
@@ -511,6 +512,12 @@ class MyApp extends StatelessWidget {
                                   context)),
                     ),
                     BlocProvider(
+                      create: (context) => ReadPaymentInstructionBloc(
+                          instructionRepository:
+                              RepositoryProvider.of<InstructionRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
                       create: (context) => PaymentCreateBloc(
                           instructionRepository:
                               RepositoryProvider.of<InstructionRepository>(
@@ -614,6 +621,12 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => ShipmentRunningBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ShipmentTaskListBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),

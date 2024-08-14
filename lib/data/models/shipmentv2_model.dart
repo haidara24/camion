@@ -68,7 +68,7 @@ class SubShipment {
   List<PathPoint>? pathpoints;
   ShipmentTruck? truck;
   double? distance;
-  double? price;
+  int? price;
   String? period;
 
   SubShipment({
@@ -92,16 +92,18 @@ class SubShipment {
   SubShipment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     shipmentStatus = json['shipment_status'];
+    print("2");
     paths = json['path'];
-    distance = json['distance'];
-    price = json['price'];
+    distance = json['distance'] ?? 0;
     period = json['period'];
+    price = json['price'];
     truck =
         json['truck'] != null ? ShipmentTruck.fromJson(json['truck']) : null;
     shipment = json['shipment'];
     shipmentinstructionv2 = json['shipmentinstructionv2'];
     shipmentpaymentv2 = json['shipmentpaymentv2'];
     totalWeight = json['total_weight'];
+    print("2");
     pickupDate = DateTime.parse(json['pickup_date']);
     deliveryDate = DateTime.parse(json['delivery_date']);
     if (json['shipment_items'] != null) {
@@ -117,6 +119,7 @@ class SubShipment {
         pathpoints!.add(PathPoint.fromJson(v));
       });
     }
+    print("2");
   }
 
   Map<String, dynamic> toJson() {
@@ -132,7 +135,6 @@ class SubShipment {
     data['total_weight'] = totalWeight;
     data['pickup_date'] = pickupDate?.toIso8601String();
     data['delivery_date'] = deliveryDate?.toIso8601String();
-    print("2");
     // data['shipmentinstructionv2'] = shipmentinstructionv2!;
     // data['shipmentpaymentv2'] = shipmentpaymentv2!;
     if (shipmentItems != null) {

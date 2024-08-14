@@ -26,7 +26,7 @@ class FixesListScreen extends StatelessWidget {
             child: Scaffold(
               backgroundColor: AppColor.lightGrey200,
               appBar: DriverAppBar(
-                title: "مصروفي",
+                title: AppLocalizations.of(context)!.translate('my_fixes'),
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: () => Navigator.push(
@@ -144,7 +144,7 @@ class FixesListScreen extends StatelessWidget {
                                                           horizontal: 11,
                                                         ),
                                                         child: Text(
-                                                          'التكلفة: ${state.fixes[index].amount} ${localeState.value.languageCode == "en" ? 'S.P' : 'ل.س'}',
+                                                          '${AppLocalizations.of(context)!.translate('costs')}: ${state.fixes[index].amount} ${localeState.value.languageCode == "en" ? 'S.P' : 'ل.س'}',
                                                           style: TextStyle(
                                                             // color: AppColor.lightBlue,
                                                             fontSize: 18.sp,
@@ -168,7 +168,7 @@ class FixesListScreen extends StatelessWidget {
                                                                 .symmetric(
                                                                 horizontal: 11),
                                                         child: Text(
-                                                          'التاريخ: ${state.fixes[index].dob!.year}/${state.fixes[index].dob!.month}/${state.fixes[index].dob!.day}',
+                                                          '${AppLocalizations.of(context)!.translate('date')}: ${state.fixes[index].dob!.year}/${state.fixes[index].dob!.month}/${state.fixes[index].dob!.day}',
                                                           style: TextStyle(
                                                               // color: AppColor.lightBlue,
                                                               fontSize: 18.sp,
@@ -192,7 +192,7 @@ class FixesListScreen extends StatelessWidget {
                                                                 .symmetric(
                                                                 horizontal: 11),
                                                         child: Text(
-                                                          'ملاحظات: ${state.fixes[index].note}',
+                                                          '${AppLocalizations.of(context)!.translate('note')}: ${state.fixes[index].note}',
                                                           style: TextStyle(
                                                               // color: AppColor.lightBlue,
                                                               fontSize: 18.sp,

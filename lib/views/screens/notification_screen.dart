@@ -10,6 +10,7 @@ import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,6 +46,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.initState();
     getUserType();
   }
+
+  // getNotificationIcon(String type){
+  //   switch (type) {
+  //     case value:
+
+  //       break;
+  //     default:
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -167,35 +177,43 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     decoration: BoxDecoration(
                                         // color: AppColor.lightGoldenYellow,
                                         borderRadius: BorderRadius.circular(5)),
-                                    child: CircleAvatar(
-                                      radius: 25.h,
-                                      // backgroundColor: AppColor.deepBlue,
-                                      child: Center(
-                                        child: (notificationProvider
-                                                    .notifications[index]
-                                                    .image!
-                                                    .length >
-                                                1)
-                                            ? ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(180),
-                                                child: Image.network(
-                                                  'https://matjari.app/media/${notificationProvider.notifications[index].image!}',
-                                                  height: 55.h,
-                                                  width: 55.w,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              )
-                                            : Text(
-                                                notificationProvider
-                                                    .notifications[index]
-                                                    .image!,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 28.sp,
-                                                ),
-                                              ),
-                                      ),
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 25.h,
+                                          // backgroundColor: AppColor.deepBlue,
+                                          child: Center(
+                                            child: (notificationProvider
+                                                        .notifications[index]
+                                                        .image!
+                                                        .length >
+                                                    1)
+                                                ? ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            180),
+                                                    child: Image.network(
+                                                      'https://matjari.app/media/${notificationProvider.notifications[index].image!}',
+                                                      height: 55.h,
+                                                      width: 55.w,
+                                                      fit: BoxFit.fill,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    notificationProvider
+                                                        .notifications[index]
+                                                        .image!,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 28.sp,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                        //   getNotificationIcon(notificationProvider
+                                        // .notifications[index].noteficationType!),
+                                      ],
                                     ),
                                   ),
                                   title: Text(notificationProvider

@@ -10,6 +10,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:camion/views/screens/merchant/shipment_details_screen.dart';
 import 'package:flutter/material.dart';
@@ -75,11 +76,11 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
 
   @override
   void dispose() {
-    super.dispose();
     for (var element in _maps) {
       element!.dispose();
     }
     _tabController.dispose();
+    super.dispose();
   }
 
   Color getColorByIndex(int index) {
@@ -340,17 +341,17 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                         indicatorColor: AppColor.deepYellow,
                         controller: _tabController,
                         onTap: (value) {
-                          // switch (value) {
-                          //   case 0:
-                          //     BlocProvider.of<ShipmentListBloc>(context)
-                          //         .add(ShipmentListLoadEvent("P"));
-                          //     break;
-                          //   case 1:
-                          //     BlocProvider.of<MerchantRequestsListBloc>(context)
-                          //         .add(MerchantRequestsListLoadEvent());
-                          //     break;
-                          //   default:
-                          // }
+                          switch (value) {
+                            case 0:
+                              BlocProvider.of<ShipmentListBloc>(context)
+                                  .add(ShipmentListLoadEvent("P"));
+                              break;
+                            case 1:
+                              BlocProvider.of<MerchantRequestsListBloc>(context)
+                                  .add(MerchantRequestsListLoadEvent());
+                              break;
+                            default:
+                          }
                           setState(() {
                             tabIndex = value;
                           });
@@ -360,7 +361,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                           Tab(
                             child: Center(
                                 child: Text(AppLocalizations.of(context)!
-                                    .translate('pending'))),
+                                    .translate('inprogress'))),
                           ),
 
                           Tab(
@@ -415,6 +416,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                           ShipmentDetailsScreen(
                                                         shipment: state
                                                             .shipments[index],
+                                                        preview: false,
                                                       ),
                                                     ));
                                               },
@@ -451,55 +453,28 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                           child: Row(
                                                             children: [
                                                               Container(
-                                                                height: 45.h,
+                                                                height: 45.w,
                                                                 width: 45.w,
                                                                 margin:
                                                                     const EdgeInsets
                                                                         .symmetric(
-                                                                  horizontal:
-                                                                      12,
+                                                                  horizontal: 4,
                                                                 ),
                                                                 child: Center(
-                                                                  child: localeState
-                                                                              .value
-                                                                              .languageCode ==
-                                                                          'en'
-                                                                      ? SvgPicture
-                                                                              .asset(
-                                                                          "assets/icons/truck_en.svg",
-                                                                          height:
-                                                                              30.h,
-                                                                          width:
-                                                                              30.w,
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        )
-                                                                          .animate(
-                                                                              delay: 600
-                                                                                  .ms)
-                                                                          .shimmer(
-                                                                              duration: playDuration -
-                                                                                  200
-                                                                                      .ms)
-                                                                          .flip()
-                                                                      : SvgPicture
-                                                                              .asset(
-                                                                          "assets/icons/truck_ar.svg",
-                                                                          height:
-                                                                              30.h,
-                                                                          width:
-                                                                              30.w,
-                                                                          fit: BoxFit
-                                                                              .fill,
-                                                                        )
-                                                                          .animate(
-                                                                              delay: 600.ms)
-                                                                          .shimmer(duration: playDuration - 200.ms)
-                                                                          .flip(),
+                                                                  child:
+                                                                      SvgPicture
+                                                                          .asset(
+                                                                    "assets/icons/waiting_shipment.svg",
+                                                                    height:
+                                                                        40.w,
+                                                                    width: 40.w,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
                                                                 ),
                                                               ),
                                                               SizedBox(
-                                                                width: 100.w,
+                                                                // width: 100.w,
                                                                 child: Text(
                                                                   commodityItemsText(state
                                                                       .shipments[
@@ -523,13 +498,11 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 padding: const EdgeInsets
                                                                     .symmetric(
                                                                     horizontal:
-                                                                        11),
-                                                                child: Text(
-                                                                  '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
-                                                                  style: TextStyle(
-                                                                      // color: AppColor.lightBlue,
-                                                                      fontSize: 18.sp,
-                                                                      fontWeight: FontWeight.bold),
+                                                                        8),
+                                                                child:
+                                                                    SectionTitle(
+                                                                  text:
+                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
                                                                 ),
                                                               ),
                                                             ],
@@ -711,10 +684,30 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                         color:
                                                             AppColor.deepYellow,
                                                         child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
                                                           children: [
+                                                            Container(
+                                                              height: 45.w,
+                                                              width: 45.w,
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal: 4,
+                                                              ),
+                                                              child: Center(
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                  state.requests[index]
+                                                                          .isApproved!
+                                                                      ? "assets/icons/complete.svg"
+                                                                      : "assets/icons/cancel.svg",
+                                                                  height: 40.w,
+                                                                  width: 40.w,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
+                                                            ),
                                                             Text(
                                                               "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
                                                               overflow:
@@ -725,18 +718,17 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 fontSize: 17.sp,
                                                               ),
                                                             ),
+                                                            Spacer(),
                                                             Padding(
                                                               padding:
                                                                   const EdgeInsets
                                                                       .symmetric(
                                                                       horizontal:
-                                                                          11),
-                                                              child: Text(
-                                                                '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
-                                                                style: TextStyle(
-                                                                    // color: AppColor.lightBlue,
-                                                                    fontSize: 18.sp,
-                                                                    fontWeight: FontWeight.bold),
+                                                                          8),
+                                                              child:
+                                                                  SectionTitle(
+                                                                text:
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
                                                               ),
                                                             ),
                                                           ],

@@ -71,7 +71,7 @@ class PathStatisticsWidget extends StatelessWidget {
         ),
         SizedBox(
           height: 50.h,
-          child: VerticalDivider(
+          child: const VerticalDivider(
             color: Colors.grey,
             thickness: 1,
             width: 1,
@@ -124,7 +124,7 @@ class PathStatisticsWidget extends StatelessWidget {
         ),
         SizedBox(
           height: 50.h,
-          child: VerticalDivider(
+          child: const VerticalDivider(
             color: Colors.grey,
             thickness: 1,
             width: 1,

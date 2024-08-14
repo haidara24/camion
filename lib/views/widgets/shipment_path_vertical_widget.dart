@@ -219,8 +219,11 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: stoppoints(context),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        children: stoppoints(context),
+      ),
     );
   }
 }

@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: Container(
-            height: 70.h,
+            height: kToolbarHeight,
             padding: EdgeInsets.only(bottom: 6.h),
             color: color ?? AppColor.deepBlack,
             child: Padding(
@@ -43,55 +43,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   Row(
                     children: [
                       scaffoldKey == null
-                          ? InkWell(
-                              onTap: () {
+                          ? IconButton(
+                              onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: AbsorbPointer(
-                                absorbing: true,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 15.h, horizontal: 15.w),
-                                  child: SizedBox(
-                                    // margin:
-                                    //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
-                                    height: 35.h,
-                                    width: 35.w,
-
-                                    child: Center(
-                                      child: localeState.value.languageCode ==
-                                              'en'
-                                          ? SvgPicture.asset(
-                                              "assets/icons/arrow-left-en.svg")
-                                          : SvgPicture.asset(
-                                              "assets/icons/arrow-left-ar.svg"),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              icon: localeState.value.languageCode == 'en'
+                                  ? SvgPicture.asset(
+                                      "assets/icons/arrow-left-en.svg")
+                                  : SvgPicture.asset(
+                                      "assets/icons/arrow-left-ar.svg"),
                             )
-                          : InkWell(
-                              onTap: () {
+                          : IconButton(
+                              onPressed: () {
                                 scaffoldKey!.currentState!.openDrawer();
                               },
-                              child: AbsorbPointer(
-                                absorbing: true,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 15.h, horizontal: 15.w),
-                                  child: SizedBox(
-                                    height: 35.h,
-                                    width: 35.w,
-                                    child: Center(
-                                      child: SvgPicture.asset(localeState
-                                                  .value.languageCode ==
-                                              'en'
-                                          ? "assets/icons/drawer_icon_en.svg"
-                                          : "assets/icons/drawer_icon_ar.svg"),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              icon: SvgPicture.asset(
+                                  localeState.value.languageCode == 'en'
+                                      ? "assets/icons/drawer_icon_en.svg"
+                                      : "assets/icons/drawer_icon_ar.svg"),
                             ),
                       SizedBox(
                         width: 5.w,
@@ -108,9 +77,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                         .initNotifications(state.notifications);
                                   }
                                 },
-                                child: InkWell(
-                                  // borderRadius: BorderRadius.circular(45),
-                                  onTap: () {
+                                child: IconButton(
+                                  onPressed: () {
                                     BlocProvider.of<NotificationBloc>(context)
                                         .add(NotificationLoadEvent());
                                     notificationProvider
@@ -121,67 +89,55 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                           builder: (context) =>
                                               NotificationScreen(),
                                         ));
-                                    // scaffoldKey.currentState!.openDrawer();
                                   },
-                                  child: AbsorbPointer(
-                                    absorbing: true,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          vertical: 13.h, horizontal: 10.w),
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          SizedBox(
-                                            height: 35.h,
-                                            width: 35.h,
-                                            child: Center(
-                                              child: SvgPicture.asset(
-                                                  "assets/icons/notification.svg"),
-                                            ),
-                                          ),
-                                          notificationProvider
-                                                      .notreadednotifications !=
-                                                  0
-                                              ? Positioned(
-                                                  right: -7.w,
-                                                  top: -10.h,
-                                                  child: Container(
-                                                    height: 20.h,
-                                                    width: 20.h,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              45),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                        notificationProvider
-                                                            .notreadednotifications
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
+                                  icon: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      SizedBox(
+                                        height: 35.h,
+                                        width: 35.h,
+                                        child: Center(
+                                          child: SvgPicture.asset(
+                                              "assets/icons/notification.svg"),
+                                        ),
+                                      ),
+                                      notificationProvider
+                                                  .notreadednotifications !=
+                                              0
+                                          ? Positioned(
+                                              right: -7.w,
+                                              top: -10.h,
+                                              child: Container(
+                                                height: 20.h,
+                                                width: 20.h,
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.deepYellow,
+                                                  borderRadius:
+                                                      BorderRadius.circular(45),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    notificationProvider
+                                                        .notreadednotifications
+                                                        .toString(),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
                                                   ),
-                                                )
-                                              : const SizedBox.shrink()
-                                        ],
-                                      ),
-                                    ),
+                                                ),
+                                              ),
+                                            )
+                                          : const SizedBox.shrink()
+                                    ],
                                   ),
                                 ),
                               );
                             }),
                     ],
                   ),
-                  SizedBox(
-                    width: 25.w,
-                  ),
+                  Spacer(),
                   SizedBox(
                     height: 45.h,
                     // width: MediaQuery.of(context).size,
@@ -192,11 +148,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 28.sp,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
+                  Spacer(),
+                  SizedBox(
+                    width: 25.w,
+                  )
                 ],
               ),
             ),
@@ -207,5 +167,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size(double.infinity, 70.h);
+  Size get preferredSize => Size(double.infinity, kToolbarHeight);
 }

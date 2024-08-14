@@ -59,340 +59,359 @@ class _SignInScreenState extends State<SignInScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: SingleChildScrollView(
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 150.h,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 17.w),
-                      child: Card(
-                        elevation: 1,
-                        clipBehavior: Clip.antiAlias,
-                        color: AppColor.deepBlack,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(45),
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                body: SingleChildScrollView(
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        height: 150.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 17.w),
+                        child: Card(
+                          elevation: 1,
+                          clipBehavior: Clip.antiAlias,
+                          color: AppColor.deepBlack,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(45),
+                            ),
                           ),
-                        ),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 60.h, horizontal: 20.w),
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    height: 75.h,
-                                    width: 150.w,
-                                    child: SvgPicture.asset(
-                                        "assets/images/camion_logo_sm.svg"),
-                                  ),
-                                  SizedBox(
-                                    height: 110.h,
-                                  ),
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('please_sign_in'),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 19.sp,
-                                      fontWeight: FontWeight.bold,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 60.h, horizontal: 20.w),
+                              child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      height: 75.h,
+                                      width: 150.w,
+                                      child: SvgPicture.asset(
+                                          "assets/images/camion_logo_sm.svg"),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('username'),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 19.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 350.w,
-                                    child: TextFormField(
-                                      // focusNode: focusNode,
-                                      // keyboardType: TextInputType.phone,
-                                      // initialValue: widget.initialValue,
-                                      controller: _usernameController,
-                                      onTap: () {
-                                        _usernameController.selection =
-                                            TextSelection.collapsed(
-                                                offset: _usernameController
-                                                    .text.length);
-                                      },
-                                      validator: (value) {
-                                        if (value!.isEmpty ||
-                                            value.length < 3) {
-                                          return AppLocalizations.of(context)!
-                                              .translate('username_error');
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (newValue) {
-                                        _usernameController.text = newValue!;
-                                      },
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
+                                    SizedBox(
+                                      height: 110.h,
+                                    ),
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('please_sign_in'),
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontSize: 19.sp,
-                                      ),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 20.w, vertical: 2.h),
-                                        hintText: AppLocalizations.of(context)!
-                                            .translate('username'),
-                                        // labelText: AppLocalizations.of(context)!
-                                        //     .translate('username'),
-                                        // floatingLabelStyle: TextStyle(
-                                        //   color: AppColor.deepYellow,
-                                        //   fontSize: 24.sp,
-                                        //   fontWeight: FontWeight.bold,
-                                        // ),
-                                        hintStyle: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 19.sp,
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.white,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('password'),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 19.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 350.w,
-                                    child: TextFormField(
-                                      controller: _passwordController,
-                                      onTap: () {
-                                        _passwordController.selection =
-                                            TextSelection.collapsed(
-                                                offset: _passwordController
-                                                    .text.length);
-                                      },
-                                      validator: (value) {
-                                        if (value!.isEmpty ||
-                                            value.length < 3) {
-                                          return AppLocalizations.of(context)!
-                                              .translate('password_error');
-                                        }
-                                        return null;
-                                      },
-                                      onSaved: (newValue) {
-                                        _passwordController.text = newValue!;
-                                      },
-                                      autovalidateMode:
-                                          AutovalidateMode.onUserInteraction,
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 19.sp,
-                                      ),
-                                      decoration: InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                            horizontal: 20.w, vertical: 2.h),
-                                        hintText: AppLocalizations.of(context)!
-                                            .translate('password'),
-                                        hintStyle: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 19.sp,
-                                        ),
-                                        filled: true,
-                                        fillColor: Colors.white,
-                                      ),
+                                    SizedBox(
+                                      height: 20.h,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 30.h,
-                                  ),
-                                  BlocConsumer<AuthBloc, AuthState>(
-                                    listener: (context, state) async {
-                                      if (state is AuthDriverSuccessState ||
-                                          state is AuthOwnerSuccessState ||
-                                          state is AuthMerchantSuccessState ||
-                                          state is AuthManagmentSuccessState ||
-                                          state is AuthCheckPointSuccessState) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          backgroundColor: AppColor.deepGreen,
-                                          dismissDirection: DismissDirection.up,
-                                          behavior: SnackBarBehavior.floating,
-                                          margin: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .size
-                                                      .height -
-                                                  150,
-                                              left: 10,
-                                              right: 10),
-                                          content: localeState.value.languageCode ==
-                                                  'en'
-                                              ? const Text(
-                                                  'sign in successfully, welcome.')
-                                              : const Text(
-                                                  'تم تسجيل الدخول بنجاح! أهلا بك.'),
-                                          duration: const Duration(seconds: 3),
-                                        ));
-
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => ControlView(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('username'),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 19.sp,
                                           ),
-                                          (route) => false,
-                                        );
-                                        var prefs = await SharedPreferences
-                                            .getInstance();
-                                        var jwt = prefs.getString("token");
-                                        Response userresponse =
-                                            await HttpHelper.get(
-                                                PROFILE_ENDPOINT,
-                                                apiToken: jwt);
-                                        if (userresponse.statusCode == 200) {
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 350.w,
+                                      child: TextFormField(
+                                        // focusNode: focusNode,
+                                        // keyboardType: TextInputType.phone,
+                                        // initialValue: widget.initialValue,
+                                        controller: _usernameController,
+                                        onTap: () {
+                                          _usernameController.selection =
+                                              TextSelection.collapsed(
+                                                  offset: _usernameController
+                                                      .text.length);
+                                        },
+                                        validator: (value) {
+                                          if (value!.isEmpty ||
+                                              value.length < 3) {
+                                            return AppLocalizations.of(context)!
+                                                .translate('username_error');
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (newValue) {
+                                          _usernameController.text = newValue!;
+                                        },
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 19.sp,
+                                        ),
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 20.w, vertical: 2.h),
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .translate('username'),
+                                          // labelText: AppLocalizations.of(context)!
+                                          //     .translate('username'),
+                                          // floatingLabelStyle: TextStyle(
+                                          //   color: AppColor.deepYellow,
+                                          //   fontSize: 24.sp,
+                                          //   fontWeight: FontWeight.bold,
+                                          // ),
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 19.sp,
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('password'),
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 19.sp,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      width: 350.w,
+                                      child: TextFormField(
+                                        controller: _passwordController,
+                                        onTap: () {
+                                          _passwordController.selection =
+                                              TextSelection.collapsed(
+                                                  offset: _passwordController
+                                                      .text.length);
+                                        },
+                                        validator: (value) {
+                                          if (value!.isEmpty ||
+                                              value.length < 3) {
+                                            return AppLocalizations.of(context)!
+                                                .translate('password_error');
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (newValue) {
+                                          _passwordController.text = newValue!;
+                                        },
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 19.sp,
+                                        ),
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 20.w, vertical: 2.h),
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .translate('password'),
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 19.sp,
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 30.h,
+                                    ),
+                                    BlocConsumer<AuthBloc, AuthState>(
+                                      listener: (context, state) async {
+                                        if (state is AuthDriverSuccessState ||
+                                            state is AuthOwnerSuccessState ||
+                                            state is AuthMerchantSuccessState ||
+                                            state
+                                                is AuthManagmentSuccessState ||
+                                            state
+                                                is AuthCheckPointSuccessState) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            backgroundColor: AppColor.deepGreen,
+                                            dismissDirection:
+                                                DismissDirection.up,
+                                            behavior: SnackBarBehavior.floating,
+                                            margin: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                        .size
+                                                        .height -
+                                                    150,
+                                                left: 10,
+                                                right: 10),
+                                            content: localeState
+                                                        .value.languageCode ==
+                                                    'en'
+                                                ? const Text(
+                                                    'sign in successfully, welcome.')
+                                                : const Text(
+                                                    'تم تسجيل الدخول بنجاح! أهلا بك.'),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                          ));
+
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ControlView(),
+                                            ),
+                                            (route) => false,
+                                          );
                                           var prefs = await SharedPreferences
                                               .getInstance();
-                                          var userType =
-                                              prefs.getString("userType") ?? "";
-                                          if (userType.isNotEmpty) {
-                                            var myDataString = utf8
-                                                .decode(userresponse.bodyBytes);
+                                          var jwt = prefs.getString("token");
+                                          Response userresponse =
+                                              await HttpHelper.get(
+                                                  PROFILE_ENDPOINT,
+                                                  apiToken: jwt);
+                                          if (userresponse.statusCode == 200) {
+                                            var prefs = await SharedPreferences
+                                                .getInstance();
+                                            var userType =
+                                                prefs.getString("userType") ??
+                                                    "";
+                                            if (userType.isNotEmpty) {
+                                              var myDataString = utf8.decode(
+                                                  userresponse.bodyBytes);
 
-                                            prefs.setString(
-                                                "userProfile", myDataString);
-                                            var result =
-                                                jsonDecode(myDataString);
-                                            var userProfile =
-                                                UserModel.fromJson(result);
-                                            if (userProfile.merchant != null) {
-                                              prefs.setInt("merchant",
-                                                  userProfile.merchant!);
-                                            }
-                                            if (userProfile.truckowner !=
-                                                null) {
-                                              prefs.setInt("truckowner",
-                                                  userProfile.truckowner!);
-                                              print("userProfile.truckowner");
-                                              print(userProfile.truckowner);
-                                            }
-                                            if (userProfile.truckuser != null) {
-                                              prefs.setInt("truckuser",
-                                                  userProfile.truckuser!);
-                                              Response driverResponse =
-                                                  await HttpHelper.get(
-                                                      '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
-                                                      apiToken: jwt);
-                                              if (driverResponse.statusCode ==
-                                                  200) {
-                                                var driverDataString =
-                                                    utf8.decode(driverResponse
-                                                        .bodyBytes);
-                                                var res = jsonDecode(
-                                                    driverDataString);
-                                                prefs.setInt(
-                                                    "truckId", res['truck2']);
+                                              prefs.setString(
+                                                  "userProfile", myDataString);
+                                              var result =
+                                                  jsonDecode(myDataString);
+                                              var userProfile =
+                                                  UserModel.fromJson(result);
+                                              if (userProfile.merchant !=
+                                                  null) {
+                                                prefs.setInt("merchant",
+                                                    userProfile.merchant!);
+                                              }
+                                              if (userProfile.truckowner !=
+                                                  null) {
+                                                prefs.setInt("truckowner",
+                                                    userProfile.truckowner!);
+                                                print("userProfile.truckowner");
+                                                print(userProfile.truckowner);
+                                              }
+                                              if (userProfile.truckuser !=
+                                                  null) {
+                                                prefs.setInt("truckuser",
+                                                    userProfile.truckuser!);
+                                                Response driverResponse =
+                                                    await HttpHelper.get(
+                                                        '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
+                                                        apiToken: jwt);
+                                                if (driverResponse.statusCode ==
+                                                    200) {
+                                                  var driverDataString =
+                                                      utf8.decode(driverResponse
+                                                          .bodyBytes);
+                                                  var res = jsonDecode(
+                                                      driverDataString);
+                                                  prefs.setInt(
+                                                      "truckId", res['truck2']);
+                                                }
                                               }
                                             }
                                           }
                                         }
-                                      }
 
-                                      if (state is AuthLoginErrorState) {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                          backgroundColor: Colors.red[300],
-                                          dismissDirection: DismissDirection.up,
-                                          behavior: SnackBarBehavior.floating,
-                                          margin: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .size
-                                                      .height -
-                                                  150,
-                                              left: 10,
-                                              right: 10),
-                                          content: localeState.value.languageCode ==
-                                                  'en'
-                                              ? const Text(
-                                                  'there is no active account for this credentials.')
-                                              : const Text(
-                                                  "لا يوجد حساب فعال وفقا للبيانات المدخلة."),
-                                          duration: const Duration(seconds: 3),
-                                        ));
-                                      }
-                                    },
-                                    builder: (context, state) {
-                                      if (state is AuthLoggingInProgressState) {
-                                        return CustomButton(
-                                          title: LoadingIndicator(),
-                                          onTap: () {},
-                                        );
-                                      } else {
-                                        return CustomButton(
-                                          title: Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('sign_in'),
-                                            style: TextStyle(
-                                              fontSize: 20.sp,
+                                        if (state is AuthLoginErrorState) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            backgroundColor: Colors.red[300],
+                                            dismissDirection:
+                                                DismissDirection.up,
+                                            behavior: SnackBarBehavior.floating,
+                                            margin: EdgeInsets.only(
+                                                bottom: MediaQuery.of(context)
+                                                        .size
+                                                        .height -
+                                                    150,
+                                                left: 10,
+                                                right: 10),
+                                            content: localeState
+                                                        .value.languageCode ==
+                                                    'en'
+                                                ? const Text(
+                                                    'there is no active account for this credentials.')
+                                                : const Text(
+                                                    "لا يوجد حساب فعال وفقا للبيانات المدخلة."),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                          ));
+                                        }
+                                      },
+                                      builder: (context, state) {
+                                        if (state
+                                            is AuthLoggingInProgressState) {
+                                          return CustomButton(
+                                            title: LoadingIndicator(),
+                                            onTap: () {},
+                                          );
+                                        } else {
+                                          return CustomButton(
+                                            title: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('sign_in'),
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                              ),
                                             ),
-                                          ),
-                                          onTap: () {
-                                            _formKey.currentState?.save();
+                                            onTap: () {
+                                              _formKey.currentState?.save();
 
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              _login();
-                                            }
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ],
+                                              if (_formKey.currentState!
+                                                  .validate()) {
+                                                _login();
+                                              }
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
+                                            },
+                                          );
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
 
-                    // const Spacer(),
-                  ],
+                      // const Spacer(),
+                    ],
+                  ),
                 ),
               ),
             ),

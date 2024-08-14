@@ -7,7 +7,6 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
-import 'package:camion/data/models/co2_report.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -15,6 +14,7 @@ import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,11 +41,9 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   late Timer timer;
   final loc.Location location = loc.Location();
   late GoogleMapController _controller;
-  bool _added = false;
   String _mapStyle = "";
   PanelState panelState = PanelState.hidden;
   final panelTransation = const Duration(milliseconds: 500);
-  Co2Report _report = Co2Report();
   var f = intel.NumberFormat("#,###", "en_US");
 
   late final AnimationController _animationController = AnimationController(
@@ -56,7 +54,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   double distance = 0;
   String period = "";
 
-  initMapbounds(SubShipment subshipment) async {
+  initMapbounds(OwnerSubShipment subshipment) async {
     List<Marker> markers = [];
     var pickuplocation = subshipment.pathpoints!
         .singleWhere((element) => element.pointType == "P")
@@ -117,14 +115,14 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   late bool truckLocationassign;
   Set<Marker> markers = Set();
 
-  Widget pathList(SubShipment subshipments, String language) {
+  Widget pathList(OwnerSubShipment subshipment, String language) {
     return GestureDetector(
       onVerticalDragUpdate: (details) {
-        _onVerticalGesture(details, subshipments, language);
+        _onVerticalGesture(details, subshipment, language);
       },
       child: Container(
         color: Colors.grey[200],
-        height: 110.h,
+        height: 115.h,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -148,9 +146,93 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                 ),
               ],
             ),
-            const Spacer(),
-            SizedBox(
-              height: 88.h,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      height: 58.w,
+                      width: 58.w,
+                      decoration: BoxDecoration(
+                          // color: AppColor.lightGoldenYellow,
+                          borderRadius: BorderRadius.circular(5)),
+                      child: CircleAvatar(
+                        radius: 25.h,
+                        // backgroundColor: AppColor.deepBlue,
+                        child: Center(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(180),
+                            child: Image.network(
+                              subshipment.shipment!.merchant!.user!.image!,
+                              height: 55.w,
+                              width: 55.w,
+                              fit: BoxFit.fill,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Center(
+                                child: Text(
+                                  "${subshipment.shipment!.merchant!.user!.firstName![0].toUpperCase()} ${subshipment.shipment!.merchant!.user!.lastName![0].toUpperCase()}",
+                                  style: TextStyle(
+                                    fontSize: 28.sp,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "${subshipment.shipment!.merchant!.user!.firstName!} ${subshipment.shipment!.merchant!.user!.lastName!}",
+                      style: TextStyle(
+                        // color: AppColor.lightBlue,
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                      height: 35.h,
+                      width: 155.w,
+                      child: CachedNetworkImage(
+                        imageUrl: subshipment.truck!.truck_type!.image!,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                Shimmer.fromColors(
+                          baseColor: (Colors.grey[300])!,
+                          highlightColor: (Colors.grey[100])!,
+                          enabled: true,
+                          child: Container(
+                            height: 25.h,
+                            color: Colors.white,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          height: 35.h,
+                          width: 155.w,
+                          color: Colors.grey[300],
+                          child: Center(
+                            child: Text(AppLocalizations.of(context)!
+                                .translate('image_load_error')),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "${language == 'en' ? subshipment.truck!.truck_type!.name! : subshipment.truck!.truck_type!.nameAr!}  ",
+                      style: TextStyle(
+                        // color: AppColor.lightBlue,
+                        fontSize: 19.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
@@ -158,8 +240,8 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     );
   }
 
-  void _onVerticalGesture(
-      DragUpdateDetails details, SubShipment subshipment, String language) {
+  void _onVerticalGesture(DragUpdateDetails details,
+      OwnerSubShipment subshipment, String language) {
     if (details.primaryDelta! < -7) {
       panelState = PanelState.open;
       showModalBottomSheet(
@@ -236,33 +318,31 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                 radius: 25.h,
                                 // backgroundColor: AppColor.deepBlue,
                                 child: Center(
-                                  child: (subshipment.truck!.truckuser!.user!
-                                              .image!.length >
-                                          1)
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(180),
-                                          child: Image.network(
-                                            subshipment
-                                                .truck!.truckuser!.user!.image!,
-                                            height: 55.w,
-                                            width: 55.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        )
-                                      : Text(
-                                          subshipment.truck!.truckuser!.user!
-                                              .firstName!,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(180),
+                                    child: Image.network(
+                                      subshipment
+                                          .shipment!.merchant!.user!.image!,
+                                      height: 55.w,
+                                      width: 55.w,
+                                      fit: BoxFit.fill,
+                                      errorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Center(
+                                        child: Text(
+                                          "${subshipment.shipment!.merchant!.user!.firstName![0].toUpperCase()} ${subshipment.shipment!.merchant!.user!.lastName![0].toUpperCase()}",
                                           style: TextStyle(
-                                            color: Colors.white,
                                             fontSize: 28.sp,
                                           ),
                                         ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                             Text(
-                              "${subshipment.truck!.truckuser!.user!.firstName!} ${subshipment.truck!.truckuser!.user!.lastName!}",
+                              "${subshipment.shipment!.merchant!.user!.firstName!} ${subshipment.shipment!.merchant!.user!.lastName!}",
                               style: TextStyle(
                                 // color: AppColor.lightBlue,
                                 fontSize: 19.sp,
@@ -313,13 +393,9 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                       ],
                     ),
                     const Divider(),
-                    Text(
-                      "مسار الشحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("shipment_route"),
                     ),
                     ShipmentPathVerticalWidget(
                       pathpoints: subshipment.pathpoints!,
@@ -329,25 +405,19 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                       mini: false,
                     ),
                     const Divider(),
-                    Text(
-                      "تفاصيل بضاعة الشاحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("commodity_info"),
                     ),
+                    const SizedBox(height: 4),
                     Commodity_info_widget(
                         shipmentItems: subshipment.shipmentItems!),
                     const Divider(),
-                    Text(
-                      "احصائيات مسار الشاحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("shipment_route_statistics"),
                     ),
+                    const SizedBox(height: 4),
                     PathStatisticsWidget(
                       distance: subshipment.distance!,
                       period: subshipment.period!,
@@ -478,6 +548,11 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                           .location!
                                           .split(",")[1])),
                                   icon: pickupicon,
+                                  infoWindow: InfoWindow(
+                                      title: state.shipments[0].pathpoints!
+                                          .singleWhere((element) =>
+                                              element.pointType == "P")
+                                          .name!),
                                 );
                                 markers.add(pickupMarker);
                                 var deliveryMarker = Marker(
@@ -496,6 +571,12 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                           .location!
                                           .split(",")[1])),
                                   icon: deliveryicon,
+                                  infoWindow: InfoWindow(
+                                    title: state.shipments[0].pathpoints!
+                                        .singleWhere((element) =>
+                                            element.pointType == "D")
+                                        .name!,
+                                  ),
                                 );
                                 markers.add(deliveryMarker);
 

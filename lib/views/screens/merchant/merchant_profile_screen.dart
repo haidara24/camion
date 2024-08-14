@@ -126,10 +126,10 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                       '${state.merchant.user!.firstName} ${state.merchant.user!.lastName}',
                                 ),
                                 const SizedBox(
-                                  width: 8,
+                                  width: 4,
                                 ),
-                                InkWell(
-                                  onTap: () {
+                                IconButton(
+                                  onPressed: () {
                                     setState(() {
                                       editMode = !editMode;
                                       firstNameController.text =
@@ -146,28 +146,22 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                           state.merchant.companyName!;
                                     });
                                   },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: AppColor.deepYellow,
-                                    ),
+                                  icon: Icon(
+                                    Icons.edit,
+                                    color: AppColor.deepYellow,
                                   ),
                                 ),
                               ],
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 8,
                             ),
                             editMode
                                 ? Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
+                                      Expanded(
                                         child: TextFormField(
                                           controller: firstNameController,
                                           onTap: () {
@@ -185,8 +179,10 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                   20),
                                           textInputAction: TextInputAction.done,
                                           style: const TextStyle(fontSize: 18),
-                                          decoration: const InputDecoration(
-                                            labelText: "الاسم الأول",
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('first_name'),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 11.0,
@@ -217,10 +213,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                           },
                                         ),
                                       ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
+                                      SizedBox(width: 8),
+                                      Expanded(
                                         child: TextFormField(
                                           controller: lastNameController,
                                           onTap: () {
@@ -238,8 +232,10 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                   20),
                                           textInputAction: TextInputAction.done,
                                           style: const TextStyle(fontSize: 18),
-                                          decoration: const InputDecoration(
-                                            labelText: "الاسم الأول",
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('last_name'),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 11.0,
@@ -272,6 +268,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   )
                                 : const SizedBox.shrink(),
+                            SizedBox(height: 8),
                             editMode
                                 ? TextFormField(
                                     controller: phoneController,
@@ -290,7 +287,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     keyboardType: TextInputType.phone,
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
-                                      labelText: "رقم الجوال",
+                                      labelText: AppLocalizations.of(context)!
+                                          .translate('phone'),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
@@ -319,8 +317,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SectionBody(
-                                        text: 'رقم الجوال: ',
+                                      SectionBody(
+                                        text:
+                                            '${AppLocalizations.of(context)!.translate('phone')}: ',
                                       ),
                                       const SizedBox(
                                         width: 8,
@@ -334,7 +333,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   ),
                             const SizedBox(
-                              height: 4,
+                              height: 8,
                             ),
                             editMode
                                 ? TextFormField(
@@ -354,7 +353,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     keyboardType: TextInputType.emailAddress,
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
-                                      labelText: "البريد الالكتروني",
+                                      labelText: AppLocalizations.of(context)!
+                                          .translate('email'),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
@@ -383,8 +383,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SectionBody(
-                                        text: 'البريد الالكتروني: ',
+                                      SectionBody(
+                                        text:
+                                            '${AppLocalizations.of(context)!.translate('email')}: ',
                                       ),
                                       const SizedBox(
                                         width: 8,
@@ -398,7 +399,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   ),
                             const SizedBox(
-                              height: 4,
+                              height: 8,
                             ),
                             editMode
                                 ? TextFormField(
@@ -419,7 +420,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     // keyboardType: TextInputType.phone,
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
-                                      labelText: "العنوان",
+                                      labelText: AppLocalizations.of(context)!
+                                          .translate('address'),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
@@ -448,8 +450,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SectionBody(
-                                        text: 'العنوان: ',
+                                      SectionBody(
+                                        text:
+                                            '${AppLocalizations.of(context)!.translate('address')}: ',
                                       ),
                                       const SizedBox(
                                         width: 8,
@@ -462,7 +465,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   ),
                             const SizedBox(
-                              height: 4,
+                              height: 8,
                             ),
                             editMode
                                 ? TextFormField(
@@ -483,7 +486,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     textInputAction: TextInputAction.done,
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
-                                      labelText: "اسم الشركة",
+                                      labelText: AppLocalizations.of(context)!
+                                          .translate('company_name'),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
@@ -512,8 +516,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SectionBody(
-                                        text: 'اسم الشركة: ',
+                                      SectionBody(
+                                        text:
+                                            '${AppLocalizations.of(context)!.translate('company_name')} : ',
                                       ),
                                       const SizedBox(
                                         width: 8,
@@ -549,10 +554,12 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ),
                                   ),
                             const Divider(),
-                            const Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                SectionTitle(text: "مستودعاتي"),
+                                SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate('my_stores')),
                               ],
                             ),
                             state.merchant.stores!.isNotEmpty
@@ -569,7 +576,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              child: Text("اسم المستودع"),
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate('store_name')),
                                             ),
                                           ),
                                         ),
@@ -579,7 +588,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              child: Text("العنوان"),
+                                              child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate('address')),
                                             ),
                                           ),
                                         ),
@@ -592,7 +603,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                  "المستودع رقم ${state.merchant.stores![index].id!}"),
+                                                  "${AppLocalizations.of(context)!.translate('store_no')} ${state.merchant.stores![index].id!}"),
                                             ),
                                           ),
                                           TableCell(
@@ -609,7 +620,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                   )
                                 : Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Text("لم يتم إضافة أية مستودعات"),
+                                    child: Text(AppLocalizations.of(context)!
+                                        .translate('store_not_found')),
                                   ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -628,7 +640,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     );
                                   },
                                   child: Text(
-                                    "إضافة مستودع  ",
+                                    "${AppLocalizations.of(context)!.translate('add_store')}  ",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

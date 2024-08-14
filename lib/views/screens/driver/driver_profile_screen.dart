@@ -156,10 +156,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceAround,
                                     children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
+                                      Expanded(
                                         child: TextFormField(
                                           controller: firstNameController,
                                           onTap: () {
@@ -177,8 +174,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                                   20),
                                           textInputAction: TextInputAction.done,
                                           style: const TextStyle(fontSize: 18),
-                                          decoration: const InputDecoration(
-                                            labelText: "الاسم الأول",
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('first_name'),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 11.0,
@@ -209,10 +208,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                           },
                                         ),
                                       ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
+                                      SizedBox(width: 8),
+                                      Expanded(
                                         child: TextFormField(
                                           controller: lastNameController,
                                           onTap: () {
@@ -230,8 +227,10 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                                   20),
                                           textInputAction: TextInputAction.done,
                                           style: const TextStyle(fontSize: 18),
-                                          decoration: const InputDecoration(
-                                            labelText: "الاسم الأول",
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('last_name'),
                                             contentPadding:
                                                 EdgeInsets.symmetric(
                                                     vertical: 11.0,
@@ -264,6 +263,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     ],
                                   )
                                 : const SizedBox.shrink(),
+                            SizedBox(height: 8),
                             editMode
                                 ? TextFormField(
                                     controller: phoneController,
@@ -282,7 +282,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     keyboardType: TextInputType.phone,
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
-                                      labelText: "رقم الجوال",
+                                      labelText: AppLocalizations.of(context)!
+                                          .translate('phone'),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
@@ -311,8 +312,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SectionBody(
-                                        text: 'رقم الجوال: ',
+                                      SectionBody(
+                                        text:
+                                            '${AppLocalizations.of(context)!.translate('phone')}: ',
                                       ),
                                       const SizedBox(
                                         width: 8,
@@ -324,9 +326,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                       ),
                                     ],
                                   ),
-                            const SizedBox(
-                              height: 4,
-                            ),
+                            SizedBox(height: 8),
                             editMode
                                 ? TextFormField(
                                     controller: emailController,
@@ -345,7 +345,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     keyboardType: TextInputType.emailAddress,
                                     style: const TextStyle(fontSize: 18),
                                     decoration: InputDecoration(
-                                      labelText: "البريد الالكتروني",
+                                      labelText: AppLocalizations.of(context)!
+                                          .translate('email'),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 11.0, horizontal: 9.0),
@@ -374,8 +375,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                 : Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      const SectionBody(
-                                        text: 'البريد الالكتروني: ',
+                                      SectionBody(
+                                        text:
+                                            '${AppLocalizations.of(context)!.translate('email')}: ',
                                       ),
                                       const SizedBox(
                                         width: 8,
@@ -388,7 +390,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     ],
                                   ),
                             const SizedBox(
-                              height: 4,
+                              height: 8,
                             ),
                           ],
                         ),

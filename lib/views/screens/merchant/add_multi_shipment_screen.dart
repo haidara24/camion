@@ -308,20 +308,11 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: AbsorbPointer(
-                          absorbing: false,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: lang == "en"
-                                ? const Icon(Icons.arrow_forward)
-                                : const Icon(Icons.arrow_back),
-                          ),
-                        ),
-                      ),
+                      IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back)),
                       SectionTitle(
                         text: AppLocalizations.of(context)!
                             .translate('choose_shippment_path'),
@@ -1167,13 +1158,13 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
     );
   }
 
-  double calculatePrice(
+  int calculatePrice(
     double distance,
     double weight,
   ) {
     double result = 0.0;
     result = distance * (weight / 1000) * 550;
-    return result;
+    return result.toInt();
   }
 
   showTruckModalSheet(BuildContext context, String lang) {
@@ -1596,9 +1587,6 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                   }
                 },
               ),
-              const SizedBox(
-                height: 15,
-              ),
             ],
           ),
         );
@@ -1663,7 +1651,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                 showShipmentPathModalSheet(
                                                     context,
                                                     localeState
-                                                        .value.languageCode!);
+                                                        .value.languageCode);
                                               }
                                             },
                                             child: Row(
@@ -1696,7 +1684,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                     showShipmentPathModalSheet(
                                                         context,
                                                         localeState.value
-                                                            .languageCode!);
+                                                            .languageCode);
                                                   },
                                                   child: AbsorbPointer(
                                                     absorbing: true,
@@ -1774,7 +1762,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                           showShipmentPathModalSheet(
                                                               context,
                                                               localeState.value
-                                                                  .languageCode!);
+                                                                  .languageCode);
                                                         },
                                                         child: Icon(
                                                           Icons.edit,
@@ -2303,7 +2291,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                               selectedIndex);
                                                                     },
                                                                     child: Text(
-                                                                      "إضافة بضاعة  ",
+                                                                      AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'add_commodity'),
                                                                       style:
                                                                           TextStyle(
                                                                         fontSize:
@@ -2524,13 +2515,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   SizedBox(
                                                     height: 25.h,
                                                     width: 25.h,
-                                                    child: localeState.value
-                                                                .languageCode ==
-                                                            "en"
-                                                        ? SvgPicture.asset(
-                                                            "assets/icons/truck.svg")
-                                                        : SvgPicture.asset(
-                                                            "assets/icons/truck_ar.svg"),
+                                                    child: SvgPicture.asset(
+                                                        "assets/icons/truck_ar.svg"),
                                                   ),
                                                   const SizedBox(width: 8),
                                                   SectionTitle(
@@ -2564,7 +2550,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             .delivery_location[
                                                                 selectedIndex]
                                                             .isNotEmpty) {
-                                                      if (shipmentProvider!
+                                                      if (shipmentProvider
                                                           .addShipmentformKey[
                                                               selectedIndex]
                                                           .currentState!
@@ -2954,7 +2940,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                           ),
                                           const Divider(),
                                           Visibility(
-                                            visible: shipmentProvider!
+                                            visible: shipmentProvider
                                                 .truckConfirm[selectedIndex],
                                             child: Text(
                                                 "الرجاء اكمال بيانات الشاحنة الحالية قبل إضافة شاحنة أخرى.",
@@ -2968,24 +2954,23 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                             children: [
                                               InkWell(
                                                 onTap: () {
-                                                  if (shipmentProvider!
+                                                  if (shipmentProvider
                                                           .pickup_location[
                                                               selectedIndex]
                                                           .isNotEmpty ||
-                                                      shipmentProvider!
+                                                      shipmentProvider
                                                           .delivery_location[
                                                               selectedIndex]
                                                           .isNotEmpty) {
-                                                    if (shipmentProvider!
-                                                                .trucks[
+                                                    if (shipmentProvider.trucks[
                                                             selectedIndex] !=
                                                         null) {
-                                                      if (shipmentProvider!
+                                                      if (shipmentProvider
                                                           .addShipmentformKey[
                                                               selectedIndex]
                                                           .currentState!
                                                           .validate()) {
-                                                        shipmentProvider!
+                                                        shipmentProvider
                                                             .setTruckConfirm(
                                                                 false,
                                                                 selectedIndex);
@@ -2997,32 +2982,35 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             milliseconds: 500,
                                                           ),
                                                         );
-                                                        shipmentProvider!
+                                                        shipmentProvider
                                                             .addpath();
                                                         setState(() {
                                                           selectedIndex++;
                                                         });
                                                       } else {
-                                                        shipmentProvider!
+                                                        shipmentProvider
                                                             .setTruckConfirm(
                                                                 true,
                                                                 selectedIndex);
                                                       }
                                                     } else {
-                                                      shipmentProvider!
+                                                      shipmentProvider
                                                           .setTruckConfirm(true,
                                                               selectedIndex);
                                                     }
                                                   } else {
-                                                    shipmentProvider!
+                                                    shipmentProvider
                                                         .setTruckConfirm(true,
                                                             selectedIndex);
                                                   }
                                                 },
                                                 child: Row(
                                                   children: [
-                                                    const Text(
-                                                      "إضافة شاحنة ",
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'add_truck'),
                                                       style: TextStyle(
                                                         fontSize: 15,
                                                         // fontWeight:
@@ -3435,7 +3423,13 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                     ),
                                   )
                                 : Positioned(
-                                    left: 5,
+                                    left: localeState.value.languageCode == "en"
+                                        ? null
+                                        : 5,
+                                    right:
+                                        localeState.value.languageCode == "en"
+                                            ? 5
+                                            : null,
                                     top: 0,
                                     child: InkWell(
                                       onTap: () {

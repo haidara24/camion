@@ -16,6 +16,7 @@ import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,9 +116,9 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     }
   }
 
-  void _onVerticalGesture(DragUpdateDetails details,
+  void _onVerticalGesture(DragUpdateDetails? details,
       List<SubShipment> subshipments, String language) {
-    if (details.primaryDelta! < -7) {
+    if (details == null || details.primaryDelta! < -7) {
       panelState = PanelState.open;
       showModalBottomSheet(
         context: context,
@@ -138,7 +139,9 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
             }
           },
           child: Container(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8.0,
+            ),
             // constraints:
             //     BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             width: double.infinity,
@@ -149,27 +152,16 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    InkWell(
-                      onTap: () {
+                    IconButton(
+                      onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: AbsorbPointer(
-                        absorbing: false,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * .8,
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: SizedBox(
-                              height: 8.h,
-                              width: 25.w,
-                              child: SvgPicture.asset(
-                                "assets/icons/arrow_down.svg",
-                                fit: BoxFit.contain,
-                                height: 8.h,
-                                width: 25.w,
-                              ),
-                            ),
-                          ),
+                      icon: SizedBox(
+                        width: 32.w,
+                        child: SvgPicture.asset(
+                          "assets/icons/arrow_down.svg",
+                          fit: BoxFit.contain,
+                          height: 8.h,
                         ),
                       ),
                     ),
@@ -284,13 +276,9 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                       ],
                     ),
                     const Divider(),
-                    Text(
-                      "مسار الشحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("shipment_route"),
                     ),
                     ShipmentPathVerticalWidget(
                       pathpoints: subshipments[selectedIndex].pathpoints!,
@@ -300,25 +288,17 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                       mini: false,
                     ),
                     const Divider(),
-                    Text(
-                      "تفاصيل بضاعة الشاحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("commodity_info"),
                     ),
                     Commodity_info_widget(
                         shipmentItems:
                             subshipments[selectedIndex].shipmentItems!),
                     const Divider(),
-                    Text(
-                      "احصائيات مسار الشاحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("shipment_route_statistics"),
                     ),
                     PathStatisticsWidget(
                       distance: subshipments[selectedIndex].distance!,
@@ -343,31 +323,29 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
       },
       child: Container(
         color: Colors.grey[200],
-        height: 110.h,
+        height: 140.h,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 4.h,
-                      width: 25.w,
-                      child: SvgPicture.asset(
-                        "assets/icons/arrow_up.svg",
-                        fit: BoxFit.contain,
-                        height: 8.h,
-                        width: 25.w,
-                      ),
+                IconButton(
+                  onPressed: () {
+                    _onVerticalGesture(null, subshipments, language);
+                  },
+                  icon: SizedBox(
+                    width: 32.w,
+                    child: SvgPicture.asset(
+                      "assets/icons/arrow_up.svg",
+                      fit: BoxFit.contain,
+                      height: 8.h,
                     ),
                   ),
-                ),
+                )
               ],
             ),
-            const Spacer(),
+            // const Spacer(),
             SizedBox(
               height: 88.h,
               child: ListView.builder(
@@ -746,7 +724,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                             // mapType: shipmentProvider.mapType,
                           ),
                           Positioned(
-                            bottom: 115,
+                            bottom: 145,
                             left: 5,
                             child: InkWell(
                               onTap: () async {

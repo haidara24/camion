@@ -14,7 +14,7 @@ class ShipmentCompleteListBloc
     on<ShipmentCompleteListLoadEvent>((event, emit) async {
       emit(ShipmentCompleteListLoadingProgress());
       try {
-        var result = await shipmentRepository.getKShipmentList("C");
+        var result = await shipmentRepository.getLogShipmentList();
         emit(ShipmentCompleteListLoadedSuccess(result));
       } catch (e) {
         emit(ShipmentCompleteListLoadedFailed(e.toString()));
