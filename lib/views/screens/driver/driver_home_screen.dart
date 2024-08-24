@@ -85,7 +85,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     _locationSubscription?.cancel();
     _timer?.cancel();
 
-    if (gpsId.isEmpty || gpsId.length < 4) {
+    if (gpsId.isEmpty || gpsId.length < 8) {
       _locationSubscription = location.onLocationChanged.handleError((onError) {
         _locationSubscription?.cancel();
         setState(() {
@@ -222,6 +222,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
               child: Scaffold(
                 key: _scaffoldKey,
                 resizeToAvoidBottomInset: false,
+                // backgroundColor: AppColor.deepBlack,
                 appBar: DriverAppBar(
                   title: title,
                   scaffoldKey: _scaffoldKey,
@@ -364,9 +365,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/translate_camion.svg",
-                            height: 20.h,
-                            width: 20.h,
+                            "assets/icons/orange/translate_camion.svg",
+                            height: 25.h,
+                            width: 25.h,
                           ),
                           title: Text(
                             localeState.value.languageCode != 'en'
@@ -396,8 +397,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         child: ListTile(
                           leading: SvgPicture.asset(
                             "assets/icons/help_info.svg",
-                            height: 20.h,
-                            width: 20.h,
+                            height: 25.h,
+                            width: 25.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!.translate('my_fixes'),
@@ -414,8 +415,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       ListTile(
                         leading: SvgPicture.asset(
                           "assets/icons/help_info.svg",
-                          height: 20.h,
-                          width: 20.h,
+                          height: 25.h,
+                          width: 25.h,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.translate('help'),
@@ -425,7 +426,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                               fontWeight: FontWeight.bold),
                         ),
                         trailing: Container(
-                          width: 35.w,
+                          width: 36.w,
                           height: 20.h,
                           decoration: BoxDecoration(
                               color: AppColor.deepYellow,
@@ -487,8 +488,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         child: ListTile(
                           leading: SvgPicture.asset(
                             "assets/icons/log_out.svg",
-                            height: 20.h,
-                            width: 20.h,
+                            height: 25.h,
+                            width: 25.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!.translate('log_out'),
@@ -508,7 +509,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                     builder: (context, state) {
                       if (state is BottomNavBarShown) {
                         return Container(
-                          height: 65.h,
+                          height: 64.h,
                           color: AppColor.deepBlack,
                           child: TabBar(
                             labelPadding: EdgeInsets.zero,
@@ -525,7 +526,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             },
                             tabs: [
                               Tab(
-                                // text: "طلب مخلص",
                                 height: 64.h,
                                 icon: navigationValue == 0
                                     ? Column(
@@ -533,9 +533,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/home_selected.svg",
-                                            width: 38.w,
-                                            height: 38.w,
+                                            "assets/icons/orange/home.svg",
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -556,9 +556,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/home.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            "assets/icons/white/home.svg",
+                                            width: 30.w,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -583,9 +583,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/my_shipments_selected.svg",
-                                            width: 38.w,
-                                            height: 38.w,
+                                            "assets/icons/orange/my_shipments.svg",
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -617,9 +617,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/my_shipments.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            "assets/icons/white/my_shipments.svg",
+                                            width: 30.w,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -647,7 +647,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                       ),
                               ),
                               Tab(
-                                // text: "الرئيسية",
                                 height: 64.h,
                                 icon: navigationValue == 2
                                     ? Column(
@@ -655,9 +654,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/search_for_truck_selected.svg",
-                                            width: 38.w,
-                                            height: 38.w,
+                                            "assets/icons/orange/search_for_truck.svg",
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -687,9 +686,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/search_for_truck.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            "assets/icons/white/search_for_truck.svg",
+                                            width: 30.w,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -716,7 +715,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                       ),
                               ),
                               Tab(
-                                // text: "التعرفة",
                                 height: 64.h,
                                 icon: navigationValue == 3
                                     ? Column(
@@ -724,9 +722,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/location_selected.svg",
-                                            width: 38.w,
-                                            height: 38.w,
+                                            "assets/icons/orange/location.svg",
+                                            width: 34.w,
+                                            height: 34.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -747,9 +745,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/location.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            "assets/icons/white/location.svg",
+                                            width: 30.w,
+                                            height: 30.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(

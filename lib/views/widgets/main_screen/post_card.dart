@@ -1,5 +1,6 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/data/models/post_model.dart';
+import 'package:camion/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -129,7 +130,9 @@ class PostCard extends StatelessWidget {
                       child: Text(
                         AppLocalizations.of(context)!
                             .translate(isVisible ? 'read_less' : 'read_more'),
-                        style: TextStyle(color: Colors.blue[300]),
+                        style: TextStyle(
+                          color: AppColor.deepYellow,
+                        ),
                       ),
                     )
                   ],

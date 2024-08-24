@@ -309,10 +309,11 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.arrow_back)),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                      ),
                       SectionTitle(
                         text: AppLocalizations.of(context)!
                             .translate('choose_shippment_path'),
@@ -321,9 +322,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 8.h,
                 ),
-                SectionBody(
+                SectionTitle(
                   text:
                       AppLocalizations.of(context)!.translate('pickup_address'),
                 ),
@@ -781,8 +782,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                 child: SizedBox(
                                   height: 32.h,
                                   width: 32.w,
-                                  child:
-                                      SvgPicture.asset("assets/icons/add.svg"),
+                                  child: SvgPicture.asset(
+                                      "assets/icons/orange/add.svg"),
                                 ),
                               ),
                               const SizedBox(
@@ -806,7 +807,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                       const SizedBox(
                         height: 5,
                       ),
-                      SectionBody(
+                      SectionTitle(
                         text: AppLocalizations.of(context)!
                             .translate('delivery_address'),
                       ),
@@ -1139,9 +1140,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                     title: SizedBox(
                       height: 50.h,
                       width: 150.w,
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          "confirm",
+                          AppLocalizations.of(context)!.translate("confirm"),
                           style: TextStyle(
                             color: Colors.black,
                           ),
@@ -1391,7 +1392,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                     height: 100,
                                     width: 100,
                                     child: SvgPicture.asset(
-                                        "assets/icons/search_truck.svg"),
+                                        "assets/icons/grey/search_for_truck.svg"),
                                   ),
                                   Text(
                                     AppLocalizations.of(context)!
@@ -1500,46 +1501,30 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(
-                                                      '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].truckuser!.usertruck!.firstName} ${state.trucks[index].truckuser!.usertruck!.lastName}',
-                                                      style: TextStyle(
-                                                          // color: AppColor.lightBlue,
-                                                          fontSize: 18.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    SectionBody(
+                                                      text:
+                                                          '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].truckuser!.usertruck!.firstName} ${state.trucks[index].truckuser!.usertruck!.lastName}',
                                                     ),
                                                     SizedBox(
                                                       height: 7.h,
                                                     ),
-                                                    Text(
-                                                      '${AppLocalizations.of(context)!.translate('net_weight')}: ${state.trucks[index].emptyWeight}',
-                                                      style: TextStyle(
-                                                          // color: AppColor.lightBlue,
-                                                          fontSize: 18.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    SectionBody(
+                                                      text:
+                                                          '${AppLocalizations.of(context)!.translate('net_weight')}: ${f.format(state.trucks[index].emptyWeight)} ${lang == "en" ? "kg" : "كغ"}',
                                                     ),
                                                     SizedBox(
                                                       height: 7.h,
                                                     ),
-                                                    Text(
-                                                      '${AppLocalizations.of(context)!.translate('truck_number')}: ${state.trucks[index].truckNumber}',
-                                                      style: TextStyle(
-                                                          // color: AppColor.lightBlue,
-                                                          fontSize: 18.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    SectionBody(
+                                                      text:
+                                                          '${AppLocalizations.of(context)!.translate('truck_number')}: ${state.trucks[index].truckNumber}',
                                                     ),
                                                     SizedBox(
                                                       height: 7.h,
                                                     ),
-                                                    Text(
-                                                      'السعر: ${f.format(calculatePrice(truckProvider.distance[selectedIndex], truckProvider.totalWeight[selectedIndex]))} ${lang == "en" ? "S.P" : "ل.س"}',
-                                                      style: TextStyle(
-                                                          // color: AppColor.lightBlue,
-                                                          fontSize: 18.sp,
-                                                          fontWeight:
-                                                              FontWeight.bold),
+                                                    SectionBody(
+                                                      text:
+                                                          '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(truckProvider.distance[selectedIndex], truckProvider.totalWeight[selectedIndex]))} ${lang == "en" ? "S.P" : "ل.س"}',
                                                     ),
                                                     SizedBox(
                                                       height: 7.h,
@@ -1630,12 +1615,14 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   child: Card(
                                     key: key3,
                                     elevation: 2,
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 5),
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                      horizontal: 4,
+                                    ),
                                     color: Colors.white,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 7.5),
+                                          horizontal: 8.0, vertical: 7.5),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -1663,7 +1650,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   height: 25.h,
                                                   width: 25.h,
                                                   child: SvgPicture.asset(
-                                                      "assets/icons/shipment_path.svg"),
+                                                      "assets/icons/grey/shipment_path.svg"),
                                                 ),
                                                 const SizedBox(width: 8),
                                                 SectionTitle(
@@ -1714,7 +1701,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                   const EdgeInsets
                                                                       .all(4.0),
                                                               child:
-                                                                  SectionTitle(
+                                                                  SectionBody(
                                                                 text: AppLocalizations.of(
                                                                         context)!
                                                                     .translate(
@@ -1932,7 +1919,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   ? Padding(
                                                       padding: const EdgeInsets
                                                           .symmetric(
-                                                          vertical: 7.5),
+                                                        vertical: 7.5,
+                                                        horizontal: 4,
+                                                      ),
                                                       child:
                                                           PathStatisticsWidget(
                                                         distance:
@@ -1970,11 +1959,11 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   elevation: 2,
                                                   color: Colors.white,
                                                   margin:
-                                                      const EdgeInsets.all(5),
+                                                      const EdgeInsets.all(4),
                                                   child: Padding(
                                                     padding: const EdgeInsets
                                                         .symmetric(
-                                                        horizontal: 10.0,
+                                                        horizontal: 8.0,
                                                         vertical: 7.5),
                                                     child: Column(
                                                       children: [
@@ -1990,7 +1979,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                     width: 25.h,
                                                                     child: SvgPicture
                                                                         .asset(
-                                                                            "assets/icons/goods_information.svg"),
+                                                                            "assets/icons/grey/goods.svg"),
                                                                   ),
                                                                   const SizedBox(
                                                                       width: 8),
@@ -2069,8 +2058,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                     .done,
                                                             style:
                                                                 const TextStyle(
-                                                                    fontSize:
-                                                                        20),
+                                                              fontSize: 16,
+                                                              color: Colors
+                                                                  .black87,
+                                                            ),
                                                             decoration:
                                                                 InputDecoration(
                                                               labelText: AppLocalizations
@@ -2198,8 +2189,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             ],
                                                             style:
                                                                 const TextStyle(
-                                                                    fontSize:
-                                                                        20),
+                                                              fontSize: 16,
+                                                              color: Colors
+                                                                  .black87,
+                                                            ),
                                                             decoration:
                                                                 InputDecoration(
                                                               labelText: AppLocalizations
@@ -2466,12 +2459,14 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   child: Card(
                                     elevation: 2,
                                     key: key2,
-                                    margin:
-                                        const EdgeInsets.symmetric(vertical: 5),
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 5,
+                                      horizontal: 4,
+                                    ),
                                     color: Colors.white,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 7.5),
+                                          horizontal: 8.0, vertical: 7.5),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -2610,7 +2605,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                   const EdgeInsets
                                                                       .all(4.0),
                                                               child:
-                                                                  SectionTitle(
+                                                                  SectionBody(
                                                                 text: AppLocalizations.of(
                                                                         context)!
                                                                     .translate(
@@ -2778,7 +2773,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                     color: Colors.white,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 10.0, vertical: 7.5),
+                                          horizontal: 8.0, vertical: 7.5),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -2788,17 +2783,13 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                 .translate('loading_time'),
                                           ),
                                           const SizedBox(
-                                            height: 4,
+                                            height: 8,
                                           ),
                                           Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceAround,
                                             children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .45,
+                                              Expanded(
                                                 child: InkWell(
                                                   onTap: () {
                                                     _showDatePicker(
@@ -2812,8 +2803,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         selectedIndex],
                                                     enabled: false,
                                                     style: const TextStyle(
-                                                      fontSize: 18,
-                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      color: Colors.black87,
                                                     ),
                                                     decoration: InputDecoration(
                                                       labelText:
@@ -2823,8 +2814,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                   'date'),
                                                       floatingLabelStyle:
                                                           const TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        color: Colors.black87,
                                                       ),
                                                       contentPadding:
                                                           const EdgeInsets
@@ -2840,10 +2831,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                 ),
                                               ),
                                               SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .45,
+                                                width: 8,
+                                              ),
+                                              Expanded(
                                                 child: InkWell(
                                                   onTap: () {
                                                     _showTimePicker(
@@ -2855,8 +2845,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         selectedIndex],
                                                     enabled: false,
                                                     style: const TextStyle(
-                                                      fontSize: 18,
-                                                      color: Colors.black,
+                                                      fontSize: 16,
+                                                      color: Colors.black87,
                                                     ),
                                                     decoration: InputDecoration(
                                                       labelText:
@@ -2866,8 +2856,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                   'time'),
                                                       floatingLabelStyle:
                                                           const TextStyle(
-                                                        fontSize: 18,
-                                                        color: Colors.black,
+                                                        fontSize: 16,
+                                                        color: Colors.black87,
                                                       ),
                                                       contentPadding:
                                                           const EdgeInsets
@@ -3013,9 +3003,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                               'add_truck'),
                                                       style: TextStyle(
                                                         fontSize: 15,
-                                                        // fontWeight:
-                                                        // FontWeight.bold,
-                                                        // color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            AppColor.deepYellow,
                                                       ),
                                                     ),
                                                     AbsorbPointer(
@@ -3028,7 +3019,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                           height: 28.h,
                                                           width: 28.w,
                                                           child: SvgPicture.asset(
-                                                              "assets/icons/add.svg"),
+                                                              "assets/icons/orange/add.svg"),
                                                         ),
                                                       ),
                                                     ),
@@ -3123,216 +3114,208 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                       selectedIndex]
                                                                   .isNotEmpty) {
                                                                 if (shipmentProvider
-                                                                            .trucks[
-                                                                        selectedIndex] !=
-                                                                    null) {
-                                                                  if (shipmentProvider
-                                                                      .addShipmentformKey[
-                                                                          selectedIndex]
-                                                                      .currentState!
-                                                                      .validate()) {
-                                                                    for (var element
-                                                                        in shipmentProvider
-                                                                            .addShipmentformKey) {
-                                                                      element
-                                                                          .currentState
-                                                                          ?.save();
-                                                                    }
+                                                                    .addShipmentformKey[
+                                                                        selectedIndex]
+                                                                    .currentState!
+                                                                    .validate()) {
+                                                                  for (var element
+                                                                      in shipmentProvider
+                                                                          .addShipmentformKey) {
+                                                                    element
+                                                                        .currentState
+                                                                        ?.save();
+                                                                  }
 
-                                                                    List<SubShipment>
-                                                                        subshipmentsitems =
+                                                                  List<SubShipment>
+                                                                      subshipmentsitems =
+                                                                      [];
+
+                                                                  for (var i =
+                                                                          0;
+                                                                      i <
+                                                                          shipmentProvider
+                                                                              .pickup_controller
+                                                                              .length;
+                                                                      i++) {
+                                                                    List<ShipmentItems>
+                                                                        shipmentitems =
                                                                         [];
 
-                                                                    for (var i =
+                                                                    int totalWeight =
+                                                                        0;
+                                                                    for (var j =
                                                                             0;
-                                                                        i < shipmentProvider.pickup_controller.length;
-                                                                        i++) {
-                                                                      List<ShipmentItems>
-                                                                          shipmentitems =
-                                                                          [];
-
-                                                                      int totalWeight =
-                                                                          0;
-                                                                      for (var j =
-                                                                              0;
-                                                                          j < shipmentProvider.commodityWeight_controllers[i].length;
-                                                                          j++) {
-                                                                        ShipmentItems
-                                                                            shipmentitem =
-                                                                            ShipmentItems(
-                                                                          commodityName: shipmentProvider
-                                                                              .commodityName_controllers[i][j]
-                                                                              .text,
-                                                                          commodityWeight:
-                                                                              double.parse(shipmentProvider.commodityWeight_controllers[i][j].text.replaceAll(",", "")).toInt(),
-                                                                        );
-                                                                        shipmentitems
-                                                                            .add(shipmentitem);
-                                                                        totalWeight +=
-                                                                            double.parse(shipmentProvider.commodityWeight_controllers[i][j].text.replaceAll(",", "")).toInt();
-                                                                      }
-
-                                                                      List<PathPoint>
-                                                                          points =
-                                                                          [];
-                                                                      points
-                                                                          .add(
-                                                                        PathPoint(
-                                                                          pointType:
-                                                                              "P",
-                                                                          location:
-                                                                              "${shipmentProvider.pickup_latlng[i]!.latitude},${shipmentProvider.pickup_latlng[i]!.longitude}",
-                                                                          name: shipmentProvider
-                                                                              .pickup_controller[i]
-                                                                              .text,
-                                                                          nameEn:
-                                                                              shipmentProvider.pickup_eng_string[i],
-                                                                          number:
-                                                                              0,
-                                                                          city:
-                                                                              1,
-                                                                        ),
+                                                                        j < shipmentProvider.commodityWeight_controllers[i].length;
+                                                                        j++) {
+                                                                      ShipmentItems
+                                                                          shipmentitem =
+                                                                          ShipmentItems(
+                                                                        commodityName: shipmentProvider
+                                                                            .commodityName_controllers[i][j]
+                                                                            .text,
+                                                                        commodityWeight:
+                                                                            double.parse(shipmentProvider.commodityWeight_controllers[i][j].text.replaceAll(",", "")).toInt(),
                                                                       );
-                                                                      points
+                                                                      shipmentitems
                                                                           .add(
-                                                                        PathPoint(
-                                                                          pointType:
-                                                                              "D",
-                                                                          location:
-                                                                              "${shipmentProvider.delivery_latlng[i]!.latitude},${shipmentProvider.delivery_latlng[i]!.longitude}",
-                                                                          name: shipmentProvider
-                                                                              .delivery_controller[i]
-                                                                              .text,
-                                                                          nameEn:
-                                                                              shipmentProvider.delivery_eng_string[i],
-                                                                          number:
-                                                                              0,
-                                                                          city:
-                                                                              1,
-                                                                        ),
-                                                                      );
-
-                                                                      for (var s =
-                                                                              0;
-                                                                          s < shipmentProvider.stoppoints_controller[i].length;
-                                                                          s++) {
-                                                                        points
-                                                                            .add(
-                                                                          PathPoint(
-                                                                            pointType:
-                                                                                "S",
-                                                                            location:
-                                                                                "${shipmentProvider.stoppoints_latlng[i][s]!.latitude},${shipmentProvider.stoppoints_latlng[i][s]!.longitude}",
-                                                                            name:
-                                                                                shipmentProvider.stoppoints_controller[i][s].text,
-                                                                            nameEn:
-                                                                                shipmentProvider.stoppoints_eng_string[i][s],
-                                                                            number:
-                                                                                s,
-                                                                            city:
-                                                                                1,
-                                                                          ),
-                                                                        );
-                                                                      }
-
-                                                                      SubShipment
-                                                                          subshipment =
-                                                                          SubShipment(
-                                                                        shipmentStatus:
-                                                                            "P",
-                                                                        paths: jsonEncode(
-                                                                            shipmentProvider.pathes[i]),
-                                                                        shipmentItems:
-                                                                            shipmentitems,
-                                                                        totalWeight:
-                                                                            totalWeight,
-                                                                        distance:
-                                                                            shipmentProvider.distance[i],
-                                                                        price: calculatePrice(
-                                                                            shipmentProvider.distance[i],
-                                                                            shipmentProvider.totalWeight[i]),
-                                                                        period:
-                                                                            shipmentProvider.period[i],
-                                                                        pathpoints:
-                                                                            points,
-                                                                        truck: ShipmentTruck(
-                                                                            id: shipmentProvider.trucks[i]!.id!),
-                                                                        // truckTypes: truckTypes,
-                                                                        pickupDate:
-                                                                            DateTime(
-                                                                          shipmentProvider
-                                                                              .loadDate[i]
-                                                                              .year,
-                                                                          shipmentProvider
-                                                                              .loadDate[i]
-                                                                              .month,
-                                                                          shipmentProvider
-                                                                              .loadDate[i]
-                                                                              .day,
-                                                                          shipmentProvider
-                                                                              .loadTime[i]
-                                                                              .hour,
-                                                                          shipmentProvider
-                                                                              .loadTime[i]
-                                                                              .day,
-                                                                        ),
-                                                                        deliveryDate:
-                                                                            DateTime(
-                                                                          shipmentProvider
-                                                                              .loadDate[i]
-                                                                              .year,
-                                                                          shipmentProvider
-                                                                              .loadDate[i]
-                                                                              .month,
-                                                                          shipmentProvider
-                                                                              .loadDate[i]
-                                                                              .day,
-                                                                          shipmentProvider
-                                                                              .loadTime[i]
-                                                                              .hour,
-                                                                          shipmentProvider
-                                                                              .loadTime[i]
-                                                                              .day,
-                                                                        ),
-                                                                      );
-                                                                      subshipmentsitems
-                                                                          .add(
-                                                                              subshipment);
+                                                                              shipmentitem);
+                                                                      totalWeight += double.parse(shipmentProvider
+                                                                              .commodityWeight_controllers[i][j]
+                                                                              .text
+                                                                              .replaceAll(",", ""))
+                                                                          .toInt();
                                                                     }
 
-                                                                    Shipmentv2
-                                                                        shipment =
-                                                                        Shipmentv2(
-                                                                      subshipments:
-                                                                          subshipmentsitems,
+                                                                    List<PathPoint>
+                                                                        points =
+                                                                        [];
+                                                                    points.add(
+                                                                      PathPoint(
+                                                                        pointType:
+                                                                            "P",
+                                                                        location:
+                                                                            "${shipmentProvider.pickup_latlng[i]!.latitude},${shipmentProvider.pickup_latlng[i]!.longitude}",
+                                                                        name: shipmentProvider
+                                                                            .pickup_controller[i]
+                                                                            .text,
+                                                                        nameEn:
+                                                                            shipmentProvider.pickup_eng_string[i],
+                                                                        number:
+                                                                            0,
+                                                                        city: 1,
+                                                                      ),
+                                                                    );
+                                                                    points.add(
+                                                                      PathPoint(
+                                                                        pointType:
+                                                                            "D",
+                                                                        location:
+                                                                            "${shipmentProvider.delivery_latlng[i]!.latitude},${shipmentProvider.delivery_latlng[i]!.longitude}",
+                                                                        name: shipmentProvider
+                                                                            .delivery_controller[i]
+                                                                            .text,
+                                                                        nameEn:
+                                                                            shipmentProvider.delivery_eng_string[i],
+                                                                        number:
+                                                                            0,
+                                                                        city: 1,
+                                                                      ),
                                                                     );
 
-                                                                    BlocProvider.of<ShipmentMultiCreateBloc>(
-                                                                            context)
+                                                                    for (var s =
+                                                                            0;
+                                                                        s < shipmentProvider.stoppoints_controller[i].length;
+                                                                        s++) {
+                                                                      points
+                                                                          .add(
+                                                                        PathPoint(
+                                                                          pointType:
+                                                                              "S",
+                                                                          location:
+                                                                              "${shipmentProvider.stoppoints_latlng[i][s]!.latitude},${shipmentProvider.stoppoints_latlng[i][s]!.longitude}",
+                                                                          name: shipmentProvider
+                                                                              .stoppoints_controller[i][s]
+                                                                              .text,
+                                                                          nameEn:
+                                                                              shipmentProvider.stoppoints_eng_string[i][s],
+                                                                          number:
+                                                                              s,
+                                                                          city:
+                                                                              1,
+                                                                        ),
+                                                                      );
+                                                                    }
+
+                                                                    SubShipment
+                                                                        subshipment =
+                                                                        SubShipment(
+                                                                      shipmentStatus:
+                                                                          "P",
+                                                                      paths: jsonEncode(
+                                                                          shipmentProvider
+                                                                              .pathes[i]),
+                                                                      shipmentItems:
+                                                                          shipmentitems,
+                                                                      totalWeight:
+                                                                          totalWeight,
+                                                                      distance:
+                                                                          shipmentProvider
+                                                                              .distance[i],
+                                                                      price: calculatePrice(
+                                                                          shipmentProvider.distance[
+                                                                              i],
+                                                                          shipmentProvider
+                                                                              .totalWeight[i]),
+                                                                      period: shipmentProvider
+                                                                          .period[i],
+                                                                      pathpoints:
+                                                                          points,
+                                                                      truck: ShipmentTruck(
+                                                                          id: shipmentProvider
+                                                                              .trucks[i]!
+                                                                              .id!),
+                                                                      // truckTypes: truckTypes,
+                                                                      pickupDate:
+                                                                          DateTime(
+                                                                        shipmentProvider
+                                                                            .loadDate[i]
+                                                                            .year,
+                                                                        shipmentProvider
+                                                                            .loadDate[i]
+                                                                            .month,
+                                                                        shipmentProvider
+                                                                            .loadDate[i]
+                                                                            .day,
+                                                                        shipmentProvider
+                                                                            .loadTime[i]
+                                                                            .hour,
+                                                                        shipmentProvider
+                                                                            .loadTime[i]
+                                                                            .day,
+                                                                      ),
+                                                                      deliveryDate:
+                                                                          DateTime(
+                                                                        shipmentProvider
+                                                                            .loadDate[i]
+                                                                            .year,
+                                                                        shipmentProvider
+                                                                            .loadDate[i]
+                                                                            .month,
+                                                                        shipmentProvider
+                                                                            .loadDate[i]
+                                                                            .day,
+                                                                        shipmentProvider
+                                                                            .loadTime[i]
+                                                                            .hour,
+                                                                        shipmentProvider
+                                                                            .loadTime[i]
+                                                                            .day,
+                                                                      ),
+                                                                    );
+                                                                    subshipmentsitems
                                                                         .add(
-                                                                      ShipmentMultiCreateButtonPressed(
-                                                                        shipment,
-                                                                      ),
-                                                                    );
-                                                                  } else {
-                                                                    Scrollable
-                                                                        .ensureVisible(
-                                                                      key1.currentContext!,
-                                                                      duration:
-                                                                          const Duration(
-                                                                        milliseconds:
-                                                                            500,
-                                                                      ),
-                                                                    );
+                                                                            subshipment);
                                                                   }
+
+                                                                  Shipmentv2
+                                                                      shipment =
+                                                                      Shipmentv2(
+                                                                    subshipments:
+                                                                        subshipmentsitems,
+                                                                  );
+
+                                                                  BlocProvider.of<
+                                                                              ShipmentMultiCreateBloc>(
+                                                                          context)
+                                                                      .add(
+                                                                    ShipmentMultiCreateButtonPressed(
+                                                                      shipment,
+                                                                    ),
+                                                                  );
                                                                 } else {
-                                                                  shipmentProvider
-                                                                      .setTruckError(
-                                                                          true,
-                                                                          selectedIndex);
                                                                   Scrollable
                                                                       .ensureVisible(
-                                                                    key2.currentContext!,
+                                                                    key1.currentContext!,
                                                                     duration:
                                                                         const Duration(
                                                                       milliseconds:

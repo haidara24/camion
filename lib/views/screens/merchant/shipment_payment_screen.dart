@@ -201,23 +201,16 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                           const SizedBox(
                             width: double.infinity,
                           ),
-                          Text(
-                            AppLocalizations.of(context)!
+                          SectionTitle(
+                            text: AppLocalizations.of(context)!
                                 .translate('operation_cost'),
-                            style: TextStyle(
-                                // color: AppColor.lightBlue,
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold),
                           ),
                           SizedBox(
                             height: 7.h,
                           ),
-                          Text(
-                            '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(widget.shipment.distance!, widget.shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
-                            style: TextStyle(
-                              // color: AppColor.lightBlue,
-                              fontSize: 17.sp,
-                            ),
+                          SectionBody(
+                            text:
+                                '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(widget.shipment.distance!, widget.shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
                           ),
                           // Divider(
                           //   height: 7.h,
@@ -235,22 +228,16 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                           SizedBox(
                                             height: 7.h,
                                           ),
-                                          Text(
-                                            '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
+                                          SectionBody(
+                                            text:
+                                                '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
                                           ),
                                           SizedBox(
                                             height: 7.h,
                                           ),
-                                          Text(
-                                            '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
-                                            style: TextStyle(
-                                              // color: AppColor.lightBlue,
-                                              fontSize: 17.sp,
-                                            ),
+                                          SectionBody(
+                                            text:
+                                                '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
                                           ),
                                         ],
                                       );
@@ -316,12 +303,9 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                   const SizedBox(
                                     width: double.infinity,
                                   ),
-                                  Text(
-                                    "اختر وسيلة الدفع",
-                                    style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("choose_payment_method"),
                                   ),
                                   SizedBox(
                                     height: 8.h,
@@ -350,14 +334,9 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(10),
-                                          ),
-                                          child: Center(
-                                            child: Image.asset(
-                                              "assets/images/albaraka.png",
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  .25,
+                                            image: const DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/images/Albaraka.jpg"),
                                             ),
                                           ),
                                         ),
@@ -377,21 +356,17 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(10),
+                                            image: const DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/images/Alharam.jpg"),
+                                              fit: BoxFit.fill,
+                                            ),
                                           ),
                                           height: 65,
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
                                               .28,
-                                          child: Center(
-                                            child: Image.asset(
-                                              "assets/images/alharam.png",
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  .25,
-                                            ),
-                                          ),
                                         ),
                                       ),
                                       InkWell(
@@ -409,6 +384,10 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(10),
+                                            image: const DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/images/e_Cash.jpg"),
+                                            ),
                                           ),
                                           clipBehavior: Clip.hardEdge,
                                           height: 65,
@@ -416,15 +395,6 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                                   .size
                                                   .width *
                                               .28,
-                                          child: Center(
-                                            child: Image.asset(
-                                              "assets/images/fatora.png",
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  .25,
-                                            ),
-                                          ),
                                         ),
                                       ),
                                     ],
@@ -525,17 +495,24 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SectionTitle(text: "بنك البركة"),
+                  SectionTitle(
+                      text: AppLocalizations.of(context)!.translate("barakah")),
                   Image.asset(
-                    "assets/images/albaraka.png",
+                    "assets/images/Albaraka.jpg",
                     height: 30,
                   ),
                 ],
               ),
               const Divider(),
-              const SectionBody(text: "رقم الحساب:1117556556."),
-              const SectionBody(text: "اسم الحساب : أكروس مينا"),
-              const SectionBody(text: "أرفق الاشعار لمراجعته"),
+              SectionBody(
+                  text:
+                      "${AppLocalizations.of(context)!.translate("account_no")}:1117556556."),
+              SectionBody(
+                  text:
+                      "${AppLocalizations.of(context)!.translate("account_name")} : AcrossMena"),
+              SectionBody(
+                  text: AppLocalizations.of(context)!
+                      .translate("send_attachment")),
               const SizedBox(height: 8),
               BlocConsumer<PaymentCreateBloc, PaymentCreateState>(
                 listener: (context, state) {
@@ -578,17 +555,24 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SectionTitle(text: "الهرم"),
+                  SectionTitle(
+                      text: AppLocalizations.of(context)!.translate("haram")),
                   Image.asset(
-                    "assets/images/alharam.png",
+                    "assets/images/Alharam.jpg",
                     height: 30,
                   ),
                 ],
               ),
               const Divider(),
-              const SectionBody(text: "رقم الحساب:1117556556."),
-              const SectionBody(text: "اسم الحساب : أكروس مينا"),
-              const SectionBody(text: "أرفق الاشعار لمراجعته"),
+              SectionBody(
+                  text:
+                      "${AppLocalizations.of(context)!.translate("account_no")}:1117556556."),
+              SectionBody(
+                  text:
+                      "${AppLocalizations.of(context)!.translate("account_name")} : AcrossMena"),
+              SectionBody(
+                  text: AppLocalizations.of(context)!
+                      .translate("send_attachment")),
               const SizedBox(height: 8),
               CustomButton(
                 title: const Icon(
@@ -625,9 +609,10 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SectionTitle(text: "فاتورة"),
+                  SectionTitle(
+                      text: AppLocalizations.of(context)!.translate("ecash")),
                   Image.asset(
-                    "assets/images/fatora.png",
+                    "assets/images/e_Cash.jpg",
                     height: 30,
                   ),
                 ],

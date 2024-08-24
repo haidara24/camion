@@ -5,13 +5,16 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/complete_sub_shipment_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
+import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
+import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
@@ -422,6 +425,114 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                       distance: subshipment.distance!,
                       period: subshipment.period!,
                     ),
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: BlocConsumer<CompleteSubShipmentBloc,
+                          CompleteSubShipmentState>(
+                        listener: (context, completestate) {
+                          if (completestate
+                              is CompleteSubShipmentLoadedSuccess) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ControlView(),
+                                ),
+                                (route) => false);
+                          }
+                        },
+                        builder: (context, completestate) {
+                          if (completestate
+                              is CompleteSubShipmentLoadingProgress) {
+                            return CustomButton(
+                              title: SizedBox(
+                                width: 90.w,
+                                child: Center(
+                                  child: LoadingIndicator(),
+                                ),
+                              ),
+                              onTap: () {},
+                              // color: Colors.white,
+                            );
+                          } else {
+                            return CustomButton(
+                              title: SizedBox(
+                                width: 110.w,
+                                child: Row(
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('accept'),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(width: 8),
+                                    SizedBox(
+                                      height: 30.w,
+                                      width: 30.w,
+                                      child: SvgPicture.asset(
+                                        "assets/icons/white/notification_shipment_complete.svg",
+                                        width: 30.w,
+                                        height: 30.w,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                showDialog<void>(
+                                  context: context,
+                                  barrierDismissible:
+                                      false, // user must tap button!
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor: Colors.white,
+                                      title: Text(AppLocalizations.of(context)!
+                                          .translate('finish')),
+                                      content: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('finish_confirm'),
+                                      ),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('cancel')),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        TextButton(
+                                          child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('ok')),
+                                          onPressed: () {
+                                            BlocProvider.of<
+                                                        CompleteSubShipmentBloc>(
+                                                    context)
+                                                .add(
+                                              CompleteSubShipmentButtonPressed(
+                                                subshipment.id!,
+                                              ),
+                                            );
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -511,8 +622,9 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                 if (state is DriverActiveShipmentLoadedSuccess) {
                   if (state.shipments.isEmpty) {
                     return Center(
-                      child: Text(AppLocalizations.of(context)!
-                          .translate('no_shipments')),
+                      child: SectionTitle(
+                          text: AppLocalizations.of(context)!
+                              .translate('no_active')),
                     );
                   } else {
                     return Consumer<ActiveShippmentProvider>(

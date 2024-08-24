@@ -1,3 +1,4 @@
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipments_widgets/shimmer_card.dart';
 import 'package:camion/views/widgets/shipments_widgets/subshipment_card.dart';
 import 'package:flutter/material.dart';
@@ -106,8 +107,9 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
                     if (state is UnassignedShipmentListLoadedSuccess) {
                       return state.shipments.isEmpty
                           ? Center(
-                              child: Text(AppLocalizations.of(context)!
-                                  .translate('no_shipments')),
+                              child: SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate('no_shipments')),
                             )
                           : ListView.builder(
                               itemCount: state.shipments.length,

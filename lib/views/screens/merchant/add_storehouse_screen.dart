@@ -1,3 +1,4 @@
+import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/profile/create_store_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/merchant_profile_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -182,7 +183,10 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen> {
                       child: TextFormField(
                         controller: storeAddressController,
                         decoration: InputDecoration(
-                            filled: true, hintText: "أدخل عنوان المستودع"),
+                          filled: true,
+                          hintText: AppLocalizations.of(context)!
+                              .translate("enter_store_address"),
+                        ),
                       ),
                     ),
                   ),

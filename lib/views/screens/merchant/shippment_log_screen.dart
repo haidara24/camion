@@ -387,8 +387,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                   .height *
                                               .75,
                                           child: Center(
-                                            child: Text(
-                                                AppLocalizations.of(context)!
+                                            child: SectionTitle(
+                                                text: AppLocalizations.of(
+                                                        context)!
                                                     .translate('no_shipments')),
                                           ),
                                         )
@@ -453,8 +454,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                           child: Row(
                                                             children: [
                                                               Container(
-                                                                height: 45.w,
-                                                                width: 45.w,
+                                                                height: 35.w,
+                                                                width: 35.w,
                                                                 margin:
                                                                     const EdgeInsets
                                                                         .symmetric(
@@ -464,10 +465,10 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                   child:
                                                                       SvgPicture
                                                                           .asset(
-                                                                    "assets/icons/waiting_shipment.svg",
+                                                                    "assets/icons/grey/waiting_shipment.svg",
                                                                     height:
-                                                                        40.w,
-                                                                    width: 40.w,
+                                                                        35.w,
+                                                                    width: 35.w,
                                                                     fit: BoxFit
                                                                         .fill,
                                                                   ),
@@ -625,9 +626,11 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                   .height *
                                               .75,
                                           child: Center(
-                                            child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('no_shipments')),
+                                            child: SectionTitle(
+                                                text: AppLocalizations.of(
+                                                        context)!
+                                                    .translate(
+                                                        'no_out_orders')),
                                           ),
                                         )
                                       : ListView.builder(
@@ -686,36 +689,37 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                         child: Row(
                                                           children: [
                                                             Container(
-                                                              height: 45.w,
-                                                              width: 45.w,
+                                                              height: 35.w,
+                                                              width: 35.w,
                                                               margin:
                                                                   const EdgeInsets
                                                                       .symmetric(
                                                                 horizontal: 4,
                                                               ),
-                                                              child: Center(
-                                                                child:
-                                                                    SvgPicture
-                                                                        .asset(
-                                                                  state.requests[index]
-                                                                          .isApproved!
-                                                                      ? "assets/icons/complete.svg"
-                                                                      : "assets/icons/cancel.svg",
-                                                                  height: 40.w,
-                                                                  width: 40.w,
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                state
+                                                                        .requests[
+                                                                            index]
+                                                                        .isApproved!
+                                                                    ? "assets/icons/grey/notification_shipment_complete.svg"
+                                                                    : "assets/icons/grey/notification_shipment_cancelation.svg",
+                                                                height: 35.w,
+                                                                width: 35.w,
+                                                                fit:
+                                                                    BoxFit.fill,
                                                               ),
                                                             ),
                                                             Text(
-                                                              "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
+                                                              // "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
+                                                              " ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,
                                                               style: TextStyle(
-                                                                // color: AppColor.lightBlue,
-                                                                fontSize: 17.sp,
+                                                                fontSize: 18,
+                                                                color: AppColor
+                                                                    .darkGrey,
                                                               ),
                                                             ),
                                                             Spacer(),
@@ -724,7 +728,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                   const EdgeInsets
                                                                       .symmetric(
                                                                       horizontal:
-                                                                          8),
+                                                                          4),
                                                               child:
                                                                   SectionTitle(
                                                                 text:

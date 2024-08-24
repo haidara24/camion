@@ -159,7 +159,7 @@ class NotificationServices {
   Future forgroundMessage(
       BuildContext context, NotificationProvider provider) async {
     if (notificationProvider != null) {
-      // notificationProvider!.addNotReadedNotification();
+      notificationProvider!.addNotReadedNotification();
       BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
     }
     await FirebaseMessaging.instance

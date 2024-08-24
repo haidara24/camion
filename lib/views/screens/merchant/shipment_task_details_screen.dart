@@ -129,29 +129,33 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                   width: 1,
                 ),
               ),
-              width: 80.w,
-              height: 95.h,
+              width: MediaQuery.of(context).size.width * .27,
+              height: 110.h,
               child: Image(
-                height: 80.w,
-                width: 95.h,
+                height: MediaQuery.of(context).size.width * .27,
+                width: 110.h,
                 fit: BoxFit.fill,
                 image: FileImage(_files[i]),
               ),
             ),
             Positioned(
               top: -24,
-              left: -8,
+              left: -16,
               child: IconButton(
                 onPressed: () {
                   setState(() {
                     _files.removeAt(i);
                   });
                 },
-                icon: Card(
-                  color: Colors.grey[200]!,
-                  child: Icon(
-                    Icons.delete,
-                    color: Colors.red[400],
+                icon: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200]!,
+                    borderRadius: BorderRadius.circular(45),
+                  ),
+                  child: SizedBox(
+                    height: 25.w,
+                    width: 25.w,
+                    child: SvgPicture.asset("assets/icons/cancel.svg"),
                   ),
                 ),
               ),
@@ -251,9 +255,9 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                           widget.shipment
                                                       .shipmentinstructionv2 ==
                                                   null
-                                              ? const Icon(
+                                              ? Icon(
                                                   Icons.warning_amber_rounded,
-                                                  color: Colors.red,
+                                                  color: AppColor.deepYellow,
                                                 )
                                               : Icon(
                                                   Icons.check_circle,
@@ -352,9 +356,9 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                       children: [
                                         widget.shipment.shipmentpaymentv2 ==
                                                 null
-                                            ? const Icon(
+                                            ? Icon(
                                                 Icons.warning_amber_rounded,
-                                                color: Colors.red,
+                                                color: AppColor.deepYellow,
                                               )
                                             : Icon(
                                                 Icons.check_circle,
@@ -1660,10 +1664,6 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                       commodityQuantity_controller[
                                                                           index2],
                                                                   onTap: () {
-                                                                    // BlocProvider.of<
-                                                                    //             BottomNavBarCubit>(
-                                                                    //         context)
-                                                                    //     .emitHide();
                                                                     commodityQuantity_controller[index2].selection = TextSelection(
                                                                         baseOffset:
                                                                             0,
@@ -1693,7 +1693,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                   ],
                                                                   style: const TextStyle(
                                                                       fontSize:
-                                                                          20),
+                                                                          18),
                                                                   decoration:
                                                                       InputDecoration(
                                                                     labelText: AppLocalizations.of(
@@ -1708,9 +1708,18 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                             9.0),
                                                                   ),
                                                                   onTapOutside:
-                                                                      (event) {},
+                                                                      (event) {
+                                                                    FocusManager
+                                                                        .instance
+                                                                        .primaryFocus
+                                                                        ?.unfocus();
+                                                                  },
                                                                   onEditingComplete:
                                                                       () {
+                                                                    FocusManager
+                                                                        .instance
+                                                                        .primaryFocus
+                                                                        ?.unfocus();
                                                                     // if (evaluateCo2()) {
                                                                     //   calculateCo2Report();
                                                                     // }
@@ -2172,294 +2181,23 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                 'weight_info'),
                                                       ),
                                                     ]),
-                                                SizedBox(height: 8),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 3,
-                                                  ),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            .45,
-                                                        child: TextFormField(
-                                                          controller:
-                                                              truck_weight_controller,
-                                                          onTap: () {
-                                                            truck_weight_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        truck_weight_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
-                                                          },
-                                                          // enabled:
-                                                          //     widget.shipment.shipmentinstruction == null,
-                                                          scrollPadding: EdgeInsets.only(
-                                                              bottom: MediaQuery.of(
-                                                                          context)
-                                                                      .viewInsets
-                                                                      .bottom +
-                                                                  20),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          inputFormatters: [
-                                                            DecimalFormatter(),
-                                                          ],
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 18),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'first_weight'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
-                                                            suffix: Text(
-                                                              localeState.value
-                                                                          .languageCode ==
-                                                                      "en"
-                                                                  ? "kg"
-                                                                  : "كغ",
-                                                            ),
-                                                            suffixStyle:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        15),
-                                                          ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {
-                                                            if (net_weight_controller
-                                                                .text
-                                                                .isNotEmpty) {
-                                                              final_weight_controller
-                                                                  .text = (double.parse(net_weight_controller
-                                                                          .text
-                                                                          .replaceAll(
-                                                                              ",",
-                                                                              "")) -
-                                                                      double.parse(truck_weight_controller
-                                                                          .text
-                                                                          .replaceAll(
-                                                                              ",",
-                                                                              "")))
-                                                                  .abs()
-                                                                  .toString();
-                                                            }
-                                                          },
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            truck_weight_controller
-                                                                    .text =
-                                                                newValue!;
-                                                          },
-                                                          onFieldSubmitted:
-                                                              (value) {},
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            .45,
-                                                        child: TextFormField(
-                                                          controller:
-                                                              net_weight_controller,
-                                                          onTap: () {
-                                                            net_weight_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                              baseOffset: 0,
-                                                              extentOffset:
-                                                                  net_weight_controller
-                                                                      .value
-                                                                      .text
-                                                                      .length,
-                                                            );
-                                                          },
-                                                          scrollPadding:
-                                                              EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                20,
-                                                          ),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .number,
-                                                          inputFormatters: [
-                                                            DecimalFormatter(),
-                                                          ],
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 18,
-                                                          ),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'second_weight'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
-                                                            suffix: Text(
-                                                              localeState.value
-                                                                          .languageCode ==
-                                                                      "en"
-                                                                  ? "kg"
-                                                                  : "كغ",
-                                                            ),
-                                                            suffixStyle:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        15),
-                                                          ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {
-                                                            if (truck_weight_controller
-                                                                .text
-                                                                .isNotEmpty) {
-                                                              final_weight_controller
-                                                                  .text = (double.parse(net_weight_controller
-                                                                          .text
-                                                                          .replaceAll(
-                                                                              ",",
-                                                                              "")) -
-                                                                      double.parse(truck_weight_controller
-                                                                          .text
-                                                                          .replaceAll(
-                                                                              ",",
-                                                                              "")))
-                                                                  .abs()
-                                                                  .toString();
-                                                            }
-                                                          },
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            net_weight_controller
-                                                                    .text =
-                                                                newValue!;
-                                                          },
-                                                          onFieldSubmitted:
-                                                              (value) {},
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 12,
-                                                ),
+                                                const SizedBox(height: 8),
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.center,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-                                                    SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              .92,
+                                                    Expanded(
                                                       child: TextFormField(
                                                         controller:
-                                                            final_weight_controller,
+                                                            truck_weight_controller,
                                                         onTap: () {
-                                                          final_weight_controller
+                                                          truck_weight_controller
                                                                   .selection =
                                                               TextSelection(
                                                                   baseOffset: 0,
                                                                   extentOffset:
-                                                                      final_weight_controller
+                                                                      truck_weight_controller
                                                                           .value
                                                                           .text
                                                                           .length);
@@ -2488,7 +2226,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           labelText: AppLocalizations
                                                                   .of(context)!
                                                               .translate(
-                                                                  'commodity_gross_weight'),
+                                                                  'first_weight'),
                                                           contentPadding:
                                                               const EdgeInsets
                                                                   .symmetric(
@@ -2519,7 +2257,25 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
 
                                                           // evaluatePrice();
                                                         },
-                                                        onChanged: (value) {},
+                                                        onChanged: (value) {
+                                                          if (net_weight_controller
+                                                              .text
+                                                              .isNotEmpty) {
+                                                            final_weight_controller
+                                                                .text = (double.parse(net_weight_controller
+                                                                        .text
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            "")) -
+                                                                    double.parse(truck_weight_controller
+                                                                        .text
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            "")))
+                                                                .abs()
+                                                                .toString();
+                                                          }
+                                                        },
                                                         autovalidateMode:
                                                             AutovalidateMode
                                                                 .onUserInteraction,
@@ -2534,7 +2290,120 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           return null;
                                                         },
                                                         onSaved: (newValue) {
-                                                          final_weight_controller
+                                                          truck_weight_controller
+                                                              .text = newValue!;
+                                                        },
+                                                        onFieldSubmitted:
+                                                            (value) {},
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Expanded(
+                                                      child: TextFormField(
+                                                        controller:
+                                                            net_weight_controller,
+                                                        onTap: () {
+                                                          net_weight_controller
+                                                                  .selection =
+                                                              TextSelection(
+                                                            baseOffset: 0,
+                                                            extentOffset:
+                                                                net_weight_controller
+                                                                    .value
+                                                                    .text
+                                                                    .length,
+                                                          );
+                                                        },
+                                                        scrollPadding:
+                                                            EdgeInsets.only(
+                                                          bottom: MediaQuery.of(
+                                                                      context)
+                                                                  .viewInsets
+                                                                  .bottom +
+                                                              20,
+                                                        ),
+                                                        textInputAction:
+                                                            TextInputAction
+                                                                .done,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        inputFormatters: [
+                                                          DecimalFormatter(),
+                                                        ],
+                                                        style: const TextStyle(
+                                                          fontSize: 18,
+                                                        ),
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText: AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  'second_weight'),
+                                                          contentPadding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  vertical:
+                                                                      11.0,
+                                                                  horizontal:
+                                                                      9.0),
+                                                          suffix: Text(
+                                                            localeState.value
+                                                                        .languageCode ==
+                                                                    "en"
+                                                                ? "kg"
+                                                                : "كغ",
+                                                          ),
+                                                          suffixStyle:
+                                                              const TextStyle(
+                                                                  fontSize: 15),
+                                                        ),
+                                                        onTapOutside: (event) {
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+                                                        },
+                                                        onEditingComplete: () {
+                                                          FocusManager.instance
+                                                              .primaryFocus
+                                                              ?.unfocus();
+
+                                                          // evaluatePrice();
+                                                        },
+                                                        onChanged: (value) {
+                                                          if (truck_weight_controller
+                                                              .text
+                                                              .isNotEmpty) {
+                                                            final_weight_controller
+                                                                .text = (double.parse(net_weight_controller
+                                                                        .text
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            "")) -
+                                                                    double.parse(truck_weight_controller
+                                                                        .text
+                                                                        .replaceAll(
+                                                                            ",",
+                                                                            "")))
+                                                                .abs()
+                                                                .toString();
+                                                          }
+                                                        },
+                                                        autovalidateMode:
+                                                            AutovalidateMode
+                                                                .onUserInteraction,
+                                                        validator: (value) {
+                                                          if (value!.isEmpty) {
+                                                            return AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    'insert_value_validate');
+                                                          }
+                                                          return null;
+                                                        },
+                                                        onSaved: (newValue) {
+                                                          net_weight_controller
                                                               .text = newValue!;
                                                         },
                                                         onFieldSubmitted:
@@ -2544,7 +2413,38 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                   ],
                                                 ),
                                                 const SizedBox(
-                                                  height: 12,
+                                                  height: 8,
+                                                ),
+                                                TextFormField(
+                                                  controller:
+                                                      final_weight_controller,
+                                                  enabled: false,
+                                                  style: const TextStyle(
+                                                      fontSize: 18),
+                                                  decoration: InputDecoration(
+                                                    labelText: AppLocalizations
+                                                            .of(context)!
+                                                        .translate(
+                                                            'commodity_gross_weight'),
+                                                    contentPadding:
+                                                        const EdgeInsets
+                                                            .symmetric(
+                                                            vertical: 11.0,
+                                                            horizontal: 9.0),
+                                                    suffix: Text(
+                                                      localeState.value
+                                                                  .languageCode ==
+                                                              "en"
+                                                          ? "kg"
+                                                          : "كغ",
+                                                    ),
+                                                    suffixStyle:
+                                                        const TextStyle(
+                                                            fontSize: 15),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 8,
                                                 ),
                                               ],
                                             ),
@@ -2660,8 +2560,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                             children: [
                                               Row(
                                                 mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
+                                                    MainAxisAlignment.start,
                                                 children: [
                                                   SectionTitle(
                                                     text: AppLocalizations.of(
@@ -2669,6 +2568,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         .translate(
                                                             'upload_files'),
                                                   ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
                                                   InkWell(
                                                     onTap: () async {
                                                       var pickedImages =
@@ -2683,18 +2588,23 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         () {},
                                                       );
                                                     },
-                                                    child: Card(
-                                                      elevation: 1,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Center(
-                                                          child: SizedBox(
-                                                            height: 40.h,
-                                                            width: 50.w,
-                                                            child: SvgPicture.asset(
-                                                                "assets/icons/cloud.svg"),
+                                                    child: SizedBox(
+                                                      width: 100.w,
+                                                      child: Card(
+                                                        elevation: 1,
+                                                        color: Colors.white,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Center(
+                                                            child: SizedBox(
+                                                              height: 40.h,
+                                                              width: 50.w,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                      "assets/icons/cloud.svg"),
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
@@ -2718,7 +2628,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                       builder: (context, state) {
                                         if (state
                                             is ReadInstructionLoadedSuccess) {
-                                          return SizedBox.shrink();
+                                          return const SizedBox.shrink();
                                         } else {
                                           return Shimmer.fromColors(
                                             baseColor: (Colors.grey[300])!,

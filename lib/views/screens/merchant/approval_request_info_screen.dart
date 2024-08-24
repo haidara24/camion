@@ -13,6 +13,7 @@ import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ApprovalRequestDetailsScreen extends StatelessWidget {
   final String type;
@@ -31,7 +32,8 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
             child: Scaffold(
               backgroundColor: AppColor.lightGrey200,
               appBar: CustomAppBar(
-                title: "حالة الطلب",
+                title: AppLocalizations.of(context)!
+                    .translate("approval_request_status"),
               ),
               body: SingleChildScrollView(
                 // physics: const NeverScrollableScrollPhysics(),
@@ -54,7 +56,8 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         SectionTitle(
-                                            text: "لقد وافق السائق على طلبك "),
+                                            text: AppLocalizations.of(context)!
+                                                .translate("request_confirm")),
                                         state.request.extratext!.isNotEmpty
                                             ? SectionBody(
                                                 text:
@@ -102,7 +105,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                       is ShipmentUpdateStatusLoadingProgress) {
                                                     return CustomButton(
                                                       title: SizedBox(
-                                                        width: 70.w,
+                                                        width: 120.w,
                                                         child: Center(
                                                           child:
                                                               LoadingIndicator(),
@@ -114,18 +117,40 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                   } else {
                                                     return CustomButton(
                                                       title: SizedBox(
-                                                        width: 70.w,
-                                                        child: Center(
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'accept'),
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .green),
-                                                          ),
+                                                        width: 120.w,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceAround,
+                                                          children: [
+                                                            Center(
+                                                              child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'accept'),
+                                                                style:
+                                                                    const TextStyle(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 30.w,
+                                                              width: 30.w,
+                                                              child: SvgPicture
+                                                                  .asset(
+                                                                "assets/icons/white/notification_shipment_complete.svg",
+                                                                width: 30.w,
+                                                                height: 30.w,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                       onTap: () {
@@ -142,7 +167,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                           ),
                                                         );
                                                       },
-                                                      color: Colors.white,
+                                                      // color: Colors.white,
                                                     );
                                                   }
                                                 },
@@ -155,11 +180,13 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                   )
                                 : Column(
                                     children: [
-                                      SectionBody(text: "لقد رفض السائق طلبك "),
+                                      SectionBody(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("request_reject")),
                                       state.request.reason!.isNotEmpty
                                           ? SectionBody(
                                               text:
-                                                  "السبب: ${state.request.reason!} ")
+                                                  "${AppLocalizations.of(context)!.translate("reason")}: ${state.request.reason!} ")
                                           : const SizedBox.shrink(),
                                       const Divider(),
                                       Padding(
@@ -171,22 +198,25 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                             CustomButton(
                                               title: SizedBox(
                                                 width: 140.w,
-                                                child: const Center(
-                                                  child:
-                                                      Text("بحث عن سائق أخر"),
+                                                child: Center(
+                                                  child: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .translate(
+                                                          "search_for_truck")),
                                                 ),
                                               ),
                                               onTap: () {
                                                 Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SearchTruckScreen(
-                                                              subshipmentId: state
-                                                                  .request
-                                                                  .subshipment!
-                                                                  .id!),
-                                                    ));
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SearchTruckScreen(
+                                                            subshipmentId: state
+                                                                .request
+                                                                .subshipment!
+                                                                .id!),
+                                                  ),
+                                                );
                                               },
                                               color: Colors.white,
                                             ),

@@ -797,49 +797,49 @@ class _CreateTruckForDriverScreenState
                               const SizedBox(
                                 height: 12,
                               ),
-                              TextFormField(
-                                controller: gpsController,
-                                onTap: () {
-                                  gpsController.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset:
-                                          gpsController.value.text.length);
-                                },
-                                scrollPadding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom +
-                                        20),
-                                textInputAction: TextInputAction.done,
-                                keyboardType: TextInputType.phone,
-                                style: const TextStyle(fontSize: 18),
-                                decoration: const InputDecoration(
-                                  labelText: "أدخل معرف الgps",
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 11.0, horizontal: 9.0),
-                                ),
-                                onTapOutside: (event) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                onEditingComplete: () {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return AppLocalizations.of(context)!
-                                        .translate('insert_value_validate');
-                                  }
-                                  return null;
-                                },
-                                onSaved: (newValue) {
-                                  gpsController.text = newValue!;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
+                              // TextFormField(
+                              //   controller: gpsController,
+                              //   onTap: () {
+                              //     gpsController.selection = TextSelection(
+                              //         baseOffset: 0,
+                              //         extentOffset:
+                              //             gpsController.value.text.length);
+                              //   },
+                              //   scrollPadding: EdgeInsets.only(
+                              //       bottom: MediaQuery.of(context)
+                              //               .viewInsets
+                              //               .bottom +
+                              //           20),
+                              //   textInputAction: TextInputAction.done,
+                              //   keyboardType: TextInputType.phone,
+                              //   style: const TextStyle(fontSize: 18),
+                              //   decoration: const InputDecoration(
+                              //     labelText: "أدخل معرف الgps",
+                              //     contentPadding: EdgeInsets.symmetric(
+                              //         vertical: 11.0, horizontal: 9.0),
+                              //   ),
+                              //   onTapOutside: (event) {
+                              //     FocusManager.instance.primaryFocus?.unfocus();
+                              //   },
+                              //   onEditingComplete: () {
+                              //     FocusManager.instance.primaryFocus?.unfocus();
+                              //   },
+                              //   autovalidateMode:
+                              //       AutovalidateMode.onUserInteraction,
+                              //   validator: (value) {
+                              //     if (value!.isEmpty) {
+                              //       return AppLocalizations.of(context)!
+                              //           .translate('insert_value_validate');
+                              //     }
+                              //     return null;
+                              //   },
+                              //   onSaved: (newValue) {
+                              //     gpsController.text = newValue!;
+                              //   },
+                              // ),
+                              // const SizedBox(
+                              //   height: 12,
+                              // ),
                               Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 3),
@@ -875,7 +875,7 @@ class _CreateTruckForDriverScreenState
                                                     height: 40.h,
                                                     width: 50.w,
                                                     child: SvgPicture.asset(
-                                                        "assets/icons/cloud.svg"),
+                                                        "assets/icons/grey/add_image.svg"),
                                                   ),
                                                 ),
                                               ),
@@ -900,40 +900,40 @@ class _CreateTruckForDriverScreenState
                                               SharedPreferences prefs =
                                                   await SharedPreferences
                                                       .getInstance();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                backgroundColor:
-                                                    AppColor.deepGreen,
-                                                dismissDirection:
-                                                    DismissDirection.up,
-                                                behavior:
-                                                    SnackBarBehavior.floating,
-                                                margin: EdgeInsets.only(
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height -
-                                                            150,
-                                                    left: 10,
-                                                    right: 10),
-                                                content: localeState.value
-                                                            .languageCode ==
-                                                        'en'
-                                                    ? const Text(
-                                                        'A Truck has been created successfully.',
-                                                        style: TextStyle(
-                                                          fontSize: 18,
-                                                        ),
-                                                      )
-                                                    : const Text(
-                                                        'تم انشاء مركبة جديدة بنجاح..',
-                                                        style: TextStyle(
-                                                          fontSize: 18,
-                                                        ),
-                                                      ),
-                                                duration:
-                                                    const Duration(seconds: 3),
-                                              ));
+                                              // ScaffoldMessenger.of(context)
+                                              //     .showSnackBar(SnackBar(
+                                              //   backgroundColor:
+                                              //       AppColor.deepGreen,
+                                              //   dismissDirection:
+                                              //       DismissDirection.up,
+                                              //   behavior:
+                                              //       SnackBarBehavior.floating,
+                                              //   margin: EdgeInsets.only(
+                                              //       bottom:
+                                              //           MediaQuery.of(context)
+                                              //                   .size
+                                              //                   .height -
+                                              //               150,
+                                              //       left: 10,
+                                              //       right: 10),
+                                              //   content: localeState.value
+                                              //               .languageCode ==
+                                              //           'en'
+                                              //       ? const Text(
+                                              //           'A Truck has been created successfully.',
+                                              //           style: TextStyle(
+                                              //             fontSize: 18,
+                                              //           ),
+                                              //         )
+                                              //       : const Text(
+                                              //           'تم انشاء مركبة جديدة بنجاح..',
+                                              //           style: TextStyle(
+                                              //             fontSize: 18,
+                                              //           ),
+                                              //         ),
+                                              //   duration:
+                                              //       const Duration(seconds: 3),
+                                              // ));
                                               prefs.setInt(
                                                   "truckId", state.truck.id!);
                                               prefs.setString(
@@ -990,6 +990,8 @@ class _CreateTruckForDriverScreenState
                                                               widthController
                                                                   .text)
                                                           .toInt();
+                                                      truck.locationLat =
+                                                          "35.363149,35.932120";
                                                       truck.long = double.parse(
                                                               longController
                                                                   .text)

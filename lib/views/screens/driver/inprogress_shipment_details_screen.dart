@@ -20,6 +20,7 @@ import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
@@ -426,14 +427,35 @@ class _InprogressShipmentDetailsScreenState
                                           } else {
                                             return CustomButton(
                                               title: SizedBox(
-                                                child: Center(
-                                                  child: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .translate('ok'),
-                                                    style: const TextStyle(
-                                                        color: Colors.green),
-                                                  ),
+                                                width: 120.w,
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    Center(
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate('serve'),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 30.w,
+                                                      width: 30.w,
+                                                      child: SvgPicture.asset(
+                                                        "assets/icons/white/notification_shipment_complete.svg",
+                                                        width: 30.w,
+                                                        height: 30.w,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
                                               onTap: () {
@@ -449,7 +471,14 @@ class _InprogressShipmentDetailsScreenState
                                                       title: Text(
                                                           AppLocalizations.of(
                                                                   context)!
-                                                              .translate('ok')),
+                                                              .translate(
+                                                                  'serve')),
+                                                      content: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'serve_confirm'),
+                                                      ),
                                                       actions: <Widget>[
                                                         TextButton(
                                                           child: Text(
@@ -489,7 +518,7 @@ class _InprogressShipmentDetailsScreenState
                                                   },
                                                 );
                                               },
-                                              color: Colors.white,
+                                              // color: Colors.white,
                                             );
                                           }
                                         },

@@ -53,6 +53,8 @@ import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/complete_sub_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/re_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
@@ -102,6 +104,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_stripe/flutter_stripe.dart';
@@ -141,7 +144,12 @@ void main() async {
 
   HttpOverrides.global = MyHttpOverrides();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: AppColor.deepBlack,
+      systemNavigationBarColor: AppColor.deepBlack,
+    ),
+  );
   runApp(MyApp(
     lang: lang,
   ));
@@ -458,6 +466,18 @@ class MyApp extends StatelessWidget {
                                   context)),
                     ),
                     BlocProvider(
+                      create: (context) => CompleteSubShipmentBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ReActiveShipmentBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
                       create: (context) => ActivateShipmentBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
@@ -672,9 +692,9 @@ class MyApp extends StatelessWidget {
                           ),
                           inputDecorationTheme: InputDecorationTheme(
                             labelStyle: TextStyle(
-                                fontSize: 18, color: Colors.grey[600]!),
+                                fontSize: 16, color: Colors.grey[600]!),
                             suffixStyle: const TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                             ),
                             floatingLabelStyle: const TextStyle(
                               fontSize: 20,

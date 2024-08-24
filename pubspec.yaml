@@ -80,6 +80,9 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/orange/
+    - assets/icons/white/
+    - assets/icons/grey/
     - assets/style/
     - assets/.env
     - lang/

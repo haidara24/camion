@@ -138,65 +138,72 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                   SizedBox(
                                     height: 20.h,
                                   ),
-                                  BlocConsumer<AuthBloc, AuthState>(
-                                    listener: (context, state) async {
-                                      if (state is AuthDriverSuccessState ||
-                                          state is AuthOwnerSuccessState ||
-                                          state is AuthMerchantSuccessState ||
-                                          state is AuthManagmentSuccessState ||
-                                          state is AuthCheckPointSuccessState) {
-                                        showCustomSnackBar(
-                                          context: context,
-                                          message: localeState
-                                                      .value.languageCode ==
-                                                  'en'
-                                              ? 'sign in successfully, welcome.'
-                                              : 'تم تسجيل الدخول بنجاح! أهلا بك.',
-                                        );
-
-                                        if (widget.isLogin) {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ControlView(),
-                                            ),
-                                            (route) => false,
+                                  Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: BlocConsumer<AuthBloc, AuthState>(
+                                      listener: (context, state) async {
+                                        if (state is AuthDriverSuccessState ||
+                                            state is AuthOwnerSuccessState ||
+                                            state is AuthMerchantSuccessState ||
+                                            state
+                                                is AuthManagmentSuccessState ||
+                                            state
+                                                is AuthCheckPointSuccessState) {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            message: localeState
+                                                        .value.languageCode ==
+                                                    'en'
+                                                ? 'sign in successfully, welcome.'
+                                                : 'تم تسجيل الدخول بنجاح! أهلا بك.',
                                           );
-                                        } else {
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  CreateProfileScreen(),
-                                            ),
-                                            (route) => false,
+
+                                          if (widget.isLogin) {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const ControlView(),
+                                              ),
+                                              (route) => false,
+                                            );
+                                          } else {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    CreateProfileScreen(),
+                                              ),
+                                              (route) => false,
+                                            );
+                                          }
+                                        }
+
+                                        if (state is AuthLoginErrorState) {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            backgroundColor: Colors.red[300]!,
+                                            message: state.error!,
                                           );
                                         }
-                                      }
-
-                                      if (state is AuthLoginErrorState) {
-                                        showCustomSnackBar(
-                                          context: context,
-                                          backgroundColor: Colors.red[300]!,
-                                          message: state.error!,
-                                        );
-                                      }
-                                    },
-                                    builder: (context, state) {
-                                      if (state is AuthLoggingInProgressState) {
-                                        return LoadingIndicator(
-                                          color: Colors.white,
-                                        );
-                                      } else {
-                                        return Pinput(
-                                          defaultPinTheme: defaultPinTheme,
-                                          focusedPinTheme: focusedPinTheme,
-                                          submittedPinTheme: submittedPinTheme,
-                                          onCompleted: (pin) => _verify(pin),
-                                        );
-                                      }
-                                    },
+                                      },
+                                      builder: (context, state) {
+                                        if (state
+                                            is AuthLoggingInProgressState) {
+                                          return LoadingIndicator(
+                                            color: Colors.white,
+                                          );
+                                        } else {
+                                          return Pinput(
+                                            defaultPinTheme: defaultPinTheme,
+                                            focusedPinTheme: focusedPinTheme,
+                                            submittedPinTheme:
+                                                submittedPinTheme,
+                                            onCompleted: (pin) => _verify(pin),
+                                          );
+                                        }
+                                      },
+                                    ),
                                   ),
                                   SizedBox(
                                     height: 8,

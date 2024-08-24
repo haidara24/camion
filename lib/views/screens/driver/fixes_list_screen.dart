@@ -5,6 +5,7 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/create_fix_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,6 +40,7 @@ class FixesListScreen extends StatelessWidget {
                   Icons.add,
                   color: Colors.white,
                 ),
+                backgroundColor: AppColor.darkGrey,
               ),
               body: SingleChildScrollView(
                 // physics: const NeverScrollableScrollPhysics(),
@@ -59,8 +61,9 @@ class FixesListScreen extends StatelessWidget {
                           if (state is TruckFixListLoadedSuccess) {
                             return state.fixes.isEmpty
                                 ? Center(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .translate('no_shipments')),
+                                    child: SectionTitle(
+                                        text: AppLocalizations.of(context)!
+                                            .translate('no_spending')),
                                   )
                                 : ListView.builder(
                                     itemCount: state.fixes.length,

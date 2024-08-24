@@ -680,6 +680,41 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  String getAddressName(dynamic result) {
+    String str = "";
+    List<String> typesToCheck = [
+      'route',
+      'locality',
+      'administrative_area_level_2',
+      'administrative_area_level_1'
+    ];
+    for (var element in result["results"]) {
+      if (element['address_components'][0]['types'].contains('route')) {
+        for (int i = element['address_components'].length - 1; i >= 0; i--) {
+          var element1 = element['address_components'][i];
+          print(element1["long_name"]);
+          if (typesToCheck.any((type) => element1['types'].contains(type)) &&
+              element1["long_name"] != null) {
+            str = str + ('${element1["long_name"]},');
+          }
+        }
+        break;
+      }
+    }
+    if (str.isEmpty) {
+      for (int i = result["results"]['address_components'].length - 1;
+          i >= 0;
+          i--) {
+        var element1 = result["results"]['address_components'][i];
+        if (typesToCheck.any((type) => element1['types'].contains(type))) {
+          print(element1["long_name"]);
+          str = str + ('${element1["long_name"] ?? ""},');
+        }
+      }
+    }
+    return str;
+  }
+
   setPickupInfo(dynamic suggestion, int index) async {
     print(_pickuptextLoading[index]);
     var sLocation = await PlaceService.getPlace(suggestion.placeId);
@@ -695,8 +730,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _pickup_controller[index].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _pickup_controller[index].text = getAddressName(result);
     }
     // var responseEng = await http.get(
     //   Uri.parse(
@@ -743,8 +777,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
       _pickup_latlng[index] = position;
-      _pickup_controller[index].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _pickup_controller[index].text = getAddressName(result);
       _pickup_location[index] = "${position.latitude},${position.longitude}";
     }
     // var responseEng = await http.get(
@@ -801,8 +834,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
       _delivery_latlng[index] = position;
-      _delivery_controller[index].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _delivery_controller[index].text = getAddressName(result);
       _delivery_location[index] = "${position.latitude},${position.longitude}";
     }
 
@@ -840,8 +872,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _delivery_controller[index].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _delivery_controller[index].text = getAddressName(result);
     }
     // var responseEng = await http.get(
     //   Uri.parse(
@@ -880,8 +911,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _stoppoints_controller[index][index2].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _stoppoints_controller[index][index2].text = getAddressName(result);
     }
 
     // var responseEng = await http.get(
@@ -1018,8 +1048,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _pickup_controller[index].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _pickup_controller[index].text = getAddressName(result);
     }
     _pickupLoading[index] = false;
     if (_delivery_controller[index].text.isNotEmpty &&
@@ -1062,8 +1091,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _stoppoints_controller[index][index2].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _stoppoints_controller[index][index2].text = getAddressName(result);
     }
 
     // var responseEng = await http.get(
@@ -1115,8 +1143,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     );
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      _delivery_controller[index].text =
-          '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+      _delivery_controller[index].text = getAddressName(result);
     }
 
     // var responseEng = await http.get(

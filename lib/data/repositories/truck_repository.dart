@@ -336,7 +336,7 @@ class TruckRepository {
     request.fields['truckuser'] = truck.truckuser!.id!.toString();
     request.fields['owner'] = truck.owner!.toString();
     request.fields['truck_type'] = truck.truckType!.id!.toString();
-    request.fields['location_lat'] = "0,0";
+    request.fields['location_lat'] = truck.locationLat!;
     request.fields['height'] = truck.height!.toString();
     request.fields['width'] = truck.width!.toString();
     request.fields['long'] = truck.long!.toString();

@@ -1,3 +1,4 @@
+import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_active_status_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:popover/popover.dart';
 import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
@@ -71,8 +73,8 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: Center(
                         child: SvgPicture.asset(
                             localeState.value.languageCode == 'en'
-                                ? "assets/icons/drawer_icon_en.svg"
-                                : "assets/icons/drawer_icon_ar.svg"),
+                                ? "assets/icons/orange/drawer_en.svg"
+                                : "assets/icons/orange/drawer_ar.svg"),
                       ),
                     ),
                   ),
@@ -147,65 +149,53 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
               scaffoldKey == null
                   ? const SizedBox.shrink()
                   : Consumer<TruckActiveStatusProvider>(
-                      builder: (context, activeProvider, child) {
-                      return BlocConsumer<TruckActiveStatusBloc,
-                          TruckActiveStatusState>(
-                        listener: (context, state) {
-                          if (state is TruckActiveStatusLoadedFailed) {
-                            print(state.errortext);
-                          }
-                          if (state is TruckActiveStatusLoadedSuccess) {
-                            print(state.status);
-                            activeProvider.setStatus(state.status);
-                          }
-
-                          // TODO: implement listener
+                      builder: (providercontext, activeProvider, child) {
+                      return IconButton(
+                        onPressed: () {
+                          showPopover(
+                            context: providercontext,
+                            bodyBuilder: (providercontext) =>
+                                TruckStatusWidget(),
+                            onPop: () => print('Popover was popped!'),
+                            direction: PopoverDirection.bottom,
+                            width: 150,
+                            height: 115.h,
+                            arrowHeight: 7,
+                            arrowWidth: 0,
+                            backgroundColor: Colors.grey[300]!,
+                            barrierLabel: "truck_status",
+                            radius: 10,
+                          );
                         },
-                        builder: (context, state) {
-                          if (state is TruckActiveStatusLoadedSuccess) {
-                            return IconButton(
-                              onPressed: () =>
-                                  BlocProvider.of<TruckActiveStatusBloc>(
-                                          context)
-                                      .add(UpdateTruckActiveStatusEvent(
-                                          (activeProvider.isOn))),
-                              icon: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  SizedBox(
-                                    height: 35.h,
-                                    width: 35.h,
-                                    child: Center(
-                                      child: SvgPicture.asset(
-                                          "assets/icons/orange_truck.svg"),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: -5.w,
-                                    top: -5.h,
-                                    child: Container(
-                                      height: 15.h,
-                                      width: 15.h,
-                                      decoration: BoxDecoration(
-                                        color: activeProvider.isOn
-                                            ? Colors.green
-                                            : Colors.grey,
-                                        borderRadius: BorderRadius.circular(45),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                        icon: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            SizedBox(
+                              height: 26.h,
+                              width: 30.h,
+                              child: Center(
+                                child: SvgPicture.asset(
+                                    height: 26.h,
+                                    width: 30.h,
+                                    "assets/icons/orange/shipment_completed.svg"),
                               ),
-                            );
-                          } else if (state
-                              is TruckActiveStatusLoadingProgress) {
-                            return LoadingIndicator(
-                              color: Colors.white,
-                            );
-                          } else {
-                            return SizedBox.shrink();
-                          }
-                        },
+                            ),
+                            Positioned(
+                              right: -5.w,
+                              top: -5.h,
+                              child: Container(
+                                height: 15.h,
+                                width: 15.h,
+                                decoration: BoxDecoration(
+                                  color: activeProvider.isOn
+                                      ? Colors.green
+                                      : Colors.grey,
+                                  borderRadius: BorderRadius.circular(45),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     }),
             ],
@@ -217,4 +207,80 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size(double.infinity, kToolbarHeight);
+}
+
+class TruckStatusWidget extends StatefulWidget {
+  TruckStatusWidget({Key? key}) : super(key: key);
+
+  @override
+  State<TruckStatusWidget> createState() => _TruckStatusWidgetState();
+}
+
+class _TruckStatusWidgetState extends State<TruckStatusWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TruckActiveStatusProvider>(
+        builder: (providercontext, activeProvider, child) {
+      return Column(
+        children: [
+          SizedBox(height: 8),
+          Text(
+              "${AppLocalizations.of(context)!.translate("truck_status")}: ${activeProvider.isOn ? AppLocalizations.of(context)!.translate("enabled") : AppLocalizations.of(context)!.translate("disabled")}"),
+          Spacer(),
+          BlocConsumer<TruckActiveStatusBloc, TruckActiveStatusState>(
+            listener: (context, state) {
+              if (state is TruckActiveStatusLoadedFailed) {
+                print(state.errortext);
+              }
+              if (state is TruckActiveStatusLoadedSuccess) {
+                print(state.status);
+                activeProvider.setStatus(state.status);
+              }
+
+              // TODO: implement listener
+            },
+            builder: (context, loadstate) {
+              if (loadstate is TruckActiveStatusLoadedSuccess) {
+                return IconButton(
+                  onPressed: () {
+                    BlocProvider.of<TruckActiveStatusBloc>(context).add(
+                      UpdateTruckActiveStatusEvent(
+                        (activeProvider.isOn),
+                      ),
+                    );
+                  },
+                  icon: CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    value: activeProvider.isOn,
+                    contentPadding: EdgeInsets.zero,
+                    enabled: false,
+                    onChanged: (value) {
+                      // setState(() {
+                      //   activeProvider.isOn = !activeProvider.isOn;
+                      // });
+                    },
+                    title: Text(
+                        '${activeProvider.isOn ? AppLocalizations.of(context)!.translate("enabled") : AppLocalizations.of(context)!.translate("disabled")}'),
+                  ),
+                );
+              } else if (loadstate is TruckActiveStatusLoadingProgress) {
+                return Center(
+                  child: SizedBox(
+                    height: 35.h,
+                    width: 35.h,
+                    child: LoadingIndicator(
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              } else {
+                return SizedBox.shrink();
+              }
+            },
+          ),
+          Spacer(),
+        ],
+      );
+    });
+  }
 }

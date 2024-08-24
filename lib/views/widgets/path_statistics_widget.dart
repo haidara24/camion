@@ -1,5 +1,6 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,12 +31,9 @@ class PathStatisticsWidget extends StatelessWidget {
                     width: MediaQuery.of(context).size.width * .2,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: Text(
-                        AppLocalizations.of(context)!.translate('total_co2'),
-                        style: TextStyle(
-                          // color: Colors.grey,
-                          fontSize: 17.sp,
-                        ),
+                      child: SectionBody(
+                        text: AppLocalizations.of(context)!
+                            .translate('total_co2'),
                       ),
                     ),
                   ),
@@ -53,14 +51,9 @@ class PathStatisticsWidget extends StatelessWidget {
                   ),
                   BlocBuilder<LocaleCubit, LocaleState>(
                     builder: (context, localeState) {
-                      return SizedBox(
-                        child: Text(
-                          " ${(distance * 1700) / 1000000} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
-                          style: TextStyle(
-                            // color: Colors.white,
-                            fontSize: 17.sp,
-                          ),
-                        ),
+                      return SectionBody(
+                        text:
+                            " ${(distance * 1700) / 1000000} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
                       );
                     },
                   ),
@@ -85,12 +78,8 @@ class PathStatisticsWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    AppLocalizations.of(context)!.translate('distance'),
-                    style: TextStyle(
-                      // color: Colors.grey,
-                      fontSize: 17.sp,
-                    ),
+                  SectionBody(
+                    text: AppLocalizations.of(context)!.translate('distance'),
                   ),
                 ],
               ),
@@ -106,14 +95,9 @@ class PathStatisticsWidget extends StatelessWidget {
                   ),
                   BlocBuilder<LocaleCubit, LocaleState>(
                     builder: (context, localeState) {
-                      return SizedBox(
-                        child: Text(
-                          " $distance ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
-                          style: TextStyle(
-                            // color: Colors.white,
-                            fontSize: 17.sp,
-                          ),
-                        ),
+                      return SectionBody(
+                        text:
+                            " $distance ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
                       );
                     },
                   ),
@@ -138,12 +122,8 @@ class PathStatisticsWidget extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Text(
-                    AppLocalizations.of(context)!.translate('period'),
-                    style: TextStyle(
-                      // color: Colors.grey,
-                      fontSize: 17.sp,
-                    ),
+                  SectionBody(
+                    text: AppLocalizations.of(context)!.translate('period'),
                   ),
                 ],
               ),
@@ -161,12 +141,9 @@ class PathStatisticsWidget extends StatelessWidget {
                     builder: (context, localeState) {
                       return FittedBox(
                         fit: BoxFit.scaleDown,
-                        child: Text(
-                          " ${localeState.value.languageCode == "en" ? period : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
-                          style: TextStyle(
-                            // color: Colors.white,
-                            fontSize: 17.sp,
-                          ),
+                        child: SectionBody(
+                          text:
+                              " ${localeState.value.languageCode == "en" ? period : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
                         ),
                       );
                     },

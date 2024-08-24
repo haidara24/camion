@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
@@ -158,7 +160,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                   decoration: InputDecoration(
                                     labelText: AppLocalizations.of(context)!
                                         .translate('first_name'),
-                                    contentPadding: EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                         vertical: 11.0, horizontal: 9.0),
                                   ),
                                   validator: (value) {
@@ -178,7 +180,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                                   decoration: InputDecoration(
                                     labelText: AppLocalizations.of(context)!
                                         .translate('last_name'),
-                                    contentPadding: EdgeInsets.symmetric(
+                                    contentPadding: const EdgeInsets.symmetric(
                                         vertical: 11.0, horizontal: 9.0),
                                   ),
                                   validator: (value) {
@@ -201,15 +203,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(context)!
                                   .translate('email'),
-                              contentPadding: EdgeInsets.symmetric(
+                              contentPadding: const EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter a value';
-                              }
-                              return null;
-                            },
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -221,7 +217,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                               decoration: InputDecoration(
                                 labelText: AppLocalizations.of(context)!
                                     .translate('address'),
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                     vertical: 11.0, horizontal: 9.0),
                               ),
                               validator: (value) {
@@ -241,7 +237,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                               decoration: InputDecoration(
                                 labelText: AppLocalizations.of(context)!
                                     .translate('company_name'),
-                                contentPadding: EdgeInsets.symmetric(
+                                contentPadding: const EdgeInsets.symmetric(
                                     vertical: 11.0, horizontal: 9.0),
                               ),
                               validator: (value) {
@@ -255,7 +251,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                       ],
                     ),
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: buildupdateProfileBtn(userType),
@@ -312,7 +308,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ControlView(),
+                  builder: (context) => const ControlView(),
                 ),
                 (route) => false,
               );
@@ -459,7 +455,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ControlView(),
+                  builder: (context) => const ControlView(),
                 ),
                 (route) => false,
               );

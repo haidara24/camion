@@ -183,7 +183,7 @@ class _SelectTruckMultiPathScreenState
                                             height: 100,
                                             width: 100,
                                             child: SvgPicture.asset(
-                                                "assets/icons/search_truck.svg"),
+                                                "assets/icons/orange/search_for_truck.svg"),
                                           ),
                                           const Text(
                                             "ابحث عن شاحنة",

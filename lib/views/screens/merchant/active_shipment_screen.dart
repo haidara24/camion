@@ -551,8 +551,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   void initState() {
     super.initState();
     timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      _fetchTruckLocation(subshipment!.truck!);
       if (startTracking) {
+        _fetchTruckLocation(subshipment!.truck!);
         mymap();
       }
     });
@@ -588,7 +588,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     try {
       String? location;
       dynamic data;
-      if (truck.gpsId!.isEmpty) {
+      if (truck.gpsId!.isEmpty || truck.gpsId!.length < 8) {
         location = await _truckRepository.getTruckLocation(truck.id!);
       } else {
         data = await GpsRepository.getCarInfo(truck.gpsId!);
@@ -637,8 +637,12 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                     }
                     return Visibility(
                       visible: state.shipments.isNotEmpty,
-                      replacement: const Center(
-                          child: Text("There are no active shipments")),
+                      replacement: Center(
+                        child: SectionTitle(
+                          text: AppLocalizations.of(context)!
+                              .translate('no_active'),
+                        ),
+                      ),
                       child: Stack(
                         children: [
                           GoogleMap(

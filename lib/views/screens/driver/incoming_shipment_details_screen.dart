@@ -425,28 +425,51 @@ class _IncomingShipmentDetailsScreenState
                                                   is AcceptRequestLoadingProgressState) {
                                                 return CustomButton(
                                                   title: SizedBox(
-                                                    width: 70.w,
+                                                    width: 120.w,
                                                     child: Center(
                                                       child: LoadingIndicator(),
                                                     ),
                                                   ),
                                                   onTap: () {},
-                                                  color: Colors.white,
+                                                  // color: Colors.white,
                                                 );
                                               } else {
                                                 return CustomButton(
                                                   title: SizedBox(
-                                                    width: 70.w,
-                                                    child: Center(
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate(
-                                                                'accept'),
-                                                        style: const TextStyle(
-                                                            color:
-                                                                Colors.green),
-                                                      ),
+                                                    width: 120.w,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Center(
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'accept'),
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 30.w,
+                                                          width: 30.w,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            "assets/icons/white/notification_shipment_complete.svg",
+                                                            width: 30.w,
+                                                            height: 30.w,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   onTap: () {
@@ -623,7 +646,7 @@ class _IncomingShipmentDetailsScreenState
                                                       },
                                                     );
                                                   },
-                                                  color: Colors.white,
+                                                  // color: Colors.white,
                                                 );
                                               }
                                             },
@@ -648,27 +671,51 @@ class _IncomingShipmentDetailsScreenState
                                                   is RejectRequestLoadingProgressState) {
                                                 return CustomButton(
                                                   title: SizedBox(
-                                                    width: 70.w,
+                                                    width: 120.w,
                                                     child: Center(
                                                       child: LoadingIndicator(),
                                                     ),
                                                   ),
                                                   onTap: () {},
-                                                  color: Colors.white,
+                                                  // color: Colors.white,
                                                 );
                                               } else {
                                                 return CustomButton(
                                                   title: SizedBox(
-                                                    width: 70.w,
-                                                    child: Center(
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate(
-                                                                'reject'),
-                                                        style: const TextStyle(
-                                                            color: Colors.red),
-                                                      ),
+                                                    width: 120.w,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        Center(
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'cancel'),
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          height: 30.w,
+                                                          width: 30.w,
+                                                          child:
+                                                              SvgPicture.asset(
+                                                            "assets/icons/white/notification_shipment_cancelation.svg",
+                                                            width: 30.w,
+                                                            height: 30.w,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                   onTap: () {
@@ -791,7 +838,7 @@ class _IncomingShipmentDetailsScreenState
                                                       },
                                                     );
                                                   },
-                                                  color: Colors.white,
+                                                  // color: Colors.white,
                                                 );
                                               }
                                             },

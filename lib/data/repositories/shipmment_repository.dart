@@ -44,6 +44,21 @@ class ShipmentRepository {
     }
   }
 
+  Future<bool> reActiveShipment(int shipmentId) async {
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var response = await HttpHelper.patch(
+      "$SHIPPMENTSV2_ENDPOINT$shipmentId/reactive/",
+      {},
+      apiToken: jwt,
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<CommodityCategory>> getCommodityCategories() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
@@ -576,6 +591,23 @@ class ShipmentRepository {
     var response = await HttpHelper.patch(
       "$SUB_SHIPPMENTSV2_ENDPOINT$id/active_shipment/",
       {"shipment_status": "A"},
+      apiToken: jwt,
+    );
+    print(response.statusCode);
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data["status"] = response.statusCode;
+    var jsonObject = jsonDecode(response.body);
+
+    data["details"] = jsonObject["details"];
+    return data;
+  }
+
+  Future<dynamic> completeSubShipment(int id) async {
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var response = await HttpHelper.patch(
+      "$SUB_SHIPPMENTSV2_ENDPOINT$id/complete_subshipment/",
+      {"shipment_status": "C", "complete_notes": "_"},
       apiToken: jwt,
     );
     print(response.statusCode);

@@ -35,7 +35,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: EdgeInsets.only(bottom: 6.h),
             color: color ?? AppColor.deepBlack,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              padding: EdgeInsets.symmetric(horizontal: 8.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,23 +47,30 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              icon: localeState.value.languageCode == 'en'
-                                  ? SvgPicture.asset(
-                                      "assets/icons/arrow-left-en.svg")
-                                  : SvgPicture.asset(
-                                      "assets/icons/arrow-left-ar.svg"),
+                              icon: SizedBox(
+                                height: 25.w,
+                                width: 25.w,
+                                child: SvgPicture.asset(
+                                    localeState.value.languageCode == 'en'
+                                        ? "assets/icons/arrow-left-en.svg"
+                                        : "assets/icons/arrow-left-ar.svg"),
+                              ),
                             )
                           : IconButton(
                               onPressed: () {
                                 scaffoldKey!.currentState!.openDrawer();
                               },
-                              icon: SvgPicture.asset(
-                                  localeState.value.languageCode == 'en'
-                                      ? "assets/icons/drawer_icon_en.svg"
-                                      : "assets/icons/drawer_icon_ar.svg"),
+                              icon: SizedBox(
+                                height: 25.w,
+                                width: 25.w,
+                                child: SvgPicture.asset(
+                                    localeState.value.languageCode == 'en'
+                                        ? "assets/icons/orange/drawer_en.svg"
+                                        : "assets/icons/orange/drawer_ar.svg"),
+                              ),
                             ),
                       SizedBox(
-                        width: 5.w,
+                        width: 4.w,
                       ),
                       scaffoldKey == null
                           ? const SizedBox.shrink()
@@ -94,12 +101,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     clipBehavior: Clip.none,
                                     children: [
                                       SizedBox(
-                                        height: 35.h,
-                                        width: 35.h,
-                                        child: Center(
-                                          child: SvgPicture.asset(
-                                              "assets/icons/notification.svg"),
-                                        ),
+                                        height: 25.w,
+                                        width: 25.w,
+                                        child: SvgPicture.asset(
+                                            "assets/icons/orange/notification.svg"),
                                       ),
                                       notificationProvider
                                                   .notreadednotifications !=
@@ -137,7 +142,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             }),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   SizedBox(
                     height: 45.h,
                     // width: MediaQuery.of(context).size,
@@ -153,10 +158,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       ),
                     ),
                   ),
-                  Spacer(),
-                  SizedBox(
-                    width: 25.w,
-                  )
+                  const Spacer(),
+                  scaffoldKey == null
+                      ? SizedBox(
+                          width: 50.w,
+                        )
+                      : SizedBox(
+                          width: 85.w,
+                        )
                 ],
               ),
             ),
@@ -167,5 +176,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size(double.infinity, kToolbarHeight);
+  Size get preferredSize => const Size(double.infinity, kToolbarHeight);
 }

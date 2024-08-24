@@ -8,6 +8,7 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/shipment_instructions_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_task_details_screen.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -148,9 +149,10 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                             MediaQuery.of(context).size.height *
                                                 .75,
                                         child: Center(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('no_shipments')),
+                                          child: SectionTitle(
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .translate('no_tasks')),
                                         ),
                                       )
                                     ],
@@ -273,7 +275,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                                         Center(
                                                                       child: SvgPicture
                                                                           .asset(
-                                                                              "assets/icons/notification.svg"),
+                                                                              "assets/icons/grey/bell.svg"),
                                                                     ),
                                                                   ),
                                                                 ),
@@ -298,7 +300,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                                           decoration:
                                                                               BoxDecoration(
                                                                             color:
-                                                                                AppColor.deepYellow,
+                                                                                Colors.grey[600],
                                                                             borderRadius:
                                                                                 BorderRadius.circular(45),
                                                                           ),

@@ -214,21 +214,19 @@ class CompleteShipmentScreen extends StatelessWidget {
                                                                             index]
                                                                         .shipmentStatus! ==
                                                                     'C'
-                                                                ? SvgPicture
-                                                                    .asset(
-                                                                    "assets/icons/shipment_completed.svg",
-                                                                    height:
-                                                                        30.h,
-                                                                    width: 30.w,
-                                                                    fit: BoxFit
-                                                                        .fill,
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .check_circle_outline_outlined,
+                                                                    color: AppColor
+                                                                        .darkGrey,
+                                                                    size: 30,
                                                                   )
                                                                 : SvgPicture
                                                                     .asset(
-                                                                    "assets/icons/shipment_cancellation.svg",
+                                                                    "assets/icons/grey/notification_shipment_cancelation.svg",
                                                                     height:
-                                                                        30.h,
-                                                                    width: 30.w,
+                                                                        28.w,
+                                                                    width: 28.w,
                                                                     fit: BoxFit
                                                                         .fill,
                                                                   ),

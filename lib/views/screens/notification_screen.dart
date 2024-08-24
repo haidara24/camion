@@ -1,3 +1,4 @@
+import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
@@ -7,6 +8,8 @@ import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dar
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,14 +50,35 @@ class _NotificationScreenState extends State<NotificationScreen> {
     getUserType();
   }
 
-  // getNotificationIcon(String type){
-  //   switch (type) {
-  //     case value:
+  Widget getStatusImage(String value) {
+    switch (value) {
+      case "A":
+        return SvgPicture.asset(
+          "assets/icons/orange/notification_shipment_complete.svg",
+          height: 30.h,
+          width: 30.w,
+          fit: BoxFit.fill,
+        );
+      case "J":
+        return SvgPicture.asset(
+          "assets/icons/orange/notification_shipment_cancelation.svg",
+          height: 30.h,
+          width: 30.w,
+          fit: BoxFit.fill,
+        );
 
-  //       break;
-  //     default:
-  //   }
-  // }
+      case "C":
+        return SvgPicture.asset(
+          "assets/icons/orange/notification_shipment_complete.svg",
+          height: 30.h,
+          width: 30.w,
+          fit: BoxFit.fill,
+        );
+
+      default:
+        return SizedBox.shrink();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +102,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * .75,
-                                child: const Center(
-                                  child: Text(
-                                      "There are no Notifications to show."),
+                                child: Center(
+                                  child: SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate('no_notifications'),
+                                  ),
                                 ),
                               )
                             ],
@@ -97,14 +123,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       .notifications[index].dateCreated!));
                               return Container(
                                 decoration: BoxDecoration(
-                                  border: const Border(
-                                      // bottom: BorderSide(
-                                      //     color: AppColor.deepBlue, width: 2),
-                                      ),
                                   color: notificationProvider
                                           .notifications[index].isread!
                                       ? Colors.white
                                       : Colors.blue[50],
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
                                 ),
                                 child: ListTile(
                                   contentPadding: EdgeInsets.zero,
@@ -211,19 +236,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                   ),
                                           ),
                                         ),
-                                        //   getNotificationIcon(notificationProvider
-                                        // .notifications[index].noteficationType!),
+                                        Positioned(
+                                            child: getStatusImage(
+                                                notificationProvider
+                                                    .notifications[index]
+                                                    .noteficationType!)),
                                       ],
                                     ),
                                   ),
-                                  title: Text(notificationProvider
-                                      .notifications[index].title!),
+                                  title: SectionTitle(
+                                    text: notificationProvider
+                                        .notifications[index].title!,
+                                  ),
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(notificationProvider
-                                          .notifications[index].description!),
+                                      SectionBody(
+                                          text: notificationProvider
+                                              .notifications[index]
+                                              .description!),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
@@ -236,7 +268,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       ),
                                     ],
                                   ),
-                                  dense: false,
+                                  dense: true,
                                 ),
                               );
                             },

@@ -1,5 +1,6 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -39,21 +40,11 @@ class AddShipmentPathVerticalWidget extends StatelessWidget {
           ),
           alignment: TimelineAlign.manual,
           lineXY: .3,
-          startChild: Text(
-            AppLocalizations.of(context)!.translate('pickup_address'),
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          startChild: SectionBody(
+            text: AppLocalizations.of(context)!.translate('pickup_address'),
           ),
-          endChild: Text(
-            "  ${pickup.text}",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          endChild: SectionBody(
+            text: "  ${pickup.text}",
           ),
         ),
       ),
@@ -80,21 +71,12 @@ class AddShipmentPathVerticalWidget extends StatelessWidget {
             ),
             alignment: TimelineAlign.manual,
             lineXY: .3,
-            startChild: Text(
-              "${AppLocalizations.of(context)!.translate('station_no')} ${i + 1}",
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+            startChild: SectionBody(
+              text:
+                  "${AppLocalizations.of(context)!.translate('station_no')} ${i + 1}",
             ),
-            endChild: Text(
-              "  ${stations[i].text}",
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
+            endChild: SectionBody(
+              text: "  ${stations[i].text}",
             ),
           ),
         ),
@@ -124,21 +106,11 @@ class AddShipmentPathVerticalWidget extends StatelessWidget {
           ),
           alignment: TimelineAlign.manual,
           lineXY: .3,
-          startChild: Text(
-            AppLocalizations.of(context)!.translate('delivery_address'),
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          startChild: SectionBody(
+            text: AppLocalizations.of(context)!.translate('delivery_address'),
           ),
-          endChild: Text(
-            "  ${delivery.text}",
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          endChild: SectionBody(
+            text: "  ${delivery.text}",
           ),
         ),
       ),

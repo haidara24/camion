@@ -318,7 +318,6 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                   initMapbounds();
                 },
                 zoomControlsEnabled: false,
-
                 initialCameraPosition: CameraPosition(
                     target: LatLng(
                         double.parse(widget

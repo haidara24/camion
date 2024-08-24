@@ -322,9 +322,9 @@ class _HomeScreenState extends State<HomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/translate_camion.svg",
-                            height: 20.h,
-                            width: 20.h,
+                            "assets/icons/orange/translate_camion.svg",
+                            height: 25.h,
+                            width: 25.h,
                           ),
                           title: Text(
                             localeState.value.languageCode != 'en'
@@ -354,9 +354,9 @@ class _HomeScreenState extends State<HomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/my_shipments_selected.svg",
-                            height: 20.h,
-                            width: 20.h,
+                            "assets/icons/orange/my_shipments.svg",
+                            height: 25.h,
+                            width: 25.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!
@@ -373,9 +373,9 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       ListTile(
                         leading: SvgPicture.asset(
-                          "assets/icons/help_info.svg",
-                          height: 20.h,
-                          width: 20.h,
+                          "assets/icons/orange/help_info.svg",
+                          height: 25.h,
+                          width: 25.h,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.translate('help'),
@@ -386,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
                         trailing: Container(
-                          width: 35.w,
+                          width: 36.w,
                           height: 20.h,
                           decoration: BoxDecoration(
                               color: AppColor.deepYellow,
@@ -453,9 +453,9 @@ class _HomeScreenState extends State<HomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/log_out.svg",
-                            height: 20.h,
-                            width: 20.h,
+                            "assets/icons/orange/log_out.svg",
+                            height: 25.h,
+                            width: 25.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!.translate('log_out'),
@@ -482,6 +482,8 @@ class _HomeScreenState extends State<HomeScreen>
                             labelPadding: EdgeInsets.zero,
                             controller: _tabController,
                             indicatorColor: AppColor.deepYellow,
+                            // indicatorSize: TabBarIndicatorSize.tab,
+
                             labelColor: AppColor.deepYellow,
                             unselectedLabelColor: Colors.white,
                             labelStyle: TextStyle(fontSize: 12.sp),
@@ -500,9 +502,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/home_selected.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            "assets/icons/orange/home.svg",
+                                            width: 32.w,
+                                            height: 32.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -523,9 +525,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/home.svg",
-                                            width: 33.w,
-                                            height: 33.w,
+                                            "assets/icons/white/home.svg",
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -550,9 +552,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/my_shipments_selected.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            "assets/icons/orange/my_shipments.svg",
+                                            width: 32.w,
+                                            height: 32.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -576,9 +578,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/my_shipments.svg",
-                                            width: 33.w,
-                                            height: 33.w,
+                                            "assets/icons/white/my_shipments.svg",
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -608,9 +610,10 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/truck_order_selected.svg",
+                                            "assets/icons/orange/truck_order.svg",
                                             width: 35.w,
-                                            height: 35.w,
+                                            height: 32.w,
+                                            fit: BoxFit.fill,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -634,9 +637,10 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/truck_order.svg",
-                                            width: 33.w,
-                                            height: 33.w,
+                                            "assets/icons/white/truck_order.svg",
+                                            width: 31.w,
+                                            height: 28.w,
+                                            fit: BoxFit.fill,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -664,9 +668,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/location_selected.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            "assets/icons/orange/location.svg",
+                                            width: 32.w,
+                                            height: 32.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -687,9 +691,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/location.svg",
-                                            width: 33.w,
-                                            height: 33.w,
+                                            "assets/icons/white/location.svg",
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -738,9 +742,9 @@ class _HomeScreenState extends State<HomeScreen>
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     SvgPicture.asset(
-                                                      "assets/icons/task_selected.svg",
-                                                      width: 35.w,
-                                                      height: 35.w,
+                                                      "assets/icons/orange/tasks.svg",
+                                                      width: 32.w,
+                                                      height: 32.w,
                                                     ),
                                                     localeState.value
                                                                 .languageCode ==
@@ -766,9 +770,9 @@ class _HomeScreenState extends State<HomeScreen>
                                                       MainAxisAlignment.end,
                                                   children: [
                                                     SvgPicture.asset(
-                                                      "assets/icons/tasks.svg",
-                                                      width: 33.w,
-                                                      height: 33.w,
+                                                      "assets/icons/white/tasks.svg",
+                                                      width: 28.w,
+                                                      height: 28.w,
                                                     ),
                                                     localeState.value
                                                                 .languageCode ==
@@ -792,8 +796,8 @@ class _HomeScreenState extends State<HomeScreen>
                                               ? Positioned(
                                                   left: -5,
                                                   child: Container(
-                                                    height: 25.w,
-                                                    width: 25.w,
+                                                    height: 22.w,
+                                                    width: 22.w,
                                                     decoration: BoxDecoration(
                                                       color:
                                                           AppColor.deepYellow,

@@ -184,7 +184,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                       ? Center(
                                           child: Text(
                                               AppLocalizations.of(context)!
-                                                  .translate('no_shipments')),
+                                                  .translate('no_in_orders')),
                                         )
                                       : ListView.builder(
                                           itemCount: state.requests.length,

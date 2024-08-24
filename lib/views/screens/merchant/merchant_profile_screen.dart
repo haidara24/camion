@@ -121,6 +121,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
+                                const SizedBox(
+                                  width: 40,
+                                ),
                                 SectionTitle(
                                   text:
                                       '${state.merchant.user!.firstName} ${state.merchant.user!.lastName}',
@@ -153,9 +156,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                 ),
                               ],
                             ),
-                            const SizedBox(
-                              height: 8,
-                            ),
+                            const Divider(),
                             editMode
                                 ? Row(
                                     mainAxisAlignment:
@@ -184,7 +185,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                 AppLocalizations.of(context)!
                                                     .translate('first_name'),
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                                     vertical: 11.0,
                                                     horizontal: 9.0),
                                           ),
@@ -213,7 +214,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                           },
                                         ),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Expanded(
                                         child: TextFormField(
                                           controller: lastNameController,
@@ -237,7 +238,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                 AppLocalizations.of(context)!
                                                     .translate('last_name'),
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                                     vertical: 11.0,
                                                     horizontal: 9.0),
                                           ),
@@ -268,7 +269,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   )
                                 : const SizedBox.shrink(),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 16),
                             editMode
                                 ? TextFormField(
                                     controller: phoneController,
@@ -333,7 +334,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   ),
                             const SizedBox(
-                              height: 8,
+                              height: 16,
                             ),
                             editMode
                                 ? TextFormField(
@@ -399,7 +400,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   ),
                             const SizedBox(
-                              height: 8,
+                              height: 16,
                             ),
                             editMode
                                 ? TextFormField(
@@ -465,7 +466,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     ],
                                   ),
                             const SizedBox(
-                              height: 8,
+                              height: 16,
                             ),
                             editMode
                                 ? TextFormField(
@@ -562,6 +563,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                         .translate('my_stores')),
                               ],
                             ),
+                            const SizedBox(
+                              height: 16,
+                            ),
                             state.merchant.stores!.isNotEmpty
                                 ? Table(
                                     border: TableBorder.all(
@@ -603,7 +607,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                  "${AppLocalizations.of(context)!.translate('store_no')} ${state.merchant.stores![index].id!}"),
+                                                  "${AppLocalizations.of(context)!.translate('store_no')} ${(index + 1)}"),
                                             ),
                                           ),
                                           TableCell(
@@ -678,7 +682,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                           ],
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       editMode
                           ? Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -706,7 +710,10 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     );
                                   } else {
                                     return CustomButton(
-                                      title: Text("حفظ التغيرات"),
+                                      title: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate("save"),
+                                      ),
                                       onTap: () {
                                         _profileFormKey.currentState!.save();
                                         if (_profileFormKey.currentState!
@@ -740,7 +747,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                               ),
                             )
                           : const SizedBox.shrink(),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 16),
                     ]),
                   );
                 } else {

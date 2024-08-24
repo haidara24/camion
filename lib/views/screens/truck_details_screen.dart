@@ -10,12 +10,15 @@ import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart' as intel;
 
 class TruckDetailsScreen extends StatefulWidget {
   final KTruck truck;
@@ -78,6 +81,8 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
     }
   }
 
+  var f = intel.NumberFormat("#,###", "en_US");
+
   @override
   void initState() {
     // TODO: implement initState
@@ -101,10 +106,42 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
       var result = jsonDecode(value.body);
 
       setState(() {
-        position_name =
-            '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
+        position_name = getAddressName(result);
       });
     });
+  }
+
+  String getAddressName(dynamic result) {
+    String str = "";
+    List<String> typesToCheck = [
+      'route',
+      'locality',
+      'administrative_area_level_2',
+      'administrative_area_level_1'
+    ];
+    for (var element in result["results"]) {
+      if (element['address_components'][0]['types'].contains('route')) {
+        for (int i = element['address_components'].length - 1; i >= 0; i--) {
+          var element1 = element['address_components'][i];
+          if (typesToCheck.any((type) => element1['types'].contains(type)) &&
+              element1["long_name"] != null) {
+            str = str + ('${element1["long_name"]},');
+          }
+        }
+        break;
+      }
+    }
+    if (str.isEmpty) {
+      for (int i = result["results"]['address_components'].length - 1;
+          i >= 0;
+          i--) {
+        var element1 = result["results"]['address_components'][i];
+        if (typesToCheck.any((type) => element1['types'].contains(type))) {
+          str = str + ('${element1["long_name"] ?? ""},');
+        }
+      }
+    }
+    return str;
   }
 
   @override
@@ -239,12 +276,9 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                   SizedBox(
                                     height: 7.h,
                                   ),
-                                  Text(
-                                    '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == 'en' ? widget.truck.truckType!.name! : widget.truck.truckType!.nameAr!}',
-                                    style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 18.sp,
-                                        fontWeight: FontWeight.bold),
+                                  SectionTitle(
+                                    text:
+                                        '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == 'en' ? widget.truck.truckType!.name! : widget.truck.truckType!.nameAr!}',
                                   ),
                                   SizedBox(
                                     height: 7.h,
@@ -253,27 +287,18 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                     // width:
                                     //     MediaQuery.of(context).size.width *
                                     //         .4,
-                                    child: Text(
-                                      '${AppLocalizations.of(context)!.translate('truck_location')}: $position_name',
-                                      style: TextStyle(
-                                        // color: AppColor.lightBlue,
-                                        fontSize: 17.sp,
-                                      ),
+                                    child: SectionBody(
+                                      text:
+                                          '${AppLocalizations.of(context)!.translate('truck_location')}: $position_name',
                                     ),
                                   ),
                                   const Divider(),
                                   Row(
                                     children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                          ),
+                                      Expanded(
+                                        child: SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
                                         ),
                                       ),
                                       SizedBox(
@@ -282,16 +307,10 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                           color: Colors.grey[300],
                                         ),
                                       ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .4,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.translate('empty_weight')}: ${widget.truck.emptyWeight!}',
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                          ),
+                                      Expanded(
+                                        child: SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('empty_weight')}: ${f.format(widget.truck.emptyWeight)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
                                         ),
                                       ),
                                     ],
@@ -299,16 +318,10 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                   const Divider(),
                                   Row(
                                     children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .25,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.translate('long')}: ${widget.truck.long!}',
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                          ),
+                                      Expanded(
+                                        child: SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('long')}: ${widget.truck.long!}',
                                         ),
                                       ),
                                       SizedBox(
@@ -317,16 +330,10 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                           color: Colors.grey[300],
                                         ),
                                       ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .25,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.translate('height')}: ${widget.truck.height!}',
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                          ),
+                                      Expanded(
+                                        child: SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('height')}: ${widget.truck.height!}',
                                         ),
                                       ),
                                       SizedBox(
@@ -335,16 +342,10 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                           color: Colors.grey[300],
                                         ),
                                       ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .25,
-                                        child: Text(
-                                          '${AppLocalizations.of(context)!.translate('width')}: ${widget.truck.width!}',
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 17.sp,
-                                          ),
+                                      Expanded(
+                                        child: SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('width')}: ${widget.truck.width!}',
                                         ),
                                       ),
                                     ],
