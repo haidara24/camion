@@ -21,6 +21,7 @@ import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_subtitle_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
@@ -183,7 +184,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                   backgroundColor: Colors.white10,
                   initialDateTime: addShippmentProvider!.loadTime[index],
                   mode: cupertino.CupertinoDatePickerMode.time,
-                  minimumDate: DateTime.now(),
+                  // minimumDate: DateTime.now(),
                   onDateTimeChanged: (value) {
                     // loadTime = value;
                     addShippmentProvider!.setLoadTime(value, index);
@@ -532,7 +533,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                     children: [
                       ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         itemCount: valueProvider
                             .stoppoints_controller[selectedIndex].length,
                         itemBuilder: (context, index2) {
@@ -1143,7 +1144,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                       child: Center(
                         child: Text(
                           AppLocalizations.of(context)!.translate("confirm"),
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -1316,7 +1317,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                             ),
                             color: Colors.white,
                           ),
-                          // elevation: 2,
+                          // elevation: 1,
                         ),
                         iconStyleData: IconStyleData(
                           icon: const Icon(
@@ -1431,7 +1432,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                           // Navigator.pop(context);
                                         },
                                         child: Card(
-                                          elevation: 2,
+                                          elevation: 1,
                                           clipBehavior: Clip.antiAlias,
                                           shape: const RoundedRectangleBorder(
                                             borderRadius: BorderRadius.all(
@@ -1448,8 +1449,11 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Image.network(
-                                                state.trucks[index].images![0]
-                                                    .image!,
+                                                state.trucks[index].images!
+                                                        .isNotEmpty
+                                                    ? state.trucks[index]
+                                                        .images![0].image!
+                                                    : "",
                                                 height: 175.h,
                                                 width: double.infinity,
                                                 fit: BoxFit.cover,
@@ -1614,7 +1618,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   focusNode: _path_node,
                                   child: Card(
                                     key: key3,
-                                    elevation: 2,
+                                    elevation: 1,
                                     margin: const EdgeInsets.symmetric(
                                       vertical: 5,
                                       horizontal: 4,
@@ -1680,10 +1684,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10),
-                                                        border: Border.all(
-                                                          width: 1,
-                                                          color: Colors.grey,
-                                                        ),
+                                                        // border: Border.all(
+                                                        //   width: 1,
+                                                        //   color: Colors.grey,
+                                                        // ),
                                                       ),
                                                       child: Padding(
                                                         padding:
@@ -1694,21 +1698,14 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            const SizedBox(
-                                                                width: 8),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(4.0),
-                                                              child:
-                                                                  SectionBody(
-                                                                text: AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'choose_shippment_path'),
-                                                              ),
+                                                            SectionSubTitle(
+                                                              text: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'choose_shippment_path'),
                                                             ),
-                                                            Spacer(),
+                                                            const Spacer(),
                                                             Icon(
                                                               Icons
                                                                   .arrow_forward_ios,
@@ -1956,7 +1953,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                             return Stack(
                                               children: [
                                                 Card(
-                                                  elevation: 2,
+                                                  elevation: 1,
                                                   color: Colors.white,
                                                   margin:
                                                       const EdgeInsets.all(4),
@@ -2457,7 +2454,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                 EnsureVisibleWhenFocused(
                                   focusNode: _truck_node,
                                   child: Card(
-                                    elevation: 2,
+                                    elevation: 1,
                                     key: key2,
                                     margin: const EdgeInsets.symmetric(
                                       vertical: 5,
@@ -2584,10 +2581,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(10),
-                                                        border: Border.all(
-                                                          width: 1,
-                                                          color: Colors.grey,
-                                                        ),
+                                                        // border: Border.all(
+                                                        //   width: 1,
+                                                        //   color: Colors.grey,
+                                                        // ),
                                                       ),
                                                       child: Padding(
                                                         padding:
@@ -2598,19 +2595,12 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            const SizedBox(
-                                                                width: 8),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .all(4.0),
-                                                              child:
-                                                                  SectionBody(
-                                                                text: AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'select_truck'),
-                                                              ),
+                                                            SectionSubTitle(
+                                                              text: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'select_truck'),
                                                             ),
                                                             const Spacer(),
                                                             shipmentProvider.trucks[
@@ -2769,7 +2759,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 1.5),
                                   child: Card(
-                                    elevation: 2,
+                                    elevation: 1,
                                     color: Colors.white,
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -2778,9 +2768,31 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          SectionTitle(
-                                            text: AppLocalizations.of(context)!
-                                                .translate('loading_time'),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                height: 25.h,
+                                                width: 25.h,
+                                                child: SvgPicture.asset(
+                                                    "assets/icons/grey/time.svg"),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              SectionTitle(
+                                                text: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('loading_time'),
+                                              ),
+                                              const Spacer(),
+                                              shipmentProvider.trucks[
+                                                          selectedIndex] !=
+                                                      null
+                                                  ? Icon(Icons.edit,
+                                                      color:
+                                                          AppColor.deepYellow)
+                                                  : const SizedBox.shrink(),
+                                            ],
                                           ),
                                           const SizedBox(
                                             height: 8,
@@ -2822,15 +2834,19 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                               .symmetric(
                                                               vertical: 11.0,
                                                               horizontal: 9.0),
-                                                      suffixIcon: Icon(
-                                                        Icons.calendar_month,
-                                                        color: Colors.grey[900],
+                                                      suffixIcon: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(12.0),
+                                                        child: SvgPicture.asset(
+                                                          "assets/icons/grey/calendar.svg",
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 8,
                                               ),
                                               Expanded(
@@ -2864,9 +2880,15 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                               .symmetric(
                                                               vertical: 11.0,
                                                               horizontal: 9.0),
-                                                      suffixIcon: Icon(
-                                                        Icons.timer_outlined,
-                                                        color: Colors.grey[900],
+                                                      suffixIcon: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(12.0),
+                                                        child: SvgPicture.asset(
+                                                          "assets/icons/grey/time.svg",
+                                                          height: 15.h,
+                                                          width: 15.h,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

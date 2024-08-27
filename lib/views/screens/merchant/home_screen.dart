@@ -18,6 +18,7 @@ import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
+import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/active_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/add_multi_shipment_screen.dart';
@@ -74,7 +75,6 @@ class _HomeScreenState extends State<HomeScreen>
     BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
 
     notificationServices.requestNotificationPermission();
-    // notificationServices.forgroundMessage(context);
     notificationServices.firebaseInit(context);
     notificationServices.setupInteractMessage(context);
     notificationServices.isTokenRefresh();
@@ -267,11 +267,13 @@ class _HomeScreenState extends State<HomeScreen>
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.setString("language", "ar");
+                            UserService.updateLang("ar");
                           } else {
                             BlocProvider.of<LocaleCubit>(context).toEnglish();
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.setString("language", "en");
+                            UserService.updateLang("en");
                           }
                           Future.delayed(const Duration(milliseconds: 500))
                               .then((value) {
@@ -476,14 +478,14 @@ class _HomeScreenState extends State<HomeScreen>
                     builder: (context, state) {
                       if (state is BottomNavBarShown) {
                         return Container(
-                          height: 65.h,
+                          height: 62.h,
                           color: AppColor.deepBlack,
                           child: TabBar(
                             labelPadding: EdgeInsets.zero,
                             controller: _tabController,
                             indicatorColor: AppColor.deepYellow,
                             // indicatorSize: TabBarIndicatorSize.tab,
-
+                            dividerColor: Colors.transparent,
                             labelColor: AppColor.deepYellow,
                             unselectedLabelColor: Colors.white,
                             labelStyle: TextStyle(fontSize: 12.sp),
@@ -495,7 +497,7 @@ class _HomeScreenState extends State<HomeScreen>
                             },
                             tabs: [
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: navigationValue == 0
                                     ? Column(
                                         mainAxisAlignment:
@@ -545,7 +547,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       ),
                               ),
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: navigationValue == 1
                                     ? Column(
                                         mainAxisAlignment:
@@ -603,15 +605,15 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                               Tab(
                                 // text: "الرئيسية",
-                                height: 64.h,
+                                height: 62.h,
                                 icon: navigationValue == 2
                                     ? Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/orange/truck_order.svg",
-                                            width: 35.w,
+                                            "assets/icons/orange/add.svg",
+                                            width: 32.w,
                                             height: 32.w,
                                             fit: BoxFit.fill,
                                           ),
@@ -637,8 +639,8 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/white/truck_order.svg",
-                                            width: 31.w,
+                                            "assets/icons/white/add.svg",
+                                            width: 28.w,
                                             height: 28.w,
                                             fit: BoxFit.fill,
                                           ),
@@ -661,7 +663,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       ),
                               ),
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: navigationValue == 3
                                     ? Column(
                                         mainAxisAlignment:
@@ -711,7 +713,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       ),
                               ),
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: Consumer<TaskNumProvider>(
                                   builder: (context, value, child) {
                                     return BlocListener<ShipmentTaskListBloc,

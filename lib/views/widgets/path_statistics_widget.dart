@@ -42,9 +42,12 @@ class PathStatisticsWidget extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(
-                    height: 25.h,
-                    width: 25.h,
-                    child: SvgPicture.asset("assets/icons/co2fingerprint.svg"),
+                    height: 20.h,
+                    width: 28.h,
+                    child: SvgPicture.asset(
+                      "assets/icons/orange/co2.svg",
+                      fit: BoxFit.fitHeight,
+                    ),
                   ),
                   SizedBox(
                     width: 5.w,
@@ -86,9 +89,10 @@ class PathStatisticsWidget extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(
-                    height: 25.h,
+                    height: 20.h,
                     width: 25.h,
-                    child: SvgPicture.asset("assets/icons/distance.svg"),
+                    child: SvgPicture.asset(
+                        "assets/icons/orange/shipment_path.svg"),
                   ),
                   SizedBox(
                     width: 5.w,
@@ -130,9 +134,9 @@ class PathStatisticsWidget extends StatelessWidget {
               Row(
                 children: [
                   SizedBox(
-                    height: 25.h,
+                    height: 20.h,
                     width: 25.h,
-                    child: SvgPicture.asset("assets/icons/time.svg"),
+                    child: SvgPicture.asset("assets/icons/orange/time.svg"),
                   ),
                   SizedBox(
                     width: 5.w,

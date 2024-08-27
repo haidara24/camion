@@ -155,7 +155,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                   child: SizedBox(
                     height: 25.w,
                     width: 25.w,
-                    child: SvgPicture.asset("assets/icons/cancel.svg"),
+                    child: SvgPicture.asset(
+                        "assets/icons/grey/notification_shipment_cancelation.svg"),
                   ),
                 ),
               ),
@@ -704,12 +705,13 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                           .text
                                                                           .length);
                                                         },
-                                                        scrollPadding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                50),
+                                                        // scrollPadding:
+                                                        //     EdgeInsets.only(
+                                                        //   bottom: MediaQuery.of(
+                                                        //           context)
+                                                        //       .viewInsets
+                                                        //       .bottom,
+                                                        // ),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -782,12 +784,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         // enabled: instructionProvider.subShipment!
                                                         //         .shipmentinstructionv2 ==
                                                         //     null,
-                                                        scrollPadding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                20),
+                                                        // scrollPadding: EdgeInsets.only(
+                                                        //     bottom: MediaQuery.of(
+                                                        //                 context)
+                                                        //             .viewInsets
+                                                        //             .bottom +
+                                                        //         20),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -863,12 +865,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         // enabled: instructionProvider.subShipment!
                                                         //         .shipmentinstructionv2 ==
                                                         //     null,
-                                                        scrollPadding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                20),
+                                                        // scrollPadding: EdgeInsets.only(
+                                                        //     bottom: MediaQuery.of(
+                                                        //                 context)
+                                                        //             .viewInsets
+                                                        //             .bottom +
+                                                        //         20),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -984,12 +986,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         // enabled: instructionProvider.subShipment!
                                                         //         .shipmentinstructionv2 ==
                                                         //     null,
-                                                        scrollPadding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                20),
+                                                        // scrollPadding: EdgeInsets.only(
+                                                        //     bottom: MediaQuery.of(
+                                                        //                 context)
+                                                        //             .viewInsets
+                                                        //             .bottom +
+                                                        //         20),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -1061,12 +1063,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         // enabled: instructionProvider.subShipment!
                                                         //         .shipmentinstructionv2 ==
                                                         //     null,
-                                                        scrollPadding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                20),
+                                                        // scrollPadding: EdgeInsets.only(
+                                                        //     bottom: MediaQuery.of(
+                                                        //                 context)
+                                                        //             .viewInsets
+                                                        //             .bottom +
+                                                        //         20),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -1142,12 +1144,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         // enabled: instructionProvider.subShipment!
                                                         //         .shipmentinstructionv2 ==
                                                         //     null,
-                                                        scrollPadding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                20),
+                                                        // scrollPadding: EdgeInsets.only(
+                                                        //     bottom: MediaQuery.of(
+                                                        //                 context)
+                                                        //             .viewInsets
+                                                        //             .bottom +
+                                                        //         20),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -2204,12 +2206,12 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         },
                                                         // enabled:
                                                         //     widget.shipment.shipmentinstruction == null,
-                                                        scrollPadding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom +
-                                                                20),
+                                                        // scrollPadding: EdgeInsets.only(
+                                                        //     bottom: MediaQuery.of(
+                                                        //                 context)
+                                                        //             .viewInsets
+                                                        //             .bottom +
+                                                        //         20),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -2314,14 +2316,14 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                     .length,
                                                           );
                                                         },
-                                                        scrollPadding:
-                                                            EdgeInsets.only(
-                                                          bottom: MediaQuery.of(
-                                                                      context)
-                                                                  .viewInsets
-                                                                  .bottom +
-                                                              20,
-                                                        ),
+                                                        // scrollPadding:
+                                                        //     EdgeInsets.only(
+                                                        //   bottom: MediaQuery.of(
+                                                        //               context)
+                                                        //           .viewInsets
+                                                        //           .bottom +
+                                                        //       20,
+                                                        // ),
                                                         textInputAction:
                                                             TextInputAction
                                                                 .done,
@@ -2603,7 +2605,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                               width: 50.w,
                                                               child: SvgPicture
                                                                   .asset(
-                                                                      "assets/icons/cloud.svg"),
+                                                                      "assets/icons/grey/add_image.svg"),
                                                             ),
                                                           ),
                                                         ),

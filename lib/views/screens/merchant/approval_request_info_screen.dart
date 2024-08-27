@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 
 class ApprovalRequestDetailsScreen extends StatelessWidget {
   final String type;
@@ -53,8 +54,20 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.center,
                                       children: [
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Lottie.asset(
+                                          'assets/images/accept_order.json',
+                                          width: 550.w,
+                                          height: 400.w,
+                                          fit: BoxFit.fill,
+                                        ),
+                                        const SizedBox(
+                                          height: 16,
+                                        ),
                                         SectionTitle(
                                             text: AppLocalizations.of(context)!
                                                 .translate("request_confirm")),
@@ -75,7 +88,10 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                     .toString(),
                                               )
                                             : const SizedBox.shrink(),
-                                        const Divider(),
+                                        // const Divider(),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
                                         Padding(
                                           padding: const EdgeInsets.all(10.0),
                                           child: Row(
@@ -112,7 +128,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                         ),
                                                       ),
                                                       onTap: () {},
-                                                      color: Colors.white,
+                                                      // color: Colors.white,
                                                     );
                                                   } else {
                                                     return CustomButton(
@@ -128,7 +144,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                                 AppLocalizations.of(
                                                                         context)!
                                                                     .translate(
-                                                                        'accept'),
+                                                                        'confirm'),
                                                                 style:
                                                                     const TextStyle(
                                                                   color: Colors
@@ -180,6 +196,18 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                   )
                                 : Column(
                                     children: [
+                                      const SizedBox(
+                                        height: 8,
+                                      ),
+                                      Lottie.asset(
+                                        'assets/images/reject_order.json',
+                                        width: 550.w,
+                                        height: 400.w,
+                                        fit: BoxFit.fill,
+                                      ),
+                                      const SizedBox(
+                                        height: 16,
+                                      ),
                                       SectionBody(
                                           text: AppLocalizations.of(context)!
                                               .translate("request_reject")),
@@ -188,7 +216,9 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                               text:
                                                   "${AppLocalizations.of(context)!.translate("reason")}: ${state.request.reason!} ")
                                           : const SizedBox.shrink(),
-                                      const Divider(),
+                                      const SizedBox(
+                                        height: 16,
+                                      ),
                                       Padding(
                                         padding: const EdgeInsets.all(10.0),
                                         child: Row(
@@ -197,12 +227,17 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                           children: [
                                             CustomButton(
                                               title: SizedBox(
-                                                width: 140.w,
+                                                width: 150.w,
                                                 child: Center(
-                                                  child: Text(AppLocalizations
-                                                          .of(context)!
-                                                      .translate(
-                                                          "search_for_truck")),
+                                                  child: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            "search_for_truck"),
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                               onTap: () {
@@ -218,7 +253,6 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                   ),
                                                 );
                                               },
-                                              color: Colors.white,
                                             ),
                                           ],
                                         ),

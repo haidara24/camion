@@ -12,7 +12,7 @@ final class DriverUpdateProfileInitial extends DriverUpdateProfileState {}
 class DriverUpdateProfileLoadingProgress extends DriverUpdateProfileState {}
 
 class DriverUpdateProfileLoadedSuccess extends DriverUpdateProfileState {
-  final Driver driver;
+  final int driver;
 
   const DriverUpdateProfileLoadedSuccess(this.driver);
 }

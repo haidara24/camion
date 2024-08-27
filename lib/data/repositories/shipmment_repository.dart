@@ -624,7 +624,7 @@ class ShipmentRepository {
     var jwt = prefs.getString("token");
 
     var rs = await HttpHelper.get('$SHIPPMENTSV2_ENDPOINT$id/', apiToken: jwt);
-
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

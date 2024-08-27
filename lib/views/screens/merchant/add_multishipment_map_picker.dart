@@ -1,3 +1,4 @@
+import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _MultiShippmentPickUpMapScreenState
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Pick Location",
+          AppLocalizations.of(context)!.translate("pick_location"),
           style: TextStyle(
             // color: AppColor.lightBlue,
             fontSize: 19.sp,
@@ -157,14 +158,15 @@ class _MultiShippmentPickUpMapScreenState
                                     .then((value) => Navigator.pop(context));
                               }
                             },
-                            title: Container(
+                            title: SizedBox(
                               height: 50.h,
                               width: 150.w,
-                              child: const Center(
+                              child: Center(
                                 child: Text(
-                                  "confirm",
-                                  style: TextStyle(
-                                    color: Colors.black,
+                                  AppLocalizations.of(context)!
+                                      .translate("confirm"),
+                                  style: const TextStyle(
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),

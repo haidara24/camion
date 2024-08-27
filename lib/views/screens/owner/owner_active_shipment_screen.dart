@@ -13,6 +13,7 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
@@ -646,7 +647,9 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                     }
                     return Visibility(
                       visible: state.shipments.isNotEmpty,
-                      replacement: Center(child: Text("no active shipments")),
+                      replacement: NoResultsWidget(
+                          text: AppLocalizations.of(context)!
+                              .translate('no_active')),
                       child: Stack(
                         children: [
                           GoogleMap(

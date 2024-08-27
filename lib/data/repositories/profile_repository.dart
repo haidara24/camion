@@ -55,7 +55,7 @@ class ProfileRepository {
     return null;
   }
 
-  Future<Driver?> updateDriver(Driver driver, File? file) async {
+  Future<int?> updateDriver(Driver driver, File? file) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var driverId = prefs.getInt("truckuser");
@@ -91,7 +91,7 @@ class ProfileRepository {
 
       var result = jsonDecode(respStr);
 
-      return Driver.fromJson(result);
+      return result['id'];
     }
     return null;
   }

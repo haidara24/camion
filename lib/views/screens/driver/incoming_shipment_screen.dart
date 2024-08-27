@@ -6,6 +6,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/driver/inprogress_shipment_details_screen.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:camion/views/widgets/shipments_widgets/shimmer_card.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +124,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: AppColor.lightGrey200,
+            backgroundColor: Colors.grey[100],
             body: SingleChildScrollView(
               // physics: const NeverScrollableScrollPhysics(),
               child: RefreshIndicator(
@@ -181,10 +182,9 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                               builder: (context, state) {
                                 if (state is DriverRequestsListLoadedSuccess) {
                                   return state.requests.isEmpty
-                                      ? Center(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('no_in_orders')),
+                                      ? NoResultsWidget(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("no_in_orders"),
                                         )
                                       : ListView.builder(
                                           itemCount: state.requests.length,
@@ -316,10 +316,9 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                               builder: (context, state) {
                                 if (state is InprogressShipmentsLoadedSuccess) {
                                   return state.shipments.isEmpty
-                                      ? Center(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('no_shipments')),
+                                      ? NoResultsWidget(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("no_shipments"),
                                         )
                                       : ListView.builder(
                                           itemCount: state.shipments.length,

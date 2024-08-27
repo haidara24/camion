@@ -7,8 +7,11 @@ import 'package:camion/views/screens/merchant/home_screen.dart';
 import 'package:camion/views/screens/owner/owner_home_screen.dart';
 import 'package:camion/views/screens/select_user_type.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ControlView extends StatefulWidget {
@@ -51,8 +54,22 @@ class _ControlViewState extends State<ControlView> {
               child: LoadingIndicator(),
             );
           } else if (state is InternetDisConnected) {
-            return const Center(
-              child: Text("no internet connection"),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Lottie.asset(
+                  'assets/images/no_internet.json',
+                  width: 210.w,
+                  height: 150.h,
+                  fit: BoxFit.fill,
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                const Center(
+                  child: SectionTitle(text: "no internet connection"),
+                ),
+              ],
             );
           } else if (state is InternetConnected) {
             // BlocProvider.of<BottomNavBarCubit>(context).emitShow();

@@ -10,6 +10,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:camion/views/screens/merchant/shipment_details_screen.dart';
@@ -381,17 +382,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                 if (state is ShipmentListLoadedSuccess &&
                                     pickupicon != null) {
                                   return state.shipments.isEmpty
-                                      ? SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .75,
-                                          child: Center(
-                                            child: SectionTitle(
-                                                text: AppLocalizations.of(
-                                                        context)!
-                                                    .translate('no_shipments')),
-                                          ),
+                                      ? NoResultsWidget(
+                                          text: AppLocalizations.of(context)!
+                                              .translate('no_shipments'),
                                         )
                                       : ListView.builder(
                                           itemCount: state.shipments.length,
@@ -416,7 +409,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       builder: (context) =>
                                                           ShipmentDetailsScreen(
                                                         shipment: state
-                                                            .shipments[index],
+                                                            .shipments[index]
+                                                            .id!,
                                                         preview: false,
                                                       ),
                                                     ));
@@ -620,18 +614,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                 if (state
                                     is MerchantRequestsListLoadedSuccess) {
                                   return state.requests.isEmpty
-                                      ? SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              .75,
-                                          child: Center(
-                                            child: SectionTitle(
-                                                text: AppLocalizations.of(
-                                                        context)!
-                                                    .translate(
-                                                        'no_out_orders')),
-                                          ),
+                                      ? NoResultsWidget(
+                                          text: AppLocalizations.of(context)!
+                                              .translate('no_out_orders'),
                                         )
                                       : ListView.builder(
                                           itemCount: state.requests.length,

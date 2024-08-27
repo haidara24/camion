@@ -28,7 +28,6 @@ class AddNewTruckScreen extends StatefulWidget {
 }
 
 class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
-  late GoogleMapController _controller;
   final GlobalKey<FormState> _newtruckFormKey = GlobalKey<FormState>();
 
   String location = "";
@@ -107,9 +106,6 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
 
   @override
   void dispose() {
-    if (_controller != null) {
-      _controller.dispose();
-    }
     super.dispose();
   }
 
@@ -523,7 +519,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             style: const TextStyle(fontSize: 18),
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(context)!
-                                  .translate('traffic_number'),
+                                  .translate('truck_number'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),
@@ -609,7 +605,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                             style: const TextStyle(fontSize: 18),
                             decoration: InputDecoration(
                               labelText: AppLocalizations.of(context)!
-                                  .translate('grosss_weight'),
+                                  .translate('gross_weight'),
                               contentPadding: EdgeInsets.symmetric(
                                   vertical: 11.0, horizontal: 9.0),
                             ),

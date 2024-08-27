@@ -28,4 +28,9 @@ class UserService {
     final response =
         await HttpHelper.post(RESEND_OTP_ENDPOINT, {"phone": newPhone});
   }
+
+  static Future<void> updateLang(String lang) async {
+    final response = await HttpHelper.post(
+        '${USERS_ENDPOINT}update_language/', {"language": lang});
+  }
 }

@@ -385,7 +385,7 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      CreateTruckForDriverScreen(driverId: btnstate.driver.id!),
+                      CreateTruckForDriverScreen(driverId: btnstate.driver),
                 ),
                 (route) => false,
               );

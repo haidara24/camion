@@ -1288,7 +1288,7 @@ class _AddShippmentScreenState extends State<AddShippmentScreen> {
                                               height: 32.h,
                                               width: 32.w,
                                               child: SvgPicture.asset(
-                                                  "assets/icons/add.svg"),
+                                                  "assets/icons/orange/add.svg"),
                                             ),
                                           ),
                                         ),

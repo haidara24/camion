@@ -13,7 +13,7 @@ const VERIFY_OTP_ENDPOINT = '${DOMAIN}verify-otp/';
 const RESEND_OTP_ENDPOINT = '${DOMAIN}resend-otp/';
 
 const LOGOUT_ENDPOINT = '${DOMAIN}logout/';
-const USERS_ENDPOINT = '${DOMAIN}auth/users/';
+const USERS_ENDPOINT = '${DOMAIN}accounts/users/';
 const PROFILE_ENDPOINT = '${DOMAIN}auth/users/me';
 const POSTS_ENDPOINT = '${DOMAIN}camion/posts/';
 const SAVED_POSTS_ENDPOINT = '${DOMAIN}camion/savedposts/';

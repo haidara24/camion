@@ -214,7 +214,9 @@ class Driver {
   Driver.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
-    truck = json['truck2'] != null ? KTruck.fromJson(json['truck2']) : null;
+    truck = (json['truck2'] == null || json['truck2'] is int)
+        ? null
+        : KTruck.fromJson(json['truck2']);
   }
 
   Map<String, dynamic> toJson() {

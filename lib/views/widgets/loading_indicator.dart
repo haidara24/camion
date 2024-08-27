@@ -15,9 +15,9 @@ class LoadingIndicator extends StatelessWidget {
           color: color,
         );
       case TargetPlatform.android:
-        return CircularProgressIndicator(
-          color: color,
-        );
+      // return CircularProgressIndicator(
+      //   color: color,
+      // );
       case TargetPlatform.fuchsia:
       case TargetPlatform.linux:
       case TargetPlatform.windows:

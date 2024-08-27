@@ -4,6 +4,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart'
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_details_screen.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
@@ -108,9 +109,9 @@ class CompleteShipmentScreen extends StatelessWidget {
                         builder: (context, state) {
                           if (state is ShipmentCompleteListLoadedSuccess) {
                             return state.shipments.isEmpty
-                                ? Center(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .translate('no_shipments')),
+                                ? NoResultsWidget(
+                                    text: AppLocalizations.of(context)!
+                                        .translate('no_shipments'),
                                   )
                                 : ListView.builder(
                                     itemCount: state.shipments.length,
@@ -132,8 +133,8 @@ class CompleteShipmentScreen extends StatelessWidget {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     ShipmentDetailsScreen(
-                                                  shipment:
-                                                      state.shipments[index],
+                                                  shipment: state
+                                                      .shipments[index].id!,
                                                   preview: true,
                                                 ),
                                               ));

@@ -359,15 +359,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                       FocusManager.instance.primaryFocus
                                           ?.unfocus();
                                     },
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return AppLocalizations.of(context)!
-                                            .translate('insert_value_validate');
-                                      }
-                                      return null;
-                                    },
                                     onSaved: (newValue) {
                                       emailController.text = newValue!;
                                     },
@@ -409,8 +400,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                       editMode = false;
                                     });
                                     BlocProvider.of<DriverProfileBloc>(context)
-                                        .add(DriverProfileLoad(
-                                            state.driver.id!));
+                                        .add(
+                                            DriverProfileLoad(btnstate.driver));
                                   }
                                 },
                                 builder: (context, btnstate) {
@@ -422,7 +413,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     );
                                   } else {
                                     return CustomButton(
-                                      title: Text("حفظ التغيرات"),
+                                      title: Text(AppLocalizations.of(context)!
+                                          .translate("save")),
                                       onTap: () {
                                         _driverprofileFormKey.currentState!
                                             .save();

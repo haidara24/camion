@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/re_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
@@ -11,6 +13,8 @@ import 'package:camion/constants/enums.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
+import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
+import 'package:camion/views/screens/merchant/shipment_payment_instruction_details_screeen.dart';
 import 'package:camion/views/screens/search_truck_screen.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
@@ -31,7 +35,7 @@ import 'package:intl/intl.dart' as intel;
 import 'package:shimmer/shimmer.dart';
 
 class ShipmentDetailsScreen extends StatefulWidget {
-  final Shipmentv2 shipment;
+  final int shipment;
   final bool preview;
   ShipmentDetailsScreen({
     Key? key,
@@ -185,6 +189,18 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
         } else {
           return "جارية";
         }
+      case "C":
+        if (languageCode == "en") {
+          return "Completed";
+        } else {
+          return "مكتملة";
+        }
+      case "F":
+        if (languageCode == "en") {
+          return "Canceled";
+        } else {
+          return "ملغاة";
+        }
       default:
         if (languageCode == "en") {
           return "Pending";
@@ -198,72 +214,38 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     switch (value) {
       case "P":
         return SvgPicture.asset(
-          "assets/icons/grey/notification_shipment_pending.svg",
-          height: 30.h,
-          width: 30.w,
+          "assets/icons/orange/notification_shipment_pending.svg",
+          height: 28.h,
+          width: 28.h,
           fit: BoxFit.fill,
         );
       case "R":
         return SvgPicture.asset(
-          "assets/icons/grey/notification_shipment_waiting.svg",
-          height: 30.h,
-          width: 30.w,
+          "assets/icons/orange/notification_shipment_waiting.svg",
+          height: 28.h,
+          width: 28.h,
           fit: BoxFit.fill,
         );
-      case "A":
-        return Icon(
-          Icons.circle,
-          color: Colors.green,
-          size: 30,
-        );
-
-      default:
+      case "F":
         return SvgPicture.asset(
-          "assets/icons/grey/notification_shipment_complete.svg",
-          height: 30.h,
-          width: 30.w,
+          "assets/icons/orange/notification_shipment_cancelation.svg",
+          height: 28.h,
+          width: 28.h,
           fit: BoxFit.fill,
-        );
-    }
-  }
-
-  Widget getStatusWidget(String status) {
-    switch (status) {
-      case "P":
-        return SizedBox(
-          height: 30.w,
-          width: 30.w,
-          child: SvgPicture.asset(
-            "assets/icons/pending_shipment_notice.svg",
-            width: 30.w,
-            height: 30.w,
-          ),
-        );
-      case "R":
-        return SizedBox(
-          height: 30.w,
-          width: 30.w,
-          child: SvgPicture.asset(
-            "assets/icons/waiting_shipment_notice.svg",
-            width: 30.w,
-            height: 30.w,
-          ),
         );
       case "A":
         return const Icon(
           Icons.circle,
           color: Colors.green,
-          size: 25,
+          size: 28,
         );
+
       default:
-        return SizedBox(
-          height: 30.w,
-          width: 30.w,
-          child: SvgPicture.asset(
-            "assets/icons/pending_shipment_notice.svg",
-            width: 30.w,
-            height: 30.w,
-          ),
+        return SvgPicture.asset(
+          "assets/icons/orange/notification_shipment_complete.svg",
+          height: 28.h,
+          width: 28.h,
+          fit: BoxFit.fill,
         );
     }
   }
@@ -512,8 +494,13 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                       Positioned(
                         top: -8,
                         left: -8,
-                        child: getStatusWidget(
-                            shipment.subshipments![index].shipmentStatus!),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(45)),
+                          child: getStatusImage(
+                              shipment.subshipments![index].shipmentStatus!),
+                        ),
                       )
                     ],
                   ),
@@ -523,6 +510,17 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     );
   }
 
+  widgetList(bool preview, Shipmentv2 shipment) {
+    if (shipment.shipmentStatus == "C") {
+      return truckList(shipment);
+    }
+    if (widget.preview) {
+      return pathList(shipment);
+    } else {
+      return truckList(shipment);
+    }
+  }
+
   late BitmapDescriptor pickupicon;
   late BitmapDescriptor deliveryicon;
   late BitmapDescriptor stopicon;
@@ -530,6 +528,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   late LatLng truckLocation;
   late bool truckLocationassign;
   Set<Marker> markers = Set();
+  bool instructionSelect = true;
 
   createMarkerIcons(Shipmentv2 shipment) async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
@@ -624,8 +623,8 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    _controller.dispose();
   }
 
   List<LatLng> deserializeLatLng(String jsonString) {
@@ -646,7 +645,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
           child: Scaffold(
             appBar: CustomAppBar(
               title:
-                  "${AppLocalizations.of(context)!.translate('shipment_number')}: ${widget.shipment.id!}",
+                  "${AppLocalizations.of(context)!.translate('shipment_number')}: ${widget.shipment}",
             ),
             body: BlocConsumer<ShipmentDetailsBloc, ShipmentDetailsState>(
               listener: (context, state) {
@@ -701,7 +700,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                                 element.pointType == "P")
                                             .location!
                                             .split(",")[1])),
-                                    zoom: 14.47),
+                                    zoom: 14.45),
                                 gestureRecognizers: {},
                                 markers: markers,
                                 polylines: {
@@ -785,9 +784,8 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                     .translate("assigned_trucks"),
                               ),
                               const SizedBox(height: 4),
-                              !widget.preview
-                                  ? truckList(shipmentstate.shipment)
-                                  : pathList(shipmentstate.shipment),
+                              widgetList(
+                                  widget.preview, shipmentstate.shipment),
                               const Divider(
                                 height: 12,
                               ),
@@ -799,8 +797,8 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                         "${AppLocalizations.of(context)!.translate("shipment_status")}: ",
                                   ),
                                   Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
                                     child: getStatusImage(
                                       shipmentstate
                                           .shipment
@@ -821,6 +819,386 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                               ),
                               const Divider(
                                 height: 12,
+                              ),
+                              Visibility(
+                                visible: shipmentstate
+                                        .shipment
+                                        .subshipments![selectedIndex]
+                                        .shipmentStatus! !=
+                                    "P",
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (shipmentstate
+                                                  .shipment
+                                                  .subshipments![selectedIndex]
+                                                  .shipmentinstructionv2 !=
+                                              null) {
+                                            BlocProvider.of<
+                                                        ReadInstructionBloc>(
+                                                    context)
+                                                .add(
+                                              ReadInstructionLoadEvent(
+                                                  shipmentstate
+                                                      .shipment
+                                                      .subshipments![
+                                                          selectedIndex]
+                                                      .shipmentinstructionv2!),
+                                            );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ShipmentInstructionDetailsScreen(
+                                                        shipment: shipmentstate
+                                                                .shipment
+                                                                .subshipments![
+                                                            selectedIndex]),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .45,
+                                              margin: const EdgeInsets.all(1),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: shipmentstate
+                                                              .shipment
+                                                              .subshipments![
+                                                                  selectedIndex]
+                                                              .shipmentinstructionv2 !=
+                                                          null
+                                                      ? AppColor.deepYellow
+                                                      : AppColor.lightGrey,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        // SizedBox(
+                                                        //     height: 25.h,
+                                                        //     width: 25.w,
+                                                        //     child: SvgPicture.asset(
+                                                        //         "assets/icons/instruction.svg")),
+                                                        const SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .35,
+                                                          child: FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'shipment_instruction'),
+                                                              style: TextStyle(
+                                                                  // color: AppColor.lightBlue,
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 7.h,
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .4,
+                                                      child: shipmentstate
+                                                                  .shipment
+                                                                  .subshipments![
+                                                                      selectedIndex]
+                                                                  .shipmentinstructionv2 ==
+                                                              null
+                                                          ? Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'instruction_not_complete'),
+                                                              maxLines: 2,
+                                                            )
+                                                          : Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'instruction_complete'),
+                                                              maxLines: 2,
+                                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: -5,
+                                              right: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? -5
+                                                  : null,
+                                              left: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? null
+                                                  : -5,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45)),
+                                                child: shipmentstate
+                                                            .shipment
+                                                            .subshipments![
+                                                                selectedIndex]
+                                                            .shipmentinstructionv2 ==
+                                                        null
+                                                    ? Icon(
+                                                        Icons
+                                                            .warning_amber_rounded,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      )
+                                                    : Icon(
+                                                        Icons.check_circle,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          if (shipmentstate
+                                                  .shipment
+                                                  .subshipments![selectedIndex]
+                                                  .shipmentpaymentv2 !=
+                                              null) {
+                                            BlocProvider.of<
+                                                        ReadPaymentInstructionBloc>(
+                                                    context)
+                                                .add(
+                                              ReadPaymentInstructionLoadEvent(
+                                                  shipmentstate
+                                                      .shipment
+                                                      .subshipments![
+                                                          selectedIndex]
+                                                      .shipmentpaymentv2!),
+                                            );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PaymentInstructionDetailsScreen(
+                                                        shipment: shipmentstate
+                                                                .shipment
+                                                                .subshipments![
+                                                            selectedIndex]),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .45,
+                                              margin: const EdgeInsets.all(1),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: shipmentstate
+                                                              .shipment
+                                                              .subshipments![
+                                                                  selectedIndex]
+                                                              .shipmentpaymentv2 !=
+                                                          null
+                                                      ? AppColor.deepYellow
+                                                      : AppColor.lightGrey,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        // SizedBox(
+                                                        //     height: 25.h,
+                                                        //     width: 25.w,
+                                                        //     child: SvgPicture.asset(
+                                                        //         "assets/icons/payment.svg")),
+                                                        const SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .35,
+                                                          child: FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'payment_instruction'),
+                                                              style: TextStyle(
+                                                                  // color: AppColor.lightBlue,
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 7.h,
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .4,
+                                                      child: shipmentstate
+                                                                  .shipment
+                                                                  .subshipments![
+                                                                      selectedIndex]
+                                                                  .shipmentpaymentv2 ==
+                                                              null
+                                                          ? Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'payment_not_complete'),
+                                                              maxLines: 2,
+                                                            )
+                                                          : Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'payment_complete'),
+                                                              maxLines: 2,
+                                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: -5,
+                                              right: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? -5
+                                                  : null,
+                                              left: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? null
+                                                  : -5,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45)),
+                                                child: shipmentstate
+                                                            .shipment
+                                                            .subshipments![
+                                                                selectedIndex]
+                                                            .shipmentpaymentv2 ==
+                                                        null
+                                                    ? Icon(
+                                                        Icons
+                                                            .warning_amber_rounded,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      )
+                                                    : Icon(
+                                                        Icons.check_circle,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: shipmentstate
+                                        .shipment
+                                        .subshipments![selectedIndex]
+                                        .shipmentStatus! !=
+                                    "P",
+                                child: const Divider(
+                                  height: 12,
+                                ),
                               ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!
@@ -888,7 +1266,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                               ),
                                             ),
                                           ),
-                                          SizedBox(width: 8),
+                                          const SizedBox(width: 8),
                                           SizedBox(
                                             height: 25.w,
                                             width: 30.w,

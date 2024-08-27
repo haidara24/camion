@@ -12,6 +12,7 @@ import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/providers/truck_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -170,7 +171,7 @@ class _AllIncomingShippmentLogScreenState
                     )),
                   )
                 : Container(
-                    width: 110.w,
+                    width: 130.w,
                     margin: const EdgeInsets.all(5),
                     padding: const EdgeInsets.all(5),
                     decoration: BoxDecoration(
@@ -233,7 +234,6 @@ class _AllIncomingShippmentLogScreenState
   Future<void> onRefresh() async {}
   @override
   Widget build(BuildContext context) {
-    final playDuration = 600.ms;
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
         return Directionality(
@@ -241,7 +241,7 @@ class _AllIncomingShippmentLogScreenState
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: AppColor.lightGrey200,
+            backgroundColor: Colors.grey[100],
             body: SingleChildScrollView(
               // physics: const NeverScrollableScrollPhysics(),
               child: Column(
@@ -380,7 +380,6 @@ class _AllIncomingShippmentLogScreenState
                                 //     buttonStyleData: ButtonStyleData(
                                 //       height: 50,
                                 //       width: double.infinity,
-
                                 //       padding: const EdgeInsets.symmetric(
                                 //         horizontal: 9.0,
                                 //       ),
@@ -528,11 +527,10 @@ class _AllIncomingShippmentLogScreenState
                                     if (state
                                         is OwnerIncomingShipmentsLoadedSuccess) {
                                       return state.requests.isEmpty
-                                          ? Center(
-                                              child: Text(AppLocalizations.of(
+                                          ? NoResultsWidget(
+                                              text: AppLocalizations.of(
                                                       context)!
-                                                  .translate('no_shipments')),
-                                            )
+                                                  .translate('no_in_orders'))
                                           : ListView.builder(
                                               itemCount: state.requests.length,
                                               physics:
@@ -711,11 +709,10 @@ class _AllIncomingShippmentLogScreenState
                                     if (state
                                         is OwnerShipmentListLoadedSuccess) {
                                       return state.shipments.isEmpty
-                                          ? Center(
-                                              child: Text(AppLocalizations.of(
+                                          ? NoResultsWidget(
+                                              text: AppLocalizations.of(
                                                       context)!
-                                                  .translate('no_shipments')),
-                                            )
+                                                  .translate('no_shipments'))
                                           : ListView.builder(
                                               itemCount: state.shipments.length,
                                               physics:
@@ -897,11 +894,10 @@ class _AllIncomingShippmentLogScreenState
                                     if (state
                                         is DriverRequestsListLoadedSuccess) {
                                       return state.requests.isEmpty
-                                          ? Center(
-                                              child: Text(AppLocalizations.of(
+                                          ? NoResultsWidget(
+                                              text: AppLocalizations.of(
                                                       context)!
-                                                  .translate('no_shipments')),
-                                            )
+                                                  .translate('no_in_orders'))
                                           : ListView.builder(
                                               itemCount: state.requests.length,
                                               physics:
@@ -1063,11 +1059,10 @@ class _AllIncomingShippmentLogScreenState
                                     if (state
                                         is InprogressShipmentsLoadedSuccess) {
                                       return state.shipments.isEmpty
-                                          ? Center(
-                                              child: Text(AppLocalizations.of(
+                                          ? NoResultsWidget(
+                                              text: AppLocalizations.of(
                                                       context)!
-                                                  .translate('no_shipments')),
-                                            )
+                                                  .translate('no_shipments'))
                                           : ListView.builder(
                                               itemCount: state.shipments.length,
                                               physics:

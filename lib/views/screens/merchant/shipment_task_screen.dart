@@ -1,14 +1,12 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/shipment_instructions_provider.dart';
-import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_task_details_screen.dart';
-import 'package:camion/views/widgets/section_title_widget.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -144,16 +142,9 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                         const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     children: [
-                                      SizedBox(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .75,
-                                        child: Center(
-                                          child: SectionTitle(
-                                              text:
-                                                  AppLocalizations.of(context)!
-                                                      .translate('no_tasks')),
-                                        ),
+                                      NoResultsWidget(
+                                        text: AppLocalizations.of(context)!
+                                            .translate('no_tasks'),
                                       )
                                     ],
                                   )

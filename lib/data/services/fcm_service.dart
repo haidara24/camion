@@ -45,7 +45,7 @@ class NotificationServices {
         // showNotification(message);
       }
       if (notificationProvider != null) {
-        // notificationProvider!.addNotReadedNotification();
+        notificationProvider!.addNotReadedNotification();
         BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
       }
     });

@@ -15,6 +15,7 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
@@ -620,7 +621,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: AppColor.lightGrey200,
+            backgroundColor: Colors.grey[100],
             body: Consumer<ActiveShippmentProvider>(
                 builder: (context, activeShipmentProvider, child) {
               activeShipmentProvider.init();
@@ -637,11 +638,9 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                     }
                     return Visibility(
                       visible: state.shipments.isNotEmpty,
-                      replacement: Center(
-                        child: SectionTitle(
-                          text: AppLocalizations.of(context)!
-                              .translate('no_active'),
-                        ),
+                      replacement: NoResultsWidget(
+                        text: AppLocalizations.of(context)!
+                            .translate('no_active'),
                       ),
                       child: Stack(
                         children: [

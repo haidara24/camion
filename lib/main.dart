@@ -132,7 +132,7 @@ void main() async {
   final LocaleCubit localeCubit = LocaleCubit();
   await localeCubit.initializeFromPreferences();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String lang = prefs.getString("language") ?? "en";
+  String lang = prefs.getString("language") ?? "ar";
   // Stripe.publishableKey =
   //     "pk_test_51IZr3HApYMiHRCEPfSdLaWzGSzImzW2kc61cSI4mYf3JptVXsfFj2SG1xcBLBgLVdvW8EXckH50FgzKZeNp454dK00xplc6hCI";
   // Stripe.merchantIdentifier = "AcrossMena";

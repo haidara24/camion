@@ -1,3 +1,4 @@
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipments_widgets/shimmer_card.dart';
 import 'package:camion/views/widgets/shipments_widgets/subshipment_card.dart';
@@ -93,7 +94,7 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
               ? TextDirection.ltr
               : TextDirection.rtl,
           child: Scaffold(
-            backgroundColor: AppColor.lightGrey200,
+            backgroundColor: Colors.grey[100],
             body: RefreshIndicator(
               onRefresh: onRefresh,
               child: Padding(
@@ -106,11 +107,10 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
                   builder: (context, state) {
                     if (state is UnassignedShipmentListLoadedSuccess) {
                       return state.shipments.isEmpty
-                          ? Center(
-                              child: SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate('no_shipments')),
-                            )
+                          ? NoResultsWidget(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("no_shipments"),
+                                        )
                           : ListView.builder(
                               itemCount: state.shipments.length,
                               shrinkWrap: true,

@@ -218,6 +218,15 @@ class TruckStatusWidget extends StatefulWidget {
 
 class _TruckStatusWidgetState extends State<TruckStatusWidget> {
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      BlocProvider.of<TruckActiveStatusBloc>(context)
+          .add(LoadTruckActiveStatusEvent());
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<TruckActiveStatusProvider>(
         builder: (providercontext, activeProvider, child) {

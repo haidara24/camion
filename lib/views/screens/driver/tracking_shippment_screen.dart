@@ -16,6 +16,7 @@ import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
@@ -463,7 +464,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                     Center(
                                       child: Text(
                                         AppLocalizations.of(context)!
-                                            .translate('accept'),
+                                            .translate('finish'),
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontSize: 18,
@@ -621,10 +622,9 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
               builder: (context, state) {
                 if (state is DriverActiveShipmentLoadedSuccess) {
                   if (state.shipments.isEmpty) {
-                    return Center(
-                      child: SectionTitle(
-                          text: AppLocalizations.of(context)!
-                              .translate('no_active')),
+                    return NoResultsWidget(
+                      text:
+                          AppLocalizations.of(context)!.translate("no_active"),
                     );
                   } else {
                     return Consumer<ActiveShippmentProvider>(

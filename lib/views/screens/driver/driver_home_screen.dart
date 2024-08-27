@@ -17,6 +17,7 @@ import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
+import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/driver/driver_profile_screen.dart';
@@ -125,8 +126,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     _listenLocation();
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
-    BlocProvider.of<TruckActiveStatusBloc>(context)
-        .add(LoadTruckActiveStatusEvent());
+
     notificationServices.requestNotificationPermission();
     // notificationServices.forgroundMessage(context);
     notificationServices.firebaseInit(context);
@@ -313,16 +313,18 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       ),
                       InkWell(
                         onTap: () async {
-                          if (AppLocalizations.of(context)!.isEnLocale!) {
+                          if (AppLocalizations.of(context)!.isEnLocale) {
                             BlocProvider.of<LocaleCubit>(context).toArabic();
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.setString("language", "ar");
+                            UserService.updateLang("ar");
                           } else {
                             BlocProvider.of<LocaleCubit>(context).toEnglish();
                             SharedPreferences prefs =
                                 await SharedPreferences.getInstance();
                             prefs.setString("language", "en");
+                            UserService.updateLang("en");
                           }
                           Future.delayed(const Duration(milliseconds: 500))
                               .then((value) {
@@ -519,6 +521,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             unselectedLabelColor: Colors.white,
                             labelStyle: TextStyle(fontSize: 12.sp),
                             unselectedLabelStyle: TextStyle(fontSize: 14.sp),
+                            dividerColor: Colors.transparent,
                             padding: EdgeInsets.zero,
                             onTap: (value) {
                               changeSelectedValue(

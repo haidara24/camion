@@ -140,7 +140,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
               : TextDirection.rtl,
           child: SafeArea(
             child: Scaffold(
-              backgroundColor: AppColor.lightGrey200,
+              backgroundColor: Colors.grey[100],
               appBar: DriverAppBar(
                 title: AppLocalizations.of(context)!.translate('add_spending'),
               ),
