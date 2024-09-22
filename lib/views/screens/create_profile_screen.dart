@@ -73,8 +73,8 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       userProvider = Provider.of<UserProvider>(context, listen: false);
+      getUserType();
     });
-    getUserType();
   }
 
   @override
@@ -272,7 +272,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
         return BlocConsumer<MerchantUpdateProfileBloc,
             MerchantUpdateProfileState>(
           listener: (context, btnstate) async {
-            print(btnstate);
             if (btnstate is MerchantUpdateProfileLoadedSuccess) {
               setState(() {
                 btnLoading = true;
@@ -281,11 +280,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               var jwt = prefs.getString("token");
               Response userresponse =
                   await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
-              print("userresponse.statusCode${userresponse.statusCode}");
               var myDataString = utf8.decode(userresponse.bodyBytes);
 
               prefs.setString("userProfile", myDataString);
-              // print("userProfile${myDataString}");
               var result = jsonDecode(myDataString);
               var userProfile = UserModel.fromJson(result);
               if (userresponse.statusCode == 200) {
@@ -327,17 +324,15 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 onTap: () {
                   _profileFormKey.currentState!.save();
                   if (_profileFormKey.currentState!.validate()) {
-                    print(profileId);
                     Merchant merchant = Merchant();
                     // merchant.id = state.merchant.id!;
                     merchant.id = profileId;
                     merchant.address = addressController.text;
                     merchant.companyName = companyNameController.text;
-                    merchant.user = UserModel();
-                    merchant.user!.email = emailController.text;
-                    // merchant.user!.phone = phoneController.text;
-                    merchant.user!.firstName = firstNameController.text;
-                    merchant.user!.lastName = lastNameController.text;
+                    merchant.email = emailController.text;
+                    // merchant.phone = phoneController.text;
+                    merchant.firstname = firstNameController.text;
+                    merchant.lastname = lastNameController.text;
                     BlocProvider.of<MerchantUpdateProfileBloc>(context).add(
                         MerchantUpdateProfileButtonPressed(merchant, null));
                   }
@@ -349,7 +344,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       case "Driver":
         return BlocConsumer<DriverUpdateProfileBloc, DriverUpdateProfileState>(
           listener: (context, btnstate) async {
-            print(btnstate);
             if (btnstate is DriverUpdateProfileLoadedSuccess) {
               setState(() {
                 btnLoading = true;
@@ -358,11 +352,9 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               var jwt = prefs.getString("token");
               Response userresponse =
                   await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
-              print("userresponse.statusCode${userresponse.statusCode}");
               var myDataString = utf8.decode(userresponse.bodyBytes);
 
               prefs.setString("userProfile", myDataString);
-              print("userProfile${myDataString}");
               var result = jsonDecode(myDataString);
               var userProfile = UserModel.fromJson(result);
               prefs.setInt("truckuser", userProfile.truckuser!);
@@ -376,19 +368,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                 // prefs.setInt("truckId", res['truck2']["id"]);
                 // prefs.setString("gpsId", res['truck2']["gpsId"]);
               }
-              BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
-
-              setState(() {
-                btnLoading = false;
-              });
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>
-                      CreateTruckForDriverScreen(driverId: btnstate.driver),
-                ),
-                (route) => false,
-              );
             }
           },
           builder: (context, btnstate) {
@@ -405,11 +384,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   if (_profileFormKey.currentState!.validate()) {
                     Driver driver = Driver();
                     driver.id = profileId;
-                    driver.user = UserModel();
-                    driver.user!.email = emailController.text;
-                    // driver.user!.phone = phoneController.text;
-                    driver.user!.firstName = firstNameController.text;
-                    driver.user!.lastName = lastNameController.text;
+                    driver.email = emailController.text;
+                    // driver.phone = phoneController.text;
+                    driver.firstname = firstNameController.text;
+                    driver.lastname = lastNameController.text;
                     BlocProvider.of<DriverUpdateProfileBloc>(context)
                         .add(DriverUpdateProfileButtonPressed(driver, null));
                   }
@@ -421,7 +399,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
       case "Owner":
         return BlocConsumer<OwnerUpdateProfileBloc, OwnerUpdateProfileState>(
           listener: (context, btnstate) async {
-            print(btnstate);
             if (btnstate is OwnerUpdateProfileLoadedSuccess) {
               setState(() {
                 btnLoading = true;
@@ -430,14 +407,11 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
               var jwt = prefs.getString("token");
               Response userresponse =
                   await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
-              print("userresponse.statusCode${userresponse.statusCode}");
               var myDataString = utf8.decode(userresponse.bodyBytes);
 
               prefs.setString("userProfile", myDataString);
-              // print("userProfile${myDataString}");
               var result = jsonDecode(myDataString);
               var userProfile = UserModel.fromJson(result);
-              print(userProfile.truckowner!);
 
               prefs.setInt("truckowner", userProfile.truckowner!);
               Response ownerResponse = await HttpHelper.get(
@@ -445,7 +419,6 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   apiToken: jwt);
               if (ownerResponse.statusCode == 200) {
                 var ownerDataString = utf8.decode(ownerResponse.bodyBytes);
-                print(ownerDataString);
                 var res = jsonDecode(ownerDataString);
                 userProvider!.setTruckOwner(TruckOwner.fromJson(res));
               }
@@ -475,11 +448,10 @@ class _CreateProfileScreenState extends State<CreateProfileScreen> {
                   if (_profileFormKey.currentState!.validate()) {
                     TruckOwner owner = TruckOwner();
                     owner.id = profileId;
-                    owner.user = UserModel();
-                    owner.user!.email = emailController.text;
-                    // owner.user!.phone = phoneController.text;
-                    owner.user!.firstName = firstNameController.text;
-                    owner.user!.lastName = lastNameController.text;
+                    owner.email = emailController.text;
+                    // owner.phone = phoneController.text;
+                    owner.firstname = firstNameController.text;
+                    owner.lastname = lastNameController.text;
                     BlocProvider.of<OwnerUpdateProfileBloc>(context).add(
                       OwnerUpdateProfileButtonPressed(owner, null),
                     );

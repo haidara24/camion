@@ -175,7 +175,7 @@ class _SelectTruckWidgetState extends State<SelectTruckWidget> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'اسم السائق: ${state.trucks[index].truckuser!.usertruck!.firstName} ${state.trucks[index].truckuser!.usertruck!.lastName}',
+                                          'اسم السائق: ${state.trucks[index].driver_firstname} ${state.trucks[index].driver_lastname}',
                                           style: TextStyle(
                                               // color: AppColor.lightBlue,
                                               fontSize: 18.sp,

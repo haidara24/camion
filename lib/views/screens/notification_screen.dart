@@ -180,16 +180,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                       .notifications[index]
                                                       .shipment!));
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    IncomingShipmentDetailsScreen(
-                                                        requestId:
-                                                            notificationProvider
-                                                                .notifications[
-                                                                    index]
-                                                                .request!),
-                                              ));
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  IncomingShipmentDetailsScreen(),
+                                            ),
+                                          );
                                         }
 
                                         // if (notificationProvider

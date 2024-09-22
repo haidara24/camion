@@ -297,8 +297,10 @@ class TruckExpense {
 
 class KTruck {
   int? id;
-  KTuckUser? truckuser;
+  String? driver_firstname;
+  String? driver_lastname;
   int? owner;
+  int? truckuser;
   TruckType? truckType;
   int? location;
   String? locationLat;
@@ -314,14 +316,18 @@ class KTruck {
   int? price;
   int? fees;
   int? extraFees;
+  int? distance;
   bool? isOn;
   String? gpsId;
+  int? private_price;
   List<TruckImages>? images;
 
   KTruck({
     this.id,
-    this.truckuser,
+    this.driver_firstname,
+    this.driver_lastname,
     this.owner,
+    this.truckuser,
     this.truckType,
     this.location,
     this.locationLat,
@@ -340,15 +346,12 @@ class KTruck {
     this.isOn,
     this.gpsId,
     this.images,
+    this.distance,
+    this.private_price,
   });
 
   KTruck.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    if (json['truckuser'] is int) {
-      truckuser = null;
-    } else if (json['truckuser'] != null) {
-      truckuser = KTuckUser.fromJson(json['truckuser']);
-    }
 
     if (json['truck_type'] is int) {
       truckType = null;
@@ -356,6 +359,9 @@ class KTruck {
       truckType = TruckType.fromJson(json['truck_type']);
     }
     owner = json['owner'];
+    truckuser = json['truckuser'] ?? 0;
+    driver_firstname = json['driver_firstname'];
+    driver_lastname = json['driver_lastname'];
 
     location = json['location'];
     locationLat = json['location_lat'];
@@ -373,6 +379,8 @@ class KTruck {
     extraFees = json['extra_fees'];
     isOn = json['isOn'];
     gpsId = json['gpsId'];
+    private_price = json['private_price'] ?? 0;
+    distance = (json['distance'] ?? 0.0).toInt() ?? 0.0;
     if (json['images'] != null) {
       images = <TruckImages>[];
       json['images'].forEach((v) {
@@ -456,27 +464,27 @@ class Usertruck {
   }
 }
 
-class KTuckType {
+class Simpletruck {
   int? id;
-  String? name;
-  String? nameAr;
-  String? image;
+  KTuckUser? truckuser;
+  int? truck_number;
+  Simpletruck({this.id, this.truckuser, this.truck_number});
 
-  KTuckType({this.id, this.name, this.nameAr});
-
-  KTuckType.fromJson(Map<String, dynamic> json) {
+  Simpletruck.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    name = json['name'];
-    nameAr = json['name_ar'];
-    image = json['image'];
+    truck_number = json['truck_number'];
+    truckuser = json['truckuser'] != null
+        ? KTuckUser.fromJson(json['truckuser'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['name'] = name;
-    data['name_ar'] = nameAr;
-    data['image'] = image;
+    data['truck_number'] = truck_number;
+    if (truckuser != null) {
+      data['truckuser'] = truckuser!.toJson();
+    }
     return data;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
+import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -48,8 +49,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 Navigator.pop(context);
                               },
                               icon: SizedBox(
-                                height: 25.w,
-                                width: 25.w,
+                                height: 28.w,
+                                width: 28.w,
                                 child: SvgPicture.asset(
                                     localeState.value.languageCode == 'en'
                                         ? "assets/icons/arrow-left-en.svg"
@@ -58,11 +59,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             )
                           : IconButton(
                               onPressed: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                BlocProvider.of<BottomNavBarCubit>(context)
+                                    .emitShow();
                                 scaffoldKey!.currentState!.openDrawer();
                               },
                               icon: SizedBox(
-                                height: 25.w,
-                                width: 25.w,
+                                height: 28.w,
+                                width: 28.w,
                                 child: SvgPicture.asset(
                                     localeState.value.languageCode == 'en'
                                         ? "assets/icons/orange/drawer_en.svg"
@@ -101,8 +105,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     clipBehavior: Clip.none,
                                     children: [
                                       SizedBox(
-                                        height: 25.w,
-                                        width: 25.w,
+                                        height: 28.w,
+                                        width: 28.w,
                                         child: SvgPicture.asset(
                                             "assets/icons/orange/notification.svg"),
                                       ),
@@ -145,7 +149,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   const Spacer(),
                   SizedBox(
                     height: 45.h,
-                    // width: MediaQuery.of(context).size,
+                    // width: MediaQuery.of(context).size.width*.75,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(

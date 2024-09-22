@@ -34,191 +34,203 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   double _zoom = 13.0;
   double get zoom => _zoom;
 
-  List<ScrollController?> _scrollController = [ScrollController()];
-  List<ScrollController?> get scrollController => _scrollController;
-
-  List<List<TextEditingController>> _commodityWeight_controllers = [
-    [TextEditingController()]
+  List<TextEditingController> _commodityWeight_controllers = [
+    TextEditingController()
   ];
-  List<List<TextEditingController>> get commodityWeight_controllers =>
+  List<TextEditingController> get commodityWeight_controllers =>
       _commodityWeight_controllers;
 
-  List<double> _totalWeight = [0.0];
+  double _totalWeight = 0.0;
 
-  List<double> get totalWeight => _totalWeight;
+  double get totalWeight => _totalWeight;
 
-  List<List<TextEditingController>> _commodityName_controllers = [
-    [TextEditingController()]
+  List<TextEditingController> _commodityName_controllers = [
+    TextEditingController()
   ];
-  List<List<TextEditingController>> get commodityName_controllers =>
+  List<TextEditingController> get commodityName_controllers =>
       _commodityName_controllers;
 
-  List<List<LatLng>> _pathes = [[]];
-  List<List<LatLng>> get pathes => _pathes;
+  List<LatLng> _pathes = [];
+  List<LatLng> get pathes => _pathes;
 
-  List<List<CommodityCategory?>> _commodityCategory_controller = [
-    [null]
-  ];
-  List<List<CommodityCategory?>> get commodityCategory_controller =>
+  List<CommodityCategory?> _commodityCategory_controller = [null];
+  List<CommodityCategory?> get commodityCategory_controller =>
       _commodityCategory_controller;
 
-  List<List<int>> _commodityCategories = [
-    [0]
-  ];
-  List<List<int>> get commodityCategories => _commodityCategories;
+  List<int> _commodityCategories = [0];
+  List<int> get commodityCategories => _commodityCategories;
 
-  List<GlobalKey<FormState>> _addShipmentformKey = [GlobalKey<FormState>()];
-  List<GlobalKey<FormState>> get addShipmentformKey => _addShipmentformKey;
+  GlobalKey<FormState> _addShipmentformKey = GlobalKey<FormState>();
+  GlobalKey<FormState> get addShipmentformKey => _addShipmentformKey;
 
-  List<TextEditingController> _pickup_controller = [TextEditingController()];
-  List<TextEditingController> get pickup_controller => _pickup_controller;
+  TextEditingController _pickup_controller = TextEditingController();
+  TextEditingController get pickup_controller => _pickup_controller;
+
+  String _pickup_statename = "";
+  String get pickup_statename => _pickup_statename;
+
+  String _delivery_statename = "";
+  String get delivery_statename => _delivery_statename;
+
+  String _pickup_placeId = "";
+  String get pickup_placeId => _pickup_placeId;
+
+  String _delivery_placeId = "";
+  String get delivery_placeId => _delivery_placeId;
 
   List<String> _pickup_eng_string = [""];
   List<String> get pickup_eng_string => _pickup_eng_string;
 
-  List<List<TextEditingController>> _stoppoints_controller = [[]];
-  List<List<TextEditingController>> get stoppoints_controller =>
+  List<TextEditingController> _stoppoints_controller = [];
+  List<TextEditingController> get stoppoints_controller =>
       _stoppoints_controller;
 
-  List<List<String>> _stoppoints_eng_string = [[]];
-  List<List<String>> get stoppoints_eng_string => _stoppoints_eng_string;
+  List<String> _stoppoints_eng_string = [];
+  List<String> get stoppoints_eng_string => _stoppoints_eng_string;
 
-  List<TextEditingController> _delivery_controller = [TextEditingController()];
-  List<TextEditingController> get delivery_controller => _delivery_controller;
+  TextEditingController _delivery_controller = TextEditingController();
+  TextEditingController get delivery_controller => _delivery_controller;
 
   List<String> _delivery_eng_string = [""];
   List<String> get delivery_eng_string => _delivery_eng_string;
 
-  List<String> _pickup_location = [""];
-  List<String> get pickup_location => _pickup_location;
+  String _pickup_location = "";
+  String get pickup_location => _pickup_location;
 
-  List<String> _delivery_location = [""];
-  List<String> get delivery_location => _delivery_location;
+  String _delivery_location = "";
+  String get delivery_location => _delivery_location;
 
-  List<List<String>> _stoppoints_location = [[]];
-  List<List<String>> get stoppoints_location => _stoppoints_location;
+  List<String> _stoppoints_location = [];
+  List<String> get stoppoints_location => _stoppoints_location;
 
-  List<LatLng?> _pickup_latlng = [null];
-  List<LatLng?> get pickup_latlng => _pickup_latlng;
+  LatLng? _pickup_latlng;
+  LatLng? get pickup_latlng => _pickup_latlng;
 
-  List<List<LatLng?>> _stoppoints_latlng = [[]];
-  List<List<LatLng?>> get stoppoints_latlng => _stoppoints_latlng;
+  List<LatLng?> _stoppoints_latlng = [];
+  List<LatLng?> get stoppoints_latlng => _stoppoints_latlng;
 
-  List<LatLng?> _delivery_latlng = [null];
-  List<LatLng?> get delivery_latlng => _delivery_latlng;
+  LatLng? _delivery_latlng;
+  LatLng? get delivery_latlng => _delivery_latlng;
 
-  List<Marker?> _pickup_marker = [const Marker(markerId: MarkerId("pickup"))];
-  List<Marker?> get pickup_marker => _pickup_marker;
+  Marker? _pickup_marker = const Marker(markerId: MarkerId("pickup"));
+  Marker? get pickup_marker => _pickup_marker;
 
-  List<List<Marker?>> _stop_marker = [[]];
-  List<List<Marker?>> get stop_marker => _stop_marker;
+  List<Marker?> _stop_marker = [];
+  List<Marker?> get stop_marker => _stop_marker;
 
-  TruckType? _truckType = null;
+  TruckType? _truckType;
   TruckType? get truckType => _truckType;
 
-  List<Marker?> _delivery_marker = [
-    const Marker(markerId: MarkerId("delivery"))
-  ];
-  List<Marker?> get delivery_marker => _delivery_marker;
+  Marker? _delivery_marker = const Marker(markerId: MarkerId("delivery"));
+  Marker? get delivery_marker => _delivery_marker;
 
-  List<Position?> _pickup_position = [null];
-  List<Position?> get pickup_position => _pickup_position;
+  Position? _pickup_position;
+  Position? get pickup_position => _pickup_position;
 
-  List<List<Position?>> _stoppoints_position = [[]];
-  List<List<Position?>> get stoppoints_position => _stoppoints_position;
+  List<Position?> _stoppoints_position = [];
+  List<Position?> get stoppoints_position => _stoppoints_position;
 
-  List<Position?> _delivery_position = [null];
-  List<Position?> get delivery_position => _delivery_position;
+  Position? _delivery_position;
+  Position? get delivery_position => _delivery_position;
 
-  List<Place?> _pickup_place = [null];
-  List<Place?> get pickup_place => _pickup_place;
+  Place? _pickup_place;
+  Place? get pickup_place => _pickup_place;
 
-  List<List<Place?>> _stoppoints_place = [[]];
-  List<List<Place?>> get stoppoints_place => _stoppoints_place;
+  List<Place?> _stoppoints_place = [];
+  List<Place?> get stoppoints_place => _stoppoints_place;
 
-  List<Place?> _delivery_place = [null];
-  List<Place?> get delivery_place => _delivery_place;
+  Place? _delivery_place;
+  Place? get delivery_place => _delivery_place;
 
   int _countpath = 1;
   int get countpath => _countpath;
 
-  List<int> _count = [1];
-  List<int> get count => _count;
+  int _count = 1;
+  int get count => _count;
 
-  List<int> _selectedTruck = [];
-  List<int> get selectedTruck => _selectedTruck;
+  List<KTruck> _selectedTruck = [];
+  List<KTruck> get selectedTruck => _selectedTruck;
 
-  List<KTruck?> _trucks = [null];
-  List<KTruck?> get trucks => _trucks;
+  List<int> _selectedTruckId = [];
+  List<int> get selectedTruckId => _selectedTruckId;
 
-  List<bool> _pathConfirm = [false];
-  List<bool> get pathConfirm => _pathConfirm;
+  // List<KTruck?> _trucks = [null];
+  // List<KTruck?> get trucks => _trucks;
 
-  List<bool> _truckConfirm = [false];
-  List<bool> get truckConfirm => _truckConfirm;
+  bool _pathConfirm = false;
+  bool get pathConfirm => _pathConfirm;
+
+  bool _truckConfirm = false;
+  bool get truckConfirm => _truckConfirm;
+
+  bool _truckTypeError = false;
+  bool get truckTypeError => _truckTypeError;
 
   List<bool> _truckError = [false];
   List<bool> get truckError => _truckError;
 
-  List<bool> _pathError = [false];
-  List<bool> get pathError => _pathError;
+  bool _pathError = false;
+  bool get pathError => _pathError;
 
-  List<bool> _dateError = [false];
-  List<bool> get dateError => _dateError;
+  bool _dateError = false;
+  bool get dateError => _dateError;
 
-  List<bool> _pickupLoading = [false];
-  List<bool> get pickupLoading => _pickupLoading;
+  bool _pickupLoading = false;
+  bool get pickupLoading => _pickupLoading;
 
-  List<bool> _deliveryLoading = [false];
-  List<bool> get deliveryLoading => _deliveryLoading;
+  bool _deliveryLoading = false;
+  bool get deliveryLoading => _deliveryLoading;
 
-  List<List<bool>> _stoppointsLoading = [[]];
-  List<List<bool>> get stoppointsLoading => _stoppointsLoading;
+  List<bool> _stoppointsLoading = [];
+  List<bool> get stoppointsLoading => _stoppointsLoading;
 
-  List<bool> _pickuptextLoading = [false];
-  List<bool> get pickuptextLoading => _pickuptextLoading;
+  bool _pickuptextLoading = false;
+  bool get pickuptextLoading => _pickuptextLoading;
 
-  List<bool> _deliverytextLoading = [false];
-  List<bool> get deliverytextLoading => _deliverytextLoading;
+  bool _deliverytextLoading = false;
+  bool get deliverytextLoading => _deliverytextLoading;
 
-  List<List<bool>> _stoppointstextLoading = [[]];
-  List<List<bool>> get stoppointstextLoading => _stoppointstextLoading;
+  List<bool> _stoppointstextLoading = [];
+  List<bool> get stoppointstextLoading => _stoppointstextLoading;
 
-  List<bool> _pickupPosition = [false];
-  List<bool> get pickupPosition => _pickupPosition;
+  bool _pickupPosition = false;
+  bool get pickupPosition => _pickupPosition;
 
-  List<bool> _deliveryPosition = [false];
-  List<bool> get deliveryPosition => _deliveryPosition;
+  bool _deliveryPosition = false;
+  bool get deliveryPosition => _deliveryPosition;
 
-  List<List<bool>> _stoppointsPosition = [[]];
-  List<List<bool>> get stoppointsPosition => _stoppointsPosition;
+  List<bool> _stoppointsPosition = [];
+  List<bool> get stoppointsPosition => _stoppointsPosition;
 
-  List<List<int>> _selectedTruckType = [[]];
-  List<List<int>> get selectedTruckType => _selectedTruckType;
+  List<TruckType> _selectedTruckType = [];
+  List<TruckType> get selectedTruckType => _selectedTruckType;
 
-  List<List<int>> _truckNum = [[]];
-  List<List<int>> get truckNum => _truckNum;
+  List<int> _selectedTruckTypeId = [];
+  List<int> get selectedTruckTypeId => _selectedTruckTypeId;
 
-  List<List<TextEditingController>> _truckNumController = [[]];
-  List<List<TextEditingController>> get truckNumController =>
-      _truckNumController;
+  List<int> _selectedTruckTypeNum = [];
+  List<int> get selectedTruckTypeNum => _selectedTruckTypeNum;
 
-  List<double> _distance = [0];
-  List<double> get distance => _distance;
+  List<TextEditingController> _truckTypeController = [];
+  List<TextEditingController> get truckTypeController => _truckTypeController;
 
-  List<String> _period = [""];
-  List<String> get period => _period;
+  double _distance = 0;
+  double get distance => _distance;
 
-  List<DateTime> _loadDate = [DateTime.now()];
-  List<DateTime> get loadDate => _loadDate;
+  String _period = "";
+  String get period => _period;
 
-  List<DateTime> _loadTime = [DateTime.now()];
-  List<DateTime> get loadTime => _loadTime;
-  List<TextEditingController> _time_controller = [TextEditingController()];
-  List<TextEditingController> get time_controller => _time_controller;
+  DateTime _loadDate = DateTime.now();
+  DateTime get loadDate => _loadDate;
 
-  List<TextEditingController> _date_controller = [TextEditingController()];
-  List<TextEditingController> get date_controller => _date_controller;
+  DateTime _loadTime = DateTime.now();
+  DateTime get loadTime => _loadTime;
+
+  TextEditingController _time_controller = TextEditingController();
+  TextEditingController get time_controller => _time_controller;
+
+  TextEditingController _date_controller = TextEditingController();
+  TextEditingController get date_controller => _date_controller;
 
   // Initialization method
   void initShipment() {
@@ -234,133 +246,134 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _zoom = 13.0;
 
-    _scrollController = [ScrollController()];
+    _commodityWeight_controllers = [TextEditingController()];
 
-    _commodityWeight_controllers = [
-      [TextEditingController()]
-    ];
+    _totalWeight = 0.0;
 
-    _totalWeight = [0.0];
+    _commodityName_controllers = [TextEditingController()];
 
-    _commodityName_controllers = [
-      [TextEditingController()]
-    ];
+    _pathes = [];
 
-    _pathes = [[]];
+    _commodityCategory_controller = [null];
 
-    _commodityCategory_controller = [
-      [null]
-    ];
+    _commodityCategories = [0];
 
-    _commodityCategories = [
-      [0]
-    ];
+    _addShipmentformKey = GlobalKey<FormState>();
 
-    _addShipmentformKey = [GlobalKey<FormState>()];
+    _pickup_controller = TextEditingController();
 
-    _pickup_controller = [TextEditingController()];
+    _pickup_statename = "";
 
-    _pickup_eng_string = [""];
+    _delivery_statename = "";
 
-    _stoppoints_controller = [[]];
+    _pickup_placeId = "";
 
-    _stoppoints_eng_string = [[]];
+    _delivery_placeId = "";
 
-    _delivery_controller = [TextEditingController()];
+    _stoppoints_controller = [];
 
-    _delivery_eng_string = [""];
+    _stoppoints_eng_string = [];
 
-    _pickup_location = [""];
+    _delivery_controller = TextEditingController();
 
-    _delivery_location = [""];
+    _pickup_location = "";
 
-    _stoppoints_location = [[]];
+    _delivery_location = "";
 
-    _pickup_latlng = [null];
+    _stoppoints_location = [];
 
-    _stoppoints_latlng = [[]];
+    _pickup_latlng = null;
 
-    _delivery_latlng = [null];
+    _stoppoints_latlng = [];
 
-    _pickup_marker = [const Marker(markerId: MarkerId("pickup"))];
+    _delivery_latlng = null;
 
-    _stop_marker = [[]];
+    _pickup_marker = const Marker(markerId: MarkerId("pickup"));
+
+    _stop_marker = [];
 
     _truckType = null;
 
-    _delivery_marker = [const Marker(markerId: MarkerId("delivery"))];
+    _delivery_marker = const Marker(markerId: MarkerId("delivery"));
 
-    _pickup_position = [null];
+    _pickup_position = null;
 
-    _stoppoints_position = [[]];
+    _stoppoints_position = [];
 
-    _delivery_position = [null];
+    _delivery_position = null;
 
-    _pickup_place = [null];
+    _pickup_place = null;
 
-    _stoppoints_place = [[]];
+    _stoppoints_place = [];
 
-    _delivery_place = [null];
+    _delivery_place = null;
 
     _countpath = 1;
 
-    _count = [1];
+    _count = 1;
 
     _selectedTruck = [];
 
-    _trucks = [null];
+    _selectedTruckId = [];
 
-    _truckConfirm = [false];
+    // _trucks = [null];
 
-    _pathConfirm = [false];
+    _truckConfirm = false;
+
+    _pathConfirm = false;
+
+    _truckTypeError = false;
 
     _truckError = [false];
 
-    _pathError = [false];
+    _pathError = false;
 
-    _dateError = [false];
+    _dateError = false;
 
-    _pickupLoading = [false];
+    _pickupLoading = false;
 
-    _deliveryLoading = [false];
+    _deliveryLoading = false;
 
-    _stoppointsLoading = [[]];
+    _stoppointsLoading = [];
 
-    _pickuptextLoading = [false];
+    _pickuptextLoading = false;
 
-    _deliverytextLoading = [false];
+    _deliverytextLoading = false;
 
-    _stoppointstextLoading = [[]];
+    _stoppointstextLoading = [];
 
-    _pickupPosition = [false];
+    _pickupPosition = false;
 
-    _deliveryPosition = [false];
+    _deliveryPosition = false;
 
-    _stoppointsPosition = [[]];
+    _stoppointsPosition = [];
 
-    _selectedTruckType = [[]];
+    _selectedTruckType = [];
 
-    _truckNum = [[]];
+    _selectedTruckTypeId = [];
 
-    _truckNumController = [[]];
+    _selectedTruckTypeNum = [];
 
-    _distance = [0];
+    _truckTypeController = [];
 
-    _period = [""];
+    _distance = 0;
 
-    _loadDate = [DateTime.now()];
+    _period = "";
 
-    _loadTime = [DateTime.now()];
-    _time_controller = [TextEditingController()];
+    _loadDate = DateTime.now();
 
-    _date_controller = [TextEditingController()];
+    _loadTime = DateTime.now();
+    _time_controller = TextEditingController();
+
+    _date_controller = TextEditingController();
   }
 
-  calculateTotalWeight(int index) {
-    _totalWeight[index] = 0;
-    for (var element in _commodityWeight_controllers[index]) {
-      _totalWeight[index] +=
-          double.parse(element.text.replaceAll(",", "")).toInt();
+  calculateTotalWeight() {
+    _totalWeight = 0;
+    for (var element in _commodityWeight_controllers) {
+      if (element.text.isNotEmpty) {
+        _totalWeight += double.parse(element.text.replaceAll(",", "")).toInt();
+      }
     }
     notifyListeners();
   }
@@ -401,10 +414,10 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _mapController2!.dispose();
   }
 
-  void getPolyPoints(int index) async {
+  void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
     List<PolylineWayPoint> waypoints = [];
-    for (var element in _stoppoints_location[index]) {
+    for (var element in _stoppoints_location) {
       waypoints.add(PolylineWayPoint(location: element, stopOver: true));
     }
 
@@ -412,25 +425,25 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         .getRouteBetweenCoordinates(
       "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
       PointLatLng(
-        _pickup_latlng[index]!.latitude,
-        _pickup_latlng[index]!.longitude,
+        _pickup_latlng!.latitude,
+        _pickup_latlng!.longitude,
       ),
       PointLatLng(
-        _delivery_latlng[index]!.latitude,
-        _delivery_latlng[index]!.longitude,
+        _delivery_latlng!.latitude,
+        _delivery_latlng!.longitude,
       ),
       wayPoints: waypoints,
     )
         .then(
       (result) {
-        _pathes[index] = [];
+        _pathes = [];
         // _isThereARoute[index] = true;
         if (result.points.isNotEmpty) {
           // _isThereARoute = true;
           // _isThereARouteError = false;
           // _thereARoute = true;
           result.points.forEach((element) {
-            _pathes[index].add(
+            _pathes.add(
               LatLng(
                 element.latitude,
                 element.longitude,
@@ -438,7 +451,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             );
           });
         }
-        initMapbounds(index);
+        initMapbounds();
       },
     ).onError(
       (error, stackTrace) {
@@ -451,24 +464,24 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     );
 
     var response = await HttpHelper.get(
-        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${_delivery_latlng[index]!.latitude},${_delivery_latlng[index]!.longitude}&origins=${_pickup_latlng[index]!.latitude},${_pickup_latlng[index]!.longitude}&key=AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c&mode=DRIVING');
+        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${_delivery_latlng!.latitude},${_delivery_latlng!.longitude}&origins=${_pickup_latlng!.latitude},${_pickup_latlng!.longitude}&key=AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c&mode=DRIVING');
 
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      _distance[index] = double.parse(result["rows"][0]['elements'][0]
-              ['distance']['text']
+      _distance = double.parse(result["rows"][0]['elements'][0]['distance']
+              ['text']
           .replaceAll(" km", ""));
-      _period[index] = result["rows"][0]['elements'][0]['duration']['text'];
+      _period = result["rows"][0]['elements'][0]['duration']['text'];
     }
     notifyListeners();
   }
 
-  initMapbounds(int index) {
-    if (_pickup_controller[index].text.isNotEmpty &&
-        _delivery_controller[index].text.isNotEmpty) {
-      setPathError(false, index);
+  initMapbounds() {
+    if (_pickup_controller.text.isNotEmpty &&
+        _delivery_controller.text.isNotEmpty) {
+      setPathError(false);
       List<Marker> markers = [];
-      var pickuplocation = _pickup_location[index].split(",");
+      var pickuplocation = _pickup_location.split(",");
       markers.add(
         Marker(
           markerId: const MarkerId("pickup"),
@@ -476,10 +489,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               double.parse(pickuplocation[0]), double.parse(pickuplocation[1])),
         ),
       );
-      print(_stoppoints_location[index].length);
-      for (var i = 0; i < _stoppoints_location[index].length; i++) {
-        var stopLocation = _stoppoints_location[index][i].split(',');
-        print(stopLocation[0]);
+      for (var i = 0; i < _stoppoints_location.length; i++) {
+        var stopLocation = _stoppoints_location[i].split(',');
         markers.add(
           Marker(
             markerId: MarkerId("stop$i"),
@@ -489,7 +500,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         );
       }
 
-      var deliverylocation = _delivery_location[index].split(",");
+      var deliverylocation = _delivery_location.split(",");
 
       markers.add(
         Marker(
@@ -531,13 +542,13 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     } else {}
   }
 
-  setLoadTime(DateTime time, int index) {
-    _time_controller[index].text = '${intl.DateFormat.jm().format(time)} ';
-    _loadTime[index] = time;
+  setLoadTime(DateTime time) {
+    _time_controller.text = '${intl.DateFormat.jm().format(time)} ';
+    _loadTime = time;
     notifyListeners();
   }
 
-  setLoadDate(DateTime date, int index, String lang) {
+  setLoadDate(DateTime date, String lang) {
     List months = [
       'jan',
       'feb',
@@ -568,115 +579,108 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     ];
     var mon = date.month;
     var month = lang == "en" ? months[mon - 1] : monthsAr[mon - 1];
-    _date_controller[index].text = '${date.year}-$month-${date.day}';
-    _loadDate[index] = date;
+    _date_controller.text = '${date.year}-$month-${date.day}';
+    _loadDate = date;
     notifyListeners();
   }
 
-  addTruckType(int id, int index) {
-    _selectedTruckType[index].add(id);
-    _truckNum[index].add(1);
-    _truckNumController[index].add(TextEditingController(text: "1"));
+  addTruckType(TruckType truckType) {
+    print("_selectedTruckType");
+    _selectedTruckType.add(truckType);
+    _selectedTruckTypeId.add(truckType.id!);
+    _selectedTruckTypeNum.add(1);
+    _truckTypeController.add(TextEditingController(text: "1"));
+
     notifyListeners();
   }
 
-  removeTruckType(int id, int index) {
-    if (_selectedTruckType[index].indexWhere((item) => item == id) != -1) {
-      var removeIndex =
-          _selectedTruckType[index].indexWhere((item) => item == id);
-      _truckNum[index].removeAt(removeIndex);
-      _truckNumController[index][removeIndex].text = "";
-      notifyListeners();
-      _truckNumController[index].removeAt(removeIndex);
-      _selectedTruckType[index].removeAt(removeIndex);
+  removeTruckType(TruckType truckType) {
+    var index = _selectedTruckTypeId.indexOf(truckType.id!);
+    _selectedTruckType.removeAt(index);
+    _selectedTruckTypeId.removeAt(index);
+    _truckTypeController[index].text = "";
+    notifyListeners();
+    _selectedTruckTypeNum.removeAt(index);
+    _truckTypeController.removeAt(index);
+    notifyListeners();
+  }
+
+  increaseTruckType(
+    int id,
+  ) {
+    _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]++;
+    _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
+        _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
+    notifyListeners();
+  }
+
+  decreaseTruckType(
+    int id,
+  ) {
+    if (_selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)] > 1) {
+      _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]--;
+
+      _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
+          _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
     }
     notifyListeners();
   }
 
-  increaseTruckType(int id, int index) {
-    if (_selectedTruckType[index].indexWhere((item) => item == id) != -1) {
-      _truckNum[index]
-          [_selectedTruckType[index].indexWhere((item) => item == id)]++;
-      _truckNumController[index]
-              [_selectedTruckType[index].indexWhere((item) => item == id)]
-          .text = _truckNum[index]
-              [_selectedTruckType[index].indexWhere((item) => item == id)]
-          .toString();
-    }
+  addSelectedTruck(KTruck truck) {
+    _selectedTruckId.add(truck.id!);
+    _selectedTruck.add(truck);
+
     notifyListeners();
   }
 
-  addSelectedTruck(int id) {
-    _selectedTruck.add(id);
+  removeSelectedTruck(KTruck truck) {
+    _selectedTruckId.remove(truck.id);
+    _selectedTruck.remove(truck);
     notifyListeners();
   }
 
-  removeSelectedTruck(int id) {
-    _selectedTruck.remove(id);
+  setPickupLoading(bool value) {
+    _pickupLoading = value;
     notifyListeners();
   }
 
-  decreaseTruckType(int id, int index) {
-    if (_selectedTruckType[index].indexWhere((item) => item == id) != -1) {
-      if (_truckNum[index]
-              [_selectedTruckType[index].indexWhere((item) => item == id)] >
-          1) {
-        _truckNum[index]
-            [_selectedTruckType[index].indexWhere((item) => item == id)]--;
-
-        _truckNumController[index]
-                [_selectedTruckType[index].indexWhere((item) => item == id)]
-            .text = _truckNum[index]
-                [_selectedTruckType[index].indexWhere((item) => item == id)]
-            .toString();
-      }
-    }
+  setPickupTextLoading(bool value) {
+    _pickuptextLoading = value;
     notifyListeners();
   }
 
-  setPickupLoading(bool value, int index) {
-    _pickupLoading[index] = value;
+  setPickupPositionClick(bool value) {
+    _pickupPosition = value;
     notifyListeners();
   }
 
-  setPickupTextLoading(bool value, int index) {
-    _pickuptextLoading[index] = value;
-    print(_pickuptextLoading[index]);
+  setDeliveryLoading(bool value) {
+    _deliveryLoading = value;
     notifyListeners();
   }
 
-  setPickupPositionClick(bool value, int index) {
-    _pickupPosition[index] = value;
+  setDeliveryTextLoading(bool value) {
+    _deliverytextLoading = value;
     notifyListeners();
   }
 
-  setDeliveryLoading(bool value, int index) {
-    _deliveryLoading[index] = value;
+  setDeliveryPositionClick(bool value) {
+    _deliveryPosition = value;
     notifyListeners();
   }
 
-  setDeliveryTextLoading(bool value, int index) {
-    _deliverytextLoading[index] = value;
+  setStopPointLoading(bool value, int index) {
+    _stoppointsLoading[index] = value;
     notifyListeners();
   }
 
-  setDeliveryPositionClick(bool value, int index) {
-    _deliveryPosition[index] = value;
+  setStopPointTextLoading(bool value, int index) {
+    _stoppointstextLoading[index] = value;
     notifyListeners();
   }
 
-  setStopPointLoading(bool value, int index, int index2) {
-    _stoppointsLoading[index][index2] = value;
-    notifyListeners();
-  }
-
-  setStopPointTextLoading(bool value, int index, int index2) {
-    _stoppointstextLoading[index][index2] = value;
-    notifyListeners();
-  }
-
-  setStopPointPositionClick(bool value, int index, int index2) {
-    _stoppointsPosition[index][index2] = value;
+  setStopPointPositionClick(bool value, int index) {
+    _stoppointsPosition[index] = value;
     notifyListeners();
   }
 
@@ -692,9 +696,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       if (element['address_components'][0]['types'].contains('route')) {
         for (int i = element['address_components'].length - 1; i >= 0; i--) {
           var element1 = element['address_components'][i];
-          print(element1["long_name"]);
           if (typesToCheck.any((type) => element1['types'].contains(type)) &&
-              element1["long_name"] != null) {
+              element1["long_name"] != null &&
+              element1["long_name"] != "طريق بدون اسم") {
             str = str + ('${element1["long_name"]},');
           }
         }
@@ -707,30 +711,69 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           i--) {
         var element1 = result["results"]['address_components'][i];
         if (typesToCheck.any((type) => element1['types'].contains(type))) {
-          print(element1["long_name"]);
           str = str + ('${element1["long_name"] ?? ""},');
         }
+      }
+    }
+    return str.replaceRange(str.length - 1, null, ".");
+  }
+
+  String getAdministrativeAreaName(dynamic result) {
+    String str = "";
+
+    for (var result in result['results']) {
+      // List results = result['results'];
+
+      List types = result['types'];
+      if (types.contains('administrative_area_level_1')) {
+        String name = result['formatted_address']
+            .replaceAll("محافظة", "")
+            .replaceAll("مُحافظة", "")
+            .replaceAll("، سوريا", "");
+        print('Place ID for administrative_area_level_1: $name');
+        return name; // Stop after finding the first match
       }
     }
     return str;
   }
 
-  setPickupInfo(dynamic suggestion, int index) async {
-    print(_pickuptextLoading[index]);
+  String getAdministrativeAreaPlaceId(dynamic result) {
+    String str = "";
+
+    if (result['status'] == 'OK') {
+      List results = result['results'];
+
+      // Iterate over the results
+      for (var result in results) {
+        List types = result['types'];
+        if (types.contains('administrative_area_level_1')) {
+          String placeId = result['place_id'];
+          print('Place ID for administrative_area_level_1: $placeId');
+          return placeId; // Stop after finding the first match
+        }
+      }
+    } else {
+      print('No results found.');
+    }
+    return str;
+  }
+
+  setPickupInfo(dynamic suggestion) async {
     var sLocation = await PlaceService.getPlace(suggestion.placeId);
-    _pickup_place[index] = sLocation;
-    _pickup_latlng[index] = LatLng(
+    _pickup_place = sLocation;
+    _pickup_latlng = LatLng(
         sLocation.geometry.location.lat, sLocation.geometry.location.lng);
 
     var response = await http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _pickup_controller[index].text = getAddressName(result);
+      _pickup_controller.text = getAddressName(result);
+      _pickup_statename = getAdministrativeAreaName(result);
+      _pickup_placeId = getAdministrativeAreaPlaceId(result);
     }
     // var responseEng = await http.get(
     //   Uri.parse(
@@ -739,46 +782,49 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     // if (responseEng.statusCode == 200) {
     //   var result = jsonDecode(responseEng.body);
 
-    //   _pickup_eng_string[index] =
+    //   _pickup_eng_string =
     //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     // }
 
-    _pickup_location[index] =
+    _pickup_location =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
 
     if (_mapController2 != null) {
-      if (_delivery_controller[index].text.isNotEmpty &&
-          _pickup_controller[index].text.isNotEmpty) {
-        getPolyPoints(index);
+      if (_delivery_controller.text.isNotEmpty &&
+          _pickup_controller.text.isNotEmpty) {
+        getPolyPoints();
       } else {
-        animateCameraToLatLng(index);
+        animateCameraToLatLng();
       }
     }
 
-    _pickuptextLoading[index] = false;
+    _pickuptextLoading = false;
 
     notifyListeners();
     if (_mapController2 == null) {
-      if (_delivery_controller[index].text.isNotEmpty &&
-          _pickup_controller[index].text.isNotEmpty) {
-        getPolyPoints(index);
+      if (_delivery_controller.text.isNotEmpty &&
+          _pickup_controller.text.isNotEmpty) {
+        getPolyPoints();
       } else {
-        animateCameraToLatLng(index);
+        animateCameraToLatLng();
       }
     }
   }
 
   Future<void> getAddressForPickupFromMapPicker(
-      LatLng position, int index) async {
+    LatLng position,
+  ) async {
     var response = await http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      _pickup_latlng[index] = position;
-      _pickup_controller[index].text = getAddressName(result);
-      _pickup_location[index] = "${position.latitude},${position.longitude}";
+      _pickup_latlng = position;
+      _pickup_controller.text = getAddressName(result);
+      _pickup_statename = getAdministrativeAreaName(result);
+      _pickup_placeId = getAdministrativeAreaPlaceId(result);
+      _pickup_location = "${position.latitude},${position.longitude}";
     }
     // var responseEng = await http.get(
     //   Uri.parse(
@@ -790,18 +836,18 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     //   _pickup_eng_string[index] =
     //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     // }
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
+    if (_delivery_controller.text.isNotEmpty &&
+        _pickup_controller.text.isNotEmpty) {
+      getPolyPoints();
     } else {
-      animateCameraToLatLng(index);
+      animateCameraToLatLng();
     }
-    _pickupLoading[index] = false;
+    _pickupLoading = false;
     notifyListeners();
   }
 
-  animateCameraToLatLng(int index) {
-    var pickuplocation = _pickup_location[index].split(",");
+  animateCameraToLatLng() {
+    var pickuplocation = _pickup_location.split(",");
 
     _mapController.animateCamera(
       CameraUpdate.newCameraPosition(
@@ -825,17 +871,18 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     );
   }
 
-  Future<void> getAddressForDeliveryFromMapPicker(
-      LatLng position, int index) async {
+  Future<void> getAddressForDeliveryFromMapPicker(LatLng position) async {
     var response = await http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      _delivery_latlng[index] = position;
-      _delivery_controller[index].text = getAddressName(result);
-      _delivery_location[index] = "${position.latitude},${position.longitude}";
+      _delivery_latlng = position;
+      _delivery_controller.text = getAddressName(result);
+      _delivery_statename = getAdministrativeAreaName(result);
+      _delivery_placeId = getAdministrativeAreaPlaceId(result);
+      _delivery_location = "${position.latitude},${position.longitude}";
     }
 
     // var responseEng = await http.get(
@@ -845,25 +892,25 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     // if (responseEng.statusCode == 200) {
     //   var result = jsonDecode(responseEng.body);
 
-    //   _delivery_eng_string[index] =
+    //   _delivery_eng_string =
     //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     // }
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
+    if (_delivery_controller.text.isNotEmpty &&
+        _pickup_controller.text.isNotEmpty) {
+      getPolyPoints();
     } else {
-      animateCameraToLatLng(index);
+      animateCameraToLatLng();
     }
-    _deliveryLoading[index] = false;
+    _deliveryLoading = false;
     notifyListeners();
   }
 
-  setDeliveryInfo(dynamic suggestion, int index) async {
+  setDeliveryInfo(dynamic suggestion) async {
     // _deliverytextLoading[index] = true;
     // notifyListeners();
     var sLocation = await PlaceService.getPlace(suggestion.placeId);
-    _delivery_place[index] = sLocation;
-    _delivery_latlng[index] = LatLng(
+    _delivery_place = sLocation;
+    _delivery_latlng = LatLng(
         sLocation.geometry.location.lat, sLocation.geometry.location.lng);
     var response = await http.get(
       Uri.parse(
@@ -872,7 +919,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _delivery_controller[index].text = getAddressName(result);
+      _delivery_controller.text = getAddressName(result);
+      _delivery_statename = getAdministrativeAreaName(result);
+      _delivery_placeId = getAdministrativeAreaPlaceId(result);
     }
     // var responseEng = await http.get(
     //   Uri.parse(
@@ -881,28 +930,28 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     // if (responseEng.statusCode == 200) {
     //   var result = jsonDecode(responseEng.body);
 
-    //   _delivery_eng_string[index] =
+    //   _delivery_eng_string =
     //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     // }
-    _delivery_location[index] =
+    _delivery_location =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
+    if (_delivery_controller.text.isNotEmpty &&
+        _pickup_controller.text.isNotEmpty) {
+      getPolyPoints();
     } else {
-      animateCameraToLatLng(index);
+      animateCameraToLatLng();
     }
-    _deliverytextLoading[index] = false;
+    _deliverytextLoading = false;
 
     notifyListeners();
   }
 
-  setStopPointInfo(dynamic suggestion, int index, int index2) async {
+  setStopPointInfo(dynamic suggestion, int index) async {
     // _stoppointstextLoading[index][index2] = true;
     // notifyListeners();
     var sLocation = await PlaceService.getPlace(suggestion.placeId);
-    _stoppoints_place[index][index2] = sLocation;
-    _stoppoints_latlng[index][index2] = LatLng(
+    _stoppoints_place[index] = sLocation;
+    _stoppoints_latlng[index] = LatLng(
         sLocation.geometry.location.lat, sLocation.geometry.location.lng);
     var response = await http.get(
       Uri.parse(
@@ -911,7 +960,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _stoppoints_controller[index][index2].text = getAddressName(result);
+      _stoppoints_controller[index].text = getAddressName(result);
     }
 
     // var responseEng = await http.get(
@@ -921,24 +970,23 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     // if (responseEng.statusCode == 200) {
     //   var result = jsonDecode(responseEng.body);
 
-    //   _stoppoints_eng_string[index][index2] =
+    //   _stoppoints_eng_string[index] =
     //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     // }
-    _stoppoints_location[index][index2] =
+    _stoppoints_location[index] =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
+    if (_delivery_controller.text.isNotEmpty &&
+        _pickup_controller.text.isNotEmpty) {
+      getPolyPoints();
     } else {
-      animateCameraToLatLng(index);
+      animateCameraToLatLng();
     }
-    _stoppointstextLoading[index][index2] = false;
+    _stoppointstextLoading[index] = false;
 
     notifyListeners();
   }
 
-  Future<bool> _handleLocationPermission(
-      BuildContext context, int index) async {
+  Future<bool> _handleLocationPermission(BuildContext context) async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -987,7 +1035,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             ),
           ),
         );
-        _pickupLoading[index] = false;
+        _pickupLoading = false;
 
         return false;
       }
@@ -1010,29 +1058,27 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           ),
         ),
       );
-      _pickupLoading[index] = false;
+      _pickupLoading = false;
 
       return false;
     }
     return true;
   }
 
-  Future<void> getCurrentPositionForPickup(
-      BuildContext context, int index) async {
-    final hasPermission = await _handleLocationPermission(context, index);
+  Future<void> getCurrentPositionForPickup(BuildContext context) async {
+    final hasPermission = await _handleLocationPermission(context);
 
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
-      print(position);
-      _pickup_latlng[index] = LatLng(position.latitude, position.longitude);
-      _pickup_position[index] = position;
-      _pickup_location[index] = "${position.latitude},${position.longitude}";
-      getAddressForPickupFromLatLng(position, index);
+      _pickup_latlng = LatLng(position.latitude, position.longitude);
+      _pickup_position = position;
+      _pickup_location = "${position.latitude},${position.longitude}";
+      getAddressForPickupFromLatLng(
+        position,
+      );
     }).catchError((e) {
-      _pickupLoading[index] = false;
-
-      debugPrint(e);
+      _pickupLoading = false;
     });
     // _pickupLoading[index] = false;
 
@@ -1040,6 +1086,51 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   }
 
   Future<void> getAddressForPickupFromLatLng(
+    Position position,
+  ) async {
+    var response = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+
+      _pickup_controller.text = getAddressName(result);
+      _pickup_statename = getAdministrativeAreaName(result);
+      _pickup_placeId = getAdministrativeAreaPlaceId(result);
+    }
+    _pickupLoading = false;
+    if (_delivery_controller.text.isNotEmpty &&
+        _pickup_controller.text.isNotEmpty) {
+      getPolyPoints();
+    } else {
+      animateCameraToLatLng();
+    }
+    notifyListeners();
+  }
+
+  Future<void> getCurrentPositionForStop(
+      BuildContext context, int index) async {
+    final hasPermission = await _handleLocationPermission(context);
+
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      _stoppoints_latlng[index] = LatLng(position.latitude, position.longitude);
+      _stoppoints_position[index] = position;
+      _stoppoints_location[index] =
+          "${position.latitude},${position.longitude}";
+      getAddressForStopPointFromLatLng(
+        position,
+        index,
+      );
+    }).catchError((e) {
+      _pickupLoading = false;
+    });
+    notifyListeners();
+  }
+
+  Future<void> getAddressForStopPointFromLatLng(
       Position position, int index) async {
     var response = await http.get(
       Uri.parse(
@@ -1048,50 +1139,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
 
-      _pickup_controller[index].text = getAddressName(result);
-    }
-    _pickupLoading[index] = false;
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
-    } else {
-      animateCameraToLatLng(index);
-    }
-    notifyListeners();
-  }
-
-  Future<void> getCurrentPositionForStop(
-      BuildContext context, int index, int index2) async {
-    final hasPermission = await _handleLocationPermission(context, index);
-
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      print(position);
-      _stoppoints_latlng[index][index2] =
-          LatLng(position.latitude, position.longitude);
-      _stoppoints_position[index][index2] = position;
-      _stoppoints_location[index][index2] =
-          "${position.latitude},${position.longitude}";
-      getAddressForStopPointFromLatLng(position, index, index2);
-    }).catchError((e) {
-      pickupLoading[index] = false;
-
-      debugPrint(e);
-    });
-    notifyListeners();
-  }
-
-  Future<void> getAddressForStopPointFromLatLng(
-      Position position, int index, int index2) async {
-    var response = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (response.statusCode == 200) {
-      var result = jsonDecode(response.body);
-
-      _stoppoints_controller[index][index2].text = getAddressName(result);
+      _stoppoints_controller[index].text = getAddressName(result);
     }
 
     // var responseEng = await http.get(
@@ -1104,31 +1152,30 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     //   _stoppoints_eng_string[index][index2] =
     //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     // }
-    _pickupLoading[index] = false;
+    _pickupLoading = false;
 
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
+    if (_delivery_controller.text.isNotEmpty &&
+        _pickup_controller.text.isNotEmpty) {
+      getPolyPoints();
     } else {
-      animateCameraToLatLng(index);
+      animateCameraToLatLng();
     }
     notifyListeners();
   }
 
-  Future<void> getCurrentPositionForDelivery(
-      BuildContext context, int index) async {
-    final hasPermission = await _handleLocationPermission(context, index);
+  Future<void> getCurrentPositionForDelivery(BuildContext context) async {
+    final hasPermission = await _handleLocationPermission(context);
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
-      _delivery_latlng[index] = LatLng(position.latitude, position.longitude);
-      _delivery_position[index] = position;
-      _delivery_location[index] = "${position.latitude},${position.longitude}";
-      getAddressForDeliveryFromLatLng(position, index);
+      _delivery_latlng = LatLng(position.latitude, position.longitude);
+      _delivery_position = position;
+      _delivery_location = "${position.latitude},${position.longitude}";
+      getAddressForDeliveryFromLatLng(
+        position,
+      );
     }).catchError((e) {
-      _deliveryLoading[index] = false;
-
-      debugPrint(e);
+      _deliveryLoading = false;
     });
     // _deliveryLoading[index] = false;
 
@@ -1136,14 +1183,17 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   }
 
   Future<void> getAddressForDeliveryFromLatLng(
-      Position position, int index) async {
+    Position position,
+  ) async {
     var response = await http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      _delivery_controller[index].text = getAddressName(result);
+      _delivery_controller.text = getAddressName(result);
+      _delivery_statename = getAdministrativeAreaName(result);
+      _delivery_placeId = getAdministrativeAreaPlaceId(result);
     }
 
     // var responseEng = await http.get(
@@ -1153,240 +1203,92 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     // if (responseEng.statusCode == 200) {
     //   var result = jsonDecode(responseEng.body);
 
-    //   _delivery_eng_string[index] =
+    //   _delivery_eng_string =
     //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
     // }
-    _deliveryLoading[index] = false;
-    if (_delivery_controller[index].text.isNotEmpty &&
-        _pickup_controller[index].text.isNotEmpty) {
-      getPolyPoints(index);
+    _deliveryLoading = false;
+    if (_delivery_controller.text.isNotEmpty &&
+        _pickup_controller.text.isNotEmpty) {
+      getPolyPoints();
     } else {
-      animateCameraToLatLng(index);
+      animateCameraToLatLng();
     }
     notifyListeners();
   }
 
-  void addstoppoint(int index) {
-    if (_stoppoints_controller[index].length > 0) {
-      if (_stoppoints_controller[index]
-              [_stoppoints_controller[index].length - 1]
+  void addstoppoint() {
+    if (_stoppoints_controller.length > 0) {
+      if (_stoppoints_controller[_stoppoints_controller.length - 1]
           .text
           .isNotEmpty) {
         TextEditingController stoppoint_controller = TextEditingController();
-        _stoppoints_controller[index].add(stoppoint_controller);
-        _stoppoints_location[index].add("");
-        _stoppoints_eng_string[index].add("");
-        _stoppoints_latlng[index].add(null);
-        _stoppoints_position[index].add(null);
-        _stoppoints_place[index].add(null);
-        _stoppointsLoading[index].add(false);
-        _stoppointstextLoading[index].add(false);
-        _stoppointsPosition[index].add(false);
-        _stop_marker[index].add(
-            Marker(markerId: MarkerId("stop${_stop_marker[index].length}")));
+        _stoppoints_controller.add(stoppoint_controller);
+        _stoppoints_location.add("");
+        _stoppoints_eng_string.add("");
+        _stoppoints_latlng.add(null);
+        _stoppoints_position.add(null);
+        _stoppoints_place.add(null);
+        _stoppointsLoading.add(false);
+        _stoppointstextLoading.add(false);
+        _stoppointsPosition.add(false);
+        _stop_marker
+            .add(Marker(markerId: MarkerId("stop${_stop_marker.length}")));
       }
     } else {
       TextEditingController stoppoint_controller = TextEditingController();
-      _stoppoints_controller[index].add(stoppoint_controller);
-      _stoppoints_location[index].add("");
-      _stoppoints_eng_string[index].add("");
-      _stoppoints_latlng[index].add(null);
-      _stoppoints_position[index].add(null);
-      _stoppoints_place[index].add(null);
-      _stoppointsLoading[index].add(false);
-      _stoppointstextLoading[index].add(false);
-      _stoppointsPosition[index].add(false);
-      _stop_marker[index]
-          .add(Marker(markerId: MarkerId("stop${_stop_marker[index].length}")));
+      _stoppoints_controller.add(stoppoint_controller);
+      _stoppoints_location.add("");
+      _stoppoints_eng_string.add("");
+      _stoppoints_latlng.add(null);
+      _stoppoints_position.add(null);
+      _stoppoints_place.add(null);
+      _stoppointsLoading.add(false);
+      _stoppointstextLoading.add(false);
+      _stoppointsPosition.add(false);
+      _stop_marker
+          .add(Marker(markerId: MarkerId("stop${_stop_marker.length}")));
     }
     notifyListeners();
   }
 
-  void removestoppoint(int index, int index2) {
-    _stoppoints_controller[index].removeAt(index2);
-    _stoppoints_eng_string[index].removeAt(index2);
-    _stoppoints_location[index].removeAt(index2);
-    _stoppoints_latlng[index].removeAt(index2);
-    _stoppoints_position[index].removeAt(index2);
-    _stoppoints_place[index].removeAt(index2);
-    _stoppointsLoading[index].removeAt(index2);
-    _stoppointstextLoading[index].removeAt(index2);
-    _stoppointsPosition[index].removeAt(index2);
-    _stop_marker[index].removeAt(index2);
+  void removestoppoint(int index2) {
+    _stoppoints_controller.removeAt(index2);
+    _stoppoints_eng_string.removeAt(index2);
+    _stoppoints_location.removeAt(index2);
+    _stoppoints_latlng.removeAt(index2);
+    _stoppoints_position.removeAt(index2);
+    _stoppoints_place.removeAt(index2);
+    _stoppointsLoading.removeAt(index2);
+    _stoppointstextLoading.removeAt(index2);
+    _stoppointsPosition.removeAt(index2);
+    _stop_marker.removeAt(index2);
     notifyListeners();
   }
 
-  void addpath() {
-    TextEditingController commodityWeight_controller = TextEditingController();
-    TextEditingController commodityName_controller = TextEditingController();
-    _scrollController.add(ScrollController());
-    _commodityWeight_controllers.add([commodityWeight_controller]);
-    _commodityName_controllers.add([commodityName_controller]);
-    _commodityCategories.add([0]);
-
-    _trucks.add(null);
-
-    _pathError.add(false);
-    _truckConfirm.add(false);
-    _pathConfirm.add(false);
-    _truckError.add(false);
-    _dateError.add(false);
-    _commodityCategory_controller.add([null]);
-    _pathes.add([]);
-    _totalWeight.add(0.0);
-    _addShipmentformKey.add(GlobalKey<FormState>());
-
-    _pickup_controller.add(TextEditingController());
-    _pickup_eng_string.add("");
-    _delivery_controller.add(TextEditingController());
-    _delivery_eng_string.add("");
-    _stoppoints_controller.add([]);
-    _stoppoints_eng_string.add([]);
-
-    _pickup_location.add("");
-    _delivery_location.add("");
-    _stoppoints_location.add([""]);
-
-    _pickup_latlng.add(null);
-    _delivery_latlng.add(null);
-    _stoppoints_latlng.add([null]);
-
-    _pickup_position.add(null);
-    _delivery_position.add(null);
-    _stoppoints_position.add([null]);
-
-    _pickup_place.add(null);
-    _delivery_place.add(null);
-    _stoppoints_place.add([null]);
-
-    _pickupLoading.add(false);
-    _pickuptextLoading.add(false);
-    _deliveryLoading.add(false);
-    _deliverytextLoading.add(false);
-    _stoppointsLoading.add([false]);
-    _stoppointstextLoading.add([false]);
-
-    _pickupPosition.add(false);
-    _deliveryPosition.add(false);
-    _stoppointsPosition.add([false]);
-
-    _pickup_marker.add(null);
-    _delivery_marker.add(null);
-    _stop_marker.add([null]);
-
-    _selectedTruckType.add([]);
-    _truckNum.add([]);
-    _truckNumController.add([]);
-
-    _date_controller.add(TextEditingController());
-    _time_controller.add(TextEditingController());
-    _loadDate.add(DateTime.now());
-    _loadTime.add(DateTime.now());
-
-    _count.add(0);
-    _distance.add(0);
-    _period.add("");
-    _countpath++;
-    _count[_countpath - 1]++;
-    notifyListeners();
-  }
-
-  void removePath(int index) {
-    _scrollController.removeAt(index);
-    _commodityWeight_controllers.removeAt(index);
-    _commodityName_controllers.removeAt(index);
-    _commodityCategories.removeAt(index);
-    _totalWeight.removeAt(index);
-
-    _trucks.removeAt(index);
-
-    _pathError.removeAt(index);
-    _truckConfirm.removeAt(index);
-    _pathConfirm.removeAt(index);
-    _truckError.removeAt(index);
-    _dateError.removeAt(index);
-    _commodityCategory_controller.removeAt(index);
-    _pathes.removeAt(index);
-    _addShipmentformKey.removeAt(index);
-
-    _pickup_controller.removeAt(index);
-    _pickup_eng_string.removeAt(index);
-    _delivery_controller.removeAt(index);
-    _delivery_eng_string.removeAt(index);
-    _stoppoints_controller.removeAt(index);
-    _stoppoints_eng_string.removeAt(index);
-
-    _pickup_location.removeAt(index);
-    _delivery_location.removeAt(index);
-    _stoppoints_location.removeAt(index);
-
-    _pickup_latlng.removeAt(index);
-    _delivery_latlng.removeAt(index);
-    _stoppoints_latlng.removeAt(index);
-
-    _pickup_position.removeAt(index);
-    _delivery_position.removeAt(index);
-    _stoppoints_position.removeAt(index);
-
-    _pickup_place.removeAt(index);
-    _delivery_place.removeAt(index);
-    _stoppoints_place.removeAt(index);
-
-    _pickupLoading.removeAt(index);
-    _deliveryLoading.removeAt(index);
-    _pickuptextLoading.removeAt(index);
-    _deliverytextLoading.removeAt(index);
-    _stoppointsLoading.removeAt(index);
-    _stoppointstextLoading.removeAt(index);
-
-    _pickupPosition.removeAt(index);
-    _deliveryPosition.removeAt(index);
-    _stoppointsPosition.removeAt(index);
-
-    _pickup_marker.removeAt(index);
-    _delivery_marker.removeAt(index);
-    _stop_marker.removeAt(index);
-
-    _selectedTruckType.removeAt(index);
-    _truckNum.removeAt(index);
-    _truckNumController.removeAt(index);
-
-    _date_controller.removeAt(index);
-    _time_controller.removeAt(index);
-    _loadDate.removeAt(index);
-    _loadTime.removeAt(index);
-
-    _distance.removeAt(index);
-    _period.removeAt(index);
-    _count.removeAt(index);
-    _countpath--;
-    notifyListeners();
-  }
-
-  void additem(int index) {
+  void additem() {
     TextEditingController commodityWeight_controller = TextEditingController();
     TextEditingController commodityName_controller = TextEditingController();
 
-    _commodityWeight_controllers[index].add(commodityWeight_controller);
-    _commodityName_controllers[index].add(commodityName_controller);
-    _commodityCategories[index].add(0);
-    _commodityCategory_controller[index].add(null);
+    _commodityWeight_controllers.add(commodityWeight_controller);
+    _commodityName_controllers.add(commodityName_controller);
+    _commodityCategories.add(0);
+    _commodityCategory_controller.add(null);
 
-    _count[index]++;
+    _count++;
     notifyListeners();
   }
 
-  void removeitem(int index, int index2) {
-    _commodityWeight_controllers[index].removeAt(index2);
-    _commodityName_controllers[index].removeAt(index2);
-    _commodityCategories[index].removeAt(index2);
-    _commodityCategory_controller[index].removeAt(index2);
-    _count[index]--;
+  void removeitem(int index2) {
+    _commodityWeight_controllers.removeAt(index2);
+    _commodityName_controllers.removeAt(index2);
+    _commodityCategories.removeAt(index2);
+    _commodityCategory_controller.removeAt(index2);
+    _count--;
     notifyListeners();
   }
 
   setTruck(KTruck truck, int index) {
-    _trucks[index] = truck;
+    // _trucks[index] = truck;
     setTruckError(false, index);
 
     notifyListeners();
@@ -1474,18 +1376,23 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     }
   }
 
-  void setPathError(bool value, int index) {
-    _pathError[index] = value;
+  void setPathError(bool value) {
+    _pathError = value;
     notifyListeners();
   }
 
-  void setPathConfirm(bool value, int index) {
-    _pathConfirm[index] = value;
+  void setPathConfirm(bool value) {
+    _pathConfirm = value;
     notifyListeners();
   }
 
-  void setTruckConfirm(bool value, int index) {
-    _truckConfirm[index] = value;
+  void setTruckConfirm(bool value) {
+    _truckConfirm = value;
+    notifyListeners();
+  }
+
+  void setTruckTypeError(bool value) {
+    _truckTypeError = value;
     notifyListeners();
   }
 
@@ -1494,8 +1401,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setDateError(bool value, int index) {
-    _dateError[index] = value;
+  void setDateError(bool value) {
+    _dateError = value;
     notifyListeners();
   }
 }

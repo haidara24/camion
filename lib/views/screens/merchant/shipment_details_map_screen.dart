@@ -160,7 +160,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                         width: 175.w,
                         child: CachedNetworkImage(
                           imageUrl: shipment.subshipments![selectedIndex].truck!
-                              .truck_type!.image!,
+                              .truck_type_image!,
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) =>
                                   Shimmer.fromColors(
@@ -188,7 +188,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                         height: 7.h,
                       ),
                       Text(
-                        "${shipment.subshipments![selectedIndex].truck!.truckuser!.user!.firstName!} ${shipment.subshipments![selectedIndex].truck!.truckuser!.user!.lastName!}",
+                        "${shipment.subshipments![selectedIndex].driver_first_name!} ${shipment.subshipments![selectedIndex].driver_last_name!}",
                         style: TextStyle(
                           fontSize: 17.sp,
                           color: AppColor.deepBlack,
@@ -393,7 +393,6 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
     );
     var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     mapcontroller.animateCamera(cameraUpdate);
-    print("asd3");
 
     // setState(() {});
   }

@@ -85,13 +85,13 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                                       borderRadius: BorderRadius.circular(180),
                                       child: SizedBox(
                                         child: Image.network(
-                                          state.owner.user!.image!,
+                                          state.owner.image!,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Center(
                                             child: Text(
-                                              "${state.owner.user!.firstName![0].toUpperCase()} ${state.owner.user!.lastName![0].toUpperCase()}",
+                                              "${state.owner.firstname![0].toUpperCase()} ${state.owner.lastname![0].toUpperCase()}",
                                               style: TextStyle(
                                                 fontSize: 28.sp,
                                               ),
@@ -119,7 +119,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                               children: [
                                 SectionTitle(
                                   text:
-                                      '${state.owner.user!.firstName} ${state.owner.user!.lastName}',
+                                      '${state.owner.firstname} ${state.owner.lastname}',
                                 ),
                                 const SizedBox(
                                   width: 8,
@@ -130,13 +130,13 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                                       editMode = !editMode;
                                       if (editMode) {
                                         firstNameController.text =
-                                            state.owner.user!.firstName!;
+                                            state.owner.firstname!;
                                         lastNameController.text =
-                                            state.owner.user!.lastName!;
+                                            state.owner.lastname!;
                                         phoneController.text =
-                                            state.owner.user!.phone!;
+                                            state.owner.phone!;
                                         emailController.text =
-                                            state.owner.user!.email!;
+                                            state.owner.email!;
                                       }
                                     });
                                   },
@@ -319,9 +319,9 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                                         width: 8,
                                       ),
                                       SectionBody(
-                                        text: state.owner.user!.phone!.isEmpty
+                                        text: state.owner.phone!.isEmpty
                                             ? '---'
-                                            : '${state.owner.user!.phone}',
+                                            : '${state.owner.phone}',
                                       ),
                                     ],
                                   ),
@@ -381,9 +381,9 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                                         width: 8,
                                       ),
                                       SectionBody(
-                                        text: state.owner.user!.email!.isEmpty
+                                        text: state.owner.email!.isEmpty
                                             ? '---'
-                                            : '${state.owner.user!.email}',
+                                            : '${state.owner.email}',
                                       ),
                                     ],
                                   ),
@@ -438,7 +438,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                                               padding:
                                                   const EdgeInsets.all(8.0),
                                               child: Text(
-                                                  "${state.owner.trucks![index].truckuser!.usertruck!.firstName!} ${state.owner.trucks![index].truckuser!.usertruck!.lastName!}"),
+                                                  "${state.owner.trucks![index].driver_firstname!} ${state.owner.trucks![index].driver_lastname!}"),
                                             ),
                                           ),
                                           TableCell(
@@ -559,14 +559,11 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                                             .validate()) {
                                           TruckOwner owner = TruckOwner();
                                           owner.id = state.owner.id!;
-                                          owner.user = UserModel();
-                                          owner.user!.email =
-                                              emailController.text;
-                                          owner.user!.phone =
-                                              phoneController.text;
-                                          owner.user!.firstName =
+                                          owner.email = emailController.text;
+                                          owner.phone = phoneController.text;
+                                          owner.firstname =
                                               firstNameController.text;
-                                          owner.user!.lastName =
+                                          owner.lastname =
                                               lastNameController.text;
                                           BlocProvider.of<
                                                       OwnerUpdateProfileBloc>(

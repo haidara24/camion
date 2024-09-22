@@ -216,7 +216,7 @@ class _AllIncomingShippmentLogScreenState
                           height: 2.h,
                         ),
                         Text(
-                          "${trucks[index].truckuser!.usertruck!.firstName!} ${trucks[index].truckuser!.usertruck!.lastName!}",
+                          "${trucks[index].driver_firstname!} ${trucks[index].driver_lastname!}",
                           style: TextStyle(
                             fontSize: 17.sp,
                             color: AppColor.deepBlack,
@@ -554,11 +554,9 @@ class _AllIncomingShippmentLogScreenState
                                                           Navigator.push(
                                                               context,
                                                               MaterialPageRoute(
-                                                                builder: (context) => IncomingShipmentDetailsScreen(
-                                                                    requestId: state
-                                                                        .requests[
-                                                                            index]
-                                                                        .id!),
+                                                                builder:
+                                                                    (context) =>
+                                                                        IncomingShipmentDetailsScreen(),
                                                               ));
                                                         },
                                                         child: AbsorbPointer(
@@ -602,7 +600,7 @@ class _AllIncomingShippmentLogScreenState
                                                                               CrossAxisAlignment.start,
                                                                           children: [
                                                                             Text(
-                                                                              "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
+                                                                              "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.firstname!} ${state.requests[index].subshipment!.lastname!}",
                                                                               overflow: TextOverflow.ellipsis,
                                                                               style: TextStyle(
                                                                                 // color: AppColor.lightBlue,
@@ -610,7 +608,7 @@ class _AllIncomingShippmentLogScreenState
                                                                               ),
                                                                             ),
                                                                             Text(
-                                                                              "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
+                                                                              "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver_firstname!} ${state.requests[index].driver_lastname!}",
                                                                               overflow: TextOverflow.ellipsis,
                                                                               style: TextStyle(
                                                                                 // color: AppColor.lightBlue,
@@ -627,7 +625,7 @@ class _AllIncomingShippmentLogScreenState
                                                                                 11),
                                                                         child:
                                                                             Text(
-                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
+                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
                                                                           style: TextStyle(
                                                                               // color: AppColor.lightBlue,
                                                                               fontSize: 18.sp,
@@ -774,7 +772,7 @@ class _AllIncomingShippmentLogScreenState
                                                                             .start,
                                                                     children: [
                                                                       Text(
-                                                                        "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.shipments[index].shipment!.merchant!.user!.firstName!} ${state.shipments[index].shipment!.merchant!.user!.lastName!}",
+                                                                        "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.shipments[index].merchant_first_name!} ${state.shipments[index].merchant_last_name!}",
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                         style:
@@ -785,7 +783,7 @@ class _AllIncomingShippmentLogScreenState
                                                                         ),
                                                                       ),
                                                                       Text(
-                                                                        "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.shipments[index].truck!.truckuser!.user!.firstName!} ${state.shipments[index].truck!.truckuser!.user!.lastName!}",
+                                                                        "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.shipments[index].driver_first_name!} ${state.shipments[index].driver_last_name!}",
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                         style:
@@ -804,7 +802,7 @@ class _AllIncomingShippmentLogScreenState
                                                                       horizontal:
                                                                           11),
                                                                   child: Text(
-                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!.id!}',
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
                                                                     style: TextStyle(
                                                                         // color: AppColor.lightBlue,
                                                                         fontSize: 18.sp,
@@ -919,14 +917,12 @@ class _AllIncomingShippmentLogScreenState
                                                                       .subshipment!
                                                                       .id!));
                                                           Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => IncomingShipmentDetailsScreen(
-                                                                    requestId: state
-                                                                        .requests[
-                                                                            index]
-                                                                        .id!),
-                                                              ));
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  IncomingShipmentDetailsScreen(),
+                                                            ),
+                                                          );
                                                         },
                                                         child: AbsorbPointer(
                                                           absorbing: false,
@@ -960,7 +956,7 @@ class _AllIncomingShippmentLogScreenState
                                                                             .spaceBetween,
                                                                     children: [
                                                                       Text(
-                                                                        "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
+                                                                        "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.firstname!} ${state.requests[index].subshipment!.lastname!}",
                                                                         overflow:
                                                                             TextOverflow.ellipsis,
                                                                         style:
@@ -977,7 +973,7 @@ class _AllIncomingShippmentLogScreenState
                                                                                 11),
                                                                         child:
                                                                             Text(
-                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
+                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
                                                                           style: TextStyle(
                                                                               // color: AppColor.lightBlue,
                                                                               fontSize: 18.sp,

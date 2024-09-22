@@ -1,8 +1,10 @@
+import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/views/widgets/calculator_loading_screen.dart';
 import 'package:camion/views/widgets/main_screen/error_indicator.dart';
 import 'package:camion/views/widgets/main_screen/post_card.dart';
+import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,42 +58,50 @@ class _MainScreenState extends State<MainScreen> {
               backgroundColor: Colors.grey[100],
               body: RefreshIndicator(
                 onRefresh: onRefresh,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 5),
-                  child: BlocBuilder<PostBloc, PostState>(
-                    builder: (context, state) {
-                      if (state is PostLoadedSuccess) {
-                        return ListView.builder(
-                          itemCount: state.posts.length,
-                          itemBuilder: (context, index) {
-                            final post = state.posts[index];
-                            final now = DateTime.now();
-                            final diff = now.difference(post.date!);
-                            final languageCode = localeState.value.languageCode;
+                child: BlocBuilder<PostBloc, PostState>(
+                  builder: (context, state) {
+                    if (state is PostLoadedSuccess) {
+                      return state.posts.isEmpty
+                          ? NoResultsWidget(
+                              text: AppLocalizations.of(context)!
+                                  .translate('no_posts'),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListView.builder(
+                                itemCount: state.posts.length,
+                                itemBuilder: (context, index) {
+                                  final post = state.posts[index];
+                                  final now = DateTime.now();
+                                  final diff = now.difference(post.date!);
+                                  final languageCode =
+                                      localeState.value.languageCode;
 
-                            return PostCard(
-                              post: post,
-                              diffText:
-                                  getTimeDifferenceText(diff, languageCode),
-                              isVisible: visiblePostId == post.id!,
-                              onVisibilityToggle: () {
-                                setState(() {
-                                  visiblePostId =
-                                      visiblePostId == post.id! ? 0 : post.id!;
-                                });
-                              },
-                              playDuration: playDuration,
-                              languageCode: languageCode,
+                                  return PostCard(
+                                    post: post,
+                                    diffText: getTimeDifferenceText(
+                                        diff, languageCode),
+                                    isVisible: visiblePostId == post.id!,
+                                    onVisibilityToggle: () {
+                                      setState(() {
+                                        visiblePostId =
+                                            visiblePostId == post.id!
+                                                ? 0
+                                                : post.id!;
+                                      });
+                                    },
+                                    playDuration: playDuration,
+                                    languageCode: languageCode,
+                                  );
+                                },
+                              ),
                             );
-                          },
-                        );
-                      } else if (state is PostLoadedFailed) {
-                        return ErrorIndicator(onRetry: onRefresh);
-                      } else {
-                        return const CalculatorLoadingScreen();
-                      }
-                    },
-                  ),
+                    } else if (state is PostLoadedFailed) {
+                      return ErrorIndicator(onRetry: onRefresh);
+                    } else {
+                      return const CalculatorLoadingScreen();
+                    }
+                  },
                 ),
               ),
             ),

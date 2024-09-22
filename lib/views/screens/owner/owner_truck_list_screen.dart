@@ -184,7 +184,7 @@ class _OwnerTruckListScreenState extends State<OwnerTruckListScreen> {
                                                                   .spaceBetween,
                                                           children: [
                                                             Text(
-                                                              "${state.trucks[index].truckuser!.usertruck!.firstName!} ${state.trucks[index].truckuser!.usertruck!.lastName!}",
+                                                              "${state.trucks[index].driver_firstname!} ${state.trucks[index].driver_lastname!}",
                                                               style: TextStyle(
                                                                 fontSize: 17.sp,
                                                                 color: AppColor

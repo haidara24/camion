@@ -14,7 +14,6 @@ class ReadPaymentInstructionBloc
     on<ReadPaymentInstructionLoadEvent>((event, emit) async {
       emit(ReadPaymentInstructionLoadingProgress());
       try {
-        print("object0");
         var result = await instructionRepository.getShipmentPayment(event.id);
         if (result != null) {
           emit(ReadPaymentInstructionLoadedSuccess(result));

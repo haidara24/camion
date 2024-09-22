@@ -8,10 +8,12 @@ sealed class TrucksListEvent extends Equatable {
 }
 
 class NearestTrucksListLoadEvent extends TrucksListEvent {
-  final int truckType;
+  final List<int> truckType;
   final String location;
+  final String pol;
+  final String pod;
 
-  NearestTrucksListLoadEvent(this.truckType, this.location);
+  NearestTrucksListLoadEvent(this.truckType, this.location, this.pol, this.pod);
 }
 
 class TrucksListLoadEvent extends TrucksListEvent {

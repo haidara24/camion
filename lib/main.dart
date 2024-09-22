@@ -1,10 +1,6 @@
 import 'dart:io';
 
 import 'package:camion/Localization/app_localizations_setup.dart';
-import 'package:camion/business_logic/bloc/check_point/charge_types_list_bloc.dart';
-import 'package:camion/business_logic/bloc/check_point/check_point_list_bloc.dart';
-import 'package:camion/business_logic/bloc/check_point/pass_charge_details_bloc.dart';
-import 'package:camion/business_logic/bloc/check_point/permission_details_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
@@ -12,7 +8,6 @@ import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/create_price_request_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/inprogress_shipments_bloc.dart';
@@ -21,16 +16,6 @@ import 'package:camion/business_logic/bloc/instructions/instruction_create_bloc.
 import 'package:camion/business_logic/bloc/instructions/payment_create_bloc.dart';
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/complete_managment_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/create_category_bloc.dart';
-import 'package:camion/business_logic/bloc/check_point/create_pass_charges_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/create_permission_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/managment_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/passcharges_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/permissions_list_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/price_request_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/shipment_update_status_bloc.dart';
-import 'package:camion/business_logic/bloc/managment/simple_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_active_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
@@ -51,6 +36,7 @@ import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.da
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
+import 'package:camion/business_logic/bloc/shipment_update_status_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/complete_sub_shipment_bloc.dart';
@@ -61,7 +47,6 @@ import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_multi_create_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shippment_create_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_details_bloc.dart';
@@ -78,6 +63,7 @@ import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
+import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/data/providers/truck_active_status_provider.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/data/providers/add_shippment_provider.dart';
@@ -88,11 +74,9 @@ import 'package:camion/data/providers/truck_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/auth_repository.dart';
 import 'package:camion/data/repositories/category_repository.dart';
-import 'package:camion/data/repositories/check_point_repository.dart';
 import 'package:camion/data/repositories/instruction_repository.dart';
 import 'package:camion/data/repositories/notification_repository.dart';
 import 'package:camion/data/repositories/post_repository.dart';
-import 'package:camion/data/repositories/price_request_repository.dart';
 import 'package:camion/data/repositories/profile_repository.dart';
 import 'package:camion/data/repositories/request_repository.dart';
 import 'package:camion/data/repositories/shipmment_repository.dart';
@@ -174,6 +158,7 @@ class MyApp extends StatelessWidget {
             return MultiProvider(
               providers: [
                 ChangeNotifierProvider(create: (_) => TaskNumProvider()),
+                ChangeNotifierProvider(create: (_) => RequestNumProvider()),
                 ChangeNotifierProvider(
                     create: (_) => ShipmentInstructionsProvider()),
                 ChangeNotifierProvider(create: (_) => NotificationProvider()),
@@ -208,16 +193,10 @@ class MyApp extends StatelessWidget {
                     create: (context) => TruckRepository(),
                   ),
                   RepositoryProvider(
-                    create: (context) => PriceRequestRepository(),
-                  ),
-                  RepositoryProvider(
                     create: (context) => ProfileRepository(),
                   ),
                   RepositoryProvider(
                     create: (context) => CategoryRepository(),
-                  ),
-                  RepositoryProvider(
-                    create: (context) => CheckPointRepository(),
                   ),
                   RepositoryProvider(
                     create: (context) => RequestRepository(),
@@ -301,12 +280,6 @@ class MyApp extends StatelessWidget {
                               RepositoryProvider.of<PostRepository>(context)),
                     ),
                     BlocProvider(
-                      create: (context) => CheckPointListBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
                       create: (context) => DriverRequestsListBloc(
                           requestRepository:
                               RepositoryProvider.of<RequestRepository>(
@@ -337,75 +310,9 @@ class MyApp extends StatelessWidget {
                                   context)),
                     ),
                     BlocProvider(
-                      create: (context) => ChargeTypesListBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => PermissionsListBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => CreatePermissionBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => CreatePassChargesBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => PasschargesListBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => PassChargeDetailsBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => PermissionDetailsBloc(
-                          checkPointRepository:
-                              RepositoryProvider.of<CheckPointRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
                       create: (context) => TrucksListBloc(
                           truckRepository:
                               RepositoryProvider.of<TruckRepository>(context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => PriceRequestBloc(
-                          priceRepository:
-                              RepositoryProvider.of<PriceRequestRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => CreatePriceRequestBloc(
-                          priceRequestRepository:
-                              RepositoryProvider.of<PriceRequestRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => CreateCategoryBloc(
-                          categoryRepository:
-                              RepositoryProvider.of<CategoryRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => SimpleCategoryListBloc(
-                          categoryRepository:
-                              RepositoryProvider.of<CategoryRepository>(
-                                  context)),
                     ),
                     BlocProvider(
                       create: (context) => TruckFixListBloc(
@@ -449,12 +356,6 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => SearchCategoryListBloc(
-                          shipmentRepository:
-                              RepositoryProvider.of<ShipmentRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => ShipmentUpdateStatusBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),
@@ -508,13 +409,13 @@ class MyApp extends StatelessWidget {
                                   context)),
                     ),
                     BlocProvider(
-                      create: (context) => ShippmentCreateBloc(
+                      create: (context) => ShipmentMultiCreateBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),
                     ),
                     BlocProvider(
-                      create: (context) => ShipmentMultiCreateBloc(
+                      create: (context) => ShipmentUpdateStatusBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),
@@ -551,18 +452,6 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => ShipmentListBloc(
-                          shipmentRepository:
-                              RepositoryProvider.of<ShipmentRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => ManagmentShipmentListBloc(
-                          shipmentRepository:
-                              RepositoryProvider.of<ShipmentRepository>(
-                                  context)),
-                    ),
-                    BlocProvider(
-                      create: (context) => CompleteManagmentShipmentListBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),

@@ -8,46 +8,45 @@ import 'package:http/http.dart' as http;
 const DOMAIN = 'https://matjari.app/';
 
 const LOGIN_ENDPOINT = '${DOMAIN}camionauth/jwt/create/';
-const PHONE_LOGIN_ENDPOINT = '${DOMAIN}login/';
-const VERIFY_OTP_ENDPOINT = '${DOMAIN}verify-otp/';
-const RESEND_OTP_ENDPOINT = '${DOMAIN}resend-otp/';
-
-const LOGOUT_ENDPOINT = '${DOMAIN}logout/';
+const PHONE_LOGIN_ENDPOINT = '${DOMAIN}accounts/login/';
+const PHONE_REGISTER_ENDPOINT = '${DOMAIN}accounts/register/';
+const VERIFY_OTP_ENDPOINT = '${DOMAIN}accounts/verify-otp/';
+const RESEND_OTP_ENDPOINT = '${DOMAIN}accounts/resend-otp/';
+const LOGOUT_ENDPOINT = '${DOMAIN}accounts/logout/';
 const USERS_ENDPOINT = '${DOMAIN}accounts/users/';
+const DRIVERS_ENDPOINT = '${DOMAIN}accounts/drivers/';
+const MERCHANTS_ENDPOINT = '${DOMAIN}accounts/merchants/';
+const OWNERS_ENDPOINT = '${DOMAIN}accounts/owners/';
+
 const PROFILE_ENDPOINT = '${DOMAIN}auth/users/me';
+
+const TRUCK_TYPES_ENDPOINT = '${DOMAIN}core/trucktypes/';
+const COMMODITY_CATEGORIES_ENDPOINT = '${DOMAIN}core/commoditycategories/';
+const PACKAGE_TYPES_ENDPOINT = '${DOMAIN}core/packagestypes/';
+
 const POSTS_ENDPOINT = '${DOMAIN}camion/posts/';
 const SAVED_POSTS_ENDPOINT = '${DOMAIN}camion/savedposts/';
 const GROUPS_ENDPOINT = '${DOMAIN}camion/groups/';
 const STATE_CUSTOMES_ENDPOINT = '${DOMAIN}camion/statecustomes/';
-const TRUCK_TYPES_ENDPOINT = '${DOMAIN}camion/trucktypes/';
-const COMMODITY_CATEGORIES_ENDPOINT = '${DOMAIN}camion/commoditycategories/';
-const KCOMMODITY_CATEGORIES_ENDPOINT = '${DOMAIN}camion/kcommoditycategories/';
-const K_CATEGORIES_ENDPOINT = '${DOMAIN}camion/kcategories/';
 const APPROVAL_REQUESTS_ENDPOINT = '${DOMAIN}camion/approvalrequests/';
 const PERMISSIONS_ENDPOINT = '${DOMAIN}camion/permessions/';
-const PATHPOINTS_ENDPOINT = '${DOMAIN}camion/checkpathpoints/';
-const CHARGES_ENDPOINT = '${DOMAIN}camion/passcharges/';
-const CHARGETYPE_ENDPOINT = '${DOMAIN}camion/chargestypes/';
-const DRIVERS_ENDPOINT = '${DOMAIN}camion/drivers/';
-const MERCHANTS_ENDPOINT = '${DOMAIN}camion/merchants/';
-const OWNERS_ENDPOINT = '${DOMAIN}camion/owners/';
 const STORES_ENDPOINT = '${DOMAIN}camion/storehouses/';
 const TRUCKS_ENDPOINT = '${DOMAIN}camion/trucks2/';
 const TRUCK_PAPERS_ENDPOINT = '${DOMAIN}camion/truckpapers/';
 const TRUCK_EXPENSES_ENDPOINT = '${DOMAIN}camion/truckfixes/';
 const FIXES_TYPE_ENDPOINT = '${DOMAIN}camion/fixestype/';
-const PACKAGE_TYPES_ENDPOINT = '${DOMAIN}camion/packagestypes/';
 const PRICEREQUEST_ENDPOINT = '${DOMAIN}camion/pricerequests/';
 const SHIPPMENTSV2_ENDPOINT = '${DOMAIN}camion/shipmentV2s/';
 const SUB_SHIPPMENTSV2_ENDPOINT = '${DOMAIN}camion/subshippments/';
 const SHIPPMENTS_PAYMENT_ENDPOINT = '${DOMAIN}camion/shipmentpayment/';
 const SHIPPMENTS_INSTRUCTION_ENDPOINT =
     '${DOMAIN}camion/shippmentinstructions/';
-const NOTIFICATIONS_ENDPOINT = '${DOMAIN}camion/notifecations/';
+
+const NOTIFICATIONS_ENDPOINT = '${DOMAIN}noti/notifications/';
 
 const GPS_DOMAIN = 'https://www.whatsgps.com/';
 const GPS_LOGIN = '${GPS_DOMAIN}user/login.do?name=Acrossmena&password=abc123';
-const GPS_CARINFO = '${GPS_DOMAIN}car/getByImei.do?token=';
+const GPS_CARINFO = '${GPS_DOMAIN}car/getByImei.do?imei=';
 
 class HttpHelper {
   static Future<http.Response> post(String url, Map<String, dynamic> body,

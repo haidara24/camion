@@ -1,7 +1,7 @@
 import 'package:camion/data/models/truck_model.dart';
 
 class UserModel {
-  int? id;
+  String? id;
   String? username;
   String? firstName;
   String? lastName;
@@ -67,7 +67,12 @@ class Merchant {
   String? companyName;
   String? imageId;
   String? imageTradeLicense;
-  UserModel? user;
+  String? firstname;
+  String? lastname;
+  String? email;
+  String? phone;
+  String? image;
+  String? user;
 
   Merchant({
     this.id,
@@ -77,6 +82,11 @@ class Merchant {
     this.companyName,
     this.imageId,
     this.imageTradeLicense,
+    this.image,
+    this.firstname,
+    this.lastname,
+    this.email,
+    this.phone,
     this.user,
   });
 
@@ -88,12 +98,17 @@ class Merchant {
         stores!.add(Stores.fromJson(v));
       });
     }
-    verified = json['verified'];
-    address = json['address'] ?? "";
-    companyName = json['company_name'] ?? "";
+    verified = json['verified'] ?? false;
+    image = json['image'];
+    firstname = json['first_name'];
+    lastname = json['last_name'];
+    email = json['email'];
+    phone = json['phone'];
+    address = json['address'];
+    companyName = json['company_name'];
     imageId = json['imageId'] ?? "";
     imageTradeLicense = json['imageTradeLicense'] ?? "";
-    user = json['user'] != null ? UserModel.fromJson(json["user"]) : null;
+    user = json['user'];
   }
 
   Map<String, dynamic> toJson() {
@@ -139,18 +154,33 @@ class Stores {
 
 class TruckOwner {
   int? id;
-  UserModel? user;
+  String? firstname;
+  String? lastname;
+  String? email;
+  String? phone;
+  String? image;
+  String? user;
   List<KTruck>? trucks;
 
   TruckOwner({
     this.id,
+    this.image,
+    this.firstname,
+    this.lastname,
+    this.email,
+    this.phone,
     this.user,
     this.trucks,
   });
 
   TruckOwner.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
+    user = json['user'];
+    image = json['image'];
+    firstname = json['first_name'] ?? "";
+    lastname = json['last_name'] ?? "";
+    email = json['email'] ?? "";
+    phone = json['phone'] ?? "";
     if (json['trucks'] != null) {
       trucks = <KTruck>[];
       json['trucks'].forEach((v) {
@@ -162,9 +192,7 @@ class TruckOwner {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
+    data['user'] = user!;
     if (trucks != null) {
       data['trucks'] = trucks!.map((v) => v.toJson()).toList();
     }
@@ -172,62 +200,49 @@ class TruckOwner {
   }
 }
 
-class Truckuser {
+class Driver {
   int? id;
-  UserModel? user;
+  String? firstname;
+  String? lastname;
+  String? email;
+  String? phone;
+  String? image;
+  String? truck_type;
+  String? truck_type_ar;
   int? truck;
+  String? user;
 
-  Truckuser({
+  Driver({
     this.id,
-    this.user,
+    this.image,
+    this.firstname,
+    this.lastname,
+    this.email,
+    this.phone,
+    this.truck_type_ar,
+    this.truck_type,
     this.truck,
+    this.user,
   });
 
-  Truckuser.fromJson(Map<String, dynamic> json) {
+  Driver.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
+    user = json['user'];
     truck = json['truck2'];
+    image = json['image'];
+    firstname = json['first_name'];
+    lastname = json['last_name'];
+    email = json['email'] ?? "";
+    phone = json['phone'] ?? "";
+    truck_type_ar = json['truck_type_ar'];
+    truck_type = json['truck_type'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['truck'] = truck;
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
-    return data;
-  }
-}
-
-class Driver {
-  int? id;
-  UserModel? user;
-  KTruck? truck;
-
-  Driver({
-    this.id,
-    this.user,
-    this.truck,
-  });
-
-  Driver.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    user = json['user'] != null ? UserModel.fromJson(json['user']) : null;
-    truck = (json['truck2'] == null || json['truck2'] is int)
-        ? null
-        : KTruck.fromJson(json['truck2']);
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    if (truck != null) {
-      data['truck'] = truck!.toJson();
-    }
-    if (user != null) {
-      data['user'] = user!.toJson();
-    }
+    data['user'] = user!;
     return data;
   }
 }

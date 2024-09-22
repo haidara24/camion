@@ -2,11 +2,12 @@
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/create_profile_screen.dart';
+import 'package:camion/views/screens/driver/create_truck_for%20driver.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:pinput/pinput.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerifyOtpScreen extends StatefulWidget {
   final bool isLogin;
@@ -29,7 +31,6 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   final focusNode = FocusNode();
 
   Future<void> _verify(String pin) async {
-    print("wer");
     BlocProvider.of<AuthBloc>(context).add(
       VerifyButtonPressed(pin),
     );
@@ -144,11 +145,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                       listener: (context, state) async {
                                         if (state is AuthDriverSuccessState ||
                                             state is AuthOwnerSuccessState ||
-                                            state is AuthMerchantSuccessState ||
-                                            state
-                                                is AuthManagmentSuccessState ||
-                                            state
-                                                is AuthCheckPointSuccessState) {
+                                            state is AuthMerchantSuccessState) {
                                           showCustomSnackBar(
                                             context: context,
                                             message: localeState
@@ -168,14 +165,36 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                               (route) => false,
                                             );
                                           } else {
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CreateProfileScreen(),
-                                              ),
-                                              (route) => false,
-                                            );
+                                            if (state
+                                                is AuthDriverSuccessState) {
+                                              SharedPreferences prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              var driverId =
+                                                  prefs.getInt("truckuser");
+                                              BlocProvider.of<TruckTypeBloc>(
+                                                      context)
+                                                  .add(TruckTypeLoadEvent());
+
+                                              Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CreateTruckForDriverScreen(
+                                                          driverId: driverId!),
+                                                ),
+                                                (route) => false,
+                                              );
+                                            } else {
+                                              Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const ControlView(),
+                                                ),
+                                                (route) => false,
+                                              );
+                                            }
                                           }
                                         }
 

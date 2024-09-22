@@ -15,7 +15,6 @@ class GpsRepository {
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
         HttpHeaders.acceptHeader: 'application/json'
       });
-      print(response.statusCode);
 
       if (response.statusCode == 200) {
         var jsonObject = jsonDecode(response.body);
@@ -37,7 +36,6 @@ class GpsRepository {
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
         HttpHeaders.acceptHeader: 'application/json'
       });
-      print(response.body);
 
       if (response.statusCode == 200) {
         var jsonObject = jsonDecode(response.body);

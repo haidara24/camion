@@ -15,6 +15,7 @@ import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -124,7 +125,8 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
         for (int i = element['address_components'].length - 1; i >= 0; i--) {
           var element1 = element['address_components'][i];
           if (typesToCheck.any((type) => element1['types'].contains(type)) &&
-              element1["long_name"] != null) {
+              element1["long_name"] != null &&
+              element1["long_name"] != "طريق بدون اسم") {
             str = str + ('${element1["long_name"]},');
           }
         }
@@ -141,7 +143,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
         }
       }
     }
-    return str;
+    return str.replaceRange(str.length - 1, null, ".");
   }
 
   @override
@@ -183,7 +185,9 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Image.network(
-                              widget.truck.images![0].image!,
+                              widget.truck.images!.isNotEmpty
+                                  ? widget.truck.images![0].image!
+                                  : "",
                               height: 250.h,
                               width: double.infinity,
                               fit: BoxFit.cover,
@@ -192,8 +196,10 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                   height: 250.h,
                                   width: double.infinity,
                                   color: Colors.grey[300],
-                                  child: const Center(
-                                    child: Text("error on loading "),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(60.0),
+                                    child: SvgPicture.asset(
+                                        "assets/images/camion_loading.svg"),
                                   ),
                                 );
                               },
@@ -455,18 +461,18 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                     return CustomButton(
                                       title: Text(
                                         AppLocalizations.of(context)!
-                                            .translate('order_truck'),
+                                            .translate('add_truck'),
                                         style: TextStyle(
                                           fontSize: 20.sp,
                                         ),
                                       ),
                                       onTap: () {
-                                        shipmentProvider.setTruck(
-                                            widget.truck, widget.index);
+                                        // shipmentProvider.setTruck(
+                                        //     widget.truck, widget.index);
                                         shipmentProvider
-                                            .addSelectedTruck(widget.truck.id!);
+                                            .addSelectedTruck(widget.truck);
                                         Navigator.pop(context);
-                                        Navigator.pop(context);
+                                        // Navigator.pop(context);
                                       },
                                     );
                                   }),

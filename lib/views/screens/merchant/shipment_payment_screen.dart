@@ -532,10 +532,11 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                       barakah_image = File(pickedImage!.path);
                       ShipmentPayment payment = ShipmentPayment();
                       payment.shipment = widget.shipment.id!;
-                      payment.amount = widget.shipment.truck!.fees;
+                      payment.amount = calculatePrice(widget.shipment.distance!,
+                          widget.shipment.totalWeight!.toDouble());
                       payment.paymentMethod = "B";
-                      payment.fees = widget.shipment.truck!.fees;
-                      payment.extraFees = widget.shipment.truck!.extra_fees;
+                      payment.fees = 0;
+                      payment.extraFees = 0;
 
                       BlocProvider.of<PaymentCreateBloc>(context).add(
                           PaymentCreateButtonPressed(payment, barakah_image));
@@ -588,10 +589,11 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                   haram_image = File(pickedImage!.path);
                   ShipmentPayment payment = ShipmentPayment();
                   payment.shipment = widget.shipment.id!;
-                  payment.amount = widget.shipment.truck!.fees;
+                  payment.amount = calculatePrice(widget.shipment.distance!,
+                      widget.shipment.totalWeight!.toDouble());
                   payment.paymentMethod = "H";
-                  payment.fees = widget.shipment.truck!.fees;
-                  payment.extraFees = widget.shipment.truck!.extra_fees;
+                  payment.fees = 0;
+                  payment.extraFees = 0;
 
                   BlocProvider.of<PaymentCreateBloc>(context)
                       .add(PaymentCreateButtonPressed(payment, haram_image));
@@ -634,17 +636,15 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               //             });
               //             var prefs = await SharedPreferences.getInstance();
               //             var jwt = prefs.getString("token");
-              //             var amount = (widget.shipment.truck!.fees! +
-              //                     widget.shipment.truck!.extra_fees!) *
+              //             var amount = (0! +
+              //                     0!) *
               //                 100;
-
               //             final response = await HttpHelper.get(
               //                 "https://matjari.app/make_payment/?amount=100",
               //                 apiToken: jwt);
               //             print(response.body);
               //             print(response.statusCode);
               //             var jsonBody = jsonDecode(response.body);
-
               //             StripeModel stripeModel =
               //                 StripeModel.fromJson(jsonBody);
               //             if (stripeModel.paymentIntent! != "" &&
@@ -682,15 +682,14 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               //                   .confirmPaymentSheetPayment()
               //                   .then((value) {
               //                 var amount = (widget.shipment.truck!.fees! +
-              //                     widget.shipment.truck!.extra_fees!);
+              //                     0!);
               //                 ShipmentPayment payment = ShipmentPayment();
               //                 payment.shipment = widget.shipment.id!;
               //                 payment.amount = widget.shipment.truck!.fees;
               //                 payment.paymentMethod = "S";
               //                 payment.fees = widget.shipment.truck!.fees;
               //                 payment.extraFees =
-              //                     widget.shipment.truck!.extra_fees;
-
+              //                     0;
               //                 // BlocProvider.of<PaymentCreateBloc>(context)
               //                 //     .add(PaymentCreateButtonPressed(payment,));
               //               });

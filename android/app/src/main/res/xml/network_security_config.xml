@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- <debug-overrides>
+        <trust-anchors>
+            <certificates src="@raw/debug_css"/>
+        </trust-anchors>
+    </debug-overrides> -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">camionsy.com</domain>
+    </domain-config>
+</network-security-config>

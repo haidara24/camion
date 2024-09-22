@@ -15,10 +15,9 @@ class ProfileRepository {
     var jwt = prefs.getString("token");
 
     var rs = await HttpHelper.get('$MERCHANTS_ENDPOINT$id/', apiToken: jwt);
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
-
+      print(myDataString);
       var result = jsonDecode(myDataString);
       return Merchant.fromJson(result);
     }
@@ -30,7 +29,6 @@ class ProfileRepository {
     var jwt = prefs.getString("token");
 
     var rs = await HttpHelper.get('$OWNERS_ENDPOINT$id/', apiToken: jwt);
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -45,7 +43,6 @@ class ProfileRepository {
     var jwt = prefs.getString("token");
 
     var rs = await HttpHelper.get('$DRIVERS_ENDPOINT$id/', apiToken: jwt);
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -78,14 +75,12 @@ class ProfileRepository {
     }
 
     request.fields['user'] = jsonEncode({
-      "first_name": driver.user!.firstName,
-      "last_name": driver.user!.lastName,
-      "email": driver.user!.email
+      "first_name": driver.firstname,
+      "last_name": driver.lastname,
+      "email": driver.email
     });
 
     var rs = await request.send();
-    print('$DRIVERS_ENDPOINT${driverId ?? driver.id}/update_profile/');
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       final respStr = await rs.stream.bytesToString();
 
@@ -118,19 +113,14 @@ class ProfileRepository {
     }
 
     request.fields['user'] = jsonEncode({
-      "first_name": merchant.user!.firstName,
-      "last_name": merchant.user!.lastName,
-      "email": merchant.user!.email
+      "first_name": merchant.firstname,
+      "last_name": merchant.lastname,
+      "email": merchant.email
     });
-    // request.fields['user[first_name]'] = merchant.user!.firstName!;
-    // request.fields['user[last_name]'] = merchant.user!.lastName!;
-    // request.fields['user[email]'] = merchant.user!.email!;
     request.fields['address'] = merchant.address!;
     request.fields['company_name'] = merchant.companyName!;
 
     var rs = await request.send();
-    print(merchantId);
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       final respStr = await rs.stream.bytesToString();
 
@@ -163,13 +153,12 @@ class ProfileRepository {
     }
 
     request.fields['user'] = jsonEncode({
-      "first_name": owner.user!.firstName,
-      "last_name": owner.user!.lastName,
-      "email": owner.user!.email
+      "first_name": owner.firstname,
+      "last_name": owner.lastname,
+      "email": owner.email
     });
 
     var rs = await request.send();
-    print(rs.statusCode);
 
     if (rs.statusCode == 200) {
       final respStr = await rs.stream.bytesToString();

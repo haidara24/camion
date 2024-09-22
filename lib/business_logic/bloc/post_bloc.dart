@@ -13,7 +13,6 @@ class PostBloc extends Bloc<PostEvent, PostState> {
       emit(PostLoadingProgress());
       try {
         var posts = await postRepository.getposts();
-        print(posts.length);
         emit(PostLoadedSuccess(posts));
         // ignore: empty_catches
       } catch (e) {}

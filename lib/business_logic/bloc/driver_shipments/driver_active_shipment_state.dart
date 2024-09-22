@@ -12,13 +12,13 @@ final class DriverActiveShipmentInitial extends DriverActiveShipmentState {}
 class DriverActiveShipmentLoadingProgress extends DriverActiveShipmentState {}
 
 class DriverActiveShipmentLoadedSuccess extends DriverActiveShipmentState {
-  final List<OwnerSubShipment> shipments;
+  final List<SubShipment> shipments;
 
   const DriverActiveShipmentLoadedSuccess(this.shipments);
 }
 
 class OwnerActiveShipmentLoadedSuccess extends DriverActiveShipmentState {
-  final List<OwnerSubShipment> shipments;
+  final List<SubShipment> shipments;
 
   const OwnerActiveShipmentLoadedSuccess(this.shipments);
 }

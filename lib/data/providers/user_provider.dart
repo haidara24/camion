@@ -11,6 +11,14 @@ class UserProvider extends ChangeNotifier {
   TruckOwner? _owner;
   TruckOwner? get owner => _owner;
 
+  UserModel? _user;
+  UserModel? get user => _user;
+
+  setUser(UserModel? value) {
+    _user = value;
+    notifyListeners();
+  }
+
   setMerchant(Merchant? value) {
     _merchant = value;
     notifyListeners();

@@ -14,6 +14,7 @@ import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart'
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
+import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
@@ -253,8 +254,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => DriverProfileScreen(
-                                      user: userProvider.driver!.user!),
+                                  builder: (context) => DriverProfileScreen(),
                                 ));
                           },
                           child: Row(
@@ -271,13 +271,13 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         borderRadius:
                                             BorderRadius.circular(180),
                                         child: Image.network(
-                                          userProvider.driver!.user!.image!,
+                                          userProvider.driver!.image!,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Center(
                                             child: Text(
-                                              "${userProvider.driver!.user!.firstName![0].toUpperCase()} ${userProvider.driver!.user!.lastName![0].toUpperCase()}",
+                                              "${userProvider.driver!.firstname![0].toUpperCase()} ${userProvider.driver!.lastname![0].toUpperCase()}",
                                               style: TextStyle(
                                                 fontSize: 28.sp,
                                               ),
@@ -295,7 +295,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                           fontWeight: FontWeight.bold),
                                     )
                                   : Text(
-                                      "${userProvider.driver!.user!.firstName!} ${userProvider.driver!.user!.lastName!}",
+                                      "${userProvider.driver!.firstname!} ${userProvider.driver!.lastname!}",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 26.sp,
@@ -398,7 +398,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/help_info.svg",
+                            "assets/icons/orange/help_info.svg",
                             height: 25.h,
                             width: 25.h,
                           ),
@@ -416,7 +416,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       ),
                       ListTile(
                         leading: SvgPicture.asset(
-                          "assets/icons/help_info.svg",
+                          "assets/icons/orange/help_info.svg",
                           height: 25.h,
                           width: 25.h,
                         ),
@@ -489,7 +489,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         },
                         child: ListTile(
                           leading: SvgPicture.asset(
-                            "assets/icons/log_out.svg",
+                            "assets/icons/orange/log_out.svg",
                             height: 25.h,
                             width: 25.h,
                           ),
@@ -580,74 +580,126 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                               ),
                               Tab(
                                 height: 64.h,
-                                icon: navigationValue == 1
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/orange/my_shipments.svg",
-                                            width: 34.w,
-                                            height: 34.w,
-                                          ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 1,
+                                icon: Consumer<RequestNumProvider>(
+                                    builder: (context, value, child) {
+                                  return BlocListener<DriverRequestsListBloc,
+                                      DriverRequestsListState>(
+                                    listener: (context, state) {
+                                      // TODO: implement listener
+                                      if (state
+                                          is DriverRequestsListLoadedSuccess) {
+                                        var taskNum = 0;
+
+                                        value.setRequestNum(
+                                            state.requests.length);
+                                      }
+                                    },
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        navigationValue == 1
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/orange/my_shipments.svg",
+                                                    width: 34.w,
+                                                    height: 34.w,
+                                                  ),
+                                                  localeState.value
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? const SizedBox(
+                                                          height: 4,
+                                                        )
+                                                      : const SizedBox.shrink(),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 1,
+                                                      ),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'incoming_orders'),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            fontSize: 12.sp),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/white/my_shipments.svg",
+                                                    width: 30.w,
+                                                    height: 30.w,
+                                                  ),
+                                                  localeState.value
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? const SizedBox(
+                                                          height: 4,
+                                                        )
+                                                      : const SizedBox.shrink(),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 1,
+                                                      ),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'incoming_orders'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12.sp),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'incoming_orders'),
-                                                overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                        value.requestNum > 0
+                                            ? Positioned(
+                                                left: 15,
+                                                child: Container(
+                                                  height: 22.w,
+                                                  width: 22.w,
+                                                  decoration: BoxDecoration(
                                                     color: AppColor.deepYellow,
-                                                    fontSize: 12.sp),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/white/my_shipments.svg",
-                                            width: 30.w,
-                                            height: 30.w,
-                                          ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 1,
-                                              ),
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'incoming_orders'),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12.sp),
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                        value.requestNum
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                        )),
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ],
+                                    ),
+                                  );
+                                }),
                               ),
                               Tab(
                                 height: 64.h,

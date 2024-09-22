@@ -14,13 +14,12 @@ class ReadInstructionBloc
     on<ReadInstructionLoadEvent>((event, emit) async {
       emit(ReadInstructionLoadingProgress());
       try {
-        print("object0");
         var result =
             await instructionRepository.getShipmentInstruction(event.id);
         if (result != null) {
           emit(ReadInstructionLoadedSuccess(result));
         } else {
-          emit(ReadInstructionLoadedFailed("error"));
+          emit(const ReadInstructionLoadedFailed("error"));
         }
       } catch (e) {
         emit(ReadInstructionLoadedFailed(e.toString()));

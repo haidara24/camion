@@ -8,10 +8,8 @@ class DrawRouteBloc extends Bloc<DrawRouteEvent, DrawRouteState> {
   DrawRouteBloc() : super(DrawRouteInitial()) {
     on<DrawRoute>((event, emit) async {
       emit(DrawRouteLoading());
-      print(state);
-      await Future.delayed(Duration(milliseconds: 400));
+      await Future.delayed(const Duration(milliseconds: 400));
       emit(DrawRouteSuccess());
-      print(state);
     });
   }
 }

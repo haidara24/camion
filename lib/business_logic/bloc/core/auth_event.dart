@@ -9,11 +9,12 @@ abstract class AuthEvent extends Equatable {
 
 class AuthCheckRequested extends AuthEvent {}
 
-class SignInButtonPressed extends AuthEvent {
-  final String username;
-  final String password;
+class SignUpButtonPressed extends AuthEvent {
+  final String first_name;
+  final String last_name;
+  final String phone;
 
-  const SignInButtonPressed(this.username, this.password);
+  const SignUpButtonPressed(this.first_name, this.last_name, this.phone);
 }
 
 class PhoneSignInButtonPressed extends AuthEvent {

@@ -1,5 +1,5 @@
 import 'package:camion/Localization/app_localizations.dart';
-import 'package:camion/business_logic/bloc/managment/shipment_update_status_bloc.dart';
+import 'package:camion/business_logic/bloc/shipment_update_status_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';

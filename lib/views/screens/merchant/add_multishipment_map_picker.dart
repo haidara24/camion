@@ -9,10 +9,9 @@ import 'package:camion/views/widgets/custom_botton.dart';
 
 class MultiShippmentPickUpMapScreen extends StatefulWidget {
   int type;
-  int index;
+  // int index;
   LatLng? location;
-  MultiShippmentPickUpMapScreen(
-      {Key? key, required this.type, required this.index, this.location})
+  MultiShippmentPickUpMapScreen({Key? key, required this.type, this.location})
       : super(key: key);
 
   @override
@@ -145,16 +144,16 @@ class _MultiShippmentPickUpMapScreenState
                               if (widget.type == 0) {
                                 addShippmentProvider!
                                     .getAddressForPickupFromMapPicker(
-                                        LatLng(selectedPosition!.latitude,
-                                            selectedPosition!.longitude),
-                                        widget.index)
+                                      LatLng(selectedPosition!.latitude,
+                                          selectedPosition!.longitude),
+                                    )
                                     .then((value) => Navigator.pop(context));
                               } else if (widget.type == 1) {
                                 addShippmentProvider!
                                     .getAddressForDeliveryFromMapPicker(
-                                        LatLng(selectedPosition!.latitude,
-                                            selectedPosition!.longitude),
-                                        widget.index)
+                                      LatLng(selectedPosition!.latitude,
+                                          selectedPosition!.longitude),
+                                    )
                                     .then((value) => Navigator.pop(context));
                               }
                             },

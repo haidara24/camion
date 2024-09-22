@@ -27,11 +27,11 @@ class CustomButton extends StatelessWidget {
         // margin: const EdgeInsets.all(4),
         height: hieght,
         decoration: BoxDecoration(
-          color: isEnabled ? color ?? AppColor.deepYellow : Colors.grey,
+          color: isEnabled ? color ?? AppColor.deepYellow : Colors.grey[300],
           // color: isEnabled ? color : Colors.white,
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
-            color: AppColor.deepYellow,
+            color: isEnabled ? color ?? AppColor.deepYellow : Colors.grey[300]!,
             width: 1,
           ),
         ),

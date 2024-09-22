@@ -13,9 +13,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class DriverProfileScreen extends StatefulWidget {
-  final UserModel user;
-
-  const DriverProfileScreen({Key? key, required this.user}) : super(key: key);
+  const DriverProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<DriverProfileScreen> createState() => _DriverProfileScreenState();
@@ -85,13 +85,13 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                       borderRadius: BorderRadius.circular(180),
                                       child: SizedBox(
                                         child: Image.network(
-                                          state.driver.user!.image!,
+                                          state.driver.image!,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Center(
                                             child: Text(
-                                              "${state.driver.user!.firstName![0].toUpperCase()} ${state.driver.user!.lastName![0].toUpperCase()}",
+                                              "${state.driver.firstname![0].toUpperCase()} ${state.driver.lastname![0].toUpperCase()}",
                                               style: TextStyle(
                                                 fontSize: 28.sp,
                                               ),
@@ -119,7 +119,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                               children: [
                                 SectionTitle(
                                   text:
-                                      '${state.driver.user!.firstName} ${state.driver.user!.lastName}',
+                                      '${state.driver.firstname} ${state.driver.lastname}',
                                 ),
                                 const SizedBox(
                                   width: 8,
@@ -129,13 +129,13 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     setState(() {
                                       editMode = !editMode;
                                       firstNameController.text =
-                                          state.driver.user!.firstName!;
+                                          state.driver.firstname!;
                                       lastNameController.text =
-                                          state.driver.user!.lastName!;
+                                          state.driver.lastname!;
                                       phoneController.text =
-                                          state.driver.user!.phone!;
+                                          state.driver.phone!;
                                       emailController.text =
-                                          state.driver.user!.email!;
+                                          state.driver.email!;
                                     });
                                   },
                                   child: Padding(
@@ -320,9 +320,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                         width: 8,
                                       ),
                                       SectionBody(
-                                        text: state.driver.user!.phone!.isEmpty
+                                        text: state.driver.phone!.isEmpty
                                             ? '---'
-                                            : '${state.driver.user!.phone}',
+                                            : '${state.driver.phone}',
                                       ),
                                     ],
                                   ),
@@ -374,9 +374,9 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                         width: 8,
                                       ),
                                       SectionBody(
-                                        text: state.driver.user!.email!.isEmpty
+                                        text: state.driver.email!.isEmpty
                                             ? '---'
-                                            : '${state.driver.user!.email}',
+                                            : '${state.driver.email}',
                                       ),
                                     ],
                                   ),
@@ -393,7 +393,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                               child: BlocConsumer<DriverUpdateProfileBloc,
                                   DriverUpdateProfileState>(
                                 listener: (context, btnstate) {
-                                  print(btnstate);
                                   if (btnstate
                                       is DriverUpdateProfileLoadedSuccess) {
                                     setState(() {
@@ -422,14 +421,11 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                             .validate()) {
                                           Driver driver = Driver();
                                           driver.id = state.driver.id!;
-                                          driver.user = UserModel();
-                                          driver.user!.email =
-                                              emailController.text;
-                                          driver.user!.phone =
-                                              phoneController.text;
-                                          driver.user!.firstName =
+                                          driver.email = emailController.text;
+                                          driver.phone = phoneController.text;
+                                          driver.firstname =
                                               firstNameController.text;
-                                          driver.user!.lastName =
+                                          driver.lastname =
                                               lastNameController.text;
                                           BlocProvider.of<
                                                       DriverUpdateProfileBloc>(

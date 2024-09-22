@@ -1,5 +1,4 @@
-import 'package:camion/data/models/kshipment_model.dart';
-import 'package:camion/data/models/shipment_model.dart';
+import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -54,59 +53,58 @@ class ActiveShippmentProvider extends ChangeNotifier {
         );
       });
     }
-    print("1111111111111111111111111111");
     notifyListeners();
   }
 
-  getpolylineCoordinates(List<Shipment> shipments) async {
-    List<LatLng> _polyline = [];
-    _polylineCoordinates = [];
-    for (var i = 0; i < shipments.length; i++) {
-      _finished.add(false);
-      PolylinePoints polylinePoints = PolylinePoints();
+  // getpolylineCoordinates(List<Shipmentv2> shipments) async {
+  //   List<LatLng> _polyline = [];
+  //   _polylineCoordinates = [];
+  //   for (var i = 0; i < shipments.length; i++) {
+  //     _finished.add(false);
+  //     PolylinePoints polylinePoints = PolylinePoints();
 
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-        PointLatLng(shipments[i].pickupCityLat!, shipments[i].pickupCityLang!),
-        PointLatLng(
-            shipments[i].deliveryCityLat!, shipments[i].deliveryCityLang!),
-      );
-      _polyline = [];
-      if (result.points.isNotEmpty) {
-        result.points.forEach((element) {
-          _polyline.add(
-            LatLng(
-              element.latitude,
-              element.longitude,
-            ),
-          );
-        });
-      }
-      _finished[i] = true;
-      _polylineCoordinates.add(_polyline);
-      notifyListeners();
-      List<Marker> markers = [];
-      markers.add(
-        Marker(
-          markerId: MarkerId("pickup"),
-          position:
-              LatLng(shipments[i].pickupCityLat!, shipments[i].pickupCityLang!),
-        ),
-      );
-      markers.add(
-        Marker(
-          markerId: MarkerId("delivery"),
-          position: LatLng(
-              shipments[i].deliveryCityLat!, shipments[i].deliveryCityLang!),
-        ),
-      );
-      getBounds(markers, _maps[i]!);
-      print("get route for ${shipments[i]}");
+  //     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+  //       "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+  //       PointLatLng(shipments[i].pickupCityLat!, shipments[i].pickupCityLang!),
+  //       PointLatLng(
+  //           shipments[i].deliveryCityLat!, shipments[i].deliveryCityLang!),
+  //     );
+  //     _polyline = [];
+  //     if (result.points.isNotEmpty) {
+  //       result.points.forEach((element) {
+  //         _polyline.add(
+  //           LatLng(
+  //             element.latitude,
+  //             element.longitude,
+  //           ),
+  //         );
+  //       });
+  //     }
+  //     _finished[i] = true;
+  //     _polylineCoordinates.add(_polyline);
+  //     notifyListeners();
+  //     List<Marker> markers = [];
+  //     markers.add(
+  //       Marker(
+  //         markerId: MarkerId("pickup"),
+  //         position:
+  //             LatLng(shipments[i].pickupCityLat!, shipments[i].pickupCityLang!),
+  //       ),
+  //     );
+  //     markers.add(
+  //       Marker(
+  //         markerId: MarkerId("delivery"),
+  //         position: LatLng(
+  //             shipments[i].deliveryCityLat!, shipments[i].deliveryCityLang!),
+  //       ),
+  //     );
+  //     getBounds(markers, _maps[i]!);
+  //     print("get route for ${shipments[i]}");
 
-      notifyListeners();
-    }
-    notifyListeners();
-  }
+  //     notifyListeners();
+  //   }
+  //   notifyListeners();
+  // }
 
   void getBounds(List<Marker> markers, GoogleMapController mapcontroller) {
     var lngs = markers.map<double>((m) => m.position.longitude).toList();

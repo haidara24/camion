@@ -102,18 +102,18 @@ class CompleteShipmentScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: BlocBuilder<ShipmentCompleteListBloc,
-                          ShipmentCompleteListState>(
-                        builder: (context, state) {
-                          if (state is ShipmentCompleteListLoadedSuccess) {
-                            return state.shipments.isEmpty
-                                ? NoResultsWidget(
-                                    text: AppLocalizations.of(context)!
-                                        .translate('no_shipments'),
-                                  )
-                                : ListView.builder(
+                    BlocBuilder<ShipmentCompleteListBloc,
+                        ShipmentCompleteListState>(
+                      builder: (context, state) {
+                        if (state is ShipmentCompleteListLoadedSuccess) {
+                          return state.shipments.isEmpty
+                              ? NoResultsWidget(
+                                  text: AppLocalizations.of(context)!
+                                      .translate('no_shipments'),
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListView.builder(
                                     itemCount: state.shipments.length,
                                     // physics:
                                     //     const NeverScrollableScrollPhysics(),
@@ -265,38 +265,38 @@ class CompleteShipmentScreen extends StatelessWidget {
                                         ),
                                       );
                                     },
-                                  );
-                          } else {
-                            return Shimmer.fromColors(
-                              baseColor: (Colors.grey[300])!,
-                              highlightColor: (Colors.grey[100])!,
-                              enabled: true,
-                              direction: ShimmerDirection.ttb,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (_, __) => Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 5),
-                                      height: 250.h,
-                                      width: double.infinity,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
+                                  ),
+                                );
+                        } else {
+                          return Shimmer.fromColors(
+                            baseColor: (Colors.grey[300])!,
+                            highlightColor: (Colors.grey[100])!,
+                            enabled: true,
+                            direction: ShimmerDirection.ttb,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemBuilder: (_, __) => Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 5),
+                                    height: 250.h,
+                                    width: double.infinity,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                  ],
-                                ),
-                                itemCount: 6,
+                                  ),
+                                ],
                               ),
-                            );
-                          }
-                        },
-                      ),
+                              itemCount: 6,
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(
                       height: 15,

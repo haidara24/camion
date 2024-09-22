@@ -234,13 +234,13 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           borderRadius:
                                               BorderRadius.circular(180),
                                           child: Image.network(
-                                            userProvider.owner!.user!.image!,
+                                            userProvider.owner!.image!,
                                             fit: BoxFit.fill,
                                             errorBuilder:
                                                 (context, error, stackTrace) =>
                                                     Center(
                                               child: Text(
-                                                "${userProvider.owner!.user!.firstName![0].toUpperCase()} ${userProvider.owner!.user!.lastName![0].toUpperCase()}",
+                                                "${userProvider.owner!.firstname![0].toUpperCase()} ${userProvider.owner!.lastname![0].toUpperCase()}",
                                                 style: TextStyle(
                                                   fontSize: 28.sp,
                                                 ),
@@ -257,7 +257,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           fontWeight: FontWeight.bold),
                                     )
                                   : Text(
-                                      "${userProvider.owner!.user!.firstName!} ${userProvider.owner!.user!.lastName!}",
+                                      "${userProvider.owner!.firstname!} ${userProvider.owner!.lastname!}",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 26.sp,

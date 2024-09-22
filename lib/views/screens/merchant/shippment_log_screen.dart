@@ -8,6 +8,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart'
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
+import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
@@ -20,6 +21,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 import 'package:flutter/services.dart' show rootBundle;
@@ -366,9 +368,50 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                           ),
 
                           Tab(
-                            child: Center(
-                                child: Text(AppLocalizations.of(context)!
-                                    .translate('outcoming_orders'))),
+                            child: Center(child: Consumer<RequestNumProvider>(
+                                builder: (context, value, child) {
+                              return BlocListener<MerchantRequestsListBloc,
+                                  MerchantRequestsListState>(
+                                listener: (context, state) {
+                                  // TODO: implement listener
+                                  if (state
+                                      is MerchantRequestsListLoadedSuccess) {
+                                    var taskNum = 0;
+
+                                    value.setRequestNum(state.requests.length);
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(AppLocalizations.of(context)!
+                                        .translate('outcoming_orders')),
+                                    const SizedBox(width: 4),
+                                    value.requestNum > 0
+                                        ? Positioned(
+                                            left: -5,
+                                            child: Container(
+                                              height: 22.w,
+                                              width: 22.w,
+                                              decoration: BoxDecoration(
+                                                color: AppColor.deepYellow,
+                                                borderRadius:
+                                                    BorderRadius.circular(45),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                    value.requestNum.toString(),
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    )),
+                                              ),
+                                            ),
+                                          )
+                                        : const SizedBox.shrink(),
+                                  ],
+                                ),
+                              );
+                            })),
                           ),
                         ],
                       ),
@@ -443,8 +486,27 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                           width:
                                                               double.infinity,
                                                           height: 48.h,
-                                                          color:
-                                                              Colors.grey[300],
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            gradient:
+                                                                LinearGradient(
+                                                              begin: Alignment
+                                                                  .topLeft,
+                                                              end: Alignment
+                                                                  .bottomRight,
+                                                              colors: [
+                                                                AppColor
+                                                                    .deepYellow,
+                                                                AppColor
+                                                                    .deepYellow,
+                                                                AppColor
+                                                                    .deepYellow,
+                                                                Colors.white,
+                                                              ],
+                                                            ),
+                                                            // color:
+                                                            //     Colors.grey[300],
+                                                          ),
                                                           child: Row(
                                                             children: [
                                                               Container(
@@ -697,7 +759,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                             ),
                                                             Text(
                                                               // "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
-                                                              " ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
+                                                              " ${state.requests[index].driver_firstname!} ${state.requests[index].driver_lastname!}",
                                                               overflow:
                                                                   TextOverflow
                                                                       .ellipsis,

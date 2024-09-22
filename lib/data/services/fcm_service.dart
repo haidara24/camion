@@ -133,7 +133,7 @@ class NotificationServices {
     if (message.data['notefication_type'] == "A" ||
         message.data['notefication_type'] == "J") {
       BlocProvider.of<RequestDetailsBloc>(context)
-          .add(RequestDetailsLoadEvent(message.data['requestId']));
+          .add(RequestDetailsLoadEvent(message.data['objectId']));
 
       Navigator.push(
         context,
@@ -146,13 +146,13 @@ class NotificationServices {
     }
     if (message.data['notefication_type'] == "O") {
       BlocProvider.of<SubShipmentDetailsBloc>(context)
-          .add(SubShipmentDetailsLoadEvent(message.data['shipmentId']));
+          .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => IncomingShipmentDetailsScreen(
-                requestId: message.data['requestId']),
-          ));
+        context,
+        MaterialPageRoute(
+          builder: (context) => IncomingShipmentDetailsScreen(),
+        ),
+      );
     }
   }
 

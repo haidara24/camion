@@ -2,6 +2,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/user_type.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/choose_login_register_screen.dart';
 import 'package:camion/views/screens/phone_login_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
@@ -100,6 +101,54 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                             height: 35.h,
                                             width: 35.h,
                                             child: SvgPicture.asset(
+                                                "assets/icons/person.svg"),
+                                          ),
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('merchant'),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                          Transform.scale(
+                                            scale: 1.4,
+                                            child: Radio(
+                                              value: UserType.merchant,
+                                              groupValue: userType,
+                                              activeColor: AppColor.deepYellow,
+                                              fillColor: MaterialStateProperty
+                                                  .resolveWith<Color>(
+                                                      (Set<MaterialState>
+                                                          states) {
+                                                if (states.contains(
+                                                    MaterialState.disabled)) {
+                                                  return Colors.white
+                                                      .withOpacity(.32);
+                                                }
+                                                return Colors.white;
+                                              }),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  userType = UserType.merchant;
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          .25,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            height: 35.h,
+                                            width: 35.h,
+                                            child: SvgPicture.asset(
                                                 "assets/icons/driver.svg"),
                                           ),
                                           Text(
@@ -185,54 +234,6 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                         ],
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          .25,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          SizedBox(
-                                            height: 35.h,
-                                            width: 35.h,
-                                            child: SvgPicture.asset(
-                                                "assets/icons/person.svg"),
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('merchant'),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          Transform.scale(
-                                            scale: 1.4,
-                                            child: Radio(
-                                              value: UserType.merchant,
-                                              groupValue: userType,
-                                              activeColor: AppColor.deepYellow,
-                                              fillColor: MaterialStateProperty
-                                                  .resolveWith<Color>(
-                                                      (Set<MaterialState>
-                                                          states) {
-                                                if (states.contains(
-                                                    MaterialState.disabled)) {
-                                                  return Colors.white
-                                                      .withOpacity(.32);
-                                                }
-                                                return Colors.white;
-                                              }),
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  userType = UserType.merchant;
-                                                });
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                   ],
                                 ),
                                 SizedBox(
@@ -252,7 +253,7 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            PhoneSignInScreen(),
+                                            ChooseLoginRegisterScreen(),
                                       ),
                                     );
                                     SharedPreferences prefs =

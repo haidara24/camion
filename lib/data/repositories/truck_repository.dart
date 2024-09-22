@@ -21,7 +21,6 @@ class TruckRepository {
     var rs = await HttpHelper.get('$TRUCKS_ENDPOINT?$truckTypeParams',
         apiToken: jwt);
     ktrucks = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -33,12 +32,15 @@ class TruckRepository {
     return ktrucks;
   }
 
-  Future<List<KTruck>> getNearestTrucks(int type, String location) async {
+  Future<List<KTruck>> getNearestTrucks(
+      List<int> types, String location, String pol, String pod) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-
+    String truckTypeParams = types.map((type) => 'truck_types=$type').join('&');
+    print(
+        '${TRUCKS_ENDPOINT}nearest_trucks/?location=$location&$truckTypeParams&loading_place_id=$pol&discharge_place_id=$pod');
     var rs = await HttpHelper.get(
-        '${TRUCKS_ENDPOINT}nearest_trucks/?location=$location&truck_type=$type',
+        '${TRUCKS_ENDPOINT}nearest_trucks/?location=$location&$truckTypeParams&loading_place_id=$pol&discharge_place_id=$pod',
         apiToken: jwt);
     ktrucks = [];
     print(rs.statusCode);
@@ -60,7 +62,6 @@ class TruckRepository {
     var rs =
         await HttpHelper.get('$TRUCKS_ENDPOINT?search=$query', apiToken: jwt);
     ktrucks = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -79,18 +80,13 @@ class TruckRepository {
     var rs = await HttpHelper.get('${TRUCKS_ENDPOINT}list_for_owner/',
         apiToken: jwt);
     ktrucks = [];
-    print(rs.statusCode);
-    print(rs.body);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
       ktrucks.add(KTruck(
         id: 0,
-        truckuser: KTuckUser(
-          id: 0,
-          usertruck: Usertruck(id: 0, firstName: "All", lastName: ""),
-        ),
+        truckuser: 0,
       ));
       for (var element in result) {
         ktrucks.add(KTruck.fromJson(element));
@@ -105,7 +101,6 @@ class TruckRepository {
 
     var rs = await HttpHelper.get('$TRUCKS_ENDPOINT$id/', apiToken: jwt);
 
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -122,7 +117,6 @@ class TruckRepository {
     var rs =
         await HttpHelper.get('$TRUCKS_ENDPOINT$id/location/', apiToken: jwt);
 
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -150,11 +144,9 @@ class TruckRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var truckId = prefs.getInt("truckId");
-    print(!status);
     var rs = await HttpHelper.patch(
         '$TRUCKS_ENDPOINT$truckId/update_active_status/', {'isOn': !status},
         apiToken: jwt);
-    print(rs.statusCode);
 
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
@@ -170,13 +162,9 @@ class TruckRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var truckId = prefs.getInt("truckId");
-    print("truckId");
-    print(truckId);
     var rs =
         await HttpHelper.get('$TRUCKS_ENDPOINT$truckId/isOn/', apiToken: jwt);
 
-    print("rs.statusCode");
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -193,7 +181,6 @@ class TruckRepository {
     var rs = await HttpHelper.get('$TRUCK_PAPERS_ENDPOINT?truck=$truck',
         apiToken: jwt);
     truckPapers = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -230,14 +217,12 @@ class TruckRepository {
     request.fields['truck'] = paper.truck.toString();
     var response = await request.send();
 
-    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       var res = jsonDecode(respStr);
       return TruckPaper.fromJson(res);
     } else {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       return null;
     }
   }
@@ -248,7 +233,6 @@ class TruckRepository {
 
     var rs = await HttpHelper.get(FIXES_TYPE_ENDPOINT, apiToken: jwt);
     fixesType = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -264,13 +248,11 @@ class TruckRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var truckId = prefs.getInt("truckId");
-    print(truckId);
 
     var rs = await HttpHelper.get(
         '$TRUCK_EXPENSES_ENDPOINT?truck=${truckid ?? truckId}',
         apiToken: jwt);
     truckExpenses = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -298,8 +280,6 @@ class TruckRepository {
       },
       apiToken: token,
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 201) {
       return true;
     } else {
@@ -333,7 +313,7 @@ class TruckRepository {
       request.files.add(element);
     }
 
-    request.fields['truckuser'] = truck.truckuser!.id!.toString();
+    request.fields['truckuser'] = truck.truckuser!.toString();
     request.fields['owner'] = truck.owner!.toString();
     request.fields['truck_type'] = truck.truckType!.id!.toString();
     request.fields['location_lat'] = truck.locationLat!;
@@ -348,14 +328,11 @@ class TruckRepository {
     request.fields['gpsId'] = truck.gpsId!.toString();
 
     var response = await request.send();
-    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       return KTruck.fromJson(jsonDecode(respStr));
     } else {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       return null;
     }
   }

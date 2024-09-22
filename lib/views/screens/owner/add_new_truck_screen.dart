@@ -795,8 +795,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                             .toInt();
                                                     truck.locationLat =
                                                         location;
-                                                    truck.truckuser = KTuckUser(
-                                                        id: truckuser);
+                                                    truck.truckuser = truckuser;
                                                     truck.owner =
                                                         widget.ownerId;
                                                     truck.truckType = trucktype;

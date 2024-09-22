@@ -5,6 +5,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dar
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/shipment_instructions_provider.dart';
+import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_task_details_screen.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:flutter/material.dart';
@@ -124,31 +125,23 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 10.0,
-                      ),
-                      child: BlocBuilder<ShipmentTaskListBloc,
-                          ShipmentTaskListState>(
-                        builder: (context, state) {
-                          if (state is ShipmentTaskListLoadedSuccess) {
-                            return state.shipments.isEmpty
-                                ? ListView(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    children: [
-                                      NoResultsWidget(
-                                        text: AppLocalizations.of(context)!
-                                            .translate('no_tasks'),
-                                      )
-                                    ],
-                                  )
-                                : ListView.builder(
+                    BlocBuilder<ShipmentTaskListBloc, ShipmentTaskListState>(
+                      builder: (context, state) {
+                        if (state is ShipmentTaskListLoadedSuccess) {
+                          return state.shipments.isEmpty
+                              ? ListView(
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  children: [
+                                    NoResultsWidget(
+                                      text: AppLocalizations.of(context)!
+                                          .translate('no_tasks'),
+                                    )
+                                  ],
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: ListView.builder(
                                     itemCount: state.shipments.length,
                                     physics:
                                         const NeverScrollableScrollPhysics(),
@@ -212,7 +205,21 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                   Container(
                                                     width: double.infinity,
                                                     height: 48.h,
-                                                    color: Colors.grey[300],
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(10),
+                                                        topRight:
+                                                            Radius.circular(10),
+                                                      ),
+                                                      border: Border.all(
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                        width: 1,
+                                                      ),
+                                                      color: Colors.grey[300],
+                                                    ),
                                                     child: Row(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -266,7 +273,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                                         Center(
                                                                       child: SvgPicture
                                                                           .asset(
-                                                                              "assets/icons/grey/bell.svg"),
+                                                                              "assets/icons/orange/notification.svg"),
                                                                     ),
                                                                   ),
                                                                 ),
@@ -291,7 +298,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                                           decoration:
                                                                               BoxDecoration(
                                                                             color:
-                                                                                Colors.grey[600],
+                                                                                AppColor.deepYellow,
                                                                             borderRadius:
                                                                                 BorderRadius.circular(45),
                                                                           ),
@@ -370,38 +377,38 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                         ),
                                       );
                                     },
-                                  );
-                          } else {
-                            return Shimmer.fromColors(
-                              baseColor: (Colors.grey[300])!,
-                              highlightColor: (Colors.grey[100])!,
-                              enabled: true,
-                              direction: ShimmerDirection.ttb,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (_, __) => Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 5),
-                                      height: 250.h,
-                                      width: double.infinity,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
+                                  ),
+                                );
+                        } else {
+                          return Shimmer.fromColors(
+                            baseColor: (Colors.grey[300])!,
+                            highlightColor: (Colors.grey[100])!,
+                            enabled: true,
+                            direction: ShimmerDirection.ttb,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemBuilder: (_, __) => Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 5),
+                                    height: 250.h,
+                                    width: double.infinity,
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                  ],
-                                ),
-                                itemCount: 6,
+                                  ),
+                                ],
                               ),
-                            );
-                          }
-                        },
-                      ),
+                              itemCount: 6,
+                            ),
+                          );
+                        }
+                      },
                     ),
                     const SizedBox(
                       height: 15,

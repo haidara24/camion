@@ -38,7 +38,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
   late AnimationController animcontroller;
   late Timer timer;
   late GoogleMapController _controller;
-  OwnerSubShipment? subshipment;
+  SubShipment? subshipment;
   String? truckLocation = "";
 
   String _mapStyle = "";
@@ -57,7 +57,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
 
-  initMapbounds(OwnerSubShipment subshipment) async {
+  initMapbounds(SubShipment subshipment) async {
     setState(() {
       startTracking = false;
     });
@@ -114,7 +114,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
   }
 
   void _onVerticalGesture(DragUpdateDetails details,
-      List<OwnerSubShipment> subshipments, String language) {
+      List<SubShipment> subshipments, String language) {
     if (details.primaryDelta! < -7) {
       panelState = PanelState.open;
       showModalBottomSheet(
@@ -193,10 +193,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                 // backgroundColor: AppColor.deepBlue,
                                 child: Center(
                                   child: (subshipments[selectedIndex]
-                                              .truck!
-                                              .truckuser!
-                                              .user!
-                                              .image!
+                                              .driver_image!
                                               .length >
                                           1)
                                       ? ClipRRect(
@@ -204,10 +201,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                               BorderRadius.circular(180),
                                           child: Image.network(
                                             subshipments[selectedIndex]
-                                                .truck!
-                                                .truckuser!
-                                                .user!
-                                                .image!,
+                                                .driver_image!,
                                             height: 55.w,
                                             width: 55.w,
                                             fit: BoxFit.fill,
@@ -215,10 +209,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                         )
                                       : Text(
                                           subshipments[selectedIndex]
-                                              .truck!
-                                              .truckuser!
-                                              .user!
-                                              .firstName!,
+                                              .driver_first_name!,
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 28.sp,
@@ -228,7 +219,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                               ),
                             ),
                             Text(
-                              "${subshipments[selectedIndex].truck!.truckuser!.user!.firstName!} ${subshipments[selectedIndex].truck!.truckuser!.user!.lastName!}",
+                              "${subshipments[selectedIndex].driver_first_name!} ${subshipments[selectedIndex].driver_last_name!}",
                               style: TextStyle(
                                 // color: AppColor.lightBlue,
                                 fontSize: 19.sp,
@@ -245,8 +236,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                               child: CachedNetworkImage(
                                 imageUrl: subshipments[selectedTruck]
                                     .truck!
-                                    .truck_type!
-                                    .image!,
+                                    .truck_type_image!,
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) =>
                                         Shimmer.fromColors(
@@ -270,7 +260,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                               ),
                             ),
                             Text(
-                              "${language == 'en' ? subshipments[selectedIndex].truck!.truck_type!.name! : subshipments[selectedIndex].truck!.truck_type!.nameAr!}  ",
+                              "${language == 'en' ? subshipments[selectedIndex].truck!.truck_type! : subshipments[selectedIndex].truck!.truck_typeAr!}  ",
                               style: TextStyle(
                                 // color: AppColor.lightBlue,
                                 fontSize: 19.sp,
@@ -334,7 +324,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
     }
   }
 
-  Widget pathList(List<OwnerSubShipment> subshipments, String language) {
+  Widget pathList(List<SubShipment> subshipments, String language) {
     return GestureDetector(
       onVerticalDragUpdate: (details) {
         _onVerticalGesture(details, subshipments, language);
@@ -467,8 +457,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                   child: CachedNetworkImage(
                                     imageUrl: subshipments[index]
                                         .truck!
-                                        .truck_type!
-                                        .image!,
+                                        .truck_type_image!,
                                     progressIndicatorBuilder:
                                         (context, url, downloadProgress) =>
                                             Shimmer.fromColors(
@@ -505,7 +494,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  "${subshipments[index].truck!.truckuser!.user!.firstName!} ${subshipments[index].truck!.truckuser!.user!.lastName!}",
+                                  "${subshipments[index].driver_first_name!} ${subshipments[index].driver_last_name!}",
                                   style: TextStyle(
                                     fontSize:
                                         selectedTruck == index ? 17.sp : 15.sp,

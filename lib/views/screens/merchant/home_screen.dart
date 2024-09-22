@@ -14,6 +14,7 @@ import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/add_shippment_provider.dart';
+import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
@@ -192,7 +193,7 @@ class _HomeScreenState extends State<HomeScreen>
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           var merchant = prefs.getInt("merchant");
-
+                          print(merchant);
                           // ignore: use_build_context_synchronously
                           BlocProvider.of<MerchantProfileBloc>(context)
                               .add(MerchantProfileLoad(merchant!));
@@ -212,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen>
                               CircleAvatar(
                                 backgroundColor: AppColor.deepYellow,
                                 radius: 35.h,
-                                child: (userProvider.merchant == null)
+                                child: (userProvider.user == null)
                                     ? Center(
                                         child: LoadingIndicator(),
                                       )
@@ -220,13 +221,13 @@ class _HomeScreenState extends State<HomeScreen>
                                         borderRadius:
                                             BorderRadius.circular(180),
                                         child: Image.network(
-                                          userProvider.merchant!.user!.image!,
+                                          userProvider.user!.image!,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Center(
                                             child: Text(
-                                              "${userProvider.merchant!.user!.firstName![0].toUpperCase()} ${userProvider.merchant!.user!.lastName![0].toUpperCase()}",
+                                              "${userProvider.user!.firstName![0].toUpperCase()} ${userProvider.user!.lastName![0].toUpperCase()}",
                                               style: TextStyle(
                                                 fontSize: 28.sp,
                                               ),
@@ -235,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         ),
                                       ),
                               ),
-                              (userProvider.merchant == null)
+                              (userProvider.user == null)
                                   ? Text(
                                       "",
                                       style: TextStyle(
@@ -244,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen>
                                           fontWeight: FontWeight.bold),
                                     )
                                   : Text(
-                                      "${userProvider.merchant!.user!.firstName!} ${userProvider.merchant!.user!.lastName!}",
+                                      "${userProvider.user!.firstName!} ${userProvider.user!.lastName!}",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 26.sp,
@@ -325,8 +326,8 @@ class _HomeScreenState extends State<HomeScreen>
                         child: ListTile(
                           leading: SvgPicture.asset(
                             "assets/icons/orange/translate_camion.svg",
-                            height: 25.h,
-                            width: 25.h,
+                            height: 27.h,
+                            width: 27.h,
                           ),
                           title: Text(
                             localeState.value.languageCode != 'en'
@@ -357,8 +358,8 @@ class _HomeScreenState extends State<HomeScreen>
                         child: ListTile(
                           leading: SvgPicture.asset(
                             "assets/icons/orange/my_shipments.svg",
-                            height: 25.h,
-                            width: 25.h,
+                            height: 27.h,
+                            width: 27.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!
@@ -376,8 +377,8 @@ class _HomeScreenState extends State<HomeScreen>
                       ListTile(
                         leading: SvgPicture.asset(
                           "assets/icons/orange/help_info.svg",
-                          height: 25.h,
-                          width: 25.h,
+                          height: 27.h,
+                          width: 27.h,
                         ),
                         title: Text(
                           AppLocalizations.of(context)!.translate('help'),
@@ -456,8 +457,8 @@ class _HomeScreenState extends State<HomeScreen>
                         child: ListTile(
                           leading: SvgPicture.asset(
                             "assets/icons/orange/log_out.svg",
-                            height: 25.h,
-                            width: 25.h,
+                            height: 27.h,
+                            width: 27.h,
                           ),
                           title: Text(
                             AppLocalizations.of(context)!.translate('log_out'),
@@ -505,8 +506,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/home.svg",
-                                            width: 32.w,
-                                            height: 32.w,
+                                            width: 35.w,
+                                            height: 35.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -528,8 +529,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/home.svg",
-                                            width: 28.w,
-                                            height: 28.w,
+                                            width: 31.w,
+                                            height: 31.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -548,60 +549,112 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                               Tab(
                                 height: 62.h,
-                                icon: navigationValue == 1
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/orange/my_shipments.svg",
-                                            width: 32.w,
-                                            height: 32.w,
-                                          ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('myshipments'),
-                                              style: TextStyle(
-                                                  color: AppColor.deepYellow,
-                                                  fontSize: 12.sp),
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/white/my_shipments.svg",
-                                            width: 28.w,
-                                            height: 28.w,
-                                          ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('myshipments'),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12.sp,
+                                icon: Consumer<RequestNumProvider>(
+                                    builder: (context, value, child) {
+                                  return BlocListener<MerchantRequestsListBloc,
+                                      MerchantRequestsListState>(
+                                    listener: (context, state) {
+                                      if (state
+                                          is MerchantRequestsListLoadedSuccess) {
+                                        var taskNum = 0;
+
+                                        value.setRequestNum(
+                                            state.requests.length);
+                                      }
+                                    },
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        navigationValue == 1
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/orange/my_shipments.svg",
+                                                    width: 35.w,
+                                                    height: 35.w,
+                                                  ),
+                                                  localeState.value
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? const SizedBox(
+                                                          height: 4,
+                                                        )
+                                                      : const SizedBox.shrink(),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'myshipments'),
+                                                      style: TextStyle(
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                          fontSize: 12.sp),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/white/my_shipments.svg",
+                                                    width: 31.w,
+                                                    height: 31.w,
+                                                  ),
+                                                  localeState.value
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? const SizedBox(
+                                                          height: 4,
+                                                        )
+                                                      : const SizedBox.shrink(),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'myshipments'),
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12.sp,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
+                                        value.requestNum > 0
+                                            ? Positioned(
+                                                left: 15,
+                                                child: Container(
+                                                  height: 22.w,
+                                                  width: 22.w,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColor.deepYellow,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                        value.requestNum
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                        )),
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ],
+                                    ),
+                                  );
+                                }),
                               ),
                               Tab(
                                 // text: "الرئيسية",
@@ -613,8 +666,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/add.svg",
-                                            width: 32.w,
-                                            height: 32.w,
+                                            width: 35.w,
+                                            height: 35.w,
                                             fit: BoxFit.fill,
                                           ),
                                           localeState.value.languageCode == 'en'
@@ -640,8 +693,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/add.svg",
-                                            width: 28.w,
-                                            height: 28.w,
+                                            width: 31.w,
+                                            height: 31.w,
                                             fit: BoxFit.fill,
                                           ),
                                           localeState.value.languageCode == 'en'
@@ -671,8 +724,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/location.svg",
-                                            width: 32.w,
-                                            height: 32.w,
+                                            width: 35.w,
+                                            height: 35.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -694,8 +747,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/location.svg",
-                                            width: 28.w,
-                                            height: 28.w,
+                                            width: 31.w,
+                                            height: 31.w,
                                           ),
                                           localeState.value.languageCode == 'en'
                                               ? const SizedBox(
@@ -745,8 +798,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                   children: [
                                                     SvgPicture.asset(
                                                       "assets/icons/orange/tasks.svg",
-                                                      width: 32.w,
-                                                      height: 32.w,
+                                                      width: 35.w,
+                                                      height: 35.w,
                                                     ),
                                                     localeState.value
                                                                 .languageCode ==
@@ -773,8 +826,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                   children: [
                                                     SvgPicture.asset(
                                                       "assets/icons/white/tasks.svg",
-                                                      width: 28.w,
-                                                      height: 28.w,
+                                                      width: 31.w,
+                                                      height: 31.w,
                                                     ),
                                                     localeState.value
                                                                 .languageCode ==

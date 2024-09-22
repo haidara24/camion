@@ -5,6 +5,7 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/verify_otp_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/privacy_policy_text.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -157,8 +158,8 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                         onSaved: (newValue) {
                                           _phoneController.text = newValue!;
                                         },
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
+                                        // autovalidateMode:
+                                        //     AutovalidateMode.onUserInteraction,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 19.sp,
@@ -243,6 +244,7 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                         }
                                       },
                                     ),
+                                    TermsOfUse(),
                                   ],
                                 ),
                               ),

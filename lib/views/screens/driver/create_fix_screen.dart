@@ -411,7 +411,6 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                               child: BlocConsumer<CreateTruckFixBloc,
                                   CreateTruckFixState>(
                                 listener: (context, state) {
-                                  print(state);
                                   if (state is CreateTruckFixLoadedSuccess) {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(SnackBar(
@@ -435,7 +434,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                     Navigator.pop(context);
                                   }
                                   if (state is CreateTruckFixLoadedFailed) {
-                                    print(state.errorstring);
+                                    debugPrint(state.errorstring);
                                   }
                                 },
                                 builder: (context, state) {

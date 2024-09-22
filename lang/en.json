@@ -6,6 +6,7 @@
     "transsit":"Transit",
     
     "select_user_type":"Select User Type",
+    "welcome":"Welcome",
     "managment":"Management",
     "check_point":"Check Point",
     "driver":"Driver",
@@ -21,6 +22,7 @@
     "reactive":"Re-Active",
     "reactive_confirm":"Are you sure you want to re-active?",
     "cancel":"Cancel",
+    "close":"Close",
     "cancel_confirm":"Are you sure you want to cancel?",
     "reject":"Reject",
     "please_sign_in":"Please sign in with your UserName",
@@ -116,6 +118,7 @@
     "running":"Active",
     "completed":"Completed",
     "cancelled":"Canceled",
+    "no_posts":"There are no Posts to show",
     "no_shipments":"There are no shipments to show",
     "no_out_orders":"There are no Outgoing Orders to show",
     "no_in_orders":"There are no InComing Orders to show",
@@ -158,6 +161,8 @@
     "settings":"Settings",
     "help":"Help",
     "log_out":"Log Out",
+    "log_in":"Sign In",
+    "sign_up":"Sign Up",
        
     "no":"No",
     "yes":"Yes",

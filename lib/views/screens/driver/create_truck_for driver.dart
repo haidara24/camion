@@ -409,7 +409,7 @@ class _CreateTruckForDriverScreenState
                                 },
                               ),
                               SizedBox(
-                                height: 4.h,
+                                height: 12.h,
                               ),
                               TextFormField(
                                 controller: heightController,
@@ -669,7 +669,7 @@ class _CreateTruckForDriverScreenState
                                 style: const TextStyle(fontSize: 18),
                                 decoration: InputDecoration(
                                   labelText: AppLocalizations.of(context)!
-                                      .translate('truck_number'),
+                                      .translate('traffic_number'),
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 11.0, horizontal: 9.0),
                                 ),
@@ -873,7 +873,7 @@ class _CreateTruckForDriverScreenState
                                                 child: Center(
                                                   child: SizedBox(
                                                     height: 40.h,
-                                                    width: 50.w,
+                                                    width: 70.w,
                                                     child: SvgPicture.asset(
                                                         "assets/icons/grey/add_image.svg"),
                                                   ),
@@ -949,7 +949,7 @@ class _CreateTruckForDriverScreenState
                                             }
                                             if (state
                                                 is CreateTruckFailureState) {
-                                              print(state.errorMessage);
+                                              debugPrint(state.errorMessage);
                                             }
                                           },
                                           builder: (context, state) {
@@ -1023,9 +1023,7 @@ class _CreateTruckForDriverScreenState
                                                               .toInt();
 
                                                       truck.truckuser =
-                                                          KTuckUser(
-                                                              id: widget
-                                                                  .driverId);
+                                                          widget.driverId;
 
                                                       if (istruckOwner) {
                                                         truck.owner = 0;

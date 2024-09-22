@@ -54,16 +54,13 @@ class InstructionRepository {
     request.fields['truck_weight'] = shipment.truckWeight!.toString();
     request.fields['final_weight'] = shipment.finalWeight!.toString();
     request.fields['commodity_items'] = jsonEncode(sub_commodity_items);
-    print("qwe");
 
     var response = await request.send();
-    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       return Shipmentinstruction.fromJson(jsonDecode(respStr));
     } else {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       return null;
     }
   }
@@ -71,12 +68,10 @@ class InstructionRepository {
   Future<ShipmentPayment?> getShipmentPayment(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    print("object1");
 
     var rs =
         await HttpHelper.get('$SHIPPMENTS_PAYMENT_ENDPOINT$id/', apiToken: jwt);
 
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -89,12 +84,10 @@ class InstructionRepository {
   Future<Shipmentinstruction?> getShipmentInstruction(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    print("object1");
 
     var rs = await HttpHelper.get('$SHIPPMENTS_INSTRUCTION_ENDPOINT$id/',
         apiToken: jwt);
 
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

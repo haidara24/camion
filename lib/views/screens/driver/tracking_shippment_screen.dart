@@ -58,7 +58,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   double distance = 0;
   String period = "";
 
-  initMapbounds(OwnerSubShipment subshipment) async {
+  initMapbounds(SubShipment subshipment) async {
     List<Marker> markers = [];
     var pickuplocation = subshipment.pathpoints!
         .singleWhere((element) => element.pointType == "P")
@@ -119,7 +119,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   late bool truckLocationassign;
   Set<Marker> markers = Set();
 
-  Widget pathList(OwnerSubShipment subshipment, String language) {
+  Widget pathList(SubShipment subshipment, String language) {
     return GestureDetector(
       onVerticalDragUpdate: (details) {
         _onVerticalGesture(details, subshipment, language);
@@ -169,14 +169,14 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(180),
                             child: Image.network(
-                              subshipment.shipment!.merchant!.user!.image!,
+                              subshipment.merchant_image!,
                               height: 55.w,
                               width: 55.w,
                               fit: BoxFit.fill,
                               errorBuilder: (context, error, stackTrace) =>
                                   Center(
                                 child: Text(
-                                  "${subshipment.shipment!.merchant!.user!.firstName![0].toUpperCase()} ${subshipment.shipment!.merchant!.user!.lastName![0].toUpperCase()}",
+                                  "${subshipment.merchant_first_name![0].toUpperCase()} ${subshipment.merchant_last_name![0].toUpperCase()}",
                                   style: TextStyle(
                                     fontSize: 28.sp,
                                   ),
@@ -188,7 +188,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                       ),
                     ),
                     Text(
-                      "${subshipment.shipment!.merchant!.user!.firstName!} ${subshipment.shipment!.merchant!.user!.lastName!}",
+                      "${subshipment.merchant_first_name!} ${subshipment.merchant_last_name!}",
                       style: TextStyle(
                         // color: AppColor.lightBlue,
                         fontSize: 19.sp,
@@ -203,7 +203,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                       height: 35.h,
                       width: 155.w,
                       child: CachedNetworkImage(
-                        imageUrl: subshipment.truck!.truck_type!.image!,
+                        imageUrl: subshipment.truck!.truck_type_image!,
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 Shimmer.fromColors(
@@ -227,7 +227,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                       ),
                     ),
                     Text(
-                      "${language == 'en' ? subshipment.truck!.truck_type!.name! : subshipment.truck!.truck_type!.nameAr!}  ",
+                      "${language == 'en' ? subshipment.truck!.truck_type! : subshipment.truck!.truck_typeAr!}  ",
                       style: TextStyle(
                         // color: AppColor.lightBlue,
                         fontSize: 19.sp,
@@ -244,8 +244,8 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     );
   }
 
-  void _onVerticalGesture(DragUpdateDetails details,
-      OwnerSubShipment subshipment, String language) {
+  void _onVerticalGesture(
+      DragUpdateDetails details, SubShipment subshipment, String language) {
     if (details.primaryDelta! < -7) {
       panelState = PanelState.open;
       showModalBottomSheet(
@@ -325,8 +325,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(180),
                                     child: Image.network(
-                                      subshipment
-                                          .shipment!.merchant!.user!.image!,
+                                      subshipment.merchant_image!,
                                       height: 55.w,
                                       width: 55.w,
                                       fit: BoxFit.fill,
@@ -334,7 +333,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                           (context, error, stackTrace) =>
                                               Center(
                                         child: Text(
-                                          "${subshipment.shipment!.merchant!.user!.firstName![0].toUpperCase()} ${subshipment.shipment!.merchant!.user!.lastName![0].toUpperCase()}",
+                                          "${subshipment.merchant_first_name![0].toUpperCase()} ${subshipment.merchant_last_name![0].toUpperCase()}",
                                           style: TextStyle(
                                             fontSize: 28.sp,
                                           ),
@@ -346,7 +345,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                               ),
                             ),
                             Text(
-                              "${subshipment.shipment!.merchant!.user!.firstName!} ${subshipment.shipment!.merchant!.user!.lastName!}",
+                              "${subshipment.merchant_first_name!} ${subshipment.merchant_last_name!}",
                               style: TextStyle(
                                 // color: AppColor.lightBlue,
                                 fontSize: 19.sp,
@@ -361,7 +360,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                               height: 35.h,
                               width: 155.w,
                               child: CachedNetworkImage(
-                                imageUrl: subshipment.truck!.truck_type!.image!,
+                                imageUrl: subshipment.truck!.truck_type_image!,
                                 progressIndicatorBuilder:
                                     (context, url, downloadProgress) =>
                                         Shimmer.fromColors(
@@ -385,7 +384,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                               ),
                             ),
                             Text(
-                              "${language == 'en' ? subshipment.truck!.truck_type!.name! : subshipment.truck!.truck_type!.nameAr!}  ",
+                              "${language == 'en' ? subshipment.truck!.truck_type! : subshipment.truck!.truck_typeAr!}  ",
                               style: TextStyle(
                                 // color: AppColor.lightBlue,
                                 fontSize: 19.sp,
@@ -555,7 +554,6 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
         const ImageConfiguration(), "assets/icons/location2.png");
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
-    print("sssssssssssssssssssssssssss");
     setState(() {});
   }
 
@@ -761,7 +759,6 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     );
     var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 100.0);
     mapcontroller.animateCamera(cameraUpdate);
-    print("asd3");
 
     setState(() {});
   }

@@ -288,8 +288,11 @@ class _SearchTruckScreenState extends State<SearchTruckScreen> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Image.network(
-                                                  state.trucks[index].images![0]
-                                                      .image!,
+                                                  state.trucks[index].images!
+                                                          .isNotEmpty
+                                                      ? state.trucks[index]
+                                                          .images![0].image!
+                                                      : "",
                                                   height: 175.h,
                                                   width: double.infinity,
                                                   fit: BoxFit.cover,
@@ -344,7 +347,7 @@ class _SearchTruckScreenState extends State<SearchTruckScreen> {
                                                             .start,
                                                     children: [
                                                       Text(
-                                                        '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].truckuser!.usertruck!.firstName} ${state.trucks[index].truckuser!.usertruck!.lastName}',
+                                                        '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].driver_firstname} ${state.trucks[index].driver_lastname}',
                                                         style: TextStyle(
                                                             // color: AppColor.lightBlue,
                                                             fontSize: 18.sp,

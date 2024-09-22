@@ -202,15 +202,12 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                                   index]
                                                               .shipment!));
                                                   Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            IncomingShipmentDetailsScreen(
-                                                                requestId: notificationProvider
-                                                                    .notifications[
-                                                                        index]
-                                                                    .request!),
-                                                      ));
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          IncomingShipmentDetailsScreen(),
+                                                    ),
+                                                  );
                                                 }
 
                                                 if (!notificationProvider
@@ -425,15 +422,12 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                                   index]
                                                               .shipment!));
                                                   Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            IncomingShipmentDetailsScreen(
-                                                                requestId: notificationProvider
-                                                                    .ownernotifications[
-                                                                        index]
-                                                                    .request!),
-                                                      ));
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          IncomingShipmentDetailsScreen(),
+                                                    ),
+                                                  );
                                                 }
 
                                                 if (!notificationProvider

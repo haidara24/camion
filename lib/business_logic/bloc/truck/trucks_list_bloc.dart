@@ -24,7 +24,11 @@ class TrucksListBloc extends Bloc<TrucksListEvent, TrucksListState> {
       emit(TrucksListLoadingProgress());
       try {
         var result = await truckRepository.getNearestTrucks(
-            event.truckType, event.location);
+          event.truckType,
+          event.location,
+          event.pol,
+          event.pod,
+        );
         emit(TrucksListLoadedSuccess(result));
       } catch (e) {
         emit(TrucksListLoadedFailed(e.toString()));

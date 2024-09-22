@@ -16,25 +16,18 @@ class Co2Service {
       'x-apikey': 'PAm7joXg4cr3oSZbbGnASvJuKudzkz76'
     });
     Co2Report? result;
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var res = jsonDecode(response.body);
-      print("co2");
       result = Co2Report.fromJson(res);
     }
-
-    print(origin);
-    print(distination);
 
     var distanceurl =
         "https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin.latitude}, ${origin.longitude}&destinations=${distination.latitude}, ${distination.longitude}&key=AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c&mode=DRIVING&";
     var distanceresponse = await http.get(Uri.parse(distanceurl));
     DistanceReport? distanceresult;
-    print(distanceresponse.statusCode);
     if (distanceresponse.statusCode == 200) {
       var res = jsonDecode(distanceresponse.body);
       distanceresult = DistanceReport.fromJson(res);
-      print(distanceresponse.body);
       result!.distance = distanceresult!.rows![0].elements![0].distance!.text!;
       result!.duration = distanceresult!.rows![0].elements![0].duration!.text!;
     }

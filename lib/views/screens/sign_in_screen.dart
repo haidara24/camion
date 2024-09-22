@@ -39,8 +39,8 @@ class _SignInScreenState extends State<SignInScreen> {
   void _postData(context) {
     // ScaffoldMessenger.of(context)
     //     .showSnackBar(SnackBar(content: Text("aasdasd")));
-    BlocProvider.of<AuthBloc>(context).add(SignInButtonPressed(
-        _usernameController.text, _passwordController.text));
+    // BlocProvider.of<AuthBloc>(context).add(SignInButtonPressed(
+    //     _usernameController.text, _passwordController.text));
   }
 
   @override
@@ -319,8 +319,6 @@ class _SignInScreenState extends State<SignInScreen> {
                                                   null) {
                                                 prefs.setInt("truckowner",
                                                     userProfile.truckowner!);
-                                                print("userProfile.truckowner");
-                                                print(userProfile.truckowner);
                                               }
                                               if (userProfile.truckuser !=
                                                   null) {

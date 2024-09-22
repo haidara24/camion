@@ -60,8 +60,8 @@ class _ECashPaymentCheckoutScreenState
                   payment.shipment = widget.shipment.id!;
                   payment.amount = int.parse(widget.amount);
                   payment.paymentMethod = "E";
-                  payment.fees = widget.shipment.truck!.fees;
-                  payment.extraFees = widget.shipment.truck!.extra_fees;
+                  payment.fees = 0;
+                  payment.extraFees = 0;
 
                   BlocProvider.of<PaymentCreateBloc>(context)
                       .add(PaymentCreateButtonPressed(payment, null));

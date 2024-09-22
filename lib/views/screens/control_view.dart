@@ -78,15 +78,7 @@ class _ControlViewState extends State<ControlView> {
               builder: (context, state) {
                 if (state is AuthDriverSuccessState) {
                   //driver
-                  // BlocProvider.of<UnassignedShipmentListBloc>(context)
-                  //     .add(UnassignedShipmentListLoadEvent());
-                  // BlocProvider.of<DriverActiveShipmentBloc>(context)
-                  //     .add(DriverActiveShipmentLoadEvent("A"));
-                  // BlocProvider.of<DriverRequestsListBloc>(context)
-                  //     .add(const DriverRequestsListLoadEvent(null));
-                  // BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
-                  // BlocProvider.of<FixTypeListBloc>(context)
-                  //     .add(FixTypeListLoad());
+
                   return DriverHomeScreen();
                 } else if (state is AuthOwnerSuccessState) {
                   //owner

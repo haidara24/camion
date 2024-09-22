@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:camion/data/models/approval_request.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 
@@ -59,6 +58,12 @@ class SubShipment {
   String? shipmentStatus;
   String? paths;
   int? shipment;
+  String? merchant_image;
+  String? merchant_first_name;
+  String? merchant_last_name;
+  String? driver_image;
+  String? driver_first_name;
+  String? driver_last_name;
   int? shipmentinstructionv2;
   int? shipmentpaymentv2;
   int? totalWeight;
@@ -69,6 +74,7 @@ class SubShipment {
   ShipmentTruck? truck;
   double? distance;
   int? price;
+  int? approvalrequest;
   String? period;
 
   SubShipment({
@@ -76,6 +82,12 @@ class SubShipment {
     this.shipmentStatus,
     this.paths,
     this.shipment,
+    this.merchant_image,
+    this.merchant_first_name,
+    this.merchant_last_name,
+    this.driver_image,
+    this.driver_first_name,
+    this.driver_last_name,
     this.shipmentinstructionv2,
     this.shipmentpaymentv2,
     this.totalWeight,
@@ -86,24 +98,30 @@ class SubShipment {
     this.truck,
     this.distance,
     this.price,
+    this.approvalrequest,
     this.period,
   });
 
   SubShipment.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     shipmentStatus = json['shipment_status'];
-    print("2");
     paths = json['path'];
-    distance = json['distance'] ?? 0;
+    distance = json['distance'];
     period = json['period'];
     price = json['price'];
     truck =
         json['truck'] != null ? ShipmentTruck.fromJson(json['truck']) : null;
     shipment = json['shipment'];
+    merchant_image = json['merchant_image'];
+    merchant_first_name = json['merchant_first_name'];
+    merchant_last_name = json['merchant_last_name'];
+    driver_image = json['driver_image'];
+    driver_first_name = json['driver_first_name'];
+    driver_last_name = json['driver_last_name'];
     shipmentinstructionv2 = json['shipmentinstructionv2'];
     shipmentpaymentv2 = json['shipmentpaymentv2'];
     totalWeight = json['total_weight'];
-    print("2");
+    approvalrequest = json['approvalrequest'];
     pickupDate = DateTime.parse(json['pickup_date']);
     deliveryDate = DateTime.parse(json['delivery_date']);
     if (json['shipment_items'] != null) {
@@ -119,7 +137,6 @@ class SubShipment {
         pathpoints!.add(PathPoint.fromJson(v));
       });
     }
-    print("2");
   }
 
   Map<String, dynamic> toJson() {
@@ -132,100 +149,10 @@ class SubShipment {
     data['distance'] = distance ?? 0.0;
     data['price'] = price ?? 0.0;
     data['period'] = period ?? "";
+    data['approvalrequest'] = approvalrequest;
     data['total_weight'] = totalWeight;
     data['pickup_date'] = pickupDate?.toIso8601String();
     data['delivery_date'] = deliveryDate?.toIso8601String();
-    // data['shipmentinstructionv2'] = shipmentinstructionv2!;
-    // data['shipmentpaymentv2'] = shipmentpaymentv2!;
-    if (shipmentItems != null) {
-      data['shipment_items'] = shipmentItems!.map((v) => v.toJson()).toList();
-    }
-
-    if (pathpoints != null) {
-      data['path_points'] = pathpoints!.map((v) => v.toJson()).toList();
-    }
-
-    return data;
-  }
-}
-
-class OwnerSubShipment {
-  int? id;
-  String? shipmentStatus;
-  String? paths;
-  SimpleShipment? shipment;
-  int? shipmentinstructionv2;
-  int? shipmentpaymentv2;
-  int? totalWeight;
-  DateTime? pickupDate;
-  DateTime? deliveryDate;
-  List<ShipmentItems>? shipmentItems;
-  List<PathPoint>? pathpoints;
-  ShipmentTruck? truck;
-  double? distance;
-  String? period;
-
-  OwnerSubShipment({
-    this.id,
-    this.shipmentStatus,
-    this.paths,
-    this.shipment,
-    this.shipmentinstructionv2,
-    this.shipmentpaymentv2,
-    this.totalWeight,
-    this.pickupDate,
-    this.deliveryDate,
-    this.shipmentItems,
-    this.pathpoints,
-    this.truck,
-    this.distance,
-    this.period,
-  });
-
-  OwnerSubShipment.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    shipmentStatus = json['shipment_status'];
-    paths = json['path'];
-    distance = json['distance'];
-    period = json['period'];
-    truck =
-        json['truck'] != null ? ShipmentTruck.fromJson(json['truck']) : null;
-    shipment = json['shipment'] != null
-        ? SimpleShipment.fromJson(json['shipment'])
-        : null;
-    shipmentinstructionv2 = json['shipmentinstructionv2'];
-    shipmentpaymentv2 = json['shipmentpaymentv2'];
-    totalWeight = json['total_weight'];
-    pickupDate = DateTime.parse(json['pickup_date']);
-    deliveryDate = DateTime.parse(json['delivery_date']);
-    if (json['shipment_items'] != null) {
-      shipmentItems = <ShipmentItems>[];
-      json['shipment_items'].forEach((v) {
-        shipmentItems!.add(ShipmentItems.fromJson(v));
-      });
-    }
-
-    if (json['path_points'] != null) {
-      pathpoints = <PathPoint>[];
-      json['path_points'].forEach((v) {
-        pathpoints!.add(PathPoint.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-
-    data['id'] = id;
-    data['shipment_status'] = shipmentStatus;
-    data['path'] = paths;
-    data['truck'] = truck!.id!;
-    data['distance'] = distance ?? 0.0;
-    data['period'] = period ?? "";
-    data['total_weight'] = totalWeight;
-    data['pickup_date'] = pickupDate?.toIso8601String();
-    data['delivery_date'] = deliveryDate?.toIso8601String();
-    print("2");
     // data['shipmentinstructionv2'] = shipmentinstructionv2!;
     // data['shipmentpaymentv2'] = shipmentpaymentv2!;
     if (shipmentItems != null) {
@@ -242,46 +169,27 @@ class OwnerSubShipment {
 
 class ShipmentTruck {
   int? id;
-  int? owner;
-  Truckuser? truckuser;
-  TruckType? truck_type;
-  int? location;
+  String? truck_type;
+  String? truck_typeAr;
+  String? truck_type_image;
   String? location_lat;
-  int? empty_weight;
-  int? gross_weight;
-  int? fees;
-  int? extra_fees;
   String? gpsId;
 
   ShipmentTruck({
     this.id,
-    this.owner,
-    this.truckuser,
     this.truck_type,
-    this.location,
+    this.truck_typeAr,
+    this.truck_type_image,
     this.location_lat,
-    this.empty_weight,
-    this.gross_weight,
-    this.fees,
-    this.extra_fees,
     this.gpsId,
   });
 
   ShipmentTruck.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    owner = json['owner'];
-    truckuser = json['truckuser'] != null
-        ? Truckuser.fromJson(json['truckuser'])
-        : null;
-    truck_type = json['truck_type'] != null
-        ? TruckType.fromJson(json['truck_type'])
-        : null;
-    location = json['location'];
+    truck_type = json['truck_type'];
+    truck_typeAr = json['truck_typeAr'];
+    truck_type_image = json['truck_type_image'];
     location_lat = json['location_lat'];
-    empty_weight = json['empty_weight'];
-    gross_weight = json['gross_weight'];
-    fees = json['fees'];
-    extra_fees = json['extra_fees'];
     gpsId = json['gpsId'];
   }
 }
@@ -312,32 +220,6 @@ class ShipmentItems {
     data['commodity_name'] = commodityName;
     data['commodity_weight'] = commodityWeight;
     // data['package_type'] = packageType;
-
-    return data;
-  }
-}
-
-class SelectedTruckType {
-  int? id;
-  int? truckType;
-  bool? is_assigned;
-
-  SelectedTruckType({
-    this.id,
-    this.truckType,
-    this.is_assigned,
-  });
-
-  SelectedTruckType.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    truckType = json['truck_type'];
-    is_assigned = json['is_assigned'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['truck_type'] = truckType;
-    data['is_assigned'] = is_assigned;
 
     return data;
   }
@@ -380,7 +262,6 @@ class PathPoint {
     data['number'] = number;
     data['point_type'] = pointType;
     data['location'] = location;
-    print("3");
 
     return data;
   }

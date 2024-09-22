@@ -28,9 +28,9 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class IncomingShipmentDetailsScreen extends StatefulWidget {
-  final int requestId;
-  IncomingShipmentDetailsScreen({Key? key, required this.requestId})
-      : super(key: key);
+  IncomingShipmentDetailsScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<IncomingShipmentDetailsScreen> createState() =>
@@ -629,8 +629,9 @@ class _IncomingShipmentDetailsScreenState
                                                                         context)
                                                                     .add(
                                                                   AcceptRequestButtonPressedEvent(
-                                                                    widget
-                                                                        .requestId,
+                                                                    shipmentstate
+                                                                        .shipment
+                                                                        .approvalrequest!,
                                                                     extraTextController
                                                                         .text,
                                                                     extraValue,
@@ -822,8 +823,9 @@ class _IncomingShipmentDetailsScreenState
                                                                           context)
                                                                       .add(
                                                                     RejectRequestButtonPressedEvent(
-                                                                      widget
-                                                                          .requestId,
+                                                                      shipmentstate
+                                                                          .shipment
+                                                                          .approvalrequest!,
                                                                       rejectText,
                                                                     ),
                                                                   );

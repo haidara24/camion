@@ -89,13 +89,13 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                       borderRadius: BorderRadius.circular(180),
                                       child: SizedBox(
                                         child: Image.network(
-                                          state.merchant.user!.image!,
+                                          state.merchant.image!,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Center(
                                             child: Text(
-                                              "${state.merchant.user!.firstName![0].toUpperCase()} ${state.merchant.user!.lastName![0].toUpperCase()}",
+                                              "${state.merchant.firstname![0].toUpperCase()} ${state.merchant.lastname![0].toUpperCase()}",
                                               style: TextStyle(
                                                 fontSize: 28.sp,
                                               ),
@@ -126,7 +126,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                 ),
                                 SectionTitle(
                                   text:
-                                      '${state.merchant.user!.firstName} ${state.merchant.user!.lastName}',
+                                      '${state.merchant.firstname} ${state.merchant.lastname}',
                                 ),
                                 const SizedBox(
                                   width: 4,
@@ -136,13 +136,13 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                     setState(() {
                                       editMode = !editMode;
                                       firstNameController.text =
-                                          state.merchant.user!.firstName!;
+                                          state.merchant.firstname!;
                                       lastNameController.text =
-                                          state.merchant.user!.lastName!;
+                                          state.merchant.lastname!;
                                       phoneController.text =
-                                          state.merchant.user!.phone!;
+                                          state.merchant.phone!;
                                       emailController.text =
-                                          state.merchant.user!.email!;
+                                          state.merchant.email!;
                                       addressController.text =
                                           state.merchant.address!;
                                       companyNameController.text =
@@ -158,114 +158,134 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                             ),
                             const Divider(),
                             editMode
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                ? Column(
                                     children: [
-                                      Expanded(
-                                        child: TextFormField(
-                                          controller: firstNameController,
-                                          onTap: () {
-                                            firstNameController.selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        firstNameController
-                                                            .value.text.length);
-                                          },
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .viewInsets
-                                                      .bottom +
-                                                  20),
-                                          textInputAction: TextInputAction.done,
-                                          style: const TextStyle(fontSize: 18),
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(context)!
-                                                    .translate('first_name'),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 11.0,
-                                                    horizontal: 9.0),
-                                          ),
-                                          onTapOutside: (event) {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          onEditingComplete: () {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return AppLocalizations.of(
-                                                      context)!
-                                                  .translate(
-                                                      'insert_value_validate');
-                                            }
-                                            return null;
-                                          },
-                                          onSaved: (newValue) {
-                                            firstNameController.text =
-                                                newValue!;
-                                          },
-                                        ),
+                                      const SizedBox(
+                                        height: 8,
                                       ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: TextFormField(
-                                          controller: lastNameController,
-                                          onTap: () {
-                                            lastNameController.selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        lastNameController
-                                                            .value.text.length);
-                                          },
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .viewInsets
-                                                      .bottom +
-                                                  20),
-                                          textInputAction: TextInputAction.done,
-                                          style: const TextStyle(fontSize: 18),
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(context)!
-                                                    .translate('last_name'),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 11.0,
-                                                    horizontal: 9.0),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Expanded(
+                                            child: TextFormField(
+                                              controller: firstNameController,
+                                              onTap: () {
+                                                firstNameController.selection =
+                                                    TextSelection(
+                                                        baseOffset: 0,
+                                                        extentOffset:
+                                                            firstNameController
+                                                                .value
+                                                                .text
+                                                                .length);
+                                              },
+                                              scrollPadding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                          .viewInsets
+                                                          .bottom +
+                                                      20),
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                              decoration: InputDecoration(
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('first_name'),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 11.0,
+                                                        horizontal: 9.0),
+                                              ),
+                                              onTapOutside: (event) {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              onEditingComplete: () {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          'insert_value_validate');
+                                                }
+                                                return null;
+                                              },
+                                              onSaved: (newValue) {
+                                                firstNameController.text =
+                                                    newValue!;
+                                              },
+                                            ),
                                           ),
-                                          onTapOutside: (event) {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          onEditingComplete: () {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return AppLocalizations.of(
-                                                      context)!
-                                                  .translate(
-                                                      'insert_value_validate');
-                                            }
-                                            return null;
-                                          },
-                                          onSaved: (newValue) {
-                                            lastNameController.text = newValue!;
-                                          },
-                                        ),
-                                      )
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: TextFormField(
+                                              controller: lastNameController,
+                                              onTap: () {
+                                                lastNameController.selection =
+                                                    TextSelection(
+                                                        baseOffset: 0,
+                                                        extentOffset:
+                                                            lastNameController
+                                                                .value
+                                                                .text
+                                                                .length);
+                                              },
+                                              scrollPadding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                          .viewInsets
+                                                          .bottom +
+                                                      20),
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                              decoration: InputDecoration(
+                                                labelText: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('last_name'),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 11.0,
+                                                        horizontal: 9.0),
+                                              ),
+                                              onTapOutside: (event) {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              onEditingComplete: () {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          'insert_value_validate');
+                                                }
+                                                return null;
+                                              },
+                                              onSaved: (newValue) {
+                                                lastNameController.text =
+                                                    newValue!;
+                                              },
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ],
                                   )
                                 : const SizedBox.shrink(),
@@ -326,10 +346,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                         width: 8,
                                       ),
                                       SectionBody(
-                                        text: state
-                                                .merchant.user!.phone!.isEmpty
+                                        text: state.merchant.phone!.isEmpty
                                             ? '---'
-                                            : '${state.merchant.user!.phone}',
+                                            : '${state.merchant.phone}',
                                       ),
                                     ],
                                   ),
@@ -392,10 +411,9 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                         width: 8,
                                       ),
                                       SectionBody(
-                                        text: state
-                                                .merchant.user!.email!.isEmpty
+                                        text: state.merchant.email!.isEmpty
                                             ? '---'
-                                            : '${state.merchant.user!.email}',
+                                            : '${state.merchant.email}',
                                       ),
                                     ],
                                   ),
@@ -689,7 +707,6 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                               child: BlocConsumer<MerchantUpdateProfileBloc,
                                   MerchantUpdateProfileState>(
                                 listener: (context, btnstate) {
-                                  print(btnstate);
                                   if (btnstate
                                       is MerchantUpdateProfileLoadedSuccess) {
                                     setState(() {
@@ -724,14 +741,11 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                               addressController.text;
                                           merchant.companyName =
                                               companyNameController.text;
-                                          merchant.user = UserModel();
-                                          merchant.user!.email =
-                                              emailController.text;
-                                          merchant.user!.phone =
-                                              phoneController.text;
-                                          merchant.user!.firstName =
+                                          merchant.email = emailController.text;
+                                          merchant.phone = phoneController.text;
+                                          merchant.firstname =
                                               firstNameController.text;
-                                          merchant.user!.lastName =
+                                          merchant.lastname =
                                               lastNameController.text;
                                           BlocProvider.of<
                                                       MerchantUpdateProfileBloc>(

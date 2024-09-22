@@ -207,11 +207,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          IncomingShipmentDetailsScreen(
-                                                              requestId: state
-                                                                  .requests[
-                                                                      index]
-                                                                  .id!),
+                                                          IncomingShipmentDetailsScreen(),
                                                     ));
                                               },
                                               child: AbsorbPointer(
@@ -248,7 +244,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                                       horizontal:
                                                                           4),
                                                               child: Text(
-                                                                "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.shipment!.merchant!.user!.firstName!} ${state.requests[index].subshipment!.shipment!.merchant!.user!.lastName!}",
+                                                                "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.firstname!} ${state.requests[index].subshipment!.lastname!}",
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
@@ -267,7 +263,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                                       horizontal:
                                                                           4),
                                                               child: Text(
-                                                                '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!.id!}',
+                                                                '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
                                                                 style:
                                                                     TextStyle(
                                                                   // color: AppColor.lightBlue,
