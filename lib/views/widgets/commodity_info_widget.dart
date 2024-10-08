@@ -18,14 +18,23 @@ class Commodity_info_widget extends StatelessWidget {
       builder: (context, localeState) {
         return Table(
           border: TableBorder.all(
-            color: Colors.grey[400]!,
+            borderRadius: BorderRadius.circular(8),
+            color: AppColor.deepYellow,
             width: 1,
           ),
           children: [
             TableRow(children: [
               TableCell(
                 child: Container(
-                  color: AppColor.lightYellow,
+                  decoration: BoxDecoration(
+                      color: AppColor.deepYellow,
+                      borderRadius: BorderRadius.only(
+                          topLeft: localeState.value.languageCode == "en"
+                              ? const Radius.circular(8)
+                              : Radius.zero,
+                          topRight: localeState.value.languageCode == "en"
+                              ? Radius.zero
+                              : const Radius.circular(8))),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SectionBody(
@@ -36,7 +45,15 @@ class Commodity_info_widget extends StatelessWidget {
               ),
               TableCell(
                 child: Container(
-                  color: AppColor.lightYellow,
+                  decoration: BoxDecoration(
+                      color: AppColor.deepYellow,
+                      borderRadius: BorderRadius.only(
+                          topRight: localeState.value.languageCode == "en"
+                              ? const Radius.circular(8)
+                              : Radius.zero,
+                          topLeft: localeState.value.languageCode == "en"
+                              ? Radius.zero
+                              : const Radius.circular(8))),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: SectionBody(

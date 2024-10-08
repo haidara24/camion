@@ -72,6 +72,7 @@
     "total_co2":"CO2 Emission",
     "distance":"Distance",
     "period":"Period",
+    "distance_from_loading":"Distance from loading point",
     "energy_consumption":"Total energy consumption",
     "location_service_diabled":"Location service is disabled. Please enable the service.",
     "add_station":"Add Station",
@@ -227,6 +228,7 @@
 
     "order_truck":"Order Truck",
     "form_init":"Init Form",
+    "form_clear":"Clear Form",
     "form_init_confirm":"Are you sure you want to init the form?",
 
     "choose_payment_method":"Choose Payment Method",
@@ -241,6 +243,7 @@
     "shipment_search":"Shipment Search",
     "my_path":"My Path",
     "path":"Path",
+    "edit_path":"edit path",
     "costs":"Costs",
     "price_request":"Pricing Request",
     "permissions":"Pass Permissions",

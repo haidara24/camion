@@ -431,13 +431,17 @@ class ShipmentRepository {
       HttpHeaders.contentTypeHeader: "multipart/form-data"
     });
 
+    print("qwe11");
     List<Map<String, dynamic>> sub_shipments = [];
+
+    print("qwe11");
     for (var element in shipment.subshipments!) {
       var item = element.toJson();
       sub_shipments.add(item);
     }
     var dataString = prefs.getString("userProfile");
     UserModel userModel = UserModel.fromJson(jsonDecode(dataString!));
+    print("qwe11");
 
     request.fields['merchant'] = userModel.merchant!.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);

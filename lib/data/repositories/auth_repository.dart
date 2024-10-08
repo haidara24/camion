@@ -128,6 +128,7 @@ class AuthRepository {
 
   Future<dynamic> verifyOtp({required String otp}) async {
     try {
+      print(otp);
       Response response = await post(Uri.parse(VERIFY_OTP_ENDPOINT),
           body: jsonEncode({"otp": otp}),
           headers: {
@@ -148,43 +149,29 @@ class AuthRepository {
 
         data["token"] = jsonObject["access"];
         prefs = await SharedPreferences.getInstance();
+        Response userresponse =
+            await HttpHelper.get(PROFILE_ENDPOINT, apiToken: data["token"]);
+        if (userresponse.statusCode == 200) {
+          var myDataString = utf8.decode(userresponse.bodyBytes);
 
+          prefs.setString("userProfile", myDataString);
+          var result = jsonDecode(myDataString);
+          userProvider.setUser(UserModel.fromJson(result));
+        }
         var userType = prefs.getString("userType") ?? "";
         bool isLogin = prefs.getBool("isLogin") ?? false;
 
-        Response userresponse =
-            await HttpHelper.get(PROFILE_ENDPOINT, apiToken: data["token"]);
-        print("user res${userresponse.statusCode}");
-        if (userresponse.statusCode == 200) {
-          if (userType.isNotEmpty) {
-            var myDataString = utf8.decode(userresponse.bodyBytes);
-
-            prefs.setString("userProfile", myDataString);
-            var result = jsonDecode(myDataString);
-            var userProfile = UserModel.fromJson(result);
-            userProvider.setUser(userProfile);
-            if (userProfile.merchant != null) {
-              prefs.setInt("merchant", userProfile.merchant!);
-            }
-            if (userProfile.truckowner != null) {
-              prefs.setInt("truckowner", userProfile.truckowner!);
-            }
-            if (userProfile.truckuser != null) {
-              prefs.setInt("truckuser", userProfile.truckuser!);
-              Response driverResponse = await HttpHelper.get(
-                  '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
-                  apiToken: data["token"]);
-              print(driverResponse.statusCode);
-              if (driverResponse.statusCode == 200) {
-                var driverDataString = utf8.decode(driverResponse.bodyBytes);
-                var res = jsonDecode(driverDataString);
-                userProvider.setDriver(Driver.fromJson(res));
-                if (isLogin) {
-                  prefs.setInt("truckId", res['truck2']);
-                  prefs.setString("gpsId", res["gpsId"]);
-                }
-              }
-            }
+        if (userType.isNotEmpty) {
+          if (userType == "Merchant") {
+            prefs.setInt("merchant", jsonObject["merchant_id"]);
+          }
+          if (userType == "Owner") {
+            prefs.setInt("truckowner", jsonObject["truck_owner_id"]);
+          }
+          if (userType == "Driver") {
+            prefs.setInt("truckuser", jsonObject["truck_user_id"]);
+            prefs.setInt("truckId", jsonObject['truck_id'] ?? 0);
+            prefs.setString("gpsId", jsonObject["gps_id"] ?? "");
           }
         }
       }

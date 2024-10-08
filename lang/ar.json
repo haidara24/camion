@@ -72,6 +72,7 @@
     "total_co2":"انبعاثات الكربون",
     "distance":"المسافة",
     "period":"المدة الزمنية",
+    "distance_from_loading":"البعد عن مكان التحميل",
     "energy_consumption":"كمية الطاقة المستهلكة",
     "location_service_diabled":"خدمة تحديد الموقع متوقفة. الرجاء تفعيلالخدمة.",
     "add_station":"أضف محطة",
@@ -226,6 +227,7 @@
 
     "order_truck":"اطلب المركبة",
     "form_init":"تهيئة الفورم",
+    "form_clear":"إعادة التهيئة",
     "form_init_confirm":"هل أنت متأكد من تهيئة الفورم؟",
 
     "choose_payment_method":"اختر وسيلة الدفع",
@@ -240,6 +242,7 @@
     "shipment_search":"بحث عن شحنة",
     "my_path":"مساري",
     "path":"المسار",
+    "edit_path":"تعديل المسار",
     "costs":"التكلفة",
     "price_request":"طلبات التسعير",
     "permissions":"أوامر المرور",

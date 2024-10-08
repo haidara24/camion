@@ -21,7 +21,7 @@ class PathStatisticsWidget extends StatelessWidget {
       children: [
         SizedBox(
           // height: 50.h,
-          width: MediaQuery.of(context).size.width * .3,
+          width: MediaQuery.of(context).size.width * .25,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,7 +56,7 @@ class PathStatisticsWidget extends StatelessWidget {
                     builder: (context, localeState) {
                       return SectionBody(
                         text:
-                            " ${(distance * 1700) / 1000000} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
+                            " ${((distance * 1700) / 1000000).toStringAsFixed(2)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
                       );
                     },
                   ),
@@ -65,14 +65,15 @@ class PathStatisticsWidget extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          height: 50.h,
-          child: const VerticalDivider(
-            color: Colors.grey,
-            thickness: 1,
-            width: 1,
-          ),
-        ),
+        // SizedBox(
+        //   height: 50.h,
+        //   width: 3,
+        //   child: const VerticalDivider(
+        //     color: Colors.grey,
+        //     thickness: 1,
+        //     width: 1,
+        //   ),
+        // ),
         SizedBox(
           // height: 50.h,
           width: MediaQuery.of(context).size.width * .25,
@@ -110,14 +111,15 @@ class PathStatisticsWidget extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(
-          height: 50.h,
-          child: const VerticalDivider(
-            color: Colors.grey,
-            thickness: 1,
-            width: 1,
-          ),
-        ),
+        // SizedBox(
+        //   height: 50.h,
+        //   width: 3,
+        //   child: const VerticalDivider(
+        //     color: Colors.grey,
+        //     thickness: 1,
+        //     width: 1,
+        //   ),
+        // ),
         SizedBox(
           // height: 50.h,
           width: MediaQuery.of(context).size.width * .35,

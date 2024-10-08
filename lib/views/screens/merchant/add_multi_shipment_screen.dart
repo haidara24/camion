@@ -42,8 +42,12 @@ class AddMultiShipmentScreen extends StatefulWidget {
   State<AddMultiShipmentScreen> createState() => _AddMultiShipmentScreenState();
 }
 
-class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
+class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
+    with SingleTickerProviderStateMixin {
   // final ScrollController _scrollController = ScrollController();
+  TabController? _tabController;
+  List<Tab> _tabs = [Tab(text: 'Tab 1'), Tab(icon: Icon(Icons.add))];
+
   final FocusNode _nodeCommodityName = FocusNode();
   final FocusNode _nodeCommodityWeight = FocusNode();
 
@@ -58,6 +62,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
   var key2 = GlobalKey();
   var key3 = GlobalKey();
 
+  final ScrollController _scrollController = ScrollController();
   // int mapIndex = 0;
   int truckIndex = 0;
 
@@ -94,9 +99,11 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
           children: [
             TextButton(
                 onPressed: () {
-                  addShippmentProvider!
-                      .setLoadDate(addShippmentProvider!.loadDate, lang);
-                  addShippmentProvider!.setDateError(false);
+                  addShippmentProvider!.setLoadDate(
+                      addShippmentProvider!.loadDate[selectedIndex],
+                      lang,
+                      selectedIndex);
+                  addShippmentProvider!.setDateError(false, selectedIndex);
 
                   Navigator.pop(context);
                 },
@@ -118,15 +125,17 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                 ],
                 child: cupertino.CupertinoDatePicker(
                   backgroundColor: Colors.white10,
-                  initialDateTime: addShippmentProvider!.loadDate,
+                  initialDateTime:
+                      addShippmentProvider!.loadDate[selectedIndex],
                   mode: cupertino.CupertinoDatePickerMode.date,
                   minimumYear: DateTime.now().year,
                   minimumDate: DateTime.now().subtract(const Duration(days: 1)),
                   maximumYear: DateTime.now().year + 1,
                   onDateTimeChanged: (value) {
                     // loadDate = value;
-                    addShippmentProvider!.setLoadDate(value, lang);
-                    addShippmentProvider!.setDateError(false);
+                    addShippmentProvider!
+                        .setLoadDate(value, lang, selectedIndex);
+                    addShippmentProvider!.setDateError(false, selectedIndex);
                     // order_brokerProvider!.setProductDate(value);
                     // order_brokerProvider!.setDateError(false);
                   },
@@ -157,9 +166,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
             TextButton(
                 onPressed: () {
                   addShippmentProvider!.setLoadTime(
-                    addShippmentProvider!.loadTime,
-                  );
-                  addShippmentProvider!.setDateError(false);
+                      addShippmentProvider!.loadTime[selectedIndex],
+                      selectedIndex);
+                  addShippmentProvider!.setDateError(false, selectedIndex);
 
                   Navigator.pop(context);
                 },
@@ -181,15 +190,14 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                 ],
                 child: cupertino.CupertinoDatePicker(
                   backgroundColor: Colors.white10,
-                  initialDateTime: addShippmentProvider!.loadTime,
+                  initialDateTime:
+                      addShippmentProvider!.loadTime[selectedIndex],
                   mode: cupertino.CupertinoDatePickerMode.time,
                   // minimumDate: DateTime.now(),
                   onDateTimeChanged: (value) {
                     // loadTime = value;
-                    addShippmentProvider!.setLoadTime(
-                      value,
-                    );
-                    addShippmentProvider!.setDateError(false);
+                    addShippmentProvider!.setLoadTime(value, selectedIndex);
+                    addShippmentProvider!.setDateError(false, selectedIndex);
                     // order_brokerProvider!.setProductDate(value);
                     // order_brokerProvider!.setDateError(false);
                   },
@@ -202,7 +210,183 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
     );
   }
 
-  // int selectedIndex = 0;
+  int selectedIndex = 0;
+
+  Widget pathList(AddMultiShipmentProvider provider, BuildContext pathcontext) {
+    return Container(
+      height: 60.h,
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            width: 1,
+            color: AppColor.lightYellow,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          ListView.builder(
+            itemCount: provider.countpath,
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                  provider.initMapbounds();
+                },
+                child: Container(
+                  // width: 130.w,
+                  margin: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.symmetric(
+                    // vertical: 5,
+                    horizontal: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    // color: selectedIndex == index
+                    //     ? AppColor.deepYellow
+                    //     : Colors.grey[400],
+                    // borderRadius: BorderRadius.circular(8),
+                    border: selectedIndex == index
+                        ? Border(
+                            bottom: BorderSide(
+                              width: 2,
+                              color: AppColor.deepYellow,
+                            ),
+                          )
+                        : null,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "الشاحنة ${index + 1}",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.darkGrey200,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              InkWell(
+                onTap: () {
+                  print("asd");
+                  if (provider.pickup_location.isNotEmpty ||
+                      provider.delivery_location.isNotEmpty) {
+                    if (provider.addShipmentformKey[selectedIndex].currentState!
+                        .validate()) {
+                      if (provider
+                              .time_controller[selectedIndex].text.isNotEmpty &&
+                          provider
+                              .date_controller[selectedIndex].text.isNotEmpty) {
+                        if (provider.selectedTruckType[selectedIndex] != null) {
+                          provider.setTruckConfirm(false, selectedIndex);
+                          provider.addpath();
+                          setState(() {
+                            selectedIndex++;
+                          });
+                        } else {
+                          provider.setTruckTypeError(true);
+                          provider.setTruckConfirm(true, selectedIndex);
+                        }
+                      } else {
+                        provider.setDateError(true, selectedIndex);
+                      }
+                    } else {
+                      provider.setTruckConfirm(true, selectedIndex);
+                    }
+                  } else {
+                    provider.setPathError(
+                      true,
+                    );
+                    provider.setTruckConfirm(true, selectedIndex);
+                  }
+                },
+                child: Row(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.translate('add_truck'),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppColor.deepYellow,
+                      ),
+                    ),
+                    AbsorbPointer(
+                      absorbing: true,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 28.h,
+                          width: 28.w,
+                          child:
+                              SvgPicture.asset("assets/icons/orange/add.svg"),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget pathList(AddMultiShipmentProvider provider, BuildContext pathcontext) {
+  //   return TabBar(
+  //     controller: _tabController,
+  //     isScrollable: true,
+  //     tabs: [
+  //       ..._tabs,
+  //     ],
+  //     onTap: (index) {
+  //       print(_tabController!.length);
+  //       print(index);
+  //       if (index == _tabs.length) {
+  //         if (provider.pickup_location[selectedIndex].isNotEmpty ||
+  //             provider.delivery_location[selectedIndex].isNotEmpty) {
+  //           if (provider.selectedTruckType[selectedIndex] != null) {
+  //             if (provider.addShipmentformKey[selectedIndex].currentState!
+  //                 .validate()) {
+  //               provider.setTruckConfirm(false, selectedIndex);
+  //               provider.addpath();
+  //               setState(() {
+  //                 int newTabIndex = _tabs.length + 1;
+  //                 _tabs.insert(_tabs.length - 1, Tab(text: 'Tab $newTabIndex'));
+  //                 _tabController =
+  //                     TabController(length: _tabs.length, vsync: this);
+  //                 selectedIndex++;
+  //               });
+  //             } else {
+  //               provider.setTruckConfirm(true, selectedIndex);
+  //             }
+  //           } else {
+  //             provider.setTruckConfirm(true, selectedIndex);
+  //           }
+  //         } else {
+  //           provider.setPathError(
+  //             true,
+  //           );
+  //           provider.setTruckConfirm(true, selectedIndex);
+  //         }
+  //       } else {
+  //         setState(() {
+  //           selectedIndex = index;
+  //         });
+  //         provider.initMapbounds();
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget selectedTruckTypesList(AddMultiShipmentProvider provider,
       BuildContext pathcontext, String lang) {
@@ -236,7 +420,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                         height: 45.h,
                         width: 155.w,
                         child: CachedNetworkImage(
-                          imageUrl: provider.selectedTruckType[index].image!,
+                          imageUrl: provider.selectedTruckType[index]!.image!,
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) =>
                                   Shimmer.fromColors(
@@ -264,12 +448,19 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                       SizedBox(
                         height: 4.h,
                       ),
-                      Center(
-                        child: SectionBody(
-                          text: lang == "en"
-                              ? provider.selectedTruckType[index].name!
-                              : provider.selectedTruckType[index].nameAr!,
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SectionBody(
+                            text: lang == "en"
+                                ? provider.selectedTruckType[index]!.name!
+                                : provider.selectedTruckType[index]!.nameAr!,
+                          ),
+                          SectionBody(
+                            text:
+                                "${lang == "en" ? "Num:" : "عدد:"} ${provider.selectedTruckTypeNum[index]}",
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -293,9 +484,13 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
     rootBundle.loadString('assets/style/normal_style.json').then((string) {
       _mapStyle = string;
     });
-    // rootBundle.loadString('assets/style/map_style.json').then((string) {
-    //   _darkmapStyle = string;
-    // });
+    _tabController = TabController(length: _tabs.length, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
   }
 
   List<LatLng> deserializeLatLng(String jsonString) {
@@ -323,7 +518,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
         builder: (context, valueProvider, child) {
           return Container(
             color: Colors.grey[200],
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             constraints:
                 BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             width: double.infinity,
@@ -331,28 +526,25 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
               // shrinkWrap: true,
               // physics: NeverScrollableScrollPhysics(),
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      const Spacer(),
-                      SectionTitle(
-                        text: AppLocalizations.of(context)!
-                            .translate('choose_shippment_path'),
-                      ),
-                      const Spacer(),
-                      const SizedBox(
-                        width: 25,
-                      ),
-                    ],
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.arrow_back),
+                    ),
+                    const Spacer(),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate('choose_shippment_path'),
+                    ),
+                    const Spacer(),
+                    const SizedBox(
+                      width: 25,
+                    ),
+                  ],
                 ),
                 SizedBox(
                   height: 8.h,
@@ -1181,337 +1373,254 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
     return result.toInt();
   }
 
-  showTruckTypeModalSheet(BuildContext context, String lang) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      // shape: const RoundedRectangleBorder(
-      //   borderRadius: BorderRadius.vertical(
-      //     top: Radius.circular(0),
-      //   ),
-      // ),
-      builder: (context) => Consumer<AddMultiShipmentProvider>(
-        builder: (context, valueProvider, child) {
-          return Container(
-            color: Colors.grey[200],
-            padding: const EdgeInsets.all(8.0),
-            constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * .75),
-            width: MediaQuery.of(context).size.width,
-            child: ListView(
-              // shrinkWrap: true,
-              // physics: NeverScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      const Spacer(),
-                      SectionTitle(
-                        text: AppLocalizations.of(context)!
-                            .translate('select_truck_type'),
-                      ),
-                      const Spacer(),
-                      const SizedBox(
-                        width: 25,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-                BlocBuilder<TruckTypeBloc, TruckTypeState>(
-                  builder: (context, typestate) {
-                    if (typestate is TruckTypeLoadedSuccess) {
-                      return ListView.builder(
-                        itemCount: typestate.truckTypes.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return StatefulBuilder(
-                              builder: (context, menuSetState) {
-                            // var isSelected = valueProvider.selectedTruckType
-                            //     .contains(typestate.truckTypes[index]);
-                            return InkWell(
-                              onTap: () {
-                                // isSelected
-                                //     ? valueProvider.removeTruckType(
-                                //         typestate.truckTypes[index])
-                                //     : valueProvider.addTruckType(
-                                //         typestate.truckTypes[index]);
-                                // valueProvider.setTruckTypeError(false);
-                                // //This rebuilds the StatefulWidget to update the button's text
-                                // setState(() {
-                                //   isSelected = valueProvider.selectedTruckTypeId
-                                //       .contains(typestate.truckTypes[index].id);
-                                // });
-                                //This rebuilds the dropdownMenu Widget to update the check mark
-                                // menuSetState(() {});
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          onChanged: (checked) {
-                                            if (!(checked ?? false)) {
-                                              valueProvider.removeTruckType(
-                                                  typestate.truckTypes[index]);
-                                            } else {
-                                              valueProvider.addTruckType(
-                                                  typestate.truckTypes[index]);
-                                            }
-                                            setState(() {});
-                                            menuSetState(() {});
-                                          },
-                                          value: valueProvider.selectedTruckType
-                                              .contains(
-                                                  typestate.truckTypes[index]),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 45.h,
-                                              width: 135.w,
-                                              child: CachedNetworkImage(
-                                                imageUrl: typestate
-                                                    .truckTypes[index].image!,
-                                                progressIndicatorBuilder:
-                                                    (context, url,
-                                                            downloadProgress) =>
-                                                        Shimmer.fromColors(
-                                                  baseColor:
-                                                      (Colors.grey[300])!,
-                                                  highlightColor:
-                                                      (Colors.grey[100])!,
-                                                  enabled: true,
-                                                  child: Container(
-                                                    height: 45.h,
-                                                    width: 135.w,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Container(
-                                                  height: 45.h,
-                                                  width: 155.w,
-                                                  color: Colors.grey[300],
-                                                  child: Center(
-                                                    child: Text(AppLocalizations
-                                                            .of(context)!
-                                                        .translate(
-                                                            'image_load_error')),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(height: 8.h),
-                                            Center(
-                                              child: SectionBody(
-                                                text: lang == "en"
-                                                    ? typestate
-                                                        .truckTypes[index].name!
-                                                    : typestate
-                                                        .truckTypes[index]
-                                                        .nameAr!,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 5.w),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  if (valueProvider
-                                                      .selectedTruckType
-                                                      .contains(typestate
-                                                          .truckTypes[index])) {
-                                                    valueProvider
-                                                        .increaseTruckType(
-                                                      typestate
-                                                          .truckTypes[index]
-                                                          .id!,
-                                                    );
-                                                    menuSetState(() {});
-                                                  }
-                                                },
-                                                icon: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(3),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                      color: Colors.grey[600]!,
-                                                      width: 1,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            45),
-                                                  ),
-                                                  child: Icon(Icons.add,
-                                                      size: 25.w,
-                                                      color: Colors.blue[200]!),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 7.h,
-                                              ),
-                                              SizedBox(
-                                                width: 70.w,
-                                                height: 38.h,
-                                                child: TextField(
-                                                  controller: valueProvider
-                                                          .selectedTruckType
-                                                          .contains(
-                                                    typestate.truckTypes[index],
-                                                  )
-                                                      ? valueProvider
-                                                              .truckTypeController[
-                                                          valueProvider
-                                                              .selectedTruckType
-                                                              .indexOf(
-                                                          typestate.truckTypes[
-                                                              index],
-                                                        )]
-                                                      : null,
-                                                  enabled: false,
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                      fontSize: 18),
-                                                  textInputAction:
-                                                      TextInputAction.done,
-                                                  keyboardType:
-                                                      const TextInputType
-                                                          .numberWithOptions(
-                                                          decimal: true,
-                                                          signed: true),
-                                                  inputFormatters: [
-                                                    DecimalFormatter(),
-                                                  ],
-                                                  decoration:
-                                                      const InputDecoration(
-                                                    labelText: "",
-                                                    alignLabelWithHint: true,
-                                                    contentPadding:
-                                                        EdgeInsets.zero,
-                                                  ),
-                                                  scrollPadding:
-                                                      EdgeInsets.only(
-                                                    bottom:
-                                                        MediaQuery.of(context)
-                                                                .viewInsets
-                                                                .bottom +
-                                                            50,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 7.h,
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  if (valueProvider
-                                                      .selectedTruckType
-                                                      .contains(typestate
-                                                          .truckTypes[index])) {
-                                                    valueProvider
-                                                        .decreaseTruckType(
-                                                      typestate
-                                                          .truckTypes[index]
-                                                          .id!,
-                                                    );
-                                                  }
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(3),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                      color: Colors.grey[600]!,
-                                                      width: 1,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            45),
-                                                  ),
-                                                  child: Icon(
-                                                    Icons.remove,
-                                                    size: 25.w,
-                                                    color: Colors.grey[600]!,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Divider(),
-                                  ],
-                                ),
-                              ),
-                            );
-                          });
-                        },
-                      );
-                    } else if (typestate is TruckTypeLoadingProgress) {
-                      return const Center(
-                        child: LinearProgressIndicator(),
-                      );
-                    } else if (typestate is TruckTypeLoadedFailed) {
-                      return Center(
-                        child: InkWell(
-                          onTap: () {
-                            BlocProvider.of<TruckTypeBloc>(context)
-                                .add(TruckTypeLoadEvent());
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .translate('list_error'),
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                              const Icon(
-                                Icons.refresh,
-                                color: Colors.grey,
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
-                SizedBox(
-                  height: 8.h,
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+  // showTruckTypeModalSheet(BuildContext context, String lang) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     useSafeArea: true,
+  //     // shape: const RoundedRectangleBorder(
+  //     //   borderRadius: BorderRadius.vertical(
+  //     //     top: Radius.circular(0),
+  //     //   ),
+  //     // ),
+  //     builder: (context) => Consumer<AddMultiShipmentProvider>(
+  //       builder: (context, valueProvider, child) {
+  //         return Stack(
+  //           alignment: Alignment.bottomCenter,
+  //           children: [
+  //             Container(
+  //               color: Colors.grey[200],
+  //               padding: const EdgeInsets.all(8.0),
+  //               constraints: BoxConstraints(
+  //                   maxHeight: MediaQuery.of(context).size.height),
+  //               width: MediaQuery.of(context).size.width,
+  //               child: ListView(
+  //                 // shrinkWrap: true,
+  //                 // physics: NeverScrollableScrollPhysics(),
+  //                 children: [
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(8.0),
+  //                     child: Row(
+  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                       children: [
+  //                         IconButton(
+  //                           onPressed: () {
+  //                             Navigator.pop(context);
+  //                           },
+  //                           icon: const Icon(Icons.arrow_back),
+  //                         ),
+  //                         const Spacer(),
+  //                         SectionTitle(
+  //                           text: AppLocalizations.of(context)!
+  //                               .translate('select_truck_type'),
+  //                         ),
+  //                         const Spacer(),
+  //                         const SizedBox(
+  //                           width: 25,
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   SizedBox(
+  //                     height: 8.h,
+  //                   ),
+  //                   BlocBuilder<TruckTypeBloc, TruckTypeState>(
+  //                     builder: (context, typestate) {
+  //                       if (typestate is TruckTypeLoadedSuccess) {
+  //                         return ListView.builder(
+  //                           itemCount: typestate.truckTypes.length,
+  //                           shrinkWrap: true,
+  //                           itemBuilder: (context, index) {
+  //                             return StatefulBuilder(
+  //                                 builder: (context, menuSetState) {
+  //                               // var isSelected = valueProvider.selectedTruckType
+  //                               //     .contains(typestate.truckTypes[index]);
+  //                               return InkWell(
+  //                                 onTap: () {
+  //                                   // isSelected
+  //                                   //     ? valueProvider.removeTruckType(
+  //                                   //         typestate.truckTypes[index])
+  //                                   //     : valueProvider.addTruckType(
+  //                                   //         typestate.truckTypes[index]);
+  //                                   // valueProvider.setTruckTypeError(false);
+  //                                   // //This rebuilds the StatefulWidget to update the button's text
+  //                                   // setState(() {
+  //                                   //   isSelected = valueProvider.selectedTruckTypeId
+  //                                   //       .contains(typestate.truckTypes[index].id);
+  //                                   // });
+  //                                   //This rebuilds the dropdownMenu Widget to update the check mark
+  //                                   // menuSetState(() {});
+  //                                 },
+  //                                 child: Padding(
+  //                                   padding: const EdgeInsets.all(8.0),
+  //                                   child: Column(
+  //                                     children: [
+  //                                       Row(
+  //                                         children: [
+  //                                           Checkbox(
+  //                                             onChanged: (checked) {
+  //                                               if (!(checked ?? false)) {
+  //                                                 valueProvider.removeTruckType(
+  //                                                     typestate
+  //                                                         .truckTypes[index]);
+  //                                               } else {
+  //                                                 valueProvider.addTruckType(
+  //                                                     typestate
+  //                                                         .truckTypes[index]);
+  //                                               }
+  //                                               setState(() {});
+  //                                               menuSetState(() {});
+  //                                             },
+  //                                             value: valueProvider
+  //                                                 .selectedTruckType
+  //                                                 .contains(typestate
+  //                                                     .truckTypes[index]),
+  //                                           ),
+  //                                           const SizedBox(width: 16),
+  //                                           Column(
+  //                                             children: [
+  //                                               SizedBox(
+  //                                                 height: 45.h,
+  //                                                 width: 135.w,
+  //                                                 child: CachedNetworkImage(
+  //                                                   imageUrl: typestate
+  //                                                       .truckTypes[index]
+  //                                                       .image!,
+  //                                                   progressIndicatorBuilder:
+  //                                                       (context, url,
+  //                                                               downloadProgress) =>
+  //                                                           Shimmer.fromColors(
+  //                                                     baseColor:
+  //                                                         (Colors.grey[300])!,
+  //                                                     highlightColor:
+  //                                                         (Colors.grey[100])!,
+  //                                                     enabled: true,
+  //                                                     child: Container(
+  //                                                       height: 45.h,
+  //                                                       width: 135.w,
+  //                                                       color: Colors.white,
+  //                                                     ),
+  //                                                   ),
+  //                                                   errorWidget:
+  //                                                       (context, url, error) =>
+  //                                                           Container(
+  //                                                     height: 45.h,
+  //                                                     width: 155.w,
+  //                                                     color: Colors.grey[300],
+  //                                                     child: Center(
+  //                                                       child: Text(
+  //                                                           AppLocalizations.of(
+  //                                                                   context)!
+  //                                                               .translate(
+  //                                                                   'image_load_error')),
+  //                                                     ),
+  //                                                   ),
+  //                                                 ),
+  //                                               ),
+  //                                               SizedBox(height: 8.h),
+  //                                               Center(
+  //                                                 child: SectionBody(
+  //                                                   text: lang == "en"
+  //                                                       ? typestate
+  //                                                           .truckTypes[index]
+  //                                                           .name!
+  //                                                       : typestate
+  //                                                           .truckTypes[index]
+  //                                                           .nameAr!,
+  //                                                 ),
+  //                                               ),
+  //                                             ],
+  //                                           ),
+  //                                         ],
+  //                                       ),
+  //                                       const Divider(),
+  //                                     ],
+  //                                   ),
+  //                                 ),
+  //                               );
+  //                             });
+  //                           },
+  //                         );
+  //                       } else if (typestate is TruckTypeLoadingProgress) {
+  //                         return const Center(
+  //                           child: LinearProgressIndicator(),
+  //                         );
+  //                       } else if (typestate is TruckTypeLoadedFailed) {
+  //                         return Center(
+  //                           child: InkWell(
+  //                             onTap: () {
+  //                               BlocProvider.of<TruckTypeBloc>(context)
+  //                                   .add(TruckTypeLoadEvent());
+  //                             },
+  //                             child: Row(
+  //                               mainAxisAlignment: MainAxisAlignment.center,
+  //                               children: [
+  //                                 Text(
+  //                                   AppLocalizations.of(context)!
+  //                                       .translate('list_error'),
+  //                                   style: const TextStyle(color: Colors.red),
+  //                                 ),
+  //                                 const Icon(
+  //                                   Icons.refresh,
+  //                                   color: Colors.grey,
+  //                                 )
+  //                               ],
+  //                             ),
+  //                           ),
+  //                         );
+  //                       } else {
+  //                         return Container();
+  //                       }
+  //                     },
+  //                   ),
+  //                   SizedBox(
+  //                     height: 8.h,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //             Positioned(
+  //               bottom: 0,
+  //               child: Container(
+  //                 height: 80.h,
+  //                 decoration: BoxDecoration(
+  //                   color: Colors.white,
+  //                   border: Border(
+  //                     top: BorderSide(color: AppColor.darkGrey200, width: 2),
+  //                   ),
+  //                 ),
+  //                 width: MediaQuery.of(context).size.width,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.symmetric(vertical: 2.5),
+  //                   child: Row(
+  //                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //                     children: [
+  //                       SizedBox(
+  //                         width: MediaQuery.of(context).size.width * .92,
+  //                         child: CustomButton(
+  //                           title: Text(
+  //                             AppLocalizations.of(context)!
+  //                                 .translate('confirm'),
+  //                             style: TextStyle(
+  //                               fontSize: 20.sp,
+  //                             ),
+  //                           ),
+  //                           onTap: () {
+  //                             Navigator.pop(context);
+  //                           },
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -1534,10 +1643,17 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // shipmentProvider.countpath > 1
-                        //     ? pathList(shipmentProvider, context)
-                        //     : const SizedBox.shrink(),
-                        SizedBox(height: 20.h),
+                        pathList(shipmentProvider, context),
+                        // Visibility(
+                        //   visible: shipmentProvider.truckConfirm[selectedIndex],
+                        //   child: Text(
+                        //     "الرجاء اكمال بيانات الشاحنة الحالية قبل إضافة شاحنة أخرى.",
+                        //     style: TextStyle(
+                        //       color: Colors.red[400],
+                        //     ),
+                        //   ),
+                        // ),
+                        SizedBox(height: 12.h),
                         Stack(
                           clipBehavior: Clip.none,
                           children: [
@@ -1552,7 +1668,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                     color: Colors.white,
                                     margin: const EdgeInsets.symmetric(
                                       vertical: 5,
-                                      horizontal: 4,
+                                      horizontal: 16,
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -1658,18 +1774,58 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                       .delivery_controller,
                                                 ),
                                                 shipmentProvider.pathConfirm
-                                                    ? InkWell(
-                                                        onTap: () {
-                                                          showShipmentPathModalSheet(
-                                                              context,
-                                                              localeState.value
-                                                                  .languageCode);
-                                                        },
-                                                        child: Icon(
-                                                          Icons.edit,
-                                                          color: AppColor
-                                                              .deepYellow,
-                                                        ),
+                                                    ? Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          InkWell(
+                                                            onTap: () {
+                                                              showShipmentPathModalSheet(
+                                                                  context,
+                                                                  localeState
+                                                                      .value
+                                                                      .languageCode);
+                                                            },
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'edit_path'),
+                                                              style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: AppColor
+                                                                    .deepYellow,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          InkWell(
+                                                            onTap: () =>
+                                                                showShipmentPathModalSheet(
+                                                                    context,
+                                                                    localeState
+                                                                        .value
+                                                                        .languageCode),
+                                                            child:
+                                                                AbsorbPointer(
+                                                              absorbing: true,
+                                                              child: Padding(
+                                                                padding:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            8.0),
+                                                                child: Icon(
+                                                                  Icons.edit,
+                                                                  color: AppColor
+                                                                      .deepYellow,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       )
                                                     : const SizedBox.shrink(),
                                               ],
@@ -1718,12 +1874,17 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                     }
                                   },
                                   child: pickupicon != null
-                                      ? Container(
+                                      ? Card(
+                                          elevation: 1,
                                           color: Colors.white,
+                                          margin: const EdgeInsets.symmetric(
+                                            vertical: 5,
+                                            horizontal: 16,
+                                          ),
                                           child: Column(
                                             children: [
                                               SizedBox(
-                                                height: 200.h,
+                                                height: 275.h,
                                                 child: AbsorbPointer(
                                                   absorbing: false,
                                                   child: GoogleMap(
@@ -1846,12 +2007,14 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   child: SizedBox(
                                     key: key2,
                                     child: Form(
-                                      key: shipmentProvider.addShipmentformKey,
+                                      key: shipmentProvider
+                                          .addShipmentformKey[selectedIndex],
                                       child: ListView.builder(
                                           shrinkWrap: true,
                                           physics:
                                               const NeverScrollableScrollPhysics(),
-                                          itemCount: shipmentProvider.count,
+                                          itemCount: shipmentProvider
+                                              .count[selectedIndex],
                                           itemBuilder: (context, index2) {
                                             return Stack(
                                               children: [
@@ -1861,7 +2024,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                   margin: const EdgeInsets
                                                       .symmetric(
                                                     vertical: 5,
-                                                    horizontal: 4,
+                                                    horizontal: 16,
                                                   ),
                                                   child: Padding(
                                                     padding: const EdgeInsets
@@ -1922,10 +2085,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             }
                                                           },
                                                           child: TextFormField(
-                                                            controller:
-                                                                shipmentProvider
+                                                            controller: shipmentProvider
                                                                         .commodityName_controllers[
-                                                                    index2],
+                                                                    selectedIndex]
+                                                                [index2],
                                                             onTap: () {
                                                               BlocProvider.of<
                                                                           BottomNavBarCubit>(
@@ -1933,13 +2096,16 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                   .emitHide();
                                                               shipmentProvider
                                                                       .commodityName_controllers[
-                                                                          index2]
+                                                                          selectedIndex]
+                                                                          [index2]
                                                                       .selection =
                                                                   TextSelection(
                                                                       baseOffset:
                                                                           0,
                                                                       extentOffset: shipmentProvider
                                                                           .commodityName_controllers[
+                                                                              selectedIndex]
+                                                                              [
                                                                               index2]
                                                                           .value
                                                                           .text
@@ -2007,7 +2173,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                 (newValue) {
                                                               shipmentProvider
                                                                   .commodityName_controllers[
-                                                                      index2]
+                                                                      selectedIndex]
+                                                                      [index2]
                                                                   .text = newValue!;
                                                             },
                                                             onFieldSubmitted:
@@ -2043,10 +2210,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             }
                                                           },
                                                           child: TextFormField(
-                                                            controller:
-                                                                shipmentProvider
+                                                            controller: shipmentProvider
                                                                         .commodityWeight_controllers[
-                                                                    index2],
+                                                                    selectedIndex]
+                                                                [index2],
                                                             onTap: () {
                                                               BlocProvider.of<
                                                                           BottomNavBarCubit>(
@@ -2054,13 +2221,16 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                   .emitHide();
                                                               shipmentProvider
                                                                       .commodityWeight_controllers[
-                                                                          index2]
+                                                                          selectedIndex]
+                                                                          [index2]
                                                                       .selection =
                                                                   TextSelection(
                                                                       baseOffset:
                                                                           0,
                                                                       extentOffset: shipmentProvider
                                                                           .commodityWeight_controllers[
+                                                                              selectedIndex]
+                                                                              [
                                                                               index2]
                                                                           .value
                                                                           .text
@@ -2118,9 +2288,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             onTapOutside:
                                                                 (event) {
                                                               shipmentProvider
-                                                                  .calculateTotalWeight();
+                                                                  .calculateTotalWeight(
+                                                                      selectedIndex);
                                                             },
-
                                                             // autovalidateMode:
                                                             //     AutovalidateMode
                                                             //         .onUserInteraction,
@@ -2138,15 +2308,18 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                 (newValue) {
                                                               shipmentProvider
                                                                   .commodityWeight_controllers[
-                                                                      index2]
+                                                                      selectedIndex]
+                                                                      [index2]
                                                                   .text = newValue!;
                                                               shipmentProvider
-                                                                  .calculateTotalWeight();
+                                                                  .calculateTotalWeight(
+                                                                      selectedIndex);
                                                             },
                                                             onFieldSubmitted:
                                                                 (value) {
                                                               shipmentProvider
-                                                                  .calculateTotalWeight();
+                                                                  .calculateTotalWeight(
+                                                                      selectedIndex);
                                                               FocusManager
                                                                   .instance
                                                                   .primaryFocus
@@ -2161,8 +2334,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         const SizedBox(
                                                           height: 12,
                                                         ),
-                                                        (shipmentProvider
-                                                                    .count ==
+                                                        (shipmentProvider.count[
+                                                                    selectedIndex] ==
                                                                 (index2 + 1))
                                                             ? Row(
                                                                 mainAxisAlignment:
@@ -2171,8 +2344,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                 children: [
                                                                   InkWell(
                                                                     onTap: () {
-                                                                      shipmentProvider
-                                                                          .additem();
+                                                                      shipmentProvider.additem(
+                                                                          selectedIndex,
+                                                                          index2);
                                                                     },
                                                                     child: Text(
                                                                       AppLocalizations.of(
@@ -2190,31 +2364,32 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                  // InkWell(
-                                                                  //   onTap: () =>
-                                                                  //       shipmentProvider
-                                                                  //           .additem(selectedIndex),
-                                                                  //   child:
-                                                                  //       AbsorbPointer(
-                                                                  //     absorbing:
-                                                                  //         true,
-                                                                  //     child:
-                                                                  //         Padding(
-                                                                  //       padding: const EdgeInsets
-                                                                  //           .all(
-                                                                  //           8.0),
-                                                                  //       child:
-                                                                  //           SizedBox(
-                                                                  //         height:
-                                                                  //             32.h,
-                                                                  //         width:
-                                                                  //             32.w,
-                                                                  //         child:
-                                                                  //             SvgPicture.asset("assets/icons/add.svg"),
-                                                                  //       ),
-                                                                  //     ),
-                                                                  //   ),
-                                                                  // ),
+                                                                  InkWell(
+                                                                    onTap: () =>
+                                                                        shipmentProvider.additem(
+                                                                            selectedIndex,
+                                                                            index2),
+                                                                    child:
+                                                                        AbsorbPointer(
+                                                                      absorbing:
+                                                                          true,
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                        child:
+                                                                            SizedBox(
+                                                                          height:
+                                                                              32.h,
+                                                                          width:
+                                                                              32.w,
+                                                                          child:
+                                                                              SvgPicture.asset("assets/icons/orange/add.svg"),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
                                                                 ],
                                                               )
                                                             : const SizedBox
@@ -2223,7 +2398,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                (shipmentProvider.count > 1)
+                                                (shipmentProvider.count[
+                                                            selectedIndex] >
+                                                        1)
                                                     ? Positioned(
                                                         left: 5,
                                                         // right: localeState
@@ -2295,7 +2472,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         ),
                                                       )
                                                     : const SizedBox.shrink(),
-                                                (shipmentProvider.count > 1) &&
+                                                (shipmentProvider.count[
+                                                                selectedIndex] >
+                                                            1) &&
                                                         (index2 != 0)
                                                     ? Positioned(
                                                         right: 0,
@@ -2309,6 +2488,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                           onTap: () {
                                                             shipmentProvider
                                                                 .removeitem(
+                                                              selectedIndex,
                                                               index2,
                                                             );
                                                             // _showAlertDialog(index);
@@ -2346,7 +2526,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   color: Colors.white,
                                   margin: const EdgeInsets.symmetric(
                                     vertical: 2,
-                                    horizontal: 4,
+                                    horizontal: 16,
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -2377,91 +2557,87 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                         const SizedBox(
                                           height: 8,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                        Column(
                                           children: [
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  _showDatePicker(localeState
-                                                      .value.languageCode);
-                                                },
-                                                child: TextFormField(
-                                                  controller: shipmentProvider
-                                                      .date_controller,
-                                                  enabled: false,
-                                                  style: const TextStyle(
+                                            InkWell(
+                                              onTap: () {
+                                                _showDatePicker(localeState
+                                                    .value.languageCode);
+                                              },
+                                              child: TextFormField(
+                                                controller: shipmentProvider
+                                                        .date_controller[
+                                                    selectedIndex],
+                                                enabled: false,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black87,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  labelText:
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate('date'),
+                                                  floatingLabelStyle:
+                                                      const TextStyle(
                                                     fontSize: 16,
                                                     color: Colors.black87,
                                                   ),
-                                                  decoration: InputDecoration(
-                                                    labelText:
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate('date'),
-                                                    floatingLabelStyle:
-                                                        const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.black87,
-                                                    ),
-                                                    contentPadding:
-                                                        const EdgeInsets
-                                                            .symmetric(
-                                                            vertical: 11.0,
-                                                            horizontal: 9.0),
-                                                    suffixIcon: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              12.0),
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/grey/calendar.svg",
-                                                      ),
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 11.0,
+                                                          horizontal: 9.0),
+                                                  suffixIcon: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: SvgPicture.asset(
+                                                      "assets/icons/grey/calendar.svg",
                                                     ),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             const SizedBox(
-                                              width: 8,
+                                              height: 8,
                                             ),
-                                            Expanded(
-                                              child: InkWell(
-                                                onTap: () {
-                                                  _showTimePicker();
-                                                },
-                                                child: TextFormField(
-                                                  controller: shipmentProvider
-                                                      .time_controller,
-                                                  enabled: false,
-                                                  style: const TextStyle(
+                                            InkWell(
+                                              onTap: () {
+                                                _showTimePicker();
+                                              },
+                                              child: TextFormField(
+                                                controller: shipmentProvider
+                                                        .time_controller[
+                                                    selectedIndex],
+                                                enabled: false,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black87,
+                                                ),
+                                                decoration: InputDecoration(
+                                                  labelText:
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate('time'),
+                                                  floatingLabelStyle:
+                                                      const TextStyle(
                                                     fontSize: 16,
                                                     color: Colors.black87,
                                                   ),
-                                                  decoration: InputDecoration(
-                                                    labelText:
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate('time'),
-                                                    floatingLabelStyle:
-                                                        const TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.black87,
-                                                    ),
-                                                    contentPadding:
-                                                        const EdgeInsets
-                                                            .symmetric(
-                                                            vertical: 11.0,
-                                                            horizontal: 9.0),
-                                                    suffixIcon: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              12.0),
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/grey/time.svg",
-                                                        height: 15.h,
-                                                        width: 15.h,
-                                                      ),
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 11.0,
+                                                          horizontal: 9.0),
+                                                  suffixIcon: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: SvgPicture.asset(
+                                                      "assets/icons/grey/time.svg",
+                                                      height: 15.h,
+                                                      width: 15.h,
                                                     ),
                                                   ),
                                                 ),
@@ -2473,7 +2649,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                           height: 5,
                                         ),
                                         Visibility(
-                                          visible: shipmentProvider.dateError,
+                                          visible: shipmentProvider
+                                              .dateError[selectedIndex],
                                           child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
@@ -2503,7 +2680,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                   color: Colors.white,
                                   margin: const EdgeInsets.symmetric(
                                     vertical: 2,
-                                    horizontal: 4,
+                                    horizontal: 16,
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -2523,10 +2700,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                               ),
                                               InkWell(
                                                 onTap: () {
-                                                  showTruckTypeModalSheet(
-                                                      context,
-                                                      localeState
-                                                          .value.languageCode);
+                                                  // showTruckTypeModalSheet(
+                                                  //     context,
+                                                  //     localeState
+                                                  //         .value.languageCode);
                                                 },
                                                 child: Row(
                                                   mainAxisAlignment:
@@ -2547,19 +2724,228 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                               'select_truck_type'),
                                                     ),
                                                     const Spacer(),
-                                                    Icon(
-                                                      Icons.arrow_forward_ios,
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                    ),
+                                                    // Icon(
+                                                    //   Icons.arrow_forward_ios,
+                                                    //   color:
+                                                    //       AppColor.deepYellow,
+                                                    // ),
                                                   ],
                                                 ),
                                               ),
                                               const SizedBox(height: 8),
-                                              selectedTruckTypesList(
-                                                shipmentProvider,
-                                                context,
-                                                localeState.value.languageCode,
+                                              // selectedTruckTypesList(
+                                              //   shipmentProvider,
+                                              //   context,
+                                              //   localeState.value.languageCode,
+                                              // ),
+                                              SizedBox(
+                                                height: 160.h,
+                                                child: BlocBuilder<
+                                                    TruckTypeBloc,
+                                                    TruckTypeState>(
+                                                  builder: (context, state) {
+                                                    if (state
+                                                        is TruckTypeLoadedSuccess) {
+                                                      // truckTypes = [];
+                                                      // truckTypes = state.truckTypes;
+                                                      // for (var element in truckTypes) {
+                                                      //   trucknum.add(0);
+                                                      //   truckNumControllers
+                                                      //       .add(TextEditingController());
+                                                      // }
+                                                      return Scrollbar(
+                                                        controller:
+                                                            _scrollController,
+                                                        thumbVisibility: true,
+                                                        thickness: 2.0,
+                                                        child: Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  2.h),
+                                                          child:
+                                                              ListView.builder(
+                                                            controller:
+                                                                _scrollController,
+                                                            itemCount: state
+                                                                .truckTypes
+                                                                .length,
+                                                            scrollDirection:
+                                                                Axis.horizontal,
+                                                            shrinkWrap: true,
+                                                            itemBuilder:
+                                                                (context,
+                                                                    index) {
+                                                              return Padding(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            5.w,
+                                                                        vertical:
+                                                                            15.h),
+                                                                child:
+                                                                    GestureDetector(
+                                                                  onTap: () {
+                                                                    FocusManager
+                                                                        .instance
+                                                                        .primaryFocus
+                                                                        ?.unfocus();
+                                                                    setState(
+                                                                        () {
+                                                                      shipmentProvider.setTruckError(
+                                                                          false,
+                                                                          selectedIndex);
+                                                                      shipmentProvider.setTruckType(
+                                                                          state.truckTypes[
+                                                                              index],
+                                                                          selectedIndex);
+                                                                    });
+                                                                  },
+                                                                  child: Stack(
+                                                                    clipBehavior:
+                                                                        Clip.none,
+                                                                    children: [
+                                                                      Container(
+                                                                        width:
+                                                                            175.w,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(7),
+                                                                          border:
+                                                                              Border.all(
+                                                                            color: shipmentProvider.selectedTruckTypeId[selectedIndex] == state.truckTypes[index].id!
+                                                                                ? AppColor.deepYellow
+                                                                                : AppColor.lightGrey,
+                                                                            width:
+                                                                                2.w,
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.center,
+                                                                          children: [
+                                                                            Image.network(
+                                                                              state.truckTypes[index].image!,
+                                                                              height: 50.h,
+                                                                              errorBuilder: (context, error, stackTrace) {
+                                                                                return Container(
+                                                                                  height: 50.h,
+                                                                                  width: 175.w,
+                                                                                  color: Colors.grey[300],
+                                                                                  child: Center(
+                                                                                    child: Text(AppLocalizations.of(context)!.translate('image_load_error')),
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                              loadingBuilder: (context, child, loadingProgress) {
+                                                                                if (loadingProgress == null) {
+                                                                                  return child;
+                                                                                }
+
+                                                                                return Shimmer.fromColors(
+                                                                                  baseColor: (Colors.grey[300])!,
+                                                                                  highlightColor: (Colors.grey[100])!,
+                                                                                  enabled: true,
+                                                                                  child: Container(
+                                                                                    height: 50.h,
+                                                                                    width: 175.w,
+                                                                                    color: Colors.white,
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                              // placeholder:
+                                                                              //     Container(
+                                                                              //   color: Colors
+                                                                              //       .white,
+                                                                              //   height:
+                                                                              //       50.h,
+                                                                              //   width: 50.h,
+                                                                              // ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 7.h,
+                                                                            ),
+                                                                            Text(
+                                                                              localeState.value.languageCode == 'en' ? state.truckTypes[index].name! : state.truckTypes[index].nameAr!,
+                                                                              style: TextStyle(
+                                                                                fontSize: 17.sp,
+                                                                                color: AppColor.deepBlack,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                      (shipmentProvider.selectedTruckTypeId[selectedIndex] ==
+                                                                              state.truckTypes[index].id!)
+                                                                          ? Positioned(
+                                                                              right: -7.w,
+                                                                              top: -10.h,
+                                                                              child: Container(
+                                                                                padding: const EdgeInsets.all(2),
+                                                                                decoration: BoxDecoration(
+                                                                                  color: AppColor.deepYellow,
+                                                                                  borderRadius: BorderRadius.circular(45),
+                                                                                ),
+                                                                                child: Icon(Icons.check, size: 16.w, color: Colors.white),
+                                                                              ),
+                                                                            )
+                                                                          : const SizedBox.shrink()
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      return Shimmer.fromColors(
+                                                        baseColor:
+                                                            (Colors.grey[300])!,
+                                                        highlightColor:
+                                                            (Colors.grey[100])!,
+                                                        enabled: true,
+                                                        direction:
+                                                            ShimmerDirection
+                                                                .rtl,
+                                                        child: ListView.builder(
+                                                          shrinkWrap: true,
+                                                          scrollDirection:
+                                                              Axis.horizontal,
+                                                          itemBuilder:
+                                                              (_, __) =>
+                                                                  Padding(
+                                                            padding: EdgeInsets
+                                                                .symmetric(
+                                                                    horizontal:
+                                                                        5.w,
+                                                                    vertical:
+                                                                        15.h),
+                                                            child: Container(
+                                                              clipBehavior: Clip
+                                                                  .antiAlias,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .white,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              child: SizedBox(
+                                                                width: 175.w,
+                                                                height: 70.h,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          itemCount: 6,
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
                                               ),
                                               Visibility(
                                                 visible: shipmentProvider
@@ -2589,15 +2975,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                             ],
                                           ),
                                         ),
-                                        const Divider(),
-                                        Visibility(
-                                          visible:
-                                              shipmentProvider.truckConfirm,
-                                          child: Text(
-                                              "الرجاء اكمال بيانات الشحنة قبل البحث عن مركبات.",
-                                              style: TextStyle(
-                                                color: Colors.red[400],
-                                              )),
+                                        const SizedBox(
+                                          height: 8,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -2610,7 +2989,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
-                                                    .92,
+                                                    .88,
                                                 child: CustomButton(
                                                   title: Text(
                                                     AppLocalizations.of(
@@ -2628,24 +3007,23 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         shipmentProvider
                                                             .delivery_location
                                                             .isNotEmpty) {
+                                                      shipmentProvider
+                                                          .setTruckConfirm(
+                                                              false,
+                                                              selectedIndex);
                                                       if (shipmentProvider
-                                                          .addShipmentformKey
+                                                          .addShipmentformKey[
+                                                              selectedIndex]
                                                           .currentState!
                                                           .validate()) {
-                                                        shipmentProvider
-                                                            .addShipmentformKey
-                                                            .currentState
-                                                            ?.save();
-                                                        shipmentProvider
-                                                            .setTruckConfirm(
-                                                          false,
-                                                        );
                                                         if (shipmentProvider
-                                                                .time_controller
+                                                                .time_controller[
+                                                                    selectedIndex]
                                                                 .text
                                                                 .isNotEmpty &&
                                                             shipmentProvider
-                                                                .date_controller
+                                                                .date_controller[
+                                                                    selectedIndex]
                                                                 .text
                                                                 .isNotEmpty) {
                                                           if (shipmentProvider
@@ -2656,8 +3034,13 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                             for (var element
                                                                 in shipmentProvider
                                                                     .selectedTruckType) {
-                                                              types.add(
-                                                                  element.id!);
+                                                              if (!types.contains(
+                                                                  element!
+                                                                      .id!)) {
+                                                                types.add(
+                                                                    element
+                                                                        .id!);
+                                                              }
                                                             }
                                                             BlocProvider.of<
                                                                         TrucksListBloc>(
@@ -2689,21 +3072,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                                         } else {
                                                           shipmentProvider
                                                               .setDateError(
-                                                                  true);
+                                                                  true,
+                                                                  selectedIndex);
                                                         }
-                                                      } else {
-                                                        Scrollable
-                                                            .ensureVisible(
-                                                          key2.currentContext!,
-                                                          duration:
-                                                              const Duration(
-                                                            milliseconds: 500,
-                                                          ),
-                                                        );
-                                                        shipmentProvider
-                                                            .setTruckConfirm(
-                                                          true,
-                                                        );
                                                       }
                                                     } else {
                                                       shipmentProvider
@@ -2724,89 +3095,110 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen> {
                                             ],
                                           ),
                                         ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 2.5),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .88,
+                                                child: CustomButton(
+                                                  title: Text(
+                                                    AppLocalizations.of(
+                                                            context)!
+                                                        .translate(
+                                                            'form_clear'),
+                                                    style: TextStyle(
+                                                      fontSize: 20.sp,
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    showDialog<void>(
+                                                      context: context,
+                                                      barrierDismissible:
+                                                          false, // user must tap button!
+                                                      builder: (BuildContext
+                                                          context) {
+                                                        return AlertDialog(
+                                                          backgroundColor:
+                                                              Colors.white,
+                                                          title: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'form_init')),
+                                                          content:
+                                                              SingleChildScrollView(
+                                                            child: ListBody(
+                                                              children: <Widget>[
+                                                                Text(
+                                                                    AppLocalizations.of(
+                                                                            context)!
+                                                                        .translate(
+                                                                            'form_init_confirm'),
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            18)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'no'),
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          18)),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              },
+                                                            ),
+                                                            TextButton(
+                                                              child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'yes'),
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          18)),
+                                                              onPressed: () {
+                                                                shipmentProvider
+                                                                    .initForm();
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                                setState(
+                                                                  () {},
+                                                                );
+                                                              },
+                                                            ),
+                                                          ],
+                                                        );
+                                                      },
+                                                    );
+                                                  },
+                                                  color: AppColor.lightGrey,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
                               ],
-                            ),
-                            Positioned(
-                              left: localeState.value.languageCode == "en"
-                                  ? null
-                                  : 5,
-                              right: localeState.value.languageCode == "en"
-                                  ? 5
-                                  : null,
-                              top: 0,
-                              child: InkWell(
-                                onTap: () {
-                                  showDialog<void>(
-                                    context: context,
-                                    barrierDismissible:
-                                        false, // user must tap button!
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        backgroundColor: Colors.white,
-                                        title: Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('form_init')),
-                                        content: SingleChildScrollView(
-                                          child: ListBody(
-                                            children: <Widget>[
-                                              Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'form_init_confirm'),
-                                                  style: const TextStyle(
-                                                      fontSize: 18)),
-                                            ],
-                                          ),
-                                        ),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('no'),
-                                                style: const TextStyle(
-                                                    fontSize: 18)),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          ),
-                                          TextButton(
-                                            child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('yes'),
-                                                style: const TextStyle(
-                                                    fontSize: 18)),
-                                            onPressed: () {
-                                              shipmentProvider.initForm();
-                                              Navigator.of(context).pop();
-                                              setState(
-                                                () {},
-                                              );
-                                            },
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  height: 30,
-                                  width: 30,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[600],
-                                    borderRadius: BorderRadius.circular(45),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.sync_outlined,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ),
                           ],
                         ),

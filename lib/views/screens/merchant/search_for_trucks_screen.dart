@@ -6,6 +6,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_multi_create_bloc.
 import 'package:camion/business_logic/bloc/truck/trucks_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
+import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/control_view.dart';
@@ -41,12 +42,16 @@ class SearchForTrucksScreen extends StatelessWidget {
 
   Widget selectedTrucksList(
       AddMultiShipmentProvider provider, BuildContext context, String lang) {
-    return provider.selectedTruck.isEmpty
+    List<KTruck> trucks = [];
+    for (var element in provider.selectedTruck) {
+      trucks.add(element);
+    }
+    return trucks.isEmpty
         ? const SizedBox.shrink()
         : SizedBox(
             height: 105.h,
             child: ListView.builder(
-              itemCount: provider.selectedTruckId.length,
+              itemCount: trucks.length,
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
@@ -71,8 +76,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                         height: 45.h,
                         width: 155.w,
                         child: CachedNetworkImage(
-                          imageUrl:
-                              provider.selectedTruck[index].truckType!.image!,
+                          imageUrl: trucks[index].truckType!.image!,
                           progressIndicatorBuilder:
                               (context, url, downloadProgress) =>
                                   Shimmer.fromColors(
@@ -102,7 +106,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                       Center(
                         child: SectionBody(
                           text:
-                              "${provider.selectedTruck[index].driver_firstname!} ${provider.selectedTruck[index].driver_lastname!}",
+                              "${trucks[index].driver_firstname!} ${trucks[index].driver_lastname!}",
                         ),
                       ),
                     ],
@@ -113,79 +117,79 @@ class SearchForTrucksScreen extends StatelessWidget {
           );
   }
 
-  Widget selectedTruckTypesList(AddMultiShipmentProvider provider,
-      BuildContext pathcontext, String lang) {
-    // List<int> selectedToShow=provider.selectedTruckType
-    return provider.selectedTruckType.isEmpty
-        ? const SizedBox.shrink()
-        : SizedBox(
-            height: 105.h,
-            child: ListView.builder(
-              itemCount: provider.selectedTruckType.length,
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Container(
-                  // width: 130.w,
-                  margin: const EdgeInsets.all(5),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 5,
-                    horizontal: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    border: Border.all(
-                      color: AppColor.deepYellow,
-                      width: 1,
-                    ),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(
+  Widget truckTypeList(
+      AddMultiShipmentProvider provider, BuildContext context, String lang) {
+    return SizedBox(
+      height: 105.h,
+      child: ListView.builder(
+        itemCount: provider.truckTypeGroup.length,
+        shrinkWrap: true,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return Container(
+            // width: 130.w,
+            margin: const EdgeInsets.all(5),
+            padding: const EdgeInsets.symmetric(
+              vertical: 5,
+              horizontal: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: AppColor.deepYellow,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 45.h,
+                  width: 155.w,
+                  child: CachedNetworkImage(
+                    imageUrl: provider.truckTypeGroup[index].image!,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Shimmer.fromColors(
+                      baseColor: (Colors.grey[300])!,
+                      highlightColor: (Colors.grey[100])!,
+                      enabled: true,
+                      child: Container(
                         height: 45.h,
                         width: 155.w,
-                        child: CachedNetworkImage(
-                          imageUrl: provider.selectedTruckType[index].image!,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  Shimmer.fromColors(
-                            baseColor: (Colors.grey[300])!,
-                            highlightColor: (Colors.grey[100])!,
-                            enabled: true,
-                            child: Container(
-                              height: 45.h,
-                              width: 155.w,
-                              color: Colors.white,
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            height: 45.h,
-                            width: 155.w,
-                            color: Colors.grey[300],
-                            child: Center(
-                              child: Text(AppLocalizations.of(context)!
-                                  .translate('image_load_error')),
-                            ),
-                          ),
-                        ),
+                        color: Colors.white,
                       ),
-                      SizedBox(
-                        height: 4.h,
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      height: 45.h,
+                      width: 155.w,
+                      color: Colors.grey[300],
+                      child: Center(
+                        child: Text(AppLocalizations.of(context)!
+                            .translate('image_load_error')),
                       ),
-                      Center(
-                        child: SectionBody(
-                          text: lang == "en"
-                              ? provider.selectedTruckType[index].name!
-                              : provider.selectedTruckType[index].nameAr!,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                );
-              },
+                ),
+                SizedBox(
+                  height: 4.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SectionBody(
+                      text: "${provider.truckTypeGroup[index].nameAr!} ",
+                    ),
+                    SectionBody(
+                      text: "${provider.selectedTruckTypeNum[index]} ",
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
+        },
+      ),
+    );
   }
 
   @override
@@ -209,6 +213,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                     children: [
                       Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
                             height: 8.h,
@@ -314,8 +319,10 @@ class SearchForTrucksScreen extends StatelessWidget {
                             ),
                           ),
                           const Divider(),
-                          selectedTrucksList(shipmentProvider, context,
+                          truckTypeList(shipmentProvider, context,
                               localeState.value.languageCode),
+                          // selectedTrucksList(shipmentProvider, context,
+                          //     localeState.value.languageCode),
                           BlocBuilder<TrucksListBloc, TrucksListState>(
                             builder: (context, state) {
                               if (state is TrucksListLoadedSuccess) {
@@ -349,7 +356,6 @@ class SearchForTrucksScreen extends StatelessWidget {
                                     : Expanded(
                                         child: ListView.builder(
                                           itemCount: state.trucks.length,
-                                          // physics: const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
                                           itemBuilder: (context, index) {
                                             return StatefulBuilder(builder:
@@ -369,11 +375,20 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                               .removeSelectedTruck(
                                                               state.trucks[
                                                                   index],
+                                                              state
+                                                                  .trucks[index]
+                                                                  .truckType!
+                                                                  .id!,
                                                             )
                                                           : shipmentProvider
                                                               .addSelectedTruck(
-                                                                  state.trucks[
-                                                                      index]);
+                                                              state.trucks[
+                                                                  index],
+                                                              state
+                                                                  .trucks[index]
+                                                                  .truckType!
+                                                                  .id!,
+                                                            );
 
                                                       menuSetState(() {});
                                                     },
@@ -422,46 +437,10 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                       .start,
                                                               children: [
                                                                 Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
                                                                   crossAxisAlignment:
                                                                       CrossAxisAlignment
                                                                           .start,
                                                                   children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          SectionTitle(
-                                                                        text:
-                                                                            ' ${state.trucks[index].driver_firstname} ${state.trucks[index].driver_lastname}',
-                                                                      ),
-                                                                    ),
-                                                                    Expanded(
-                                                                      child:
-                                                                          Row(
-                                                                        children: [
-                                                                          SectionTitle(
-                                                                            text:
-                                                                                ' ${state.trucks[index].distance} ${localeState.value.languageCode == "en" ? "km" : "كم"}',
-                                                                          ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                20.h,
-                                                                            width:
-                                                                                25.h,
-                                                                            child:
-                                                                                SvgPicture.asset("assets/icons/grey/location.svg"),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                    Expanded(
-                                                                      child:
-                                                                          SectionTitle(
-                                                                        text:
-                                                                            ' ${localeState.value.languageCode == "en" ? state.trucks[index].truckType!.name : state.trucks[index].truckType!.nameAr} ',
-                                                                      ),
-                                                                    ),
                                                                     if (isSelected)
                                                                       Icon(
                                                                         Icons
@@ -471,93 +450,96 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                       )
                                                                     else
                                                                       const Icon(
-                                                                          Icons
-                                                                              .radio_button_off),
-                                                                  ],
-                                                                ),
-                                                                Divider(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      400],
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    Expanded(
-                                                                      child:
-                                                                          SectionBody(
-                                                                        text:
-                                                                            '${AppLocalizations.of(context)!.translate('truck_number')}: ${state.trucks[index].truckNumber}',
+                                                                        Icons
+                                                                            .radio_button_off,
                                                                       ),
+                                                                    const SizedBox(
+                                                                      width: 4,
                                                                     ),
-                                                                    Expanded(
-                                                                      child:
-                                                                          SectionBody(
-                                                                        text:
-                                                                            '${AppLocalizations.of(context)!.translate('gross_weight')}: ${f.format(state.trucks[index].grossWeight)} ${localeState.value.languageCode == "en" ? "kg" : "كغ"}',
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 8.h,
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    SectionTitle(
-                                                                      text:
-                                                                          '${AppLocalizations.of(context)!.translate('price')}: ',
-                                                                    ),
-                                                                    Spacer(),
-                                                                    ((calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight) > state.trucks[index].private_price!) &&
-                                                                            state.trucks[index].private_price ==
-                                                                                0)
-                                                                        ? SectionTitle(
-                                                                            text:
-                                                                                '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight))} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"} ${(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight) > state.trucks[index].private_price!)}',
-                                                                          )
-                                                                        : Row(
-                                                                            crossAxisAlignment:
-                                                                                CrossAxisAlignment.end,
-                                                                            children: [
-                                                                              SectionTitle(
-                                                                                text: '${f.format(state.trucks[index].private_price)} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
-                                                                              ),
-                                                                              const SizedBox(
-                                                                                width: 8,
-                                                                              ),
-                                                                              Text(
-                                                                                f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight)),
-                                                                                style: const TextStyle(
-                                                                                  color: Colors.grey,
-                                                                                  fontSize: 17,
-                                                                                  decoration: TextDecoration.lineThrough,
-                                                                                ),
-                                                                              )
-                                                                            ],
-                                                                          ),
-                                                                    Spacer(),
-                                                                    IconButton(
-                                                                      onPressed:
-                                                                          () {
-                                                                        Navigator
-                                                                            .push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                TruckDetailsScreen(
-                                                                              truck: state.trucks[index],
-                                                                              index: 0,
-                                                                              ops: 'create_shipment',
-                                                                              subshipmentId: 0,
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
+                                                                      children: [
+                                                                        SectionTitle(
+                                                                          text:
+                                                                              '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].driver_firstname} ${state.trucks[index].driver_lastname}',
+                                                                        ),
+                                                                        Row(
+                                                                          children: [
+                                                                            SectionTitle(
+                                                                              text: '${AppLocalizations.of(context)!.translate('distance_from_loading')}: ${state.trucks[index].distance} ${localeState.value.languageCode == "en" ? "km" : "كم"}',
                                                                             ),
+                                                                            SizedBox(
+                                                                              height: 20.h,
+                                                                              width: 25.h,
+                                                                              child: SvgPicture.asset("assets/icons/grey/location.svg"),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        SectionTitle(
+                                                                          text:
+                                                                              '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == "en" ? state.trucks[index].truckType!.name : state.trucks[index].truckType!.nameAr} ',
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                    SizedBox(
+                                                                      height:
+                                                                          100.h,
+                                                                      width: 3,
+                                                                      child:
+                                                                          const VerticalDivider(
+                                                                        color: Colors
+                                                                            .grey,
+                                                                        thickness:
+                                                                            1,
+                                                                        width:
+                                                                            1,
+                                                                      ),
+                                                                    ),
+                                                                    Column(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        ((state.trucks[index].private_price != null && state.trucks[index].private_price! > 0) &&
+                                                                                (state.trucks[index].private_price! < calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0])))
+                                                                            ? Column(
+                                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                                children: [
+                                                                                  SectionTitle(
+                                                                                    text: '${f.format(state.trucks[index].private_price)} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                                                                  ),
+                                                                                  const SizedBox(
+                                                                                    width: 8,
+                                                                                  ),
+                                                                                  Text(
+                                                                                    '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0]))}  ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                                                                    style: const TextStyle(
+                                                                                      color: Colors.grey,
+                                                                                      fontSize: 17,
+                                                                                      decoration: TextDecoration.lineThrough,
+                                                                                    ),
+                                                                                  ),
+                                                                                ],
+                                                                              )
+                                                                            : SectionTitle(
+                                                                                text: '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0]))} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                                                              ),
+                                                                        const SizedBox(
+                                                                            height:
+                                                                                8),
+                                                                        Text(
+                                                                          "details",
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color:
+                                                                                AppColor.deepYellow,
+                                                                            fontSize:
+                                                                                17,
                                                                           ),
-                                                                        );
-                                                                      },
-                                                                      icon: Icon(
-                                                                          Icons
-                                                                              .arrow_forward_ios,
-                                                                          color:
-                                                                              AppColor.deepYellow),
+                                                                        ),
+                                                                      ],
                                                                     ),
                                                                   ],
                                                                 ),
@@ -650,7 +632,6 @@ class SearchForTrucksScreen extends StatelessWidget {
                                         duration: const Duration(seconds: 3),
                                       ));
                                       shipmentProvider.initForm();
-
                                       Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(
@@ -691,46 +672,9 @@ class SearchForTrucksScreen extends StatelessWidget {
                                             ),
                                           ),
                                           onTap: () {
-                                            if (shipmentProvider
-                                                .selectedTruck.isNotEmpty) {
+                                            if (true) {
                                               List<SubShipment>
                                                   subshipmentsitems = [];
-
-                                              List<ShipmentItems>
-                                                  shipmentitems = [];
-
-                                              int totalWeight = 0;
-                                              for (var j = 0;
-                                                  j <
-                                                      shipmentProvider
-                                                          .commodityWeight_controllers
-                                                          .length;
-                                                  j++) {
-                                                ShipmentItems shipmentitem =
-                                                    ShipmentItems(
-                                                  commodityName: shipmentProvider
-                                                      .commodityName_controllers[
-                                                          j]
-                                                      .text,
-                                                  commodityWeight: double.parse(
-                                                          shipmentProvider
-                                                              .commodityWeight_controllers[
-                                                                  j]
-                                                              .text
-                                                              .replaceAll(
-                                                                  ",", ""))
-                                                      .toInt(),
-                                                );
-                                                shipmentitems.add(shipmentitem);
-                                                totalWeight += double.parse(
-                                                        shipmentProvider
-                                                            .commodityWeight_controllers[
-                                                                j]
-                                                            .text
-                                                            .replaceAll(
-                                                                ",", ""))
-                                                    .toInt();
-                                              }
 
                                               List<PathPoint> points = [];
                                               points.add(
@@ -757,7 +701,6 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                   city: 1,
                                                 ),
                                               );
-
                                               for (var s = 0;
                                                   s <
                                                       shipmentProvider
@@ -779,125 +722,248 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                   ),
                                                 );
                                               }
+                                              int commodityIndex = 0;
+                                              for (var i = 0;
+                                                  i <
+                                                      shipmentProvider
+                                                          .selectedTruckId
+                                                          .length;
+                                                  i++) {
+                                                List<ShipmentItems>
+                                                    shipmentitems = [];
 
-                                              int truckQuantity = 0;
-                                              for (var element
-                                                  in shipmentProvider
-                                                      .selectedTruckTypeNum) {
-                                                truckQuantity += element;
+                                                double totalWeight = 0;
+                                                for (var j = 0;
+                                                    j <
+                                                        shipmentProvider
+                                                            .commodityWeight_controllers[
+                                                                commodityIndex]
+                                                            .length;
+                                                    j++) {
+                                                  ShipmentItems shipmentitem =
+                                                      ShipmentItems(
+                                                    commodityName: shipmentProvider
+                                                        .commodityName_controllers[
+                                                            commodityIndex][j]
+                                                        .text,
+                                                    commodityWeight: double.parse(
+                                                            shipmentProvider
+                                                                .commodityWeight_controllers[
+                                                                    commodityIndex]
+                                                                    [j]
+                                                                .text
+                                                                .replaceAll(
+                                                                    ",", ""))
+                                                        .toInt(),
+                                                  );
+                                                  shipmentitems
+                                                      .add(shipmentitem);
+                                                  totalWeight += double.parse(
+                                                          shipmentProvider
+                                                              .commodityWeight_controllers[
+                                                                  commodityIndex]
+                                                                  [j]
+                                                              .text
+                                                              .replaceAll(
+                                                                  ",", ""))
+                                                      .toInt();
+                                                }
+                                                SubShipment subshipment =
+                                                    SubShipment(
+                                                  shipmentStatus: "P",
+                                                  paths: jsonEncode(
+                                                      shipmentProvider.pathes),
+                                                  shipmentItems: shipmentitems,
+                                                  totalWeight:
+                                                      totalWeight.toInt(),
+                                                  distance:
+                                                      shipmentProvider.distance,
+                                                  price: calculatePrice(
+                                                      shipmentProvider.distance,
+                                                      totalWeight),
+                                                  period:
+                                                      shipmentProvider.period,
+                                                  pathpoints: points,
+                                                  truck: ShipmentTruck(
+                                                    id: shipmentProvider
+                                                        .selectedTruckId[i],
+                                                  ),
+                                                  // truckTypes: truckTypes,
+                                                  pickupDate: DateTime(
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .year,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .month,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .day,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .hour,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .day,
+                                                  ),
+                                                  deliveryDate: DateTime(
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .year,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .month,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .day,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .hour,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .day,
+                                                  ),
+                                                );
+                                                subshipmentsitems
+                                                    .add(subshipment);
+                                                commodityIndex++;
                                               }
 
                                               for (var i = 0;
                                                   i <
                                                       shipmentProvider
-                                                          .selectedTruck.length;
+                                                          .selectedTruckTypeNum
+                                                          .length;
                                                   i++) {
-                                                SubShipment subshipment =
-                                                    SubShipment(
-                                                  shipmentStatus: "P",
-                                                  paths: jsonEncode(
-                                                      shipmentProvider.pathes),
-                                                  shipmentItems: shipmentitems,
-                                                  totalWeight: totalWeight,
-                                                  distance:
-                                                      shipmentProvider.distance,
-                                                  price: calculatePrice(
-                                                    shipmentProvider.distance,
-                                                    shipmentProvider
-                                                        .totalWeight,
-                                                  ),
-                                                  period:
-                                                      shipmentProvider.period,
-                                                  pathpoints: points,
-                                                  truck: ShipmentTruck(
-                                                      id: shipmentProvider
-                                                          .selectedTruck[i]!
-                                                          .id!),
-                                                  // truckTypes: truckTypes,
-                                                  pickupDate: DateTime(
-                                                    shipmentProvider
-                                                        .loadDate.year,
-                                                    shipmentProvider
-                                                        .loadDate.month,
-                                                    shipmentProvider
-                                                        .loadDate.day,
-                                                    shipmentProvider
-                                                        .loadTime.hour,
-                                                    shipmentProvider
-                                                        .loadTime.day,
-                                                  ),
-                                                  deliveryDate: DateTime(
-                                                    shipmentProvider
-                                                        .loadDate.year,
-                                                    shipmentProvider
-                                                        .loadDate.month,
-                                                    shipmentProvider
-                                                        .loadDate.day,
-                                                    shipmentProvider
-                                                        .loadTime.hour,
-                                                    shipmentProvider
-                                                        .loadTime.day,
-                                                  ),
-                                                );
-                                                subshipmentsitems
-                                                    .add(subshipment);
-                                                truckQuantity--;
-                                              }
+                                                for (var count = 0;
+                                                    count <
+                                                        shipmentProvider
+                                                            .selectedTruckTypeNum[i];
+                                                    count++) {
+                                                  List<ShipmentItems>
+                                                      shipmentitems = [];
 
-                                              for (var i = 0;
-                                                  i < truckQuantity;
-                                                  i++) {
-                                                SubShipment subshipment =
-                                                    SubShipment(
-                                                  shipmentStatus: "P",
-                                                  paths: jsonEncode(
-                                                      shipmentProvider.pathes),
-                                                  shipmentItems: shipmentitems,
-                                                  totalWeight: totalWeight,
-                                                  distance:
-                                                      shipmentProvider.distance,
-                                                  price: calculatePrice(
-                                                    shipmentProvider.distance,
-                                                    shipmentProvider
-                                                        .totalWeight,
-                                                  ),
-                                                  period:
-                                                      shipmentProvider.period,
-                                                  pathpoints: points,
-                                                  // truckTypes: truckTypes,
-                                                  pickupDate: DateTime(
-                                                    shipmentProvider
-                                                        .loadDate.year,
-                                                    shipmentProvider
-                                                        .loadDate.month,
-                                                    shipmentProvider
-                                                        .loadDate.day,
-                                                    shipmentProvider
-                                                        .loadTime.hour,
-                                                    shipmentProvider
-                                                        .loadTime.day,
-                                                  ),
-                                                  deliveryDate: DateTime(
-                                                    shipmentProvider
-                                                        .loadDate.year,
-                                                    shipmentProvider
-                                                        .loadDate.month,
-                                                    shipmentProvider
-                                                        .loadDate.day,
-                                                    shipmentProvider
-                                                        .loadTime.hour,
-                                                    shipmentProvider
-                                                        .loadTime.day,
-                                                  ),
-                                                );
-                                                subshipmentsitems
-                                                    .add(subshipment);
+                                                  double totalWeight = 0;
+                                                  for (var j = 0;
+                                                      j <
+                                                          shipmentProvider
+                                                              .commodityWeight_controllers[
+                                                                  commodityIndex]
+                                                              .length;
+                                                      j++) {
+                                                    ShipmentItems shipmentitem =
+                                                        ShipmentItems(
+                                                      commodityName: shipmentProvider
+                                                          .commodityName_controllers[
+                                                              commodityIndex][j]
+                                                          .text,
+                                                      commodityWeight: double.parse(
+                                                              shipmentProvider
+                                                                  .commodityWeight_controllers[
+                                                                      commodityIndex]
+                                                                      [j]
+                                                                  .text
+                                                                  .replaceAll(
+                                                                      ",", ""))
+                                                          .toInt(),
+                                                    );
+                                                    shipmentitems
+                                                        .add(shipmentitem);
+                                                    totalWeight += double.parse(
+                                                            shipmentProvider
+                                                                .commodityWeight_controllers[
+                                                                    commodityIndex]
+                                                                    [j]
+                                                                .text
+                                                                .replaceAll(
+                                                                    ",", ""))
+                                                        .toInt();
+                                                  }
+                                                  SubShipment subshipment =
+                                                      SubShipment(
+                                                    shipmentStatus: "P",
+                                                    paths: jsonEncode(
+                                                        shipmentProvider
+                                                            .pathes),
+                                                    shipmentItems:
+                                                        shipmentitems,
+                                                    totalWeight:
+                                                        totalWeight.toInt(),
+                                                    distance: shipmentProvider
+                                                        .distance,
+                                                    price: calculatePrice(
+                                                        shipmentProvider
+                                                            .distance,
+                                                        totalWeight),
+                                                    period:
+                                                        shipmentProvider.period,
+                                                    pathpoints: points,
+                                                    truck: null,
+                                                    // truckTypes: truckTypes,
+                                                    pickupDate: DateTime(
+                                                      shipmentProvider
+                                                          .loadDate[
+                                                              commodityIndex]
+                                                          .year,
+                                                      shipmentProvider
+                                                          .loadDate[
+                                                              commodityIndex]
+                                                          .month,
+                                                      shipmentProvider
+                                                          .loadDate[
+                                                              commodityIndex]
+                                                          .day,
+                                                      shipmentProvider
+                                                          .loadTime[
+                                                              commodityIndex]
+                                                          .hour,
+                                                      shipmentProvider
+                                                          .loadTime[
+                                                              commodityIndex]
+                                                          .day,
+                                                    ),
+                                                    deliveryDate: DateTime(
+                                                      shipmentProvider
+                                                          .loadDate[
+                                                              commodityIndex]
+                                                          .year,
+                                                      shipmentProvider
+                                                          .loadDate[
+                                                              commodityIndex]
+                                                          .month,
+                                                      shipmentProvider
+                                                          .loadDate[
+                                                              commodityIndex]
+                                                          .day,
+                                                      shipmentProvider
+                                                          .loadTime[
+                                                              commodityIndex]
+                                                          .hour,
+                                                      shipmentProvider
+                                                          .loadTime[
+                                                              commodityIndex]
+                                                          .day,
+                                                    ),
+                                                  );
+                                                  subshipmentsitems
+                                                      .add(subshipment);
+                                                  commodityIndex++;
+                                                }
                                               }
 
                                               Shipmentv2 shipment = Shipmentv2(
                                                 subshipments: subshipmentsitems,
                                               );
-
                                               BlocProvider.of<
                                                           ShipmentMultiCreateBloc>(
                                                       context)
@@ -918,6 +984,50 @@ class SearchForTrucksScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // Positioned(
+                      //   bottom: 0,
+                      //   child: Container(
+                      //     height: 80.h,
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.white,
+                      //       border: Border(
+                      //         top: BorderSide(
+                      //             color: AppColor.darkGrey200, width: 2),
+                      //       ),
+                      //     ),
+                      //     width: MediaQuery.of(context).size.width,
+                      //     child: Padding(
+                      //       padding: const EdgeInsets.symmetric(vertical: 2.5),
+                      //       child: Row(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //         children: [
+                      //           SizedBox(
+                      //             width:
+                      //                 MediaQuery.of(context).size.width * .92,
+                      //             child: CustomButton(
+                      //               title: Text(
+                      //                 AppLocalizations.of(context)!
+                      //                     .translate('confirm'),
+                      //                 style: TextStyle(
+                      //                   fontSize: 20.sp,
+                      //                 ),
+                      //               ),
+                      //               onTap: () {
+                      //                 // Navigator.push(
+                      //                 //   context,
+                      //                 //   MaterialPageRoute(
+                      //                 //     builder: (context) =>
+                      //                 //         AddCommodityScreen(),
+                      //                 //   ),
+                      //                 // );
+                      //               },
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 );

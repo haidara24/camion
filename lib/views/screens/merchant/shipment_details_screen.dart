@@ -772,7 +772,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -787,7 +787,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                               widgetList(
                                   widget.preview, shipmentstate.shipment),
                               const Divider(
-                                height: 12,
+                                height: 16,
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -818,7 +818,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                 ],
                               ),
                               const Divider(
-                                height: 12,
+                                height: 16,
                               ),
                               Visibility(
                                 visible: shipmentstate
@@ -1214,7 +1214,9 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                 langCode: localeState.value.languageCode,
                                 mini: false,
                               ),
-                              const Divider(),
+                              const Divider(
+                                height: 32,
+                              ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!
                                     .translate("commodity_info"),
@@ -1225,7 +1227,9 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                       .shipment
                                       .subshipments![selectedIndex]
                                       .shipmentItems),
-                              const Divider(),
+                              const Divider(
+                                height: 32,
+                              ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!
                                     .translate("shipment_route_statistics"),
@@ -1237,66 +1241,68 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                 period: shipmentstate.shipment
                                     .subshipments![selectedIndex].period!,
                               ),
-                              const Divider(),
-                              Visibility(
-                                visible: shipmentstate
-                                            .shipment
-                                            .subshipments![selectedIndex]
-                                            .truck ==
-                                        null &&
-                                    !widget.preview,
-                                replacement: const SizedBox.shrink(),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: CustomButton(
-                                    title: SizedBox(
-                                      width: 200.w,
-                                      child: Row(
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'search_for_truck'),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          SizedBox(
-                                            height: 25.w,
-                                            width: 30.w,
-                                            child: SvgPicture.asset(
-                                              "assets/icons/white/search_for_truck.svg",
-                                              width: 25.w,
-                                              height: 30.w,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchTruckScreen(
-                                                  subshipmentId: shipmentstate
-                                                      .shipment
-                                                      .subshipments![
-                                                          selectedIndex]
-                                                      .id!),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
+                              const Divider(
+                                height: 32,
                               ),
+                              // Visibility(
+                              //   visible: shipmentstate
+                              //               .shipment
+                              //               .subshipments![selectedIndex]
+                              //               .truck ==
+                              //           null &&
+                              //       !widget.preview,
+                              //   replacement: const SizedBox.shrink(),
+                              //   child: Padding(
+                              //     padding: const EdgeInsets.symmetric(
+                              //         horizontal: 10.0),
+                              //     child: CustomButton(
+                              //       title: SizedBox(
+                              //         width: 200.w,
+                              //         child: Row(
+                              //           children: [
+                              //             Center(
+                              //               child: Text(
+                              //                 AppLocalizations.of(context)!
+                              //                     .translate(
+                              //                         'search_for_truck'),
+                              //                 style: const TextStyle(
+                              //                   color: Colors.white,
+                              //                   fontSize: 18,
+                              //                   fontWeight: FontWeight.bold,
+                              //                 ),
+                              //               ),
+                              //             ),
+                              //             const SizedBox(width: 8),
+                              //             SizedBox(
+                              //               height: 25.w,
+                              //               width: 30.w,
+                              //               child: SvgPicture.asset(
+                              //                 "assets/icons/white/search_for_truck.svg",
+                              //                 width: 25.w,
+                              //                 height: 30.w,
+                              //                 fit: BoxFit.fill,
+                              //               ),
+                              //             ),
+                              //           ],
+                              //         ),
+                              //       ),
+                              //       onTap: () {
+                              //         Navigator.push(
+                              //           context,
+                              //           MaterialPageRoute(
+                              //             builder: (context) =>
+                              //                 SearchTruckScreen(
+                              //                     subshipmentId: shipmentstate
+                              //                         .shipment
+                              //                         .subshipments![
+                              //                             selectedIndex]
+                              //                         .id!),
+                              //           ),
+                              //         );
+                              //       },
+                              //     ),
+                              //   ),
+                              // ),
                               Visibility(
                                 visible: !widget.preview,
                                 replacement: shipmentstate

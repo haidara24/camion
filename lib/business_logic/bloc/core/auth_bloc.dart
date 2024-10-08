@@ -32,12 +32,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           if (hastoken) {
             if (userType.isNotEmpty) {
               switch (userType) {
-                case "Managment":
-                  emit(AuthManagmentSuccessState());
-                  break;
-                case "CheckPoint":
-                  emit(AuthCheckPointSuccessState());
-                  break;
                 case "Driver":
                   emit(AuthDriverSuccessState());
                   break;

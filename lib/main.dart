@@ -626,7 +626,7 @@ class MyApp extends StatelessWidget {
                               ),
                             ),
                           ),
-                          textTheme: GoogleFonts.robotoTextTheme(
+                          textTheme: GoogleFonts.tajawalTextTheme(
                             Theme.of(context).textTheme,
                           ),
                           dividerColor: Colors.grey[400],

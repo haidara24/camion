@@ -145,7 +145,7 @@ class SubShipment {
     data['id'] = id;
     data['shipment_status'] = shipmentStatus;
     data['path'] = paths;
-    data['truck'] = truck!.id!;
+    data['truck'] = truck != null ? truck!.id! : null;
     data['distance'] = distance ?? 0.0;
     data['price'] = price ?? 0.0;
     data['period'] = period ?? "";

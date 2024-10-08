@@ -185,195 +185,188 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                         },
                                         child: AbsorbPointer(
                                           absorbing: false,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 4.0,
-                                            ),
-                                            child: Card(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10),
-                                                ),
+                                          child: Card(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
                                               ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: 48.h,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                        topLeft:
-                                                            Radius.circular(10),
-                                                        topRight:
-                                                            Radius.circular(10),
-                                                      ),
-                                                      border: Border.all(
-                                                        color:
-                                                            AppColor.deepYellow,
-                                                        width: 1,
-                                                      ),
-                                                      color: Colors.grey[300],
+                                            ),
+                                            margin: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 48.h,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topLeft:
+                                                          Radius.circular(10),
+                                                      topRight:
+                                                          Radius.circular(10),
                                                     ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 12,
-                                                          ),
-                                                          child: Text(
-                                                            "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                              // color: AppColor.lightBlue,
-                                                              fontSize: 17.sp,
-                                                            ),
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                      width: 1,
+                                                    ),
+                                                    color: Colors.grey[300],
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 12,
+                                                        ),
+                                                        child: Text(
+                                                          "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                            // color: AppColor.lightBlue,
+                                                            fontSize: 17.sp,
                                                           ),
                                                         ),
-                                                        const Spacer(),
-                                                        Container(
-                                                          height: 65.h,
-                                                          width: 47.w,
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      10),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        5),
-                                                          ),
-                                                          child: Center(
-                                                            child: Stack(
-                                                              clipBehavior:
-                                                                  Clip.none,
-                                                              children: [
-                                                                Center(
-                                                                  child:
-                                                                      SizedBox(
-                                                                    height:
-                                                                        40.h,
-                                                                    width: 40.h,
-                                                                    child:
-                                                                        Center(
-                                                                      child: SvgPicture
-                                                                          .asset(
-                                                                              "assets/icons/orange/notification.svg"),
-                                                                    ),
+                                                      ),
+                                                      const Spacer(),
+                                                      Container(
+                                                        height: 65.h,
+                                                        width: 47.w,
+                                                        margin: const EdgeInsets
+                                                            .symmetric(
+                                                            horizontal: 10),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(5),
+                                                        ),
+                                                        child: Center(
+                                                          child: Stack(
+                                                            clipBehavior:
+                                                                Clip.none,
+                                                            children: [
+                                                              Center(
+                                                                child: SizedBox(
+                                                                  height: 40.h,
+                                                                  width: 40.h,
+                                                                  child: Center(
+                                                                    child: SvgPicture
+                                                                        .asset(
+                                                                            "assets/icons/orange/notification.svg"),
                                                                   ),
                                                                 ),
-                                                                getunfinishedTasks(
-                                                                            state.shipments[index]) >
-                                                                        0
-                                                                    ? Positioned(
-                                                                        right: localeState.value.languageCode ==
-                                                                                'en'
-                                                                            ? 0
-                                                                            : null,
-                                                                        left: localeState.value.languageCode ==
-                                                                                'en'
-                                                                            ? null
-                                                                            : 0,
-                                                                        child:
-                                                                            Container(
-                                                                          height:
-                                                                              20,
-                                                                          width:
-                                                                              20,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                AppColor.deepYellow,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(45),
-                                                                          ),
-                                                                          child:
-                                                                              Center(
-                                                                            child: Text(getunfinishedTasks(state.shipments[index]).toString(),
-                                                                                style: const TextStyle(
-                                                                                  color: Colors.white,
-                                                                                )),
-                                                                          ),
+                                                              ),
+                                                              getunfinishedTasks(
+                                                                          state.shipments[
+                                                                              index]) >
+                                                                      0
+                                                                  ? Positioned(
+                                                                      right: localeState.value.languageCode ==
+                                                                              'en'
+                                                                          ? 0
+                                                                          : null,
+                                                                      left: localeState.value.languageCode ==
+                                                                              'en'
+                                                                          ? null
+                                                                          : 0,
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            20,
+                                                                        width:
+                                                                            20,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(45),
                                                                         ),
-                                                                      )
-                                                                    : Positioned(
-                                                                        right: localeState.value.languageCode ==
-                                                                                'en'
-                                                                            ? 0
-                                                                            : null,
-                                                                        left: localeState.value.languageCode ==
-                                                                                'en'
-                                                                            ? null
-                                                                            : 0,
                                                                         child:
-                                                                            Container(
-                                                                          height:
-                                                                              20,
-                                                                          width:
-                                                                              20,
-                                                                          decoration:
-                                                                              BoxDecoration(
-                                                                            color:
-                                                                                Colors.green,
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(45),
-                                                                          ),
+                                                                            Center(
+                                                                          child: Text(
+                                                                              getunfinishedTasks(state.shipments[index]).toString(),
+                                                                              style: const TextStyle(
+                                                                                color: Colors.white,
+                                                                              )),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : Positioned(
+                                                                      right: localeState.value.languageCode ==
+                                                                              'en'
+                                                                          ? 0
+                                                                          : null,
+                                                                      left: localeState.value.languageCode ==
+                                                                              'en'
+                                                                          ? null
+                                                                          : 0,
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            20,
+                                                                        width:
+                                                                            20,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              Colors.green,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(45),
+                                                                        ),
+                                                                        child:
+                                                                            const Center(
                                                                           child:
-                                                                              const Center(
-                                                                            child:
-                                                                                Icon(
-                                                                              Icons.check,
-                                                                              color: Colors.white,
-                                                                              size: 15,
-                                                                            ),
+                                                                              Icon(
+                                                                            Icons.check,
+                                                                            color:
+                                                                                Colors.white,
+                                                                            size:
+                                                                                15,
                                                                           ),
                                                                         ),
                                                                       ),
-                                                              ],
-                                                            ),
+                                                                    ),
+                                                            ],
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  ShipmentPathVerticalWidget(
-                                                    pathpoints: state
-                                                        .shipments[index]
-                                                        .pathpoints!,
-                                                    pickupDate: state
-                                                        .shipments[index]
-                                                        .pickupDate!,
-                                                    deliveryDate: state
-                                                        .shipments[index]
-                                                        .deliveryDate!,
-                                                    langCode: localeState
-                                                        .value.languageCode,
-                                                    mini: true,
-                                                  ),
-                                                ],
-                                              ),
-                                            ).animate().slideX(
-                                                duration: 350.ms,
-                                                delay: 0.ms,
-                                                begin: 1,
-                                                end: 0,
-                                                curve: Curves.easeInOutSine),
-                                          ),
+                                                ),
+                                                ShipmentPathVerticalWidget(
+                                                  pathpoints: state
+                                                      .shipments[index]
+                                                      .pathpoints!,
+                                                  pickupDate: state
+                                                      .shipments[index]
+                                                      .pickupDate!,
+                                                  deliveryDate: state
+                                                      .shipments[index]
+                                                      .deliveryDate!,
+                                                  langCode: localeState
+                                                      .value.languageCode,
+                                                  mini: true,
+                                                ),
+                                              ],
+                                            ),
+                                          ).animate().slideX(
+                                              duration: 350.ms,
+                                              delay: 0.ms,
+                                              begin: 1,
+                                              end: 0,
+                                              curve: Curves.easeInOutSine),
                                         ),
                                       );
                                     },

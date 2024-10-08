@@ -3,6 +3,7 @@ import 'package:camion/business_logic/bloc/truck_fixes/create_truck_fix_bloc.dar
 import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/formatter.dart';
@@ -42,36 +43,10 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
   var f = intel.NumberFormat("#,###", "en_US");
 
   setLoadDate(DateTime date, String lang) {
-    List months = [
-      'jan',
-      'feb',
-      'mar',
-      'april',
-      'may',
-      'jun',
-      'july',
-      'aug',
-      'sep',
-      'oct',
-      'nov',
-      'dec'
-    ];
-    List monthsAr = [
-      'كانون الثاني',
-      'شباط',
-      'أذار',
-      'نيسان',
-      'أيار',
-      'حزيران',
-      'تموز',
-      'آب',
-      'أيلول',
-      'تشرين الأول',
-      'تشرين الثاني',
-      'كانون الأول'
-    ];
     var mon = date.month;
-    var month = lang == "en" ? months[mon - 1] : monthsAr[mon - 1];
+    var month = lang == "en"
+        ? TextConstants.monthsEn[mon - 1]
+        : TextConstants.monthsAr[mon - 1];
     _dateController.text = '${date.year}-$month-${date.day}';
     fixDate = date;
   }

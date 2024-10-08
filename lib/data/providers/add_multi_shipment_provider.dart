@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/commodity_category_model.dart';
 import 'package:camion/data/models/place_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -22,6 +23,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   Shipmentv2? get shipment => _shipment;
 
+/*----------------------------------*/
+  // google map
   GoogleMapController? _mapController2;
   GoogleMapController? get mapController2 => _mapController2;
 
@@ -34,34 +37,36 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   double _zoom = 13.0;
   double get zoom => _zoom;
 
-  List<TextEditingController> _commodityWeight_controllers = [
-    TextEditingController()
+/*----------------------------------*/
+
+  // commodities
+  List<GlobalKey<FormState>> _addShipmentformKey = [GlobalKey<FormState>()];
+  List<GlobalKey<FormState>> get addShipmentformKey => _addShipmentformKey;
+
+  List<List<TextEditingController>> _commodityWeight_controllers = [
+    [TextEditingController()]
   ];
-  List<TextEditingController> get commodityWeight_controllers =>
+  List<List<TextEditingController>> get commodityWeight_controllers =>
       _commodityWeight_controllers;
 
-  double _totalWeight = 0.0;
+  List<double> _totalWeight = [0.0];
 
-  double get totalWeight => _totalWeight;
+  List<double> get totalWeight => _totalWeight;
 
-  List<TextEditingController> _commodityName_controllers = [
-    TextEditingController()
+  List<List<TextEditingController>> _commodityName_controllers = [
+    [TextEditingController()]
   ];
-  List<TextEditingController> get commodityName_controllers =>
+  List<List<TextEditingController>> get commodityName_controllers =>
       _commodityName_controllers;
+
+  List<int> _count = [1];
+  List<int> get count => _count;
+
+/*----------------------------------*/
+// add path
 
   List<LatLng> _pathes = [];
   List<LatLng> get pathes => _pathes;
-
-  List<CommodityCategory?> _commodityCategory_controller = [null];
-  List<CommodityCategory?> get commodityCategory_controller =>
-      _commodityCategory_controller;
-
-  List<int> _commodityCategories = [0];
-  List<int> get commodityCategories => _commodityCategories;
-
-  GlobalKey<FormState> _addShipmentformKey = GlobalKey<FormState>();
-  GlobalKey<FormState> get addShipmentformKey => _addShipmentformKey;
 
   TextEditingController _pickup_controller = TextEditingController();
   TextEditingController get pickup_controller => _pickup_controller;
@@ -69,63 +74,66 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   String _pickup_statename = "";
   String get pickup_statename => _pickup_statename;
 
-  String _delivery_statename = "";
-  String get delivery_statename => _delivery_statename;
-
   String _pickup_placeId = "";
   String get pickup_placeId => _pickup_placeId;
+
+  String _pickup_location = "";
+  String get pickup_location => _pickup_location;
+
+  LatLng? _pickup_latlng;
+  LatLng? get pickup_latlng => _pickup_latlng;
+
+  Marker? _pickup_marker = const Marker(markerId: MarkerId("pickup"));
+  Marker? get pickup_marker => _pickup_marker;
+
+  Position? _pickup_position;
+  Position? get pickup_position => _pickup_position;
+
+  Place? _pickup_place;
+  Place? get pickup_place => _pickup_place;
+
+  TextEditingController _delivery_controller = TextEditingController();
+  TextEditingController get delivery_controller => _delivery_controller;
+
+  String _delivery_statename = "";
+  String get delivery_statename => _delivery_statename;
 
   String _delivery_placeId = "";
   String get delivery_placeId => _delivery_placeId;
 
-  List<String> _pickup_eng_string = [""];
-  List<String> get pickup_eng_string => _pickup_eng_string;
+  String _delivery_location = "";
+  String get delivery_location => _delivery_location;
+
+  Marker? _delivery_marker = const Marker(markerId: MarkerId("delivery"));
+  Marker? get delivery_marker => _delivery_marker;
+
+  LatLng? _delivery_latlng;
+  LatLng? get delivery_latlng => _delivery_latlng;
+
+  Place? _delivery_place;
+  Place? get delivery_place => _delivery_place;
 
   List<TextEditingController> _stoppoints_controller = [];
   List<TextEditingController> get stoppoints_controller =>
       _stoppoints_controller;
 
-  List<String> _stoppoints_eng_string = [];
-  List<String> get stoppoints_eng_string => _stoppoints_eng_string;
-
-  TextEditingController _delivery_controller = TextEditingController();
-  TextEditingController get delivery_controller => _delivery_controller;
-
-  List<String> _delivery_eng_string = [""];
-  List<String> get delivery_eng_string => _delivery_eng_string;
-
-  String _pickup_location = "";
-  String get pickup_location => _pickup_location;
-
-  String _delivery_location = "";
-  String get delivery_location => _delivery_location;
-
   List<String> _stoppoints_location = [];
   List<String> get stoppoints_location => _stoppoints_location;
-
-  LatLng? _pickup_latlng;
-  LatLng? get pickup_latlng => _pickup_latlng;
 
   List<LatLng?> _stoppoints_latlng = [];
   List<LatLng?> get stoppoints_latlng => _stoppoints_latlng;
 
-  LatLng? _delivery_latlng;
-  LatLng? get delivery_latlng => _delivery_latlng;
-
-  Marker? _pickup_marker = const Marker(markerId: MarkerId("pickup"));
-  Marker? get pickup_marker => _pickup_marker;
-
   List<Marker?> _stop_marker = [];
   List<Marker?> get stop_marker => _stop_marker;
 
+  double _distance = 0;
+  double get distance => _distance;
+
+  String _period = "";
+  String get period => _period;
+
   TruckType? _truckType;
   TruckType? get truckType => _truckType;
-
-  Marker? _delivery_marker = const Marker(markerId: MarkerId("delivery"));
-  Marker? get delivery_marker => _delivery_marker;
-
-  Position? _pickup_position;
-  Position? get pickup_position => _pickup_position;
 
   List<Position?> _stoppoints_position = [];
   List<Position?> get stoppoints_position => _stoppoints_position;
@@ -133,47 +141,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   Position? _delivery_position;
   Position? get delivery_position => _delivery_position;
 
-  Place? _pickup_place;
-  Place? get pickup_place => _pickup_place;
-
   List<Place?> _stoppoints_place = [];
   List<Place?> get stoppoints_place => _stoppoints_place;
-
-  Place? _delivery_place;
-  Place? get delivery_place => _delivery_place;
-
-  int _countpath = 1;
-  int get countpath => _countpath;
-
-  int _count = 1;
-  int get count => _count;
-
-  List<KTruck> _selectedTruck = [];
-  List<KTruck> get selectedTruck => _selectedTruck;
-
-  List<int> _selectedTruckId = [];
-  List<int> get selectedTruckId => _selectedTruckId;
-
-  // List<KTruck?> _trucks = [null];
-  // List<KTruck?> get trucks => _trucks;
-
-  bool _pathConfirm = false;
-  bool get pathConfirm => _pathConfirm;
-
-  bool _truckConfirm = false;
-  bool get truckConfirm => _truckConfirm;
-
-  bool _truckTypeError = false;
-  bool get truckTypeError => _truckTypeError;
-
-  List<bool> _truckError = [false];
-  List<bool> get truckError => _truckError;
-
-  bool _pathError = false;
-  bool get pathError => _pathError;
-
-  bool _dateError = false;
-  bool get dateError => _dateError;
 
   bool _pickupLoading = false;
   bool get pickupLoading => _pickupLoading;
@@ -202,35 +171,67 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<bool> _stoppointsPosition = [];
   List<bool> get stoppointsPosition => _stoppointsPosition;
 
-  List<TruckType> _selectedTruckType = [];
-  List<TruckType> get selectedTruckType => _selectedTruckType;
+  int _countpath = 1;
+  int get countpath => _countpath;
 
-  List<int> _selectedTruckTypeId = [];
+  bool _pathConfirm = false;
+  bool get pathConfirm => _pathConfirm;
+
+  /*trucks */
+
+  List<KTruck?> _trucks = [null];
+  List<KTruck?> get trucks => _trucks;
+
+  List<bool> _truckConfirm = [false];
+  List<bool> get truckConfirm => _truckConfirm;
+
+  bool _truckTypeError = false;
+  bool get truckTypeError => _truckTypeError;
+
+  List<bool> _truckError = [false];
+  List<bool> get truckError => _truckError;
+
+  bool _pathError = false;
+  bool get pathError => _pathError;
+
+  List<bool> _dateError = [false];
+  List<bool> get dateError => _dateError;
+
+  List<TruckType?> _selectedTruckType = [null];
+  List<TruckType?> get selectedTruckType => _selectedTruckType;
+
+  List<int> _selectedTruckTypeId = [0];
   List<int> get selectedTruckTypeId => _selectedTruckTypeId;
 
   List<int> _selectedTruckTypeNum = [];
   List<int> get selectedTruckTypeNum => _selectedTruckTypeNum;
 
+  List<TruckType> _truckTypeGroup = [];
+  List<TruckType> get truckTypeGroup => _truckTypeGroup;
+
+  List<int> _truckTypeGroupId = [];
+  List<int> get truckTypeGroupId => _truckTypeGroupId;
+
   List<TextEditingController> _truckTypeController = [];
   List<TextEditingController> get truckTypeController => _truckTypeController;
 
-  double _distance = 0;
-  double get distance => _distance;
+  List<KTruck> _selectedTruck = [];
+  List<KTruck> get selectedTruck => _selectedTruck;
 
-  String _period = "";
-  String get period => _period;
+  List<int> _selectedTruckId = [];
+  List<int> get selectedTruckId => _selectedTruckId;
 
-  DateTime _loadDate = DateTime.now();
-  DateTime get loadDate => _loadDate;
+  List<DateTime> _loadDate = [DateTime.now()];
+  List<DateTime> get loadDate => _loadDate;
 
-  DateTime _loadTime = DateTime.now();
-  DateTime get loadTime => _loadTime;
+  List<DateTime> _loadTime = [DateTime.now()];
+  List<DateTime> get loadTime => _loadTime;
 
-  TextEditingController _time_controller = TextEditingController();
-  TextEditingController get time_controller => _time_controller;
+  List<TextEditingController> _time_controller = [TextEditingController()];
+  List<TextEditingController> get time_controller => _time_controller;
 
-  TextEditingController _date_controller = TextEditingController();
-  TextEditingController get date_controller => _date_controller;
+  List<TextEditingController> _date_controller = [TextEditingController()];
+  List<TextEditingController> get date_controller => _date_controller;
 
   // Initialization method
   void initShipment() {
@@ -246,79 +247,64 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _zoom = 13.0;
 
-    _commodityWeight_controllers = [TextEditingController()];
+    _commodityWeight_controllers = [
+      [TextEditingController()]
+    ];
 
-    _totalWeight = 0.0;
+    _commodityName_controllers = [
+      [TextEditingController()]
+    ];
 
-    _commodityName_controllers = [TextEditingController()];
+    _totalWeight = [0.0];
 
     _pathes = [];
 
-    _commodityCategory_controller = [null];
-
-    _commodityCategories = [0];
-
-    _addShipmentformKey = GlobalKey<FormState>();
+    _addShipmentformKey = [GlobalKey<FormState>()];
 
     _pickup_controller = TextEditingController();
-
     _pickup_statename = "";
-
-    _delivery_statename = "";
-
     _pickup_placeId = "";
-
-    _delivery_placeId = "";
-
-    _stoppoints_controller = [];
-
-    _stoppoints_eng_string = [];
+    _pickup_location = "";
+    _pickup_latlng = null;
+    _pickup_marker = const Marker(markerId: MarkerId("pickup"));
+    _pickup_position = null;
+    _pickup_place = null;
 
     _delivery_controller = TextEditingController();
-
-    _pickup_location = "";
-
+    _delivery_statename = "";
+    _delivery_placeId = "";
     _delivery_location = "";
-
-    _stoppoints_location = [];
-
-    _pickup_latlng = null;
-
-    _stoppoints_latlng = [];
-
     _delivery_latlng = null;
+    _delivery_marker = const Marker(markerId: MarkerId("delivery"));
+    _delivery_position = null;
+    _delivery_place = null;
 
-    _pickup_marker = const Marker(markerId: MarkerId("pickup"));
-
+    _stoppoints_controller = [];
+    _stoppoints_location = [];
+    _stoppoints_latlng = [];
     _stop_marker = [];
+    _stoppoints_position = [];
+    _stoppoints_place = [];
 
     _truckType = null;
 
-    _delivery_marker = const Marker(markerId: MarkerId("delivery"));
-
-    _pickup_position = null;
-
-    _stoppoints_position = [];
-
-    _delivery_position = null;
-
-    _pickup_place = null;
-
-    _stoppoints_place = [];
-
-    _delivery_place = null;
-
     _countpath = 1;
 
-    _count = 1;
+    _count = [1];
+
+    _selectedTruckTypeNum = [];
+    _truckTypeGroup = [];
+    _truckTypeGroupId = [];
 
     _selectedTruck = [];
 
-    _selectedTruckId = [];
+    _selectedTruckId = [0];
 
-    // _trucks = [null];
+    _trucks = [null];
+    _selectedTruckType = [null];
+    _selectedTruckTypeId = [0];
 
-    _truckConfirm = false;
+    _truckConfirm = [false];
 
     _pathConfirm = false;
 
@@ -328,7 +314,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _pathError = false;
 
-    _dateError = false;
+    _dateError = [false];
 
     _pickupLoading = false;
 
@@ -348,38 +334,28 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _stoppointsPosition = [];
 
-    _selectedTruckType = [];
-
-    _selectedTruckTypeId = [];
-
-    _selectedTruckTypeNum = [];
-
     _truckTypeController = [];
 
     _distance = 0;
 
     _period = "";
 
-    _loadDate = DateTime.now();
+    _loadDate = [DateTime.now()];
 
-    _loadTime = DateTime.now();
-    _time_controller = TextEditingController();
+    _loadTime = [DateTime.now()];
+    _time_controller = [TextEditingController()];
 
-    _date_controller = TextEditingController();
+    _date_controller = [TextEditingController()];
   }
 
-  calculateTotalWeight() {
-    _totalWeight = 0;
-    for (var element in _commodityWeight_controllers) {
+  calculateTotalWeight(int index) {
+    _totalWeight[index] = 0;
+    for (var element in _commodityWeight_controllers[index]) {
       if (element.text.isNotEmpty) {
-        _totalWeight += double.parse(element.text.replaceAll(",", "")).toInt();
+        _totalWeight[index] +=
+            double.parse(element.text.replaceAll(",", "")).toInt();
       }
     }
-    notifyListeners();
-  }
-
-  setTruckType(TruckType type) {
-    _truckType = type;
     notifyListeners();
   }
 
@@ -407,11 +383,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         .setMapStyle(style)
         .onError((error, stackTrace) => print(error));
     notifyListeners();
-  }
-
-  void dispose() {
-    _mapController.dispose();
-    _mapController2!.dispose();
   }
 
   void getPolyPoints() async {
@@ -542,100 +513,212 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     } else {}
   }
 
-  setLoadTime(DateTime time) {
-    _time_controller.text = '${intl.DateFormat.jm().format(time)} ';
-    _loadTime = time;
+  setLoadTime(DateTime time, int index) {
+    _time_controller[index].text = '${intl.DateFormat.jm().format(time)} ';
+    _loadTime[index] = time;
     notifyListeners();
   }
 
-  setLoadDate(DateTime date, String lang) {
-    List months = [
-      'jan',
-      'feb',
-      'mar',
-      'april',
-      'may',
-      'jun',
-      'july',
-      'aug',
-      'sep',
-      'oct',
-      'nov',
-      'dec'
-    ];
-    List monthsAr = [
-      'كانون الثاني',
-      'شباط',
-      'أذار',
-      'نيسان',
-      'أيار',
-      'حزيران',
-      'تموز',
-      'آب',
-      'أيلول',
-      'تشرين الأول',
-      'تشرين الثاني',
-      'كانون الأول'
-    ];
+  setLoadDate(DateTime date, String lang, int index) {
     var mon = date.month;
-    var month = lang == "en" ? months[mon - 1] : monthsAr[mon - 1];
-    _date_controller.text = '${date.year}-$month-${date.day}';
-    _loadDate = date;
+    var month = lang == "en"
+        ? TextConstants.monthsEn[mon - 1]
+        : TextConstants.monthsAr[mon - 1];
+    _date_controller[index].text = '${date.year}-$month-${date.day}';
+    _loadDate[index] = date;
     notifyListeners();
   }
 
-  addTruckType(TruckType truckType) {
-    print("_selectedTruckType");
-    _selectedTruckType.add(truckType);
-    _selectedTruckTypeId.add(truckType.id!);
-    _selectedTruckTypeNum.add(1);
-    _truckTypeController.add(TextEditingController(text: "1"));
+  void setTruckType(TruckType truckType, int pathIndex) {
+    // Check if the truck type is already selected for this path
+    if (_selectedTruckTypeId[pathIndex] != truckType.id) {
+      // If the current path has a different truck type, decrease the count of the previously selected type
+      if (_selectedTruckTypeId[pathIndex] != 0) {
+        int oldTypeIndex =
+            _truckTypeGroupId.indexOf(_selectedTruckTypeId[pathIndex]);
+        if (oldTypeIndex != -1) {
+          _selectedTruckTypeNum[oldTypeIndex]--;
+          // If the count becomes zero, remove the truck type from the group
+          if (_selectedTruckTypeNum[oldTypeIndex] == 0) {
+            _truckTypeGroup.removeAt(oldTypeIndex);
+            _truckTypeGroupId.removeAt(oldTypeIndex);
+            _selectedTruckTypeNum.removeAt(oldTypeIndex);
+          }
+        }
+      }
 
+      // Now, add the new truck type for the path
+      if (!_truckTypeGroupId.contains(truckType.id)) {
+        // If the new truck type isn't already in the selected group, add it
+        _truckTypeGroup.add(truckType);
+        _truckTypeGroupId.add(truckType.id!);
+        _selectedTruckTypeNum.add(1);
+      } else {
+        // If the new truck type is already selected elsewhere, just increase the count
+        int newTypeIndex = _truckTypeGroupId.indexOf(truckType.id!);
+        _selectedTruckTypeNum[newTypeIndex]++;
+      }
+
+      // Update the selected truck type and ID for the current path
+      _selectedTruckType[pathIndex] = truckType;
+      _selectedTruckTypeId[pathIndex] = truckType.id!;
+    }
+    print(_selectedTruckTypeId);
+    print(_truckTypeGroupId);
+    print(_selectedTruckTypeNum);
+
+    // Notify listeners for state update
     notifyListeners();
   }
 
-  removeTruckType(TruckType truckType) {
-    var index = _selectedTruckTypeId.indexOf(truckType.id!);
+  // addTruckType(TruckType truckType) {
+  //   _selectedTruckType.add(truckType);
+  //   _selectedTruckTypeId.add(truckType.id!);
+  //   // _selectedTruck.add();
+  //   // _selectedTruckId.add();
+  //   _selectedTruckTypeNum.add(1);
+  //   _commodityName_controllers.add([TextEditingController()]);
+  //   _commodityWeight_controllers.add([TextEditingController()]);
+  //   _truckTypeController.add(TextEditingController(text: "1"));
+  //   notifyListeners();
+  // }
+
+  // removeTruckType(TruckType truckType) {
+  //   var index = _selectedTruckTypeId.indexOf(truckType.id!);
+  //   _selectedTruckType.removeAt(index);
+  //   _selectedTruckTypeId.removeAt(index);
+  //   _selectedTruck.removeAt(index);
+  //   _selectedTruckId.removeAt(index);
+  //   _commodityName_controllers.removeAt(index);
+  //   _commodityWeight_controllers.removeAt(index);
+  //   _truckTypeController[index].text = "";
+  //   notifyListeners();
+  //   _selectedTruckTypeNum.removeAt(index);
+  //   _truckTypeController.removeAt(index);
+  //   notifyListeners();
+  // }
+
+  // increaseTruckType(
+  //   int id,
+  // ) {
+  //   _commodityName_controllers.add([TextEditingController()]);
+  //   _commodityWeight_controllers.add([TextEditingController()]);
+  //   _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]++;
+  //   _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
+  //       _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
+  //   notifyListeners();
+  // }
+
+  // decreaseTruckType(
+  //   int id,
+  // ) {
+  //   if (_selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)] > 1) {
+  //     _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]--;
+  //     _commodityName_controllers.removeLast();
+  //     _commodityWeight_controllers.removeLast();
+  //     _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
+  //         _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
+  //   }
+  //   notifyListeners();
+  // }
+
+  void addSelectedTruck(KTruck truck, int truckTypeId) {
+    var index = _truckTypeGroupId.indexOf(truckTypeId);
+
+    // Prevent adding the truck if the truck type number is 0
+    if (index != -1 && _selectedTruckTypeNum[index] > 0) {
+      _selectedTruckId.add(truck.id!); // Add the truck ID
+      _selectedTruck.add(truck); // Add the truck itself
+      _selectedTruckTypeNum[index]--; // Decrease the truck type count
+    } else {
+      // Optional: Show a message or handle the case where the truck cannot be added
+      print("Cannot add truck: no available selections for this truck type.");
+    }
+
+    notifyListeners(); // Notify listeners to update the UI
+  }
+
+  void removeSelectedTruck(KTruck truck, int truckTypeId) {
+    var index = _truckTypeGroupId.indexOf(truckTypeId);
+
+    // Remove the truck and increment the truck type number
+    if (index != -1) {
+      _selectedTruckId.remove(truck.id); // Remove the truck ID
+      _selectedTruck.remove(truck); // Remove the truck itself
+      _selectedTruckTypeNum[index]++; // Increase the truck type count
+    }
+
+    notifyListeners(); // Notify listeners to update the UI
+  }
+
+  void addpath() {
+    TextEditingController commodityWeight_controller = TextEditingController();
+    TextEditingController commodityName_controller = TextEditingController();
+    _commodityWeight_controllers.add([commodityWeight_controller]);
+    _commodityName_controllers.add([commodityName_controller]);
+    _addShipmentformKey.add(GlobalKey<FormState>());
+
+    _trucks.add(null);
+
+    _truckConfirm.add(false);
+    _truckError.add(false);
+    _dateError.add(false);
+    _totalWeight.add(0.0);
+
+    _selectedTruckType.add(null);
+    _selectedTruckTypeId.add(0);
+
+    _date_controller.add(TextEditingController());
+    _time_controller.add(TextEditingController());
+    _loadDate.add(DateTime.now());
+    _loadTime.add(DateTime.now());
+
+    _count.add(0);
+    _countpath++;
+    _count[_countpath - 1]++;
+    notifyListeners();
+  }
+
+  void removePath(int index) {
+    _commodityWeight_controllers.removeAt(index);
+    _commodityName_controllers.removeAt(index);
+    _totalWeight.removeAt(index);
+
+    _trucks.removeAt(index);
+
+    _truckError.removeAt(index);
+    _pathes.removeAt(index);
+    _dateError.removeAt(index);
+    _addShipmentformKey.removeAt(index);
+
     _selectedTruckType.removeAt(index);
     _selectedTruckTypeId.removeAt(index);
-    _truckTypeController[index].text = "";
-    notifyListeners();
-    _selectedTruckTypeNum.removeAt(index);
-    _truckTypeController.removeAt(index);
-    notifyListeners();
-  }
 
-  increaseTruckType(
-    int id,
-  ) {
-    _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]++;
-    _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
-        _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
+    _date_controller.removeAt(index);
+    _time_controller.removeAt(index);
+    _loadDate.removeAt(index);
+    _loadTime.removeAt(index);
+
+    _count.removeAt(index);
+    _countpath--;
     notifyListeners();
   }
 
-  decreaseTruckType(
-    int id,
-  ) {
-    if (_selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)] > 1) {
-      _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]--;
+  void additem(int index, int index2) {
+    TextEditingController commodityWeight_controller = TextEditingController();
+    TextEditingController commodityName_controller = TextEditingController();
 
-      _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
-          _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
-    }
+    _commodityWeight_controllers[index].add(commodityWeight_controller);
+    _commodityName_controllers[index].add(commodityName_controller);
+
+    _count[index]++;
     notifyListeners();
   }
 
-  addSelectedTruck(KTruck truck) {
-    _selectedTruckId.add(truck.id!);
-    _selectedTruck.add(truck);
-
-    notifyListeners();
-  }
-
-  removeSelectedTruck(KTruck truck) {
-    _selectedTruckId.remove(truck.id);
-    _selectedTruck.remove(truck);
+  void removeitem(int index, int index2) {
+    _commodityWeight_controllers[index].removeAt(index2);
+    _commodityName_controllers[index].removeAt(index2);
+    _count[index]--;
     notifyListeners();
   }
 
@@ -1224,7 +1307,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         TextEditingController stoppoint_controller = TextEditingController();
         _stoppoints_controller.add(stoppoint_controller);
         _stoppoints_location.add("");
-        _stoppoints_eng_string.add("");
         _stoppoints_latlng.add(null);
         _stoppoints_position.add(null);
         _stoppoints_place.add(null);
@@ -1238,7 +1320,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       TextEditingController stoppoint_controller = TextEditingController();
       _stoppoints_controller.add(stoppoint_controller);
       _stoppoints_location.add("");
-      _stoppoints_eng_string.add("");
       _stoppoints_latlng.add(null);
       _stoppoints_position.add(null);
       _stoppoints_place.add(null);
@@ -1253,7 +1334,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   void removestoppoint(int index2) {
     _stoppoints_controller.removeAt(index2);
-    _stoppoints_eng_string.removeAt(index2);
     _stoppoints_location.removeAt(index2);
     _stoppoints_latlng.removeAt(index2);
     _stoppoints_position.removeAt(index2);
@@ -1265,115 +1345,11 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void additem() {
-    TextEditingController commodityWeight_controller = TextEditingController();
-    TextEditingController commodityName_controller = TextEditingController();
-
-    _commodityWeight_controllers.add(commodityWeight_controller);
-    _commodityName_controllers.add(commodityName_controller);
-    _commodityCategories.add(0);
-    _commodityCategory_controller.add(null);
-
-    _count++;
-    notifyListeners();
-  }
-
-  void removeitem(int index2) {
-    _commodityWeight_controllers.removeAt(index2);
-    _commodityName_controllers.removeAt(index2);
-    _commodityCategories.removeAt(index2);
-    _commodityCategory_controller.removeAt(index2);
-    _count--;
-    notifyListeners();
-  }
-
   setTruck(KTruck truck, int index) {
     // _trucks[index] = truck;
     setTruckError(false, index);
 
     notifyListeners();
-  }
-
-  // Add a shipment
-  void addShipment(Shipmentv2 shipment) {
-    _shipment = shipment;
-    notifyListeners();
-  }
-
-  // Remove the shipment
-  void removeShipment() {
-    _shipment = null;
-    notifyListeners();
-  }
-
-  // Add a sub-shipment
-  void addSubShipment(SubShipment subShipment) {
-    if (_shipment != null) {
-      _shipment!.subshipments ??= [];
-      _shipment!.subshipments!.add(subShipment);
-      notifyListeners();
-    }
-  }
-
-  // Remove a sub-shipment
-  void removeSubShipment(int index) {
-    if (_shipment != null &&
-        index >= 0 &&
-        index < _shipment!.subshipments!.length) {
-      _shipment!.subshipments!.removeAt(index);
-      notifyListeners();
-    }
-  }
-
-  // Add a shipment item to a sub-shipment
-  void addShipmentItem(int subShipmentIndex, ShipmentItems shipmentItem) {
-    if (_shipment != null &&
-        subShipmentIndex >= 0 &&
-        subShipmentIndex < _shipment!.subshipments!.length) {
-      _shipment!.subshipments![subShipmentIndex].shipmentItems ??= [];
-      _shipment!.subshipments![subShipmentIndex].shipmentItems!
-          .add(shipmentItem);
-      notifyListeners();
-    }
-  }
-
-  // Remove a shipment item from a sub-shipment
-  void removeShipmentItem(int subShipmentIndex, int itemIndex) {
-    if (_shipment != null &&
-        subShipmentIndex >= 0 &&
-        subShipmentIndex < _shipment!.subshipments!.length &&
-        itemIndex >= 0 &&
-        itemIndex <
-            _shipment!.subshipments![subShipmentIndex].shipmentItems!.length) {
-      _shipment!.subshipments![subShipmentIndex].shipmentItems!
-          .removeAt(itemIndex);
-      notifyListeners();
-    }
-  }
-
-  // Add a path point to a sub-shipment
-  void addPathPoint(int subShipmentIndex, PathPoint pathPoint) {
-    if (_shipment != null &&
-        subShipmentIndex >= 0 &&
-        subShipmentIndex < _shipment!.subshipments!.length) {
-      _shipment!.subshipments![subShipmentIndex].pathpoints ??= [];
-      _shipment!.subshipments![subShipmentIndex].pathpoints!.add(pathPoint);
-      notifyListeners();
-    }
-  }
-
-  // Remove a path point from a sub-shipment
-  void removePathPoint(int subShipmentIndex, int pointIndex) {
-    if (_shipment != null &&
-        subShipmentIndex >= 0 &&
-        subShipmentIndex < _shipment!.subshipments!.length &&
-        pointIndex >= 0 &&
-        pointIndex <
-            _shipment!.subshipments![subShipmentIndex].pathpoints!.length) {
-      _shipment!.subshipments![subShipmentIndex].pathpoints!
-          .removeAt(pointIndex);
-      notifyListeners();
-    }
   }
 
   void setPathError(bool value) {
@@ -1386,8 +1362,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setTruckConfirm(bool value) {
-    _truckConfirm = value;
+  void setTruckConfirm(bool value, int index) {
+    _truckConfirm[index] = value;
     notifyListeners();
   }
 
@@ -1401,8 +1377,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setDateError(bool value) {
-    _dateError = value;
+  void setDateError(bool value, int index) {
+    _dateError[index] = value;
     notifyListeners();
   }
 }

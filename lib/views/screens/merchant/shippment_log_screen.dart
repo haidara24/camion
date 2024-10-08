@@ -391,8 +391,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                         ? Positioned(
                                             left: -5,
                                             child: Container(
-                                              height: 22.w,
-                                              width: 22.w,
+                                              height: 25.w,
+                                              width: 25.w,
                                               decoration: BoxDecoration(
                                                 color: AppColor.deepYellow,
                                                 borderRadius:
@@ -460,175 +460,170 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                               },
                                               child: AbsorbPointer(
                                                 absorbing: false,
-                                                child: Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    vertical: 4.0,
-                                                  ),
-                                                  child: Card(
-                                                    elevation: 2,
-                                                    shape:
-                                                        const RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(10),
-                                                      ),
+                                                child: Card(
+                                                  elevation: 1,
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(10),
                                                     ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Container(
-                                                          width:
-                                                              double.infinity,
-                                                          height: 48.h,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            gradient:
-                                                                LinearGradient(
-                                                              begin: Alignment
-                                                                  .topLeft,
-                                                              end: Alignment
-                                                                  .bottomRight,
-                                                              colors: [
-                                                                AppColor
-                                                                    .deepYellow,
-                                                                AppColor
-                                                                    .deepYellow,
-                                                                AppColor
-                                                                    .deepYellow,
-                                                                Colors.white,
-                                                              ],
-                                                            ),
-                                                            // color:
-                                                            //     Colors.grey[300],
-                                                          ),
-                                                          child: Row(
-                                                            children: [
-                                                              Container(
-                                                                height: 35.w,
-                                                                width: 35.w,
-                                                                margin:
-                                                                    const EdgeInsets
-                                                                        .symmetric(
-                                                                  horizontal: 4,
-                                                                ),
-                                                                child: Center(
-                                                                  child:
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                    "assets/icons/grey/waiting_shipment.svg",
-                                                                    height:
-                                                                        35.w,
-                                                                    width: 35.w,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              SizedBox(
-                                                                // width: 100.w,
-                                                                child: Text(
-                                                                  commodityItemsText(state
-                                                                      .shipments[
-                                                                          index]
-                                                                      .subshipments![
-                                                                          0]
-                                                                      .shipmentItems!),
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  style:
-                                                                      TextStyle(
-                                                                    // color: AppColor.lightBlue,
-                                                                    fontSize:
-                                                                        17.sp,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              Spacer(),
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        8),
-                                                                child:
-                                                                    SectionTitle(
-                                                                  text:
-                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
-                                                                ),
-                                                              ),
+                                                  ),
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 16,
+                                                  ),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Container(
+                                                        width: double.infinity,
+                                                        height: 48.h,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          gradient:
+                                                              LinearGradient(
+                                                            begin: Alignment
+                                                                .topLeft,
+                                                            end: Alignment
+                                                                .bottomRight,
+                                                            colors: [
+                                                              AppColor
+                                                                  .deepYellow,
+                                                              AppColor
+                                                                  .deepYellow,
+                                                              AppColor
+                                                                  .deepYellow,
+                                                              Colors.white,
                                                             ],
                                                           ),
+                                                          // color:
+                                                          //     Colors.grey[300],
                                                         ),
-                                                        SizedBox(
-                                                          height: 190.h,
-                                                          child: IgnorePointer(
-                                                            ignoring: true,
-                                                            child: GoogleMap(
-                                                              onMapCreated:
-                                                                  (GoogleMapController
-                                                                      controller) async {
-                                                                setState(() {
-                                                                  _maps.add(
-                                                                      null);
-                                                                  _maps[index] =
-                                                                      controller;
-                                                                  // _maps[index]!
-                                                                  //     .setMapStyle(
-                                                                  //         _mapStyle);
-                                                                });
-                                                                initMapbounds(
-                                                                    state.shipments[
-                                                                        index],
-                                                                    index);
-                                                              },
-                                                              myLocationButtonEnabled:
-                                                                  false,
-                                                              zoomGesturesEnabled:
-                                                                  false,
-                                                              scrollGesturesEnabled:
-                                                                  false,
-                                                              tiltGesturesEnabled:
-                                                                  false,
-                                                              rotateGesturesEnabled:
-                                                                  false,
-                                                              zoomControlsEnabled:
-                                                                  false,
-                                                              initialCameraPosition:
-                                                                  const CameraPosition(
-                                                                      target: LatLng(
-                                                                          35.363149,
-                                                                          35.932120),
-                                                                      zoom:
-                                                                          14.47),
-                                                              gestureRecognizers: {},
-                                                              markers: getMarkers(
-                                                                  state.shipments[
-                                                                      index]),
-                                                              polylines:
-                                                                  getRoutes(state
-                                                                      .shipments[
-                                                                          index]
-                                                                      .subshipments!),
-                                                              // mapType: shipmentProvider.mapType,
+                                                        child: Row(
+                                                          children: [
+                                                            Container(
+                                                              height: 35.w,
+                                                              width: 35.w,
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                horizontal: 4,
+                                                              ),
+                                                              child: Center(
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                  "assets/icons/grey/waiting_shipment.svg",
+                                                                  height: 35.w,
+                                                                  width: 35.w,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                              ),
                                                             ),
+                                                            SizedBox(
+                                                              // width: 100.w,
+                                                              child: Text(
+                                                                commodityItemsText(state
+                                                                    .shipments[
+                                                                        index]
+                                                                    .subshipments![
+                                                                        0]
+                                                                    .shipmentItems!),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  // color: AppColor.lightBlue,
+                                                                  fontSize:
+                                                                      17.sp,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            const Spacer(),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          8),
+                                                              child:
+                                                                  SectionTitle(
+                                                                text:
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 190.h,
+                                                        child: IgnorePointer(
+                                                          ignoring: true,
+                                                          child: GoogleMap(
+                                                            onMapCreated:
+                                                                (GoogleMapController
+                                                                    controller) async {
+                                                              setState(() {
+                                                                _maps.add(null);
+                                                                _maps[index] =
+                                                                    controller;
+                                                                // _maps[index]!
+                                                                //     .setMapStyle(
+                                                                //         _mapStyle);
+                                                              });
+                                                              initMapbounds(
+                                                                  state.shipments[
+                                                                      index],
+                                                                  index);
+                                                            },
+                                                            myLocationButtonEnabled:
+                                                                false,
+                                                            zoomGesturesEnabled:
+                                                                false,
+                                                            scrollGesturesEnabled:
+                                                                false,
+                                                            tiltGesturesEnabled:
+                                                                false,
+                                                            rotateGesturesEnabled:
+                                                                false,
+                                                            zoomControlsEnabled:
+                                                                false,
+                                                            initialCameraPosition:
+                                                                const CameraPosition(
+                                                                    target: LatLng(
+                                                                        35.363149,
+                                                                        35.932120),
+                                                                    zoom:
+                                                                        14.47),
+                                                            gestureRecognizers: {},
+                                                            markers: getMarkers(
+                                                                state.shipments[
+                                                                    index]),
+                                                            polylines:
+                                                                getRoutes(state
+                                                                    .shipments[
+                                                                        index]
+                                                                    .subshipments!),
+                                                            // mapType: shipmentProvider.mapType,
                                                           ),
                                                         ),
-                                                      ],
-                                                    ),
-                                                  ).animate().slideX(
-                                                      duration: 350.ms,
-                                                      delay: 0.ms,
-                                                      begin: 1,
-                                                      end: 0,
-                                                      curve:
-                                                          Curves.easeInOutSine),
-                                                ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ).animate().slideX(
+                                                    duration: 350.ms,
+                                                    delay: 0.ms,
+                                                    begin: 1,
+                                                    end: 0,
+                                                    curve:
+                                                        Curves.easeInOutSine),
                                               ),
                                             );
                                           },
@@ -721,6 +716,10 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       Radius.circular(10),
                                                     ),
                                                   ),
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 16,
+                                                  ),
                                                   child: Column(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
@@ -733,56 +732,62 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                         height: 48.h,
                                                         color:
                                                             AppColor.deepYellow,
-                                                        child: Row(
-                                                          children: [
-                                                            Container(
-                                                              height: 35.w,
-                                                              width: 35.w,
-                                                              margin:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                horizontal: 4,
-                                                              ),
-                                                              child: SvgPicture
-                                                                  .asset(
-                                                                state
-                                                                        .requests[
-                                                                            index]
-                                                                        .isApproved!
-                                                                    ? "assets/icons/grey/notification_shipment_complete.svg"
-                                                                    : "assets/icons/grey/notification_shipment_cancelation.svg",
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                          child: Row(
+                                                            children: [
+                                                              Container(
                                                                 height: 35.w,
                                                                 width: 35.w,
-                                                                fit:
-                                                                    BoxFit.fill,
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                        .symmetric(
+                                                                  horizontal: 4,
+                                                                ),
+                                                                child:
+                                                                    SvgPicture
+                                                                        .asset(
+                                                                  state.requests[index]
+                                                                          .isApproved!
+                                                                      ? "assets/icons/grey/notification_shipment_complete.svg"
+                                                                      : "assets/icons/grey/notification_shipment_cancelation.svg",
+                                                                  height: 35.w,
+                                                                  width: 35.w,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            Text(
-                                                              // "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
-                                                              " ${state.requests[index].driver_firstname!} ${state.requests[index].driver_lastname!}",
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              style: TextStyle(
-                                                                fontSize: 18,
-                                                                color: AppColor
-                                                                    .darkGrey,
+                                                              Text(
+                                                                // "${AppLocalizations.of(context)!.translate("driver_name")}: ${state.requests[index].driver!.user!.firstName!} ${state.requests[index].driver!.user!.lastName!}",
+                                                                " ${state.requests[index].driver_firstname!} ${state.requests[index].driver_lastname!}",
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: AppColor
+                                                                      .darkGrey,
+                                                                ),
                                                               ),
-                                                            ),
-                                                            Spacer(),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          4),
-                                                              child:
-                                                                  SectionTitle(
-                                                                text:
-                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                              const Spacer(),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        4),
+                                                                child:
+                                                                    SectionTitle(
+                                                                  text:
+                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
                                                       ),
                                                       ShipmentPathVerticalWidget(

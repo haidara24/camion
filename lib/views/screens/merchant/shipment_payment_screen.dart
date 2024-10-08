@@ -147,284 +147,297 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               : TextDirection.rtl,
           child: Stack(
             children: [
-              Column(
-                children: [
-                  Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .translate('shipment_path_info'),
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: AppColor.darkGrey,
-                              ),
-                            ),
-                          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  children: [
+                    Card(
+                      elevation: 1,
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        ShipmentPathVerticalWidget(
-                          pathpoints: widget.shipment.pathpoints!,
-                          pickupDate: widget.shipment.pickupDate!,
-                          deliveryDate: widget.shipment.deliveryDate!,
-                          langCode: localeState.value.languageCode,
-                          mini: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  Card(
-                    elevation: 1,
-                    clipBehavior: Clip.antiAlias,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
                       ),
-                    ),
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      color: Colors.white,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(
-                            width: double.infinity,
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('shipment_path_info'),
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.darkGrey,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          SectionTitle(
-                            text: AppLocalizations.of(context)!
-                                .translate('operation_cost'),
+                          ShipmentPathVerticalWidget(
+                            pathpoints: widget.shipment.pathpoints!,
+                            pickupDate: widget.shipment.pickupDate!,
+                            deliveryDate: widget.shipment.deliveryDate!,
+                            langCode: localeState.value.languageCode,
+                            mini: false,
                           ),
-                          SizedBox(
-                            height: 7.h,
-                          ),
-                          SectionBody(
-                            text:
-                                '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(widget.shipment.distance!, widget.shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
-                          ),
-                          // Divider(
-                          //   height: 7.h,
-                          // ),
-                          widget.shipment.shipmentpaymentv2 != null
-                              ? BlocBuilder<ReadPaymentInstructionBloc,
-                                  ReadPaymentInstructionState>(
-                                  builder: (context, state) {
-                                    if (state
-                                        is ReadPaymentInstructionLoadedSuccess) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SizedBox(
-                                            height: 7.h,
-                                          ),
-                                          SectionBody(
-                                            text:
-                                                '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
-                                          ),
-                                          SizedBox(
-                                            height: 7.h,
-                                          ),
-                                          SectionBody(
-                                            text:
-                                                '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
-                                          ),
-                                        ],
-                                      );
-                                    } else {
-                                      return Shimmer.fromColors(
-                                        baseColor: (Colors.grey[300])!,
-                                        highlightColor: (Colors.grey[100])!,
-                                        enabled: true,
-                                        direction: ShimmerDirection.ttb,
-                                        child: ListView.builder(
-                                          shrinkWrap: true,
-                                          itemBuilder: (_, __) => Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Container(
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 15,
-                                                        vertical: 5),
-                                                height: 150.h,
-                                                width: double.infinity,
-                                                clipBehavior: Clip.antiAlias,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          itemCount: 1,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                )
-                              : const SizedBox.shrink(),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  widget.shipment.shipmentpaymentv2 == null
-                      ? Card(
-                          elevation: 1,
-                          clipBehavior: Clip.antiAlias,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Card(
+                      elevation: 1,
+                      clipBehavior: Clip.antiAlias,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              width: double.infinity,
                             ),
-                          ),
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    width: double.infinity,
-                                  ),
-                                  SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate("choose_payment_method"),
-                                  ),
-                                  SizedBox(
-                                    height: 8.h,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedPaymentType = "B";
-                                          });
-                                        },
-                                        child: Container(
-                                          height: 65,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .28,
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: selectedPaymentType == "B"
-                                                  ? AppColor.deepYellow
-                                                  : Colors.grey[400]!,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            image: const DecorationImage(
-                                              image: AssetImage(
-                                                  "assets/images/Albaraka.jpg"),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedPaymentType = "H";
-                                          });
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: selectedPaymentType == "H"
-                                                  ? AppColor.deepYellow
-                                                  : Colors.grey[400]!,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            image: const DecorationImage(
-                                              image: AssetImage(
-                                                  "assets/images/Alharam.jpg"),
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                          height: 65,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .28,
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedPaymentType = "E";
-                                          });
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: selectedPaymentType == "E"
-                                                  ? AppColor.deepYellow
-                                                  : Colors.grey[400]!,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            image: const DecorationImage(
-                                              image: AssetImage(
-                                                  "assets/images/e_Cash.jpg"),
-                                            ),
-                                          ),
-                                          clipBehavior: Clip.hardEdge,
-                                          height: 65,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              .28,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 8.h,
-                                  ),
-                                ]),
-                          ),
-                        )
-                      : const SizedBox.shrink(),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  widget.shipment.shipmentpaymentv2 == null
-                      ? Card(
-                          elevation: 1,
-                          clipBehavior: Clip.antiAlias,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
+                            SectionTitle(
+                              text: AppLocalizations.of(context)!
+                                  .translate('operation_cost'),
                             ),
-                          ),
-                          color: Colors.white,
-                          child: paymentCard())
-                      : const SizedBox.shrink(),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                ],
+                            SizedBox(
+                              height: 7.h,
+                            ),
+                            SectionBody(
+                              text:
+                                  '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(widget.shipment.distance!, widget.shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
+                            ),
+                            // Divider(
+                            //   height: 7.h,
+                            // ),
+                            widget.shipment.shipmentpaymentv2 != null
+                                ? BlocBuilder<ReadPaymentInstructionBloc,
+                                    ReadPaymentInstructionState>(
+                                    builder: (context, state) {
+                                      if (state
+                                          is ReadPaymentInstructionLoadedSuccess) {
+                                        return Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(
+                                              height: 7.h,
+                                            ),
+                                            SectionBody(
+                                              text:
+                                                  '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
+                                            ),
+                                            SizedBox(
+                                              height: 7.h,
+                                            ),
+                                            SectionBody(
+                                              text:
+                                                  '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
+                                            ),
+                                          ],
+                                        );
+                                      } else {
+                                        return Shimmer.fromColors(
+                                          baseColor: (Colors.grey[300])!,
+                                          highlightColor: (Colors.grey[100])!,
+                                          enabled: true,
+                                          direction: ShimmerDirection.ttb,
+                                          child: ListView.builder(
+                                            shrinkWrap: true,
+                                            itemBuilder: (_, __) => Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 15,
+                                                      vertical: 5),
+                                                  height: 150.h,
+                                                  width: double.infinity,
+                                                  clipBehavior: Clip.antiAlias,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            itemCount: 1,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  )
+                                : const SizedBox.shrink(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    widget.shipment.shipmentpaymentv2 == null
+                        ? Card(
+                            elevation: 1,
+                            clipBehavior: Clip.antiAlias,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      width: double.infinity,
+                                    ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("choose_payment_method"),
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPaymentType = "B";
+                                            });
+                                          },
+                                          child: Container(
+                                            height: 65,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .28,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color:
+                                                    selectedPaymentType == "B"
+                                                        ? AppColor.deepYellow
+                                                        : Colors.grey[400]!,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              image: const DecorationImage(
+                                                image: AssetImage(
+                                                    "assets/images/Albaraka.jpg"),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPaymentType = "H";
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color:
+                                                    selectedPaymentType == "H"
+                                                        ? AppColor.deepYellow
+                                                        : Colors.grey[400]!,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              image: const DecorationImage(
+                                                image: AssetImage(
+                                                    "assets/images/Alharam.jpg"),
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                            height: 65,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .28,
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            setState(() {
+                                              selectedPaymentType = "E";
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color:
+                                                    selectedPaymentType == "E"
+                                                        ? AppColor.deepYellow
+                                                        : Colors.grey[400]!,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              image: const DecorationImage(
+                                                image: AssetImage(
+                                                    "assets/images/e_Cash.jpg"),
+                                              ),
+                                            ),
+                                            clipBehavior: Clip.hardEdge,
+                                            height: 65,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .28,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 8.h,
+                                    ),
+                                  ]),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    widget.shipment.shipmentpaymentv2 == null
+                        ? Card(
+                            elevation: 1,
+                            clipBehavior: Clip.antiAlias,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            color: Colors.white,
+                            child: paymentCard())
+                        : const SizedBox.shrink(),
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                  ],
+                ),
               ),
               Consumer<TaskNumProvider>(
                   builder: (context, taskProvider, child) {

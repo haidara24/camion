@@ -489,8 +489,8 @@ class _HomeScreenState extends State<HomeScreen>
                             dividerColor: Colors.transparent,
                             labelColor: AppColor.deepYellow,
                             unselectedLabelColor: Colors.white,
-                            labelStyle: TextStyle(fontSize: 12.sp),
-                            unselectedLabelStyle: TextStyle(fontSize: 14.sp),
+                            // labelStyle: TextStyle(fontSize: 12.sp),
+                            // unselectedLabelStyle: TextStyle(fontSize: 14.sp),
                             padding: EdgeInsets.zero,
                             onTap: (value) {
                               changeSelectedValue(

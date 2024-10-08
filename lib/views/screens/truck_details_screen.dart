@@ -469,8 +469,8 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                       onTap: () {
                                         // shipmentProvider.setTruck(
                                         //     widget.truck, widget.index);
-                                        shipmentProvider
-                                            .addSelectedTruck(widget.truck);
+                                        // shipmentProvider.addSelectedTruck(
+                                        //     widget.truck, 0);
                                         Navigator.pop(context);
                                         // Navigator.pop(context);
                                       },
