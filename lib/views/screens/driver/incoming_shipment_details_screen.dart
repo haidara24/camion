@@ -11,7 +11,6 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';

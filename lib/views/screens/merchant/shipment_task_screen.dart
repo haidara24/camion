@@ -186,6 +186,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                         child: AbsorbPointer(
                                           absorbing: false,
                                           child: Card(
+                                            elevation: 1,
                                             shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(10),
@@ -193,6 +194,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                             ),
                                             margin: const EdgeInsets.symmetric(
                                               horizontal: 16,
+                                              vertical: 8,
                                             ),
                                             child: Column(
                                               mainAxisAlignment:
@@ -204,23 +206,23 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                   width: double.infinity,
                                                   height: 48.h,
                                                   decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(10),
-                                                      topRight:
-                                                          Radius.circular(10),
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                      colors: [
+                                                        AppColor.deepYellow,
+                                                        AppColor.deepYellow,
+                                                        AppColor.deepYellow,
+                                                        Colors.white,
+                                                      ],
                                                     ),
-                                                    border: Border.all(
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                      width: 1,
-                                                    ),
-                                                    color: Colors.grey[300],
+                                                    // color:
+                                                    //     Colors.grey[300],
                                                   ),
                                                   child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
+                                                    // mainAxisAlignment:
+                                                    //     MainAxisAlignment.start,
                                                     children: [
                                                       Padding(
                                                         padding:
@@ -258,12 +260,17 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                             children: [
                                                               Center(
                                                                 child: SizedBox(
-                                                                  height: 40.h,
-                                                                  width: 40.h,
+                                                                  height: 30.h,
+                                                                  width: 30.h,
                                                                   child: Center(
                                                                     child: SvgPicture
                                                                         .asset(
-                                                                            "assets/icons/orange/notification.svg"),
+                                                                      "assets/icons/orange/notification.svg",
+                                                                      height:
+                                                                          30.h,
+                                                                      width:
+                                                                          30.h,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),

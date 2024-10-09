@@ -141,127 +141,124 @@ class CompleteShipmentScreen extends StatelessWidget {
                                         },
                                         child: AbsorbPointer(
                                           absorbing: false,
-                                          child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 4.0,
+                                          child: Card(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
                                             ),
-                                            child: Card(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(10),
+                                            margin: const EdgeInsets.symmetric(
+                                              horizontal: 16,
+                                              vertical: 8,
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 48.h,
+                                                  color: Colors.grey[300],
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 4,
+                                                        ),
+                                                        child: SectionTitle(
+                                                          text:
+                                                              "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}",
+                                                        ),
+                                                      ),
+                                                      const Spacer(),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                          horizontal: 4,
+                                                        ),
+                                                        child: SectionTitle(
+                                                          text: state
+                                                                      .shipments[
+                                                                          index]
+                                                                      .shipmentStatus! ==
+                                                                  'C'
+                                                              ? AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'completed')
+                                                              : AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'cancelled'),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        height: 45.h,
+                                                        width: 45.w,
+                                                        margin: const EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: 4,
+                                                        ),
+                                                        child: Center(
+                                                          child: state
+                                                                      .shipments[
+                                                                          index]
+                                                                      .shipmentStatus! ==
+                                                                  'C'
+                                                              ? Icon(
+                                                                  Icons
+                                                                      .check_circle_outline_outlined,
+                                                                  color: AppColor
+                                                                      .darkGrey,
+                                                                  size: 30,
+                                                                )
+                                                              : SvgPicture
+                                                                  .asset(
+                                                                  "assets/icons/grey/notification_shipment_cancelation.svg",
+                                                                  height: 28.w,
+                                                                  width: 28.w,
+                                                                  fit: BoxFit
+                                                                      .fill,
+                                                                ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    width: double.infinity,
-                                                    height: 48.h,
-                                                    color: Colors.grey[300],
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 4,
-                                                          ),
-                                                          child: SectionTitle(
-                                                            text:
-                                                                "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}",
-                                                          ),
-                                                        ),
-                                                        const Spacer(),
-                                                        Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 4,
-                                                          ),
-                                                          child: SectionTitle(
-                                                            text: state
-                                                                        .shipments[
-                                                                            index]
-                                                                        .shipmentStatus! ==
-                                                                    'C'
-                                                                ? AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'completed')
-                                                                : AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'cancelled'),
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          height: 45.h,
-                                                          width: 45.w,
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                            horizontal: 4,
-                                                          ),
-                                                          child: Center(
-                                                            child: state
-                                                                        .shipments[
-                                                                            index]
-                                                                        .shipmentStatus! ==
-                                                                    'C'
-                                                                ? Icon(
-                                                                    Icons
-                                                                        .check_circle_outline_outlined,
-                                                                    color: AppColor
-                                                                        .darkGrey,
-                                                                    size: 30,
-                                                                  )
-                                                                : SvgPicture
-                                                                    .asset(
-                                                                    "assets/icons/grey/notification_shipment_cancelation.svg",
-                                                                    height:
-                                                                        28.w,
-                                                                    width: 28.w,
-                                                                    fit: BoxFit
-                                                                        .fill,
-                                                                  ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  ShipmentPathVerticalWidget(
-                                                    pathpoints: state
-                                                        .shipments[index]
-                                                        .subshipments![0]
-                                                        .pathpoints!,
-                                                    pickupDate: state
-                                                        .shipments[index]
-                                                        .subshipments![0]
-                                                        .pickupDate!,
-                                                    deliveryDate: state
-                                                        .shipments[index]
-                                                        .subshipments![0]
-                                                        .deliveryDate!,
-                                                    langCode: localeState
-                                                        .value.languageCode,
-                                                    mini: true,
-                                                  ),
-                                                ],
-                                              ),
-                                            ).animate().slideX(
-                                                duration: 350.ms,
-                                                delay: 0.ms,
-                                                begin: 1,
-                                                end: 0,
-                                                curve: Curves.easeInOutSine),
-                                          ),
+                                                ShipmentPathVerticalWidget(
+                                                  pathpoints: state
+                                                      .shipments[index]
+                                                      .subshipments![0]
+                                                      .pathpoints!,
+                                                  pickupDate: state
+                                                      .shipments[index]
+                                                      .subshipments![0]
+                                                      .pickupDate!,
+                                                  deliveryDate: state
+                                                      .shipments[index]
+                                                      .subshipments![0]
+                                                      .deliveryDate!,
+                                                  langCode: localeState
+                                                      .value.languageCode,
+                                                  mini: true,
+                                                ),
+                                              ],
+                                            ),
+                                          ).animate().slideX(
+                                              duration: 350.ms,
+                                              delay: 0.ms,
+                                              begin: 1,
+                                              end: 0,
+                                              curve: Curves.easeInOutSine),
                                         ),
                                       );
                                     },

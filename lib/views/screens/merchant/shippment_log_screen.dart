@@ -472,6 +472,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                   margin: const EdgeInsets
                                                       .symmetric(
                                                     horizontal: 16,
+                                                    vertical: 8,
                                                   ),
                                                   child: Column(
                                                     mainAxisAlignment:
@@ -719,6 +720,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                   margin: const EdgeInsets
                                                       .symmetric(
                                                     horizontal: 16,
+                                                    vertical: 8,
                                                   ),
                                                   child: Column(
                                                     mainAxisAlignment:

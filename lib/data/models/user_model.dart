@@ -131,14 +131,28 @@ class Stores {
   int? id;
   String? address;
   String? location;
+  String? phone;
+  String? manager;
+  String? note;
   int? merchant;
 
-  Stores({this.id, this.address, this.location, this.merchant});
+  Stores({
+    this.id,
+    this.address,
+    this.location,
+    this.phone,
+    this.manager,
+    this.note,
+    this.merchant,
+  });
 
   Stores.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     address = json['address'];
     location = json['location'];
+    phone = json['phone'];
+    manager = json['manager'];
+    note = json['note'];
     merchant = json['merchant'];
   }
 
@@ -147,6 +161,9 @@ class Stores {
     data['id'] = id;
     data['address'] = address;
     data['location'] = location;
+    data['phone'] = phone;
+    data['manager'] = manager;
+    data['note'] = note;
     data['merchant'] = merchant;
     return data;
   }

@@ -53,6 +53,14 @@ class NotificationServices {
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
+  Future<void> _handleNewMessage(
+      BuildContext context, RemoteMessage message) async {
+    if (notificationProvider != null) {
+      await notificationProvider!.addNotReadedNotification();
+      BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
+    }
+  }
+
   Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage message) async {
     // you need to initialize firebase first

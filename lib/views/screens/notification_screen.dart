@@ -127,11 +127,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   DateTime now = DateTime.now();
                                   Duration diff = now.difference(DateTime.parse(
                                       notificationProvider
-                                          .notifications[index].dateCreated!));
+                                          .notifications[index]!.dateCreated!));
                                   return Container(
                                     decoration: BoxDecoration(
                                       color: notificationProvider
-                                              .notifications[index].isread!
+                                              .notifications[index]!.isread!
                                           ? Colors.white
                                           : Colors.blue[50],
                                     ),
@@ -142,19 +142,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       contentPadding: EdgeInsets.zero,
                                       onTap: () {
                                         if (notificationProvider
-                                                    .notifications[index]
+                                                    .notifications[index]!
                                                     .noteficationType ==
                                                 "A" ||
                                             notificationProvider
-                                                    .notifications[index]
+                                                    .notifications[index]!
                                                     .noteficationType ==
                                                 "J") {
                                           BlocProvider.of<RequestDetailsBloc>(
                                                   context)
                                               .add(RequestDetailsLoadEvent(
                                                   notificationProvider
-                                                      .notifications[index]
-                                                      .request!));
+                                                      .notifications[index]!
+                                                      .objectId!));
 
                                           Navigator.push(
                                             context,
@@ -162,14 +162,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               builder: (context) =>
                                                   ApprovalRequestDetailsScreen(
                                                 type: notificationProvider
-                                                    .notifications[index]
+                                                    .notifications[index]!
                                                     .noteficationType!,
                                               ),
                                             ),
                                           );
                                         }
                                         if (notificationProvider
-                                                .notifications[index]
+                                                .notifications[index]!
                                                 .noteficationType ==
                                             "O") {
                                           BlocProvider.of<
@@ -177,8 +177,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                   context)
                                               .add(SubShipmentDetailsLoadEvent(
                                                   notificationProvider
-                                                      .notifications[index]
-                                                      .shipment!));
+                                                      .notifications[index]!
+                                                      .objectId!));
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -212,16 +212,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                         // }
 
                                         if (!notificationProvider
-                                            .notifications[index].isread!) {
+                                            .notifications[index]!.isread!) {
                                           NotificationServices
                                               .markNotificationasRead(
                                                   notificationProvider
-                                                      .notifications[index]
+                                                      .notifications[index]!
                                                       .id!);
                                           notificationProvider
                                               .markNotificationAsRead(
                                                   notificationProvider
-                                                      .notifications[index]
+                                                      .notifications[index]!
                                                       .id!);
                                         }
                                       },
@@ -241,7 +241,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               child: Center(
                                                 child: (notificationProvider
                                                             .notifications[
-                                                                index]
+                                                                index]!
                                                             .image!
                                                             .length >
                                                         1)
@@ -250,7 +250,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                             BorderRadius
                                                                 .circular(180),
                                                         child: Image.network(
-                                                          'https://matjari.app/media/${notificationProvider.notifications[index].image!}',
+                                                          'https://matjari.app/media/${notificationProvider.notifications[index]!.image!}',
                                                           height: 55.h,
                                                           width: 55.w,
                                                           fit: BoxFit.fill,
@@ -259,7 +259,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                     : Text(
                                                         notificationProvider
                                                             .notifications[
-                                                                index]
+                                                                index]!
                                                             .image!,
                                                         style: TextStyle(
                                                           color: Colors.white,
@@ -289,7 +289,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                   ),
                                                   child: getStatusImage(
                                                       notificationProvider
-                                                          .notifications[index]
+                                                          .notifications[index]!
                                                           .noteficationType!),
                                                 )),
                                           ],
@@ -297,7 +297,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       ),
                                       title: SectionTitle(
                                         text: notificationProvider
-                                            .notifications[index].title!,
+                                            .notifications[index]!.title!,
                                       ),
                                       subtitle: Column(
                                         crossAxisAlignment:
@@ -305,7 +305,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                         children: [
                                           SectionBody(
                                               text: notificationProvider
-                                                  .notifications[index]
+                                                  .notifications[index]!
                                                   .description!),
                                           Row(
                                             mainAxisAlignment:

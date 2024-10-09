@@ -311,21 +311,21 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                 },
                 child: Row(
                   children: [
-                    Text(
-                      AppLocalizations.of(context)!.translate('add_truck'),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.deepYellow,
-                      ),
-                    ),
+                    // Text(
+                    //   AppLocalizations.of(context)!.translate('add_truck'),
+                    //   style: TextStyle(
+                    //     fontSize: 15,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: AppColor.deepYellow,
+                    //   ),
+                    // ),
                     AbsorbPointer(
                       absorbing: true,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                          height: 28.h,
-                          width: 28.w,
+                          height: 32.h,
+                          width: 32.w,
                           child:
                               SvgPicture.asset("assets/icons/orange/add.svg"),
                         ),
@@ -2978,221 +2978,208 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                         const SizedBox(
                                           height: 8,
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 2.5),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .88,
-                                                child: CustomButton(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .translate(
-                                                            'search_for_truck'),
-                                                    style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                    ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .88,
+                                              child: CustomButton(
+                                                title: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'search_for_truck'),
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp,
                                                   ),
-                                                  onTap: () {
-                                                    if (shipmentProvider
-                                                            .pickup_location
-                                                            .isNotEmpty ||
-                                                        shipmentProvider
-                                                            .delivery_location
-                                                            .isNotEmpty) {
+                                                ),
+                                                onTap: () {
+                                                  if (shipmentProvider
+                                                          .pickup_location
+                                                          .isNotEmpty ||
                                                       shipmentProvider
-                                                          .setTruckConfirm(
-                                                              false,
-                                                              selectedIndex);
+                                                          .delivery_location
+                                                          .isNotEmpty) {
+                                                    shipmentProvider
+                                                        .setTruckConfirm(false,
+                                                            selectedIndex);
+                                                    if (shipmentProvider
+                                                        .addShipmentformKey[
+                                                            selectedIndex]
+                                                        .currentState!
+                                                        .validate()) {
                                                       if (shipmentProvider
-                                                          .addShipmentformKey[
-                                                              selectedIndex]
-                                                          .currentState!
-                                                          .validate()) {
-                                                        if (shipmentProvider
-                                                                .time_controller[
-                                                                    selectedIndex]
-                                                                .text
-                                                                .isNotEmpty &&
-                                                            shipmentProvider
-                                                                .date_controller[
-                                                                    selectedIndex]
-                                                                .text
-                                                                .isNotEmpty) {
-                                                          if (shipmentProvider
-                                                              .selectedTruckType
+                                                              .time_controller[
+                                                                  selectedIndex]
+                                                              .text
+                                                              .isNotEmpty &&
+                                                          shipmentProvider
+                                                              .date_controller[
+                                                                  selectedIndex]
+                                                              .text
                                                               .isNotEmpty) {
-                                                            List<int> types =
-                                                                [];
-                                                            for (var element
-                                                                in shipmentProvider
-                                                                    .selectedTruckType) {
-                                                              if (!types.contains(
-                                                                  element!
-                                                                      .id!)) {
-                                                                types.add(
-                                                                    element
-                                                                        .id!);
-                                                              }
+                                                        if (shipmentProvider
+                                                            .selectedTruckType
+                                                            .isNotEmpty) {
+                                                          List<int> types = [];
+                                                          for (var element
+                                                              in shipmentProvider
+                                                                  .selectedTruckType) {
+                                                            if (!types.contains(
+                                                                element!.id!)) {
+                                                              types.add(
+                                                                  element.id!);
                                                             }
-                                                            BlocProvider.of<
-                                                                        TrucksListBloc>(
-                                                                    context)
-                                                                .add(
-                                                              NearestTrucksListLoadEvent(
-                                                                types,
-                                                                shipmentProvider
-                                                                    .pickup_location,
-                                                                shipmentProvider
-                                                                    .pickup_placeId,
-                                                                shipmentProvider
-                                                                    .delivery_placeId,
-                                                              ),
-                                                            );
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        SearchForTrucksScreen(),
-                                                              ),
-                                                            );
-                                                          } else {
-                                                            shipmentProvider
-                                                                .setTruckTypeError(
-                                                                    true);
                                                           }
+                                                          BlocProvider.of<
+                                                                      TrucksListBloc>(
+                                                                  context)
+                                                              .add(
+                                                            NearestTrucksListLoadEvent(
+                                                              types,
+                                                              shipmentProvider
+                                                                  .pickup_location,
+                                                              shipmentProvider
+                                                                  .pickup_placeId,
+                                                              shipmentProvider
+                                                                  .delivery_placeId,
+                                                            ),
+                                                          );
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  SearchForTrucksScreen(),
+                                                            ),
+                                                          );
                                                         } else {
                                                           shipmentProvider
-                                                              .setDateError(
-                                                                  true,
-                                                                  selectedIndex);
+                                                              .setTruckTypeError(
+                                                                  true);
                                                         }
+                                                      } else {
+                                                        shipmentProvider
+                                                            .setDateError(true,
+                                                                selectedIndex);
                                                       }
-                                                    } else {
-                                                      shipmentProvider
-                                                          .setPathError(
-                                                        true,
-                                                      );
-                                                      Scrollable.ensureVisible(
-                                                        key1.currentContext!,
-                                                        duration:
-                                                            const Duration(
-                                                          milliseconds: 500,
-                                                        ),
-                                                      );
                                                     }
-                                                  },
-                                                ),
+                                                  } else {
+                                                    shipmentProvider
+                                                        .setPathError(
+                                                      true,
+                                                    );
+                                                    Scrollable.ensureVisible(
+                                                      key1.currentContext!,
+                                                      duration: const Duration(
+                                                        milliseconds: 500,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 2.5),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .88,
-                                                child: CustomButton(
-                                                  title: Text(
-                                                    AppLocalizations.of(
-                                                            context)!
-                                                        .translate(
-                                                            'form_clear'),
-                                                    style: TextStyle(
-                                                      fontSize: 20.sp,
-                                                    ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .88,
+                                              child: CustomButton(
+                                                title: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate('form_clear'),
+                                                  style: TextStyle(
+                                                    fontSize: 20.sp,
                                                   ),
-                                                  onTap: () {
-                                                    showDialog<void>(
-                                                      context: context,
-                                                      barrierDismissible:
-                                                          false, // user must tap button!
-                                                      builder: (BuildContext
-                                                          context) {
-                                                        return AlertDialog(
-                                                          backgroundColor:
-                                                              Colors.white,
-                                                          title: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'form_init')),
-                                                          content:
-                                                              SingleChildScrollView(
-                                                            child: ListBody(
-                                                              children: <Widget>[
-                                                                Text(
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'form_init_confirm'),
-                                                                    style: const TextStyle(
+                                                ),
+                                                onTap: () {
+                                                  showDialog<void>(
+                                                    context: context,
+                                                    barrierDismissible:
+                                                        false, // user must tap button!
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        title: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'form_init')),
+                                                        content:
+                                                            SingleChildScrollView(
+                                                          child: ListBody(
+                                                            children: <Widget>[
+                                                              Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'form_init_confirm'),
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          18)),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'no'),
+                                                                style:
+                                                                    const TextStyle(
                                                                         fontSize:
                                                                             18)),
-                                                              ],
-                                                            ),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
                                                           ),
-                                                          actions: <Widget>[
-                                                            TextButton(
-                                                              child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'no'),
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          18)),
-                                                              onPressed: () {
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                              },
-                                                            ),
-                                                            TextButton(
-                                                              child: Text(
-                                                                  AppLocalizations.of(
-                                                                          context)!
-                                                                      .translate(
-                                                                          'yes'),
-                                                                  style: const TextStyle(
-                                                                      fontSize:
-                                                                          18)),
-                                                              onPressed: () {
-                                                                shipmentProvider
-                                                                    .initForm();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pop();
-                                                                setState(
-                                                                  () {},
-                                                                );
-                                                              },
-                                                            ),
-                                                          ],
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                  color: AppColor.lightGrey,
-                                                ),
+                                                          TextButton(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'yes'),
+                                                                style:
+                                                                    const TextStyle(
+                                                                        fontSize:
+                                                                            18)),
+                                                            onPressed: () {
+                                                              shipmentProvider
+                                                                  .initForm();
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              setState(
+                                                                () {},
+                                                              );
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                color: AppColor.lightGrey,
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ],
                                     ),

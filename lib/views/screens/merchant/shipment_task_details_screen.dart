@@ -122,24 +122,27 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
           alignment: Alignment.topLeft,
           children: [
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 6),
+              margin: const EdgeInsets.symmetric(
+                horizontal: 6,
+                vertical: 8,
+              ),
               decoration: BoxDecoration(
                 border: Border.all(
                   color: Colors.grey,
                   width: 1,
                 ),
               ),
-              width: MediaQuery.of(context).size.width * .27,
+              width: MediaQuery.of(context).size.width * .23,
               height: 110.h,
               child: Image(
-                height: MediaQuery.of(context).size.width * .27,
+                height: MediaQuery.of(context).size.width * .23,
                 width: 110.h,
                 fit: BoxFit.fill,
                 image: FileImage(_files[i]),
               ),
             ),
             Positioned(
-              top: -24,
+              top: -16,
               left: -16,
               child: IconButton(
                 onPressed: () {
@@ -438,7 +441,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                   elevation: 2,
                                   color: Colors.white,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(16.0),
                                     child: Column(
                                       children: [
                                         Row(
@@ -490,23 +493,30 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                   const EdgeInsets.all(8.0),
                                               child: Column(
                                                 children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'select_your_identity'),
-                                                          style: TextStyle(
-                                                            fontSize: 17,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: AppColor
-                                                                .darkGrey,
-                                                          )),
-                                                    ],
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 8.0),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'select_your_identity'),
+                                                            style: TextStyle(
+                                                              fontSize: 17,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: AppColor
+                                                                  .darkGrey,
+                                                            )),
+                                                      ],
+                                                    ),
                                                   ),
                                                   Row(
                                                     mainAxisAlignment:
@@ -663,7 +673,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                           color: Colors.white,
                                           elevation: 2,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(16.0),
                                             child: Form(
                                               key: _shipperDetailsformKey,
                                               child: Column(
@@ -686,23 +696,23 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'charger_info'),
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 17,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: AppColor
-                                                                      .darkGrey,
-                                                                )),
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'charger_info'),
+                                                              style: TextStyle(
+                                                                fontSize: 17,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: AppColor
+                                                                    .darkGrey,
+                                                              ),
+                                                            ),
                                                           ],
                                                         ),
                                                         const SizedBox(
-                                                          height: 10,
+                                                          height: 16,
                                                         ),
                                                         TextFormField(
                                                           controller:
@@ -787,7 +797,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                               (value) {},
                                                         ),
                                                         const SizedBox(
-                                                          height: 12,
+                                                          height: 16,
                                                         ),
                                                         TextFormField(
                                                           controller:
@@ -876,7 +886,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           },
                                                         ),
                                                         const SizedBox(
-                                                          height: 12,
+                                                          height: 16,
                                                         ),
                                                         TextFormField(
                                                           controller:
@@ -1008,7 +1018,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           ],
                                                         ),
                                                         const SizedBox(
-                                                          height: 10,
+                                                          height: 16,
                                                         ),
                                                         TextFormField(
                                                           controller:
@@ -1094,7 +1104,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           // onFieldSubmitted: (value) {},
                                                         ),
                                                         const SizedBox(
-                                                          height: 12,
+                                                          height: 16,
                                                         ),
                                                         TextFormField(
                                                           controller:
@@ -1184,7 +1194,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           // },
                                                         ),
                                                         const SizedBox(
-                                                          height: 12,
+                                                          height: 16,
                                                         ),
                                                         TextFormField(
                                                           controller:
@@ -1277,7 +1287,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           // },
                                                         ),
                                                         const SizedBox(
-                                                          height: 12,
+                                                          height: 8,
                                                         ),
                                                       ],
                                                     ),
@@ -1302,8 +1312,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                 elevation: 2,
                                                 color: Colors.white,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
                                                   child: Column(
                                                     children: [
                                                       Visibility(
@@ -1454,7 +1464,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                           color: Colors.white,
                                           elevation: 2,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(16.0),
                                             child: Form(
                                               key: _commodityInfoformKey,
                                               child: Column(
@@ -1594,7 +1604,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                     },
                                                                   ),
                                                                   const SizedBox(
-                                                                    height: 12,
+                                                                    height: 16,
                                                                   ),
                                                                   BlocBuilder<
                                                                       PackageTypeBloc,
@@ -1720,7 +1730,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                     },
                                                                   ),
                                                                   const SizedBox(
-                                                                    height: 12,
+                                                                    height: 16,
                                                                   ),
                                                                   TextFormField(
                                                                     controller:
@@ -1827,7 +1837,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                     },
                                                                   ),
                                                                   const SizedBox(
-                                                                    height: 12,
+                                                                    height: 16,
                                                                   ),
                                                                   TextFormField(
                                                                     controller:
@@ -2030,7 +2040,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                               color: Colors.white,
                                               child: Padding(
                                                 padding:
-                                                    const EdgeInsets.all(8.0),
+                                                    const EdgeInsets.all(16.0),
                                                 child: Column(
                                                   children: [
                                                     Row(
@@ -2090,7 +2100,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                       ),
                                                                       const SizedBox(
                                                                         height:
-                                                                            12,
+                                                                            16,
                                                                       ),
                                                                       Container(
                                                                         child: SectionBody(
@@ -2224,7 +2234,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                           color: Colors.white,
                                           elevation: 2,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(16.0),
                                             child: Form(
                                               key: _weightInfoformKey,
                                               child: Column(
@@ -2241,7 +2251,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                   'weight_info'),
                                                         ),
                                                       ]),
-                                                  const SizedBox(height: 8),
+                                                  const SizedBox(height: 16),
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment
@@ -2492,7 +2502,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                     ],
                                                   ),
                                                   const SizedBox(
-                                                    height: 8,
+                                                    height: 16,
                                                   ),
                                                   TextFormField(
                                                     controller:
@@ -2544,8 +2554,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                               child: SizedBox(
                                                 width: double.infinity,
                                                 child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
                                                   child: Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -2638,12 +2648,15 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                           color: Colors.white,
                                           elevation: 2,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(16.0),
                                             child: Column(
                                               children: [
                                                 Row(
                                                   mainAxisAlignment:
-                                                      MainAxisAlignment.start,
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
                                                   children: [
                                                     SectionTitle(
                                                       text: AppLocalizations.of(
@@ -2651,14 +2664,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           .translate(
                                                               'upload_files'),
                                                     ),
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    InkWell(
-                                                      onTap: () async {
+                                                    IconButton(
+                                                      onPressed: () async {
                                                         var pickedImages =
                                                             await _picker
                                                                 .pickMultiImage();
@@ -2671,24 +2678,17 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           () {},
                                                         );
                                                       },
-                                                      child: SizedBox(
-                                                        width: 100.w,
-                                                        child: Card(
-                                                          elevation: 1,
-                                                          color: Colors.white,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Center(
-                                                              child: SizedBox(
-                                                                height: 40.h,
-                                                                width: 50.w,
-                                                                child: SvgPicture
-                                                                    .asset(
-                                                                        "assets/icons/grey/add_image.svg"),
-                                                              ),
-                                                            ),
+                                                      icon: Card(
+                                                        elevation: 1,
+                                                        color: Colors.white,
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Icon(
+                                                            Icons
+                                                                .cloud_upload_outlined,
+                                                            size: 36,
                                                           ),
                                                         ),
                                                       ),

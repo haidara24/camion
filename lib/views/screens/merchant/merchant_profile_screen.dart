@@ -89,7 +89,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                       borderRadius: BorderRadius.circular(180),
                                       child: SizedBox(
                                         child: Image.network(
-                                          state.merchant.image!,
+                                          state.merchant.image ?? "",
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>

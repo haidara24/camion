@@ -130,7 +130,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
         // enableDrag: false,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(0),
+            top: Radius.circular(8),
           ),
         ),
         builder: (context) => GestureDetector(
@@ -168,134 +168,148 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                     ),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              height: 58.w,
-                              width: 58.w,
-                              decoration: BoxDecoration(
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                height: 58.w,
+                                width: 58.w,
+                                decoration: BoxDecoration(
                                   // color: AppColor.lightGoldenYellow,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: CircleAvatar(
-                                radius: 25.h,
-                                // backgroundColor: AppColor.deepBlue,
-                                child: Center(
-                                  child: (subshipments[selectedIndex]
-                                              .driver_image!
-                                              .length >
-                                          1)
-                                      ? ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(180),
-                                          child: Image.network(
-                                            subshipments[selectedIndex]
-                                                .driver_image!,
-                                            height: 55.w,
-                                            width: 55.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        )
-                                      : Text(
-                                          subshipments[selectedIndex]
-                                              .driver_first_name!,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 28.sp,
-                                          ),
-                                        ),
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
-                              ),
-                            ),
-                            Text(
-                              "${subshipments[selectedIndex].driver_first_name!} ${subshipments[selectedIndex].driver_last_name!}",
-                              style: TextStyle(
-                                // color: AppColor.lightBlue,
-                                fontSize: 19.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: 35.h,
-                              width: 155.w,
-                              child: CachedNetworkImage(
-                                imageUrl: subshipments[selectedTruck]
-                                    .truck!
-                                    .truck_type_image!,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) =>
-                                        Shimmer.fromColors(
-                                  baseColor: (Colors.grey[300])!,
-                                  highlightColor: (Colors.grey[100])!,
-                                  enabled: true,
-                                  child: Container(
-                                    height: 25.h,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Container(
-                                  height: 35.h,
-                                  width: 155.w,
-                                  color: Colors.grey[300],
+                                child: CircleAvatar(
+                                  radius: 25.h,
+                                  // backgroundColor: AppColor.deepBlue,
                                   child: Center(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .translate('image_load_error')),
+                                    child: (subshipments[selectedIndex]
+                                                .driver_image!
+                                                .length >
+                                            1)
+                                        ? ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(180),
+                                            child: Image.network(
+                                              subshipments[selectedIndex]
+                                                  .driver_image!,
+                                              height: 55.w,
+                                              width: 55.w,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          )
+                                        : Text(
+                                            subshipments[selectedIndex]
+                                                .driver_first_name!,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 28.sp,
+                                            ),
+                                          ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Text(
-                              "${language == 'en' ? subshipments[selectedIndex].truck!.truck_type! : subshipments[selectedIndex].truck!.truck_typeAr!}  ",
-                              style: TextStyle(
-                                // color: AppColor.lightBlue,
-                                fontSize: 19.sp,
-                                fontWeight: FontWeight.bold,
+                              Text(
+                                "${subshipments[selectedIndex].driver_first_name!} ${subshipments[selectedIndex].driver_last_name!}",
+                                style: TextStyle(
+                                  // color: AppColor.lightBlue,
+                                  fontSize: 19.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Divider(),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate("shipment_route"),
-                    ),
-                    ShipmentPathVerticalWidget(
-                      pathpoints: subshipments[selectedIndex].pathpoints!,
-                      pickupDate: subshipments[selectedIndex].pickupDate!,
-                      deliveryDate: subshipments[selectedIndex].deliveryDate!,
-                      langCode: language,
-                      mini: false,
-                    ),
-                    const Divider(),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate("commodity_info"),
-                    ),
-                    Commodity_info_widget(
-                        shipmentItems:
-                            subshipments[selectedIndex].shipmentItems!),
-                    const Divider(),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate("shipment_route_statistics"),
-                    ),
-                    PathStatisticsWidget(
-                      distance: subshipments[selectedIndex].distance!,
-                      period: subshipments[selectedIndex].period!,
-                    ),
-                  ],
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              SizedBox(
+                                height: 35.h,
+                                width: 155.w,
+                                child: CachedNetworkImage(
+                                  imageUrl: subshipments[selectedTruck]
+                                      .truck!
+                                      .truck_type_image!,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Shimmer.fromColors(
+                                    baseColor: (Colors.grey[300])!,
+                                    highlightColor: (Colors.grey[100])!,
+                                    enabled: true,
+                                    child: Container(
+                                      height: 25.h,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    height: 35.h,
+                                    width: 155.w,
+                                    color: Colors.grey[300],
+                                    child: Center(
+                                      child: Text(AppLocalizations.of(context)!
+                                          .translate('image_load_error')),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              Text(
+                                "${language == 'en' ? subshipments[selectedIndex].truck!.truck_type! : subshipments[selectedIndex].truck!.truck_typeAr!}  ",
+                                style: TextStyle(
+                                  // color: AppColor.lightBlue,
+                                  fontSize: 19.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        height: 32,
+                      ),
+                      SectionTitle(
+                        text: AppLocalizations.of(context)!
+                            .translate("shipment_route"),
+                      ),
+                      ShipmentPathVerticalWidget(
+                        pathpoints: subshipments[selectedIndex].pathpoints!,
+                        pickupDate: subshipments[selectedIndex].pickupDate!,
+                        deliveryDate: subshipments[selectedIndex].deliveryDate!,
+                        langCode: language,
+                        mini: false,
+                      ),
+                      const Divider(
+                        height: 32,
+                      ),
+                      SectionTitle(
+                        text: AppLocalizations.of(context)!
+                            .translate("commodity_info"),
+                      ),
+                      Commodity_info_widget(
+                          shipmentItems:
+                              subshipments[selectedIndex].shipmentItems!),
+                      const Divider(
+                        height: 32,
+                      ),
+                      SectionTitle(
+                        text: AppLocalizations.of(context)!
+                            .translate("shipment_route_statistics"),
+                      ),
+                      PathStatisticsWidget(
+                        distance: subshipments[selectedIndex].distance!,
+                        period: subshipments[selectedIndex].period!,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -330,7 +344,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                     child: SvgPicture.asset(
                       "assets/icons/arrow_up.svg",
                       fit: BoxFit.contain,
-                      height: 8.h,
+                      height: 12.h,
                     ),
                   ),
                 )

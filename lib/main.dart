@@ -47,6 +47,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_multi_create_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
+import 'package:camion/business_logic/bloc/store_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_details_bloc.dart';
@@ -80,6 +81,7 @@ import 'package:camion/data/repositories/post_repository.dart';
 import 'package:camion/data/repositories/profile_repository.dart';
 import 'package:camion/data/repositories/request_repository.dart';
 import 'package:camion/data/repositories/shipmment_repository.dart';
+import 'package:camion/data/repositories/store_repository.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
 import 'package:camion/firebase_options.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -201,6 +203,9 @@ class MyApp extends StatelessWidget {
                   RepositoryProvider(
                     create: (context) => RequestRepository(),
                   ),
+                  RepositoryProvider(
+                    create: (context) => StoreRepository(),
+                  ),
                 ],
                 child: MultiBlocProvider(
                   providers: [
@@ -234,6 +239,12 @@ class MyApp extends StatelessWidget {
                       create: (context) => CreateStoreBloc(
                         profileRepository:
                             RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => StoreListBloc(
+                        storeRepository:
+                            RepositoryProvider.of<StoreRepository>(context),
                       ),
                     ),
                     BlocProvider(

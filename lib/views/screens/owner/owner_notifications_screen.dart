@@ -140,7 +140,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                           Duration diff = now.difference(
                                               DateTime.parse(
                                                   notificationProvider
-                                                      .notifications[index]
+                                                      .notifications[index]!
                                                       .dateCreated!));
                                           return Container(
                                             decoration: BoxDecoration(
@@ -149,7 +149,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                   //     color: AppColor.deepBlue, width: 2),
                                                   ),
                                               color: notificationProvider
-                                                      .notifications[index]
+                                                      .notifications[index]!
                                                       .isread!
                                                   ? Colors.white
                                                   : Colors.blue[50],
@@ -159,12 +159,12 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                               onTap: () {
                                                 if (notificationProvider
                                                             .notifications[
-                                                                index]
+                                                                index]!
                                                             .noteficationType ==
                                                         "A" ||
                                                     notificationProvider
                                                             .notifications[
-                                                                index]
+                                                                index]!
                                                             .noteficationType ==
                                                         "J") {
                                                   BlocProvider.of<
@@ -173,8 +173,8 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                       .add(RequestDetailsLoadEvent(
                                                           notificationProvider
                                                               .notifications[
-                                                                  index]
-                                                              .request!));
+                                                                  index]!
+                                                              .objectId!));
 
                                                   Navigator.push(
                                                     context,
@@ -183,14 +183,14 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                           ApprovalRequestDetailsScreen(
                                                         type: notificationProvider
                                                             .notifications[
-                                                                index]
+                                                                index]!
                                                             .noteficationType!,
                                                       ),
                                                     ),
                                                   );
                                                 }
                                                 if (notificationProvider
-                                                        .notifications[index]
+                                                        .notifications[index]!
                                                         .noteficationType ==
                                                     "O") {
                                                   BlocProvider.of<
@@ -199,8 +199,8 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                       .add(SubShipmentDetailsLoadEvent(
                                                           notificationProvider
                                                               .notifications[
-                                                                  index]
-                                                              .shipment!));
+                                                                  index]!
+                                                              .objectId!));
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -211,19 +211,19 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                 }
 
                                                 if (!notificationProvider
-                                                    .notifications[index]
+                                                    .notifications[index]!
                                                     .isread!) {
                                                   NotificationServices
                                                       .markNotificationasRead(
                                                           notificationProvider
                                                               .notifications[
-                                                                  index]
+                                                                  index]!
                                                               .id!);
                                                   notificationProvider
                                                       .markNotificationAsRead(
                                                           notificationProvider
                                                               .notifications[
-                                                                  index]
+                                                                  index]!
                                                               .id!);
                                                 }
                                               },
@@ -241,7 +241,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                   child: Center(
                                                     child: (notificationProvider
                                                                 .notifications[
-                                                                    index]
+                                                                    index]!
                                                                 .image!
                                                                 .length >
                                                             1)
@@ -252,7 +252,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                                         180),
                                                             child:
                                                                 Image.network(
-                                                              'https://matjari.app/media/${notificationProvider.notifications[index].image!}',
+                                                              'https://matjari.app/media/${notificationProvider.notifications[index]!.image!}',
                                                               height: 55.h,
                                                               width: 55.w,
                                                               fit: BoxFit.fill,
@@ -261,7 +261,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                         : Text(
                                                             notificationProvider
                                                                 .notifications[
-                                                                    index]
+                                                                    index]!
                                                                 .image!,
                                                             style: TextStyle(
                                                               color:
@@ -273,13 +273,14 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                 ),
                                               ),
                                               title: Text(notificationProvider
-                                                  .notifications[index].title!),
+                                                  .notifications[index]!
+                                                  .title!),
                                               subtitle: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(notificationProvider
-                                                      .notifications[index]
+                                                      .notifications[index]!
                                                       .description!),
                                                   Row(
                                                     mainAxisAlignment:
@@ -393,7 +394,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                           notificationProvider
                                                               .ownernotifications[
                                                                   index]
-                                                              .request!));
+                                                              .objectId!));
 
                                                   Navigator.push(
                                                     context,
@@ -420,7 +421,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                           notificationProvider
                                                               .ownernotifications[
                                                                   index]
-                                                              .shipment!));
+                                                              .objectId!));
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -472,7 +473,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                                         180),
                                                             child:
                                                                 Image.network(
-                                                              'https://matjari.app/media/${notificationProvider.notifications[index].image!}',
+                                                              'https://matjari.app/media/${notificationProvider.ownernotifications[index].image!}',
                                                               height: 55.h,
                                                               width: 55.w,
                                                               fit: BoxFit.fill,

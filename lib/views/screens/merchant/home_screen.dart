@@ -630,7 +630,16 @@ class _HomeScreenState extends State<HomeScreen>
                                               ),
                                         value.requestNum > 0
                                             ? Positioned(
-                                                left: 15,
+                                                left: localeState.value
+                                                            .languageCode ==
+                                                        'en'
+                                                    ? 15
+                                                    : null,
+                                                right: localeState.value
+                                                            .languageCode ==
+                                                        'en'
+                                                    ? null
+                                                    : 15,
                                                 child: Container(
                                                   height: 22.w,
                                                   width: 22.w,

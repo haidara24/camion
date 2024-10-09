@@ -1,42 +1,45 @@
 class NotificationModel {
   int? id;
   String? title;
+  String? titleEn;
   String? description;
+  String? descriptionEn;
   String? image;
   String? dateCreated;
   String? noteficationType;
   bool? isread;
-  int? request;
-  int? user;
-  int? sender;
-  int? shipment;
+  int? objectId;
+  String? user;
+  String? sender;
 
   NotificationModel({
     this.id,
     this.title,
+    this.titleEn,
     this.description,
+    this.descriptionEn,
     this.image,
     this.dateCreated,
     this.noteficationType,
-    this.request,
+    this.objectId,
     this.isread,
     this.user,
     this.sender,
-    this.shipment,
   });
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
+    title = json['title_en'];
     description = json['description'];
+    description = json['description_en'];
     image = json['image'] ?? "";
     dateCreated = json['date_created'];
     noteficationType = json['notefication_type'];
     isread = json['isread'];
-    user = json['receiver'];
+    user = json['user'];
     sender = json['sender'];
-    shipment = json['shipment'];
-    request = json['request'];
+    objectId = json['object_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -49,7 +52,6 @@ class NotificationModel {
     data['isread'] = isread;
     data['receiver'] = user;
     data['sender'] = sender;
-    data['request'] = request;
     return data;
   }
 }

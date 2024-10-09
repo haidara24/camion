@@ -1244,65 +1244,65 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                               const Divider(
                                 height: 32,
                               ),
-                              // Visibility(
-                              //   visible: shipmentstate
-                              //               .shipment
-                              //               .subshipments![selectedIndex]
-                              //               .truck ==
-                              //           null &&
-                              //       !widget.preview,
-                              //   replacement: const SizedBox.shrink(),
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.symmetric(
-                              //         horizontal: 10.0),
-                              //     child: CustomButton(
-                              //       title: SizedBox(
-                              //         width: 200.w,
-                              //         child: Row(
-                              //           children: [
-                              //             Center(
-                              //               child: Text(
-                              //                 AppLocalizations.of(context)!
-                              //                     .translate(
-                              //                         'search_for_truck'),
-                              //                 style: const TextStyle(
-                              //                   color: Colors.white,
-                              //                   fontSize: 18,
-                              //                   fontWeight: FontWeight.bold,
-                              //                 ),
-                              //               ),
-                              //             ),
-                              //             const SizedBox(width: 8),
-                              //             SizedBox(
-                              //               height: 25.w,
-                              //               width: 30.w,
-                              //               child: SvgPicture.asset(
-                              //                 "assets/icons/white/search_for_truck.svg",
-                              //                 width: 25.w,
-                              //                 height: 30.w,
-                              //                 fit: BoxFit.fill,
-                              //               ),
-                              //             ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //       onTap: () {
-                              //         Navigator.push(
-                              //           context,
-                              //           MaterialPageRoute(
-                              //             builder: (context) =>
-                              //                 SearchTruckScreen(
-                              //                     subshipmentId: shipmentstate
-                              //                         .shipment
-                              //                         .subshipments![
-                              //                             selectedIndex]
-                              //                         .id!),
-                              //           ),
-                              //         );
-                              //       },
-                              //     ),
-                              //   ),
-                              // ),
+                              Visibility(
+                                visible: shipmentstate
+                                            .shipment
+                                            .subshipments![selectedIndex]
+                                            .truck ==
+                                        null &&
+                                    !widget.preview,
+                                replacement: const SizedBox.shrink(),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0),
+                                  child: CustomButton(
+                                    title: SizedBox(
+                                      width: 200.w,
+                                      child: Row(
+                                        children: [
+                                          Center(
+                                            child: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'search_for_truck'),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          SizedBox(
+                                            height: 25.w,
+                                            width: 30.w,
+                                            child: SvgPicture.asset(
+                                              "assets/icons/white/search_for_truck.svg",
+                                              width: 25.w,
+                                              height: 30.w,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SearchTruckScreen(
+                                                  subshipmentId: shipmentstate
+                                                      .shipment
+                                                      .subshipments![
+                                                          selectedIndex]
+                                                      .id!),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                               Visibility(
                                 visible: !widget.preview,
                                 replacement: shipmentstate
