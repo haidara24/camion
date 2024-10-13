@@ -71,23 +71,23 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                         SectionTitle(
                                             text: AppLocalizations.of(context)!
                                                 .translate("request_confirm")),
-                                        state.request.extratext!.isNotEmpty
-                                            ? SectionBody(
-                                                text:
-                                                    "وقد طالب ببعض التكاليف الإضافية: ")
-                                            : const SizedBox.shrink(),
-                                        state.request.extratext!.isNotEmpty
-                                            ? SectionBody(
-                                                text: state.request.extratext
-                                                    .toString(),
-                                              )
-                                            : const SizedBox.shrink(),
-                                        state.request.extratext!.isNotEmpty
-                                            ? SectionBody(
-                                                text: state.request.extraFees
-                                                    .toString(),
-                                              )
-                                            : const SizedBox.shrink(),
+                                        // state.request.extratext!.isNotEmpty
+                                        //     ? SectionBody(
+                                        //         text:
+                                        //             "وقد طالب ببعض التكاليف الإضافية: ")
+                                        //     : const SizedBox.shrink(),
+                                        // state.request.extratext!.isNotEmpty
+                                        //     ? SectionBody(
+                                        //         text: state.request.extratext
+                                        //             .toString(),
+                                        //       )
+                                        //     : const SizedBox.shrink(),
+                                        // state.request.extratext!.isNotEmpty
+                                        //     ? SectionBody(
+                                        //         text: state.request.extraFees
+                                        //             .toString(),
+                                        //       )
+                                        //     : const SizedBox.shrink(),
                                         // const Divider(),
                                         const SizedBox(
                                           height: 8,
@@ -121,7 +121,11 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                       is ShipmentUpdateStatusLoadingProgress) {
                                                     return CustomButton(
                                                       title: SizedBox(
-                                                        width: 120.w,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            .83,
                                                         child: Center(
                                                           child:
                                                               LoadingIndicator(),
@@ -133,11 +137,15 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                   } else {
                                                     return CustomButton(
                                                       title: SizedBox(
-                                                        width: 120.w,
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            .83,
                                                         child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
-                                                                  .spaceAround,
+                                                                  .center,
                                                           children: [
                                                             Center(
                                                               child: Text(
@@ -155,6 +163,9 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                                           .bold,
                                                                 ),
                                                               ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 16,
                                                             ),
                                                             SizedBox(
                                                               height: 30.w,
@@ -227,7 +238,10 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                           children: [
                                             CustomButton(
                                               title: SizedBox(
-                                                width: 150.w,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .83,
                                                 child: Center(
                                                   child: Text(
                                                     AppLocalizations.of(

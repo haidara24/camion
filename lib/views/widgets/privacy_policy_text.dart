@@ -1,3 +1,4 @@
+import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/policy_dialog.dart';
 import 'package:flutter/gestures.dart';
@@ -15,8 +16,8 @@ class TermsOfUse extends StatelessWidget {
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          text: "By creating an account, you are agreeing to our\n",
-          style: TextStyle(
+          text: AppLocalizations.of(context)!.translate("policy_text"),
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.white,
           ),
@@ -39,7 +40,7 @@ class TermsOfUse extends StatelessWidget {
             // ),
             // TextSpan(text: "and "),
             TextSpan(
-              text: "Privacy Policy! ",
+              text: AppLocalizations.of(context)!.translate("policy"),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: AppColor.deepYellow,

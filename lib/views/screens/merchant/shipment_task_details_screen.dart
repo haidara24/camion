@@ -21,6 +21,7 @@ import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
@@ -2775,49 +2776,17 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                         ReadInstructionLoadEvent(
                                                             state
                                                                 .shipment.id!));
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
+                                                showCustomSnackBar(
+                                                  context: context,
                                                   backgroundColor:
                                                       AppColor.deepGreen,
-                                                  dismissDirection:
-                                                      DismissDirection.up,
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                  margin: EdgeInsets.only(
-                                                      bottom:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height -
-                                                              150,
-                                                      left: 10,
-                                                      right: 10),
-                                                  content: localeState.value
+                                                  message: localeState.value
                                                               .languageCode ==
                                                           'en'
-                                                      ? const Text(
-                                                          'shipment instruction has been created successfully.',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                          ),
-                                                        )
-                                                      : const Text(
-                                                          'تم اضافة تعليمات الشحن بنجاح..',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                          ),
-                                                        ),
-                                                  duration: const Duration(
-                                                      seconds: 3),
-                                                ));
+                                                      ? 'shipment instruction has been created successfully.'
+                                                      : 'تم اضافة تعليمات الشحن بنجاح..',
+                                                );
 
-                                                // BlocProvider.of<
-                                                //             ReadInstructionBloc>(
-                                                //         context)
-                                                //     .add(ReadInstructionLoadEvent(
-                                                //         state.shipment.id!));
-                                                // setState(() {
-                                                //   hasinstruction = true;
-                                                // });
                                                 Navigator.pushAndRemoveUntil(
                                                     context,
                                                     MaterialPageRoute(

@@ -364,7 +364,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                           Tab(
                             child: Center(
                                 child: Text(AppLocalizations.of(context)!
-                                    .translate('inprogress'))),
+                                    .translate('running'))),
                           ),
 
                           Tab(
@@ -484,27 +484,32 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       Container(
                                                         width: double.infinity,
                                                         height: 48.h,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          gradient:
-                                                              LinearGradient(
-                                                            begin: Alignment
-                                                                .topLeft,
-                                                            end: Alignment
-                                                                .bottomRight,
-                                                            colors: [
-                                                              AppColor
+                                                        decoration: BoxDecoration(
+                                                            border: Border.all(
+                                                              color: AppColor
                                                                   .deepYellow,
-                                                              AppColor
-                                                                  .deepYellow,
-                                                              AppColor
-                                                                  .deepYellow,
-                                                              Colors.white,
-                                                            ],
-                                                          ),
-                                                          // color:
-                                                          //     Colors.grey[300],
-                                                        ),
+                                                              width: 1,
+                                                            ),
+                                                            borderRadius: BorderRadius.vertical(top: Radius.circular(10))
+                                                            // gradient:
+                                                            //     LinearGradient(
+                                                            //   begin: Alignment
+                                                            //       .topLeft,
+                                                            //   end: Alignment
+                                                            //       .bottomRight,
+                                                            //   colors: [
+                                                            //     AppColor
+                                                            //         .deepYellow,
+                                                            //     AppColor
+                                                            //         .deepYellow,
+                                                            //     AppColor
+                                                            //         .deepYellow,
+                                                            //     Colors.white,
+                                                            //   ],
+                                                            // ),
+                                                            // color:
+                                                            //     Colors.grey[300],
+                                                            ),
                                                         child: Row(
                                                           children: [
                                                             Container(
@@ -513,15 +518,15 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                               margin:
                                                                   const EdgeInsets
                                                                       .symmetric(
-                                                                horizontal: 4,
+                                                                horizontal: 8,
                                                               ),
                                                               child: Center(
                                                                 child:
                                                                     SvgPicture
                                                                         .asset(
-                                                                  "assets/icons/grey/waiting_shipment.svg",
-                                                                  height: 35.w,
-                                                                  width: 35.w,
+                                                                  "assets/icons/truck_ar.svg",
+                                                                  height: 20.w,
+                                                                  width: 20.w,
                                                                   fit: BoxFit
                                                                       .fill,
                                                                 ),
@@ -732,8 +737,23 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       Container(
                                                         width: double.infinity,
                                                         height: 48.h,
-                                                        color:
-                                                            AppColor.deepYellow,
+                                                        // color:
+                                                        //     AppColor.deepYellow,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            width: 1,
+                                                          ),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    10),
+                                                          ),
+                                                        ),
                                                         child: Padding(
                                                           padding:
                                                               const EdgeInsets
@@ -757,8 +777,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                           .isApproved!
                                                                       ? "assets/icons/grey/notification_shipment_complete.svg"
                                                                       : "assets/icons/grey/notification_shipment_cancelation.svg",
-                                                                  height: 35.w,
-                                                                  width: 35.w,
+                                                                  height: 22.w,
+                                                                  width: 22.w,
                                                                   fit: BoxFit
                                                                       .fill,
                                                                 ),

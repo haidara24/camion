@@ -16,6 +16,7 @@ import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -392,161 +393,176 @@ class SearchForTrucksScreen extends StatelessWidget {
 
                                                       menuSetState(() {});
                                                     },
-                                                    child: Container(
+                                                    child: Card(
                                                       clipBehavior:
                                                           Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                          8,
-                                                        ),
-                                                        color: Colors.white,
-                                                        border: Border.all(
-                                                          color: isSelected
-                                                              ? AppColor
-                                                                  .deepYellow
-                                                              : Colors
-                                                                  .grey[350]!,
-                                                          width: 1,
-                                                        ),
-                                                      ),
+                                                      color: Colors.white,
                                                       margin: const EdgeInsets
                                                           .symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 5,
+                                                        horizontal: 16,
+                                                        vertical: 10,
                                                       ),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Row(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    if (isSelected)
-                                                                      Icon(
-                                                                        Icons
-                                                                            .radio_button_checked,
-                                                                        color: AppColor
-                                                                            .deepYellow,
-                                                                      )
-                                                                    else
-                                                                      const Icon(
-                                                                        Icons
-                                                                            .radio_button_off,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(16.0),
+                                                        child: Row(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            if (isSelected)
+                                                              Icon(
+                                                                Icons
+                                                                    .radio_button_checked,
+                                                                color: AppColor
+                                                                    .deepYellow,
+                                                              )
+                                                            else
+                                                              const Icon(
+                                                                Icons
+                                                                    .radio_button_off,
+                                                              ),
+                                                            const SizedBox(
+                                                              width: 4,
+                                                            ),
+                                                            SizedBox(
+                                                              width: 200.w,
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  SectionTitle(
+                                                                    text:
+                                                                        '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].driver_firstname} ${state.trucks[index].driver_lastname}',
+                                                                  ),
+                                                                  Row(
+                                                                    children: [
+                                                                      SectionTitle(
+                                                                        size:
+                                                                            16,
+                                                                        text:
+                                                                            '${AppLocalizations.of(context)!.translate('distance_from_loading')}: ${state.trucks[index].distance} ${localeState.value.languageCode == "en" ? "km" : "كم"}',
                                                                       ),
-                                                                    const SizedBox(
-                                                                      width: 4,
-                                                                    ),
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .start,
-                                                                      children: [
-                                                                        SectionTitle(
-                                                                          text:
-                                                                              '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].driver_firstname} ${state.trucks[index].driver_lastname}',
-                                                                        ),
-                                                                        Row(
+                                                                      // SizedBox(
+                                                                      //   height:
+                                                                      //       20.h,
+                                                                      //   width:
+                                                                      //       25.h,
+                                                                      //   child: SvgPicture
+                                                                      //       .asset(
+                                                                      //           "assets/icons/grey/location.svg"),
+                                                                      // ),
+                                                                    ],
+                                                                  ),
+                                                                  SectionTitle(
+                                                                    size: 16,
+                                                                    text:
+                                                                        '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == "en" ? state.trucks[index].truckType!.name : state.trucks[index].truckType!.nameAr} ',
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 100.h,
+                                                              width: 16,
+                                                              child:
+                                                                  const VerticalDivider(
+                                                                color:
+                                                                    Colors.grey,
+                                                                thickness: 1,
+                                                                width: 1,
+                                                              ),
+                                                            ),
+                                                            Expanded(
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  ((state.trucks[index].private_price != null &&
+                                                                              state.trucks[index].private_price! >
+                                                                                  0) &&
+                                                                          (state.trucks[index].private_price! <
+                                                                              calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0])))
+                                                                      ? Column(
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.center,
                                                                           children: [
                                                                             SectionTitle(
-                                                                              text: '${AppLocalizations.of(context)!.translate('distance_from_loading')}: ${state.trucks[index].distance} ${localeState.value.languageCode == "en" ? "km" : "كم"}',
+                                                                              text: '${f.format(state.trucks[index].private_price)} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
                                                                             ),
-                                                                            SizedBox(
-                                                                              height: 20.h,
-                                                                              width: 25.h,
-                                                                              child: SvgPicture.asset("assets/icons/grey/location.svg"),
+                                                                            const SizedBox(
+                                                                              width: 8,
+                                                                            ),
+                                                                            Text(
+                                                                              '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0]))}  ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                                                              style: const TextStyle(
+                                                                                color: Colors.grey,
+                                                                                fontSize: 16,
+                                                                                decoration: TextDecoration.lineThrough,
+                                                                              ),
                                                                             ),
                                                                           ],
-                                                                        ),
-                                                                        SectionTitle(
+                                                                        )
+                                                                      : SectionTitle(
                                                                           text:
-                                                                              '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == "en" ? state.trucks[index].truckType!.name : state.trucks[index].truckType!.nameAr} ',
+                                                                              '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0]))} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
                                                                         ),
-                                                                      ],
-                                                                    ),
-                                                                    SizedBox(
+                                                                  const SizedBox(
                                                                       height:
-                                                                          100.h,
-                                                                      width: 3,
-                                                                      child:
-                                                                          const VerticalDivider(
-                                                                        color: Colors
-                                                                            .grey,
-                                                                        thickness:
-                                                                            1,
-                                                                        width:
-                                                                            1,
-                                                                      ),
-                                                                    ),
-                                                                    Column(
-                                                                      crossAxisAlignment:
-                                                                          CrossAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        ((state.trucks[index].private_price != null && state.trucks[index].private_price! > 0) &&
-                                                                                (state.trucks[index].private_price! < calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0])))
-                                                                            ? Column(
-                                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                                children: [
-                                                                                  SectionTitle(
-                                                                                    text: '${f.format(state.trucks[index].private_price)} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
-                                                                                  ),
-                                                                                  const SizedBox(
-                                                                                    width: 8,
-                                                                                  ),
-                                                                                  Text(
-                                                                                    '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0]))}  ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
-                                                                                    style: const TextStyle(
-                                                                                      color: Colors.grey,
-                                                                                      fontSize: 17,
-                                                                                      decoration: TextDecoration.lineThrough,
-                                                                                    ),
-                                                                                  ),
-                                                                                ],
-                                                                              )
-                                                                            : SectionTitle(
-                                                                                text: '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0]))} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
-                                                                              ),
-                                                                        const SizedBox(
-                                                                            height:
-                                                                                8),
-                                                                        Text(
-                                                                          "details",
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                AppColor.deepYellow,
-                                                                            fontSize:
-                                                                                17,
+                                                                          8),
+                                                                  TextButton(
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator
+                                                                          .push(
+                                                                        context,
+                                                                        MaterialPageRoute(
+                                                                          builder: (context) =>
+                                                                              TruckDetailsScreen(
+                                                                            truck:
+                                                                                state.trucks[index],
+                                                                            index:
+                                                                                0,
+                                                                            ops:
+                                                                                'create_shipment',
+                                                                            subshipmentId:
+                                                                                0,
+                                                                            distance:
+                                                                                shipmentProvider.distance,
+                                                                            weight:
+                                                                                shipmentProvider.totalWeight[0],
                                                                           ),
                                                                         ),
-                                                                      ],
+                                                                      );
+                                                                    },
+                                                                    child: Text(
+                                                                      AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              "details"),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: AppColor
+                                                                            .deepYellow,
+                                                                        fontSize:
+                                                                            17,
+                                                                      ),
                                                                     ),
-                                                                  ],
-                                                                ),
-                                                              ],
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                          ],
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -581,7 +597,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                           Container(
                                             margin: const EdgeInsets.symmetric(
                                                 horizontal: 15, vertical: 5),
-                                            height: 250.h,
+                                            height: 150.h,
                                             width: double.infinity,
                                             clipBehavior: Clip.antiAlias,
                                             decoration: BoxDecoration(
@@ -623,14 +639,13 @@ class SearchForTrucksScreen extends StatelessWidget {
                                   listener: (context, state) {
                                     if (state
                                         is ShipmentMultiCreateSuccessState) {
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                        content: Text(AppLocalizations.of(
-                                                context)!
+                                      showCustomSnackBar(
+                                        context: context,
+                                        backgroundColor: AppColor.deepGreen,
+                                        message: AppLocalizations.of(context)!
                                             .translate(
-                                                'shipment_created_success')),
-                                        duration: const Duration(seconds: 3),
-                                      ));
+                                                'shipment_created_success'),
+                                      );
                                       shipmentProvider.initForm();
                                       Navigator.pushAndRemoveUntil(
                                         context,
@@ -643,6 +658,11 @@ class SearchForTrucksScreen extends StatelessWidget {
                                     }
                                     if (state
                                         is ShipmentMultiCreateFailureState) {
+                                      showCustomSnackBar(
+                                        context: context,
+                                        backgroundColor: Colors.red[300]!,
+                                        message: state.errorMessage,
+                                      );
                                       print(state.errorMessage);
                                     }
                                   },
@@ -666,7 +686,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                         child: CustomButton(
                                           title: Text(
                                             AppLocalizations.of(context)!
-                                                .translate('create_shipment'),
+                                                .translate('send_request'),
                                             style: TextStyle(
                                               fontSize: 20.sp,
                                             ),

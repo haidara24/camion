@@ -33,8 +33,6 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
   }
 
   void _postData(context) {
-    // ScaffoldMessenger.of(context)
-    //     .showSnackBar(SnackBar(content: Text("aasdasd")));
     BlocProvider.of<AuthBloc>(context).add(
       SignUpButtonPressed(
         _firstNameController.text,
@@ -358,6 +356,7 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                         if (state is PhoneAuthSuccessState) {
                                           showCustomSnackBar(
                                             context: context,
+                                            backgroundColor: AppColor.deepGreen,
                                             message: localeState
                                                         .value.languageCode ==
                                                     'en'

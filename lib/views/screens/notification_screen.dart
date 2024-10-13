@@ -31,15 +31,23 @@ class NotificationScreen extends StatefulWidget {
 class _NotificationScreenState extends State<NotificationScreen> {
   String usertype = "Trader";
 
-  String diffText(Duration diff) {
+  String diffText(Duration diff, String lang) {
     if (diff.inSeconds < 60) {
-      return "منذ ${diff.inSeconds.toString()} ثانية";
+      return lang == "ar"
+          ? "منذ ${diff.inSeconds.toString()} ثانية"
+          : "since ${diff.inSeconds.toString()} seconds";
     } else if (diff.inMinutes < 60) {
-      return "منذ ${diff.inMinutes.toString()} دقيقة";
+      return lang == "ar"
+          ? "منذ ${diff.inMinutes.toString()} دقيقة"
+          : "since ${diff.inMinutes.toString()} minutes";
     } else if (diff.inHours < 24) {
-      return "منذ ${diff.inHours.toString()} ساعة";
+      return lang == "ar"
+          ? "منذ ${diff.inHours.toString()} ساعة"
+          : "since ${diff.inHours.toString()} hours";
     } else {
-      return "منذ ${diff.inDays.toString()} يوم";
+      return lang == "ar"
+          ? "منذ ${diff.inDays.toString()} يوم"
+          : "since ${diff.inDays.toString()} days";
     }
   }
 
@@ -128,198 +136,197 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                   Duration diff = now.difference(DateTime.parse(
                                       notificationProvider
                                           .notifications[index]!.dateCreated!));
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: notificationProvider
-                                              .notifications[index]!.isread!
-                                          ? Colors.white
-                                          : Colors.blue[50],
+                                  return Card(
+                                    elevation: 1,
+                                    color: notificationProvider
+                                            .notifications[index]!.isread!
+                                        ? Colors.white
+                                        : Colors.blue[50],
+                                    margin: const EdgeInsets.symmetric(
+                                      vertical: 10,
+                                      horizontal: 16,
                                     ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      onTap: () {
-                                        if (notificationProvider
-                                                    .notifications[index]!
-                                                    .noteficationType ==
-                                                "A" ||
-                                            notificationProvider
-                                                    .notifications[index]!
-                                                    .noteficationType ==
-                                                "J") {
-                                          BlocProvider.of<RequestDetailsBloc>(
-                                                  context)
-                                              .add(RequestDetailsLoadEvent(
-                                                  notificationProvider
+                                    child: Container(
+                                      padding: const EdgeInsets.all(12),
+                                      child: ListTile(
+                                        // contentPadding: EdgeInsets.zero,
+                                        onTap: () {
+                                          if (notificationProvider
                                                       .notifications[index]!
-                                                      .objectId!));
+                                                      .noteficationType ==
+                                                  "A" ||
+                                              notificationProvider
+                                                      .notifications[index]!
+                                                      .noteficationType ==
+                                                  "J") {
+                                            BlocProvider.of<RequestDetailsBloc>(
+                                                    context)
+                                                .add(RequestDetailsLoadEvent(
+                                                    notificationProvider
+                                                        .notifications[index]!
+                                                        .objectId!));
 
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ApprovalRequestDetailsScreen(
-                                                type: notificationProvider
-                                                    .notifications[index]!
-                                                    .noteficationType!,
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ApprovalRequestDetailsScreen(
+                                                  type: notificationProvider
+                                                      .notifications[index]!
+                                                      .noteficationType!,
+                                                ),
                                               ),
-                                            ),
-                                          );
-                                        }
-                                        if (notificationProvider
-                                                .notifications[index]!
-                                                .noteficationType ==
-                                            "O") {
-                                          BlocProvider.of<
-                                                      SubShipmentDetailsBloc>(
-                                                  context)
-                                              .add(SubShipmentDetailsLoadEvent(
-                                                  notificationProvider
-                                                      .notifications[index]!
-                                                      .objectId!));
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  IncomingShipmentDetailsScreen(),
-                                            ),
-                                          );
-                                        }
-
-                                        // if (notificationProvider
-                                        //         .notifications[index]
-                                        //         .noteficationType ==
-                                        //     "T") {
-                                        //   BlocProvider.of<ShipmentDetailsBloc>(
-                                        //           context)
-                                        //       .add(ShipmentDetailsLoadEvent(
-                                        //           notificationProvider
-                                        //               .notifications[index]
-                                        //               .shipment!));
-                                        //   Navigator.push(
-                                        //       context,
-                                        //       MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             ShipmentDetailsScreen(
-                                        //           shipment: notificationProvider
-                                        //               .notifications[index]
-                                        //               .shipment!,
-                                        //           preview: true,
-                                        //         ),
-                                        //       ));
-                                        // }
-
-                                        if (!notificationProvider
-                                            .notifications[index]!.isread!) {
-                                          NotificationServices
-                                              .markNotificationasRead(
-                                                  notificationProvider
-                                                      .notifications[index]!
-                                                      .id!);
-                                          notificationProvider
-                                              .markNotificationAsRead(
-                                                  notificationProvider
-                                                      .notifications[index]!
-                                                      .id!);
-                                        }
-                                      },
-                                      leading: Container(
-                                        height: 75.h,
-                                        width: 50.w,
-                                        decoration: BoxDecoration(
-                                            // color: Colors.red,
-                                            borderRadius:
-                                                BorderRadius.circular(5)),
-                                        child: Stack(
-                                          clipBehavior: Clip.none,
-                                          children: [
-                                            CircleAvatar(
-                                              radius: 25.h,
-                                              // backgroundColor: AppColor.deepBlue,
-                                              child: Center(
-                                                child: (notificationProvider
-                                                            .notifications[
-                                                                index]!
-                                                            .image!
-                                                            .length >
-                                                        1)
-                                                    ? ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(180),
-                                                        child: Image.network(
-                                                          'https://matjari.app/media/${notificationProvider.notifications[index]!.image!}',
-                                                          height: 55.h,
-                                                          width: 55.w,
-                                                          fit: BoxFit.fill,
-                                                        ),
-                                                      )
-                                                    : Text(
+                                            );
+                                          }
+                                          if (notificationProvider
+                                                  .notifications[index]!
+                                                  .noteficationType ==
+                                              "O") {
+                                            BlocProvider.of<
+                                                        SubShipmentDetailsBloc>(
+                                                    context)
+                                                .add(
+                                                    SubShipmentDetailsLoadEvent(
                                                         notificationProvider
                                                             .notifications[
                                                                 index]!
-                                                            .image!,
-                                                        style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 28.sp,
-                                                        ),
-                                                      ),
+                                                            .objectId!));
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IncomingShipmentDetailsScreen(),
                                               ),
-                                            ),
-                                            Positioned(
-                                                bottom: -10,
-                                                left: localeState.value
-                                                            .languageCode ==
-                                                        "en"
-                                                    ? null
-                                                    : -5,
-                                                right: localeState.value
-                                                            .languageCode ==
-                                                        "en"
-                                                    ? -5
-                                                    : null,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            45),
-                                                  ),
-                                                  child: getStatusImage(
-                                                      notificationProvider
-                                                          .notifications[index]!
-                                                          .noteficationType!),
-                                                )),
-                                          ],
-                                        ),
-                                      ),
-                                      title: SectionTitle(
-                                        text: notificationProvider
-                                            .notifications[index]!.title!,
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          SectionBody(
-                                              text: notificationProvider
-                                                  .notifications[index]!
-                                                  .description!),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
+                                            );
+                                          }
+
+                                          if (!notificationProvider
+                                              .notifications[index]!.isread!) {
+                                            NotificationServices
+                                                .markNotificationasRead(
+                                                    notificationProvider
+                                                        .notifications[index]!
+                                                        .id!);
+                                            notificationProvider
+                                                .markNotificationAsRead(
+                                                    notificationProvider
+                                                        .notifications[index]!
+                                                        .id!);
+                                          }
+                                        },
+                                        leading: Container(
+                                          height: 75.h,
+                                          width: 50.w,
+                                          decoration: BoxDecoration(
+                                              // color: Colors.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          child: Stack(
+                                            clipBehavior: Clip.none,
                                             children: [
-                                              Text(diffText(diff)),
-                                              SizedBox(
-                                                width: 9.w,
-                                              )
+                                              CircleAvatar(
+                                                radius: 25.h,
+                                                // backgroundColor: AppColor.deepBlue,
+                                                child: Center(
+                                                  child: (notificationProvider
+                                                              .notifications[
+                                                                  index]!
+                                                              .image!
+                                                              .length >
+                                                          1)
+                                                      ? ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      180),
+                                                          child: Image.network(
+                                                            'https://matjari.app/media/${notificationProvider.notifications[index]!.image!}',
+                                                            height: 55.h,
+                                                            width: 55.w,
+                                                            fit: BoxFit.fill,
+                                                          ),
+                                                        )
+                                                      : Text(
+                                                          notificationProvider
+                                                              .notifications[
+                                                                  index]!
+                                                              .image!,
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 28.sp,
+                                                          ),
+                                                        ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                  bottom: -10,
+                                                  left: localeState.value
+                                                              .languageCode ==
+                                                          "en"
+                                                      ? null
+                                                      : -5,
+                                                  right: localeState.value
+                                                              .languageCode ==
+                                                          "en"
+                                                      ? -5
+                                                      : null,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              45),
+                                                    ),
+                                                    child: getStatusImage(
+                                                        notificationProvider
+                                                            .notifications[
+                                                                index]!
+                                                            .noteficationType!),
+                                                  )),
                                             ],
                                           ),
-                                        ],
+                                        ),
+                                        title: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            SectionTitle(
+                                              text: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? notificationProvider
+                                                      .notifications[index]!
+                                                      .titleEn!
+                                                  : notificationProvider
+                                                      .notifications[index]!
+                                                      .title!,
+                                            ),
+                                            Text(
+                                              diffText(
+                                                diff,
+                                                localeState.value.languageCode,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SectionBody(
+                                                text: localeState.value
+                                                            .languageCode ==
+                                                        "en"
+                                                    ? notificationProvider
+                                                        .notifications[index]!
+                                                        .descriptionEn!
+                                                    : notificationProvider
+                                                        .notifications[index]!
+                                                        .description!),
+                                          ],
+                                        ),
+                                        dense: true,
                                       ),
-                                      dense: true,
                                     ),
                                   );
                                 },

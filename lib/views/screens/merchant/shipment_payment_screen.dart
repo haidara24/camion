@@ -15,6 +15,7 @@ import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -444,30 +445,14 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                 return BlocConsumer<PaymentCreateBloc, PaymentCreateState>(
                   listener: (context, state) {
                     if (state is PaymentCreateSuccessState) {
-                      taskProvider.decreaseTaskNum();
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      showCustomSnackBar(
+                        context: context,
                         backgroundColor: AppColor.deepGreen,
-                        dismissDirection: DismissDirection.up,
-                        behavior: SnackBarBehavior.floating,
-                        margin: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).size.height - 150,
-                            left: 10,
-                            right: 10),
-                        content: localeState.value.languageCode == 'en'
-                            ? const Text(
-                                'Payment has been created successfully.',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              )
-                            : const Text(
-                                'تم الدفع بنجاح',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                        duration: const Duration(seconds: 3),
-                      ));
+                        message: localeState.value.languageCode == 'en'
+                            ? 'Payment has been created successfully.'
+                            : 'تم الدفع بنجاح',
+                      );
+                      taskProvider.decreaseTaskNum();
 
                       Navigator.pushAndRemoveUntil(
                           context,

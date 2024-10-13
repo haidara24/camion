@@ -31,148 +31,131 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: Container(
-            height: kToolbarHeight,
-            padding: EdgeInsets.only(bottom: 6.h),
-            color: color ?? AppColor.deepBlack,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.w),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      scaffoldKey == null
-                          ? IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: SizedBox(
-                                height: 28.w,
-                                width: 28.w,
-                                child: SvgPicture.asset(
-                                    localeState.value.languageCode == 'en'
-                                        ? "assets/icons/arrow-left-en.svg"
-                                        : "assets/icons/arrow-left-ar.svg"),
-                              ),
-                            )
-                          : IconButton(
-                              onPressed: () {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                BlocProvider.of<BottomNavBarCubit>(context)
-                                    .emitShow();
-                                scaffoldKey!.currentState!.openDrawer();
-                              },
-                              icon: SizedBox(
-                                height: 28.w,
-                                width: 28.w,
-                                child: SvgPicture.asset(
-                                    localeState.value.languageCode == 'en'
-                                        ? "assets/icons/orange/drawer_en.svg"
-                                        : "assets/icons/orange/drawer_ar.svg"),
-                              ),
-                            ),
-                      SizedBox(
-                        width: 4.w,
+          child: AppBar(
+            backgroundColor: color ?? AppColor.deepBlack,
+            title: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold),
+            ),
+            leading: scaffoldKey == null
+                ? IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: SizedBox(
+                      // margin:
+                      //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
+                      height: 35.h,
+                      width: 35.w,
+
+                      child: Center(
+                        child: SvgPicture.asset(
+                          localeState.value.languageCode == 'en'
+                              ? "assets/icons/arrow-left-en.svg"
+                              : "assets/icons/arrow-left-ar.svg",
+                          height: 30.h,
+                          width: 30.h,
+                        ),
                       ),
-                      scaffoldKey == null
-                          ? const SizedBox.shrink()
-                          : Consumer<NotificationProvider>(
-                              builder: (context, notificationProvider, child) {
-                              return BlocListener<NotificationBloc,
-                                  NotificationState>(
-                                listener: (context, state) {
-                                  if (state is NotificationLoadedSuccess) {
-                                    notificationProvider
-                                        .initNotifications(state.notifications);
-                                  }
-                                },
-                                child: IconButton(
-                                  onPressed: () {
-                                    BlocProvider.of<NotificationBloc>(context)
-                                        .add(NotificationLoadEvent());
-                                    notificationProvider
-                                        .clearNotReadedNotification();
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              NotificationScreen(),
-                                        ));
-                                  },
-                                  icon: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      SizedBox(
-                                        height: 28.w,
-                                        width: 28.w,
-                                        child: SvgPicture.asset(
-                                            "assets/icons/orange/notification.svg"),
-                                      ),
-                                      notificationProvider
-                                                  .notreadednotifications !=
-                                              0
-                                          ? Positioned(
-                                              right: -7.w,
-                                              top: -10.h,
-                                              child: Container(
-                                                height: 20.h,
-                                                width: 20.h,
-                                                decoration: BoxDecoration(
-                                                  color: AppColor.deepYellow,
-                                                  borderRadius:
-                                                      BorderRadius.circular(45),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    notificationProvider
-                                                        .notreadednotifications
-                                                        .toString(),
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : const SizedBox.shrink()
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-                    ],
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    height: 45.h,
-                    // width: MediaQuery.of(context).size.width*.75,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.bold),
+                    ),
+                  )
+                : IconButton(
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                      scaffoldKey!.currentState!.openDrawer();
+                    },
+                    icon: SizedBox(
+                      // margin:
+                      //     EdgeInsets.symmetric(vertical: 13.h, horizontal: 3.w),
+                      height: 35.h,
+                      width: 35.w,
+
+                      child: Center(
+                        child: SvgPicture.asset(
+                          localeState.value.languageCode == 'en'
+                              ? "assets/icons/orange/drawer_en.svg"
+                              : "assets/icons/orange/drawer_ar.svg",
+                          height: 30.h,
+                          width: 30.h,
+                        ),
                       ),
                     ),
                   ),
-                  const Spacer(),
-                  scaffoldKey == null
-                      ? SizedBox(
-                          width: 50.w,
-                        )
-                      : SizedBox(
-                          width: 85.w,
-                        )
-                ],
-              ),
-            ),
+            centerTitle: true,
+            actions: [
+              scaffoldKey == null
+                  ? const SizedBox.shrink()
+                  : Consumer<NotificationProvider>(
+                      builder: (context, notificationProvider, child) {
+                        return BlocListener<NotificationBloc,
+                            NotificationState>(
+                          listener: (context, state) {
+                            if (state is NotificationLoadedSuccess) {
+                              notificationProvider
+                                  .initNotifications(state.notifications);
+                            }
+                          },
+                          child: IconButton(
+                            onPressed: () {
+                              BlocProvider.of<NotificationBloc>(context)
+                                  .add(NotificationLoadEvent());
+                              notificationProvider.clearNotReadedNotification();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NotificationScreen(),
+                                  ));
+                            },
+                            icon: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                SizedBox(
+                                  height: 30.h,
+                                  width: 30.h,
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      "assets/icons/notification.svg",
+                                      height: 30.h,
+                                      width: 30.h,
+                                    ),
+                                  ),
+                                ),
+                                notificationProvider.notreadednotifications != 0
+                                    ? Positioned(
+                                        right: -7.w,
+                                        top: -10.h,
+                                        child: Container(
+                                          height: 20.h,
+                                          width: 20.h,
+                                          decoration: BoxDecoration(
+                                            color: AppColor.deepYellow,
+                                            borderRadius:
+                                                BorderRadius.circular(45),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              notificationProvider
+                                                  .notreadednotifications
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox.shrink()
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ],
           ),
         );
       },

@@ -1,6 +1,7 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -161,12 +162,9 @@ class _MultiShippmentPickUpMapScreenState
                               height: 50.h,
                               width: 150.w,
                               child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!
+                                child: SectionBody(
+                                  text: AppLocalizations.of(context)!
                                       .translate("confirm"),
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                  ),
                                 ),
                               ),
                             ),

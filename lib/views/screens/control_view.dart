@@ -35,7 +35,7 @@ class _ControlViewState extends State<ControlView> {
   }
 
   void initializeFromPreferences() {
-    final String storedLocale = prefs.getString('language') ?? 'en';
+    final String storedLocale = prefs.getString('language') ?? 'ar';
 
     if (storedLocale == 'en') {
       BlocProvider.of<LocaleCubit>(context).toEnglish();

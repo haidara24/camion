@@ -254,6 +254,10 @@ class AuthRepository {
     var token = await jwtOrEmpty;
 
     if (token != "") {
+      print("isExpired");
+      print(JwtDecoder.isExpired(token));
+      print(JwtDecoder.getExpirationDate(token));
+      print(JwtDecoder.getRemainingTime(token));
       if (JwtDecoder.isExpired(token)) {
         return false;
       } else {
@@ -273,6 +277,7 @@ class AuthRepository {
   Future<void> logout() async {
     var prefs = await SharedPreferences.getInstance();
     String? firebaseToken = "";
+    prefs.clear();
     FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: true,
@@ -288,7 +293,6 @@ class AuthRepository {
     final response = await HttpHelper.post(
         LOGOUT_ENDPOINT, {'refresh': refreshToken, 'fcm_token': firebaseToken},
         apiToken: jwt);
-    prefs.clear();
     if (response.statusCode == 204) {
       // Logout successful
     } else {

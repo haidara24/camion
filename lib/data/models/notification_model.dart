@@ -30,9 +30,9 @@ class NotificationModel {
   NotificationModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
-    title = json['title_en'];
+    titleEn = json['title_en'];
     description = json['description'];
-    description = json['description_en'];
+    descriptionEn = json['description_en'];
     image = json['image'] ?? "";
     dateCreated = json['date_created'];
     noteficationType = json['notefication_type'];

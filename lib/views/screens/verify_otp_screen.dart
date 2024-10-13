@@ -148,6 +148,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                             state is AuthMerchantSuccessState) {
                                           showCustomSnackBar(
                                             context: context,
+                                            backgroundColor: AppColor.deepGreen,
                                             message: localeState
                                                         .value.languageCode ==
                                                     'en'

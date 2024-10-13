@@ -36,12 +36,7 @@ class _SignInScreenState extends State<SignInScreen> {
     _postData(context);
   }
 
-  void _postData(context) {
-    // ScaffoldMessenger.of(context)
-    //     .showSnackBar(SnackBar(content: Text("aasdasd")));
-    // BlocProvider.of<AuthBloc>(context).add(SignInButtonPressed(
-    //     _usernameController.text, _passwordController.text));
-  }
+  void _postData(context) {}
 
   @override
   Widget build(BuildContext context) {

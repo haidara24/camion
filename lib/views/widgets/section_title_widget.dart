@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 
 class SectionTitle extends StatelessWidget {
   final String text;
-  const SectionTitle({Key? key, required this.text}) : super(key: key);
+  final double? size;
+  const SectionTitle({Key? key, required this.text, this.size})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Text(
       text,
       style: TextStyle(
-        fontSize: 18,
+        fontSize: size ?? 18,
         fontWeight: FontWeight.bold,
         color: AppColor.darkGrey,
       ),

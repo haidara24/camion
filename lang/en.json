@@ -42,8 +42,10 @@
     "commodity_weight":"Gross Weight",
     "commodity_quantity":"Packages No",
     "package_type":"Package Type",
-    "insert_value_validate":"Insert value validate",
-    
+    "insert_value_validate":"Please Insert value",
+    "insert_commodity_validate":"Please Insert Commodity Name",
+    "insert_weight_validate":"Please Insert Weight",
+
     "truck_info":"Truck Info",
     "truck_status":"Truck Status",
     "enabled":"Enabled",
@@ -52,7 +54,7 @@
     "select_truck_type":"Select Truck Type",
     "select_truck_error":"Please select truck",
     "search_with_truck_number":"Search with truck number",
-    "search_for_truck":"Search For a Truck",
+    "search_for_truck":"Search For a Camion",
     "choose_shippment_path":"Choose Truck Route",
     "shippment_path":"Truck Route",
     "pickup_address":"Pick Up Address",
@@ -69,7 +71,7 @@
     "satellite":"Satellite",
     "shipment_load_complete_error":"Please complete shipment info",
     "shipment_created_success":"Shipment has been created successfully",
-    "total_co2":"CO2 Emission",
+    "total_co2":"Emissions",
     "distance":"Distance",
     "period":"Period",
     "distance_from_loading":"Distance from loading point",
@@ -94,7 +96,7 @@
     "date":"Date",
     "note":"Notes",
     "search_truck":"Search Truck",
-    "create_shipment":"Create Shipment",
+    "send_request":"Send Request",
     "pick_date_error":"Please pick loading date",
     
     "read_more":"Read more",
@@ -159,6 +161,7 @@
     "saved":"Saved",
     "my_calculates":"My Calculations",
     "policy":"Privacy Policy",
+    "policy_text":"By creating an account, you are agreeing to our\n",
     "settings":"Settings",
     "help":"Help",
     "log_out":"Log Out",
@@ -261,5 +264,6 @@
     "my_trucks":"My Trucks",
     "order_shippment":"Create Shipment",
     "tracking":"Tracking",
+    "details":"Details",
     "tasks":"Tasks"
 }

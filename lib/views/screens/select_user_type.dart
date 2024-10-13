@@ -103,6 +103,9 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                             child: SvgPicture.asset(
                                                 "assets/icons/person.svg"),
                                           ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('merchant'),
@@ -151,6 +154,9 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                             child: SvgPicture.asset(
                                                 "assets/icons/driver.svg"),
                                           ),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('driver'),
@@ -198,6 +204,9 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                             width: 35.h,
                                             child: SvgPicture.asset(
                                                 "assets/icons/truck.svg"),
+                                          ),
+                                          const SizedBox(
+                                            height: 4,
                                           ),
                                           Text(
                                             AppLocalizations.of(context)!

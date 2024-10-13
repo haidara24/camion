@@ -56,7 +56,7 @@ class PathStatisticsWidget extends StatelessWidget {
                     builder: (context, localeState) {
                       return SectionBody(
                         text:
-                            " ${((distance * 1700) / 1000000).toStringAsFixed(2)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}",
+                            " ${((distance * 1700) / 1000000).toStringAsFixed(2)} ${"en" == 'en' ? "kg" : "كغ"}",
                       );
                     },
                   ),
@@ -101,8 +101,7 @@ class PathStatisticsWidget extends StatelessWidget {
                   BlocBuilder<LocaleCubit, LocaleState>(
                     builder: (context, localeState) {
                       return SectionBody(
-                        text:
-                            " $distance ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
+                        text: " $distance ${"en" == 'en' ? "km" : "كم"}",
                       );
                     },
                   ),
@@ -149,7 +148,7 @@ class PathStatisticsWidget extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         child: SectionBody(
                           text:
-                              " ${localeState.value.languageCode == "en" ? period : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
+                              " ${"en" == "en" ? period.replaceAll("hours", "h").replaceAll("hour", "h") : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
                         ),
                       );
                     },

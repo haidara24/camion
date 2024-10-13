@@ -479,7 +479,7 @@ class _HomeScreenState extends State<HomeScreen>
                     builder: (context, state) {
                       if (state is BottomNavBarShown) {
                         return Container(
-                          height: 62.h,
+                          height: 75.h,
                           color: AppColor.deepBlack,
                           child: TabBar(
                             labelPadding: EdgeInsets.zero,
@@ -506,14 +506,12 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/home.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            width: 30.w,
+                                            height: 30.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('home'),
@@ -529,14 +527,12 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/home.svg",
-                                            width: 31.w,
-                                            height: 31.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('home'),
@@ -572,8 +568,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                 children: [
                                                   SvgPicture.asset(
                                                     "assets/icons/orange/my_shipments.svg",
-                                                    width: 35.w,
-                                                    height: 35.w,
+                                                    width: 30.w,
+                                                    height: 30.w,
                                                   ),
                                                   localeState.value
                                                               .languageCode ==
@@ -603,8 +599,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                 children: [
                                                   SvgPicture.asset(
                                                     "assets/icons/white/my_shipments.svg",
-                                                    width: 31.w,
-                                                    height: 31.w,
+                                                    width: 28.w,
+                                                    height: 28.w,
                                                   ),
                                                   localeState.value
                                                               .languageCode ==
@@ -633,13 +629,13 @@ class _HomeScreenState extends State<HomeScreen>
                                                 left: localeState.value
                                                             .languageCode ==
                                                         'en'
-                                                    ? 15
+                                                    ? -5
                                                     : null,
                                                 right: localeState.value
                                                             .languageCode ==
                                                         'en'
                                                     ? null
-                                                    : 15,
+                                                    : -5,
                                                 child: Container(
                                                   height: 22.w,
                                                   width: 22.w,
@@ -675,20 +671,18 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/add.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            width: 30.w,
+                                            height: 30.w,
                                             fit: BoxFit.fill,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
                                               AppLocalizations.of(context)!
-                                                  .translate('order_shippment'),
+                                                  .translate('search'),
                                               style: TextStyle(
                                                   color: AppColor.deepYellow,
                                                   fontSize: 12.sp),
@@ -702,20 +696,18 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/add.svg",
-                                            width: 31.w,
-                                            height: 31.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                             fit: BoxFit.fill,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Text(
                                               AppLocalizations.of(context)!
-                                                  .translate('order_shippment'),
+                                                  .translate('search'),
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12.sp),
@@ -733,14 +725,12 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/location.svg",
-                                            width: 35.w,
-                                            height: 35.w,
+                                            width: 30.w,
+                                            height: 30.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('tracking'),
@@ -756,14 +746,12 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/location.svg",
-                                            width: 31.w,
-                                            height: 31.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('tracking'),
@@ -807,8 +795,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                   children: [
                                                     SvgPicture.asset(
                                                       "assets/icons/orange/tasks.svg",
-                                                      width: 35.w,
-                                                      height: 35.w,
+                                                      width: 30.w,
+                                                      height: 30.w,
                                                     ),
                                                     localeState.value
                                                                 .languageCode ==
@@ -835,8 +823,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                   children: [
                                                     SvgPicture.asset(
                                                       "assets/icons/white/tasks.svg",
-                                                      width: 31.w,
-                                                      height: 31.w,
+                                                      width: 28.w,
+                                                      height: 28.w,
                                                     ),
                                                     localeState.value
                                                                 .languageCode ==
@@ -858,7 +846,16 @@ class _HomeScreenState extends State<HomeScreen>
                                                 ),
                                           value.taskNum > 0
                                               ? Positioned(
-                                                  left: -5,
+                                                  left: localeState.value
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? -5
+                                                      : null,
+                                                  right: localeState.value
+                                                              .languageCode ==
+                                                          'en'
+                                                      ? null
+                                                      : -5,
                                                   child: Container(
                                                     height: 22.w,
                                                     width: 22.w,

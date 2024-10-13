@@ -43,6 +43,8 @@
     "commodity_quantity":"العدد",
     "package_type":"نوع الطرد",
     "insert_value_validate":"الرجاء ادخال قيمة",
+    "insert_commodity_validate":"الرجاء ادخال اسم البضاعة",
+    "insert_weight_validate":"الرجاء ادخال الوزن",
 
     "truck_info":"معلومات المركبة",
     "truck_status":"حالة المركبة",
@@ -52,7 +54,7 @@
     "select_truck_type":"اختر نوع المركبة",
     "select_truck_error":"الرجاء اختيار مركبة",
     "search_with_truck_number":"بحث عن طريق رقم المركبة",
-    "search_for_truck":"ابحث عن مركبة",
+    "search_for_truck":"ابحث عن كميون",
     "choose_shippment_path":"اختر مسار المركبة",
     "shippment_path":"مسار المركبة",
     "pickup_address":"عنوان التحميل",
@@ -69,7 +71,7 @@
     "satellite":"قمر صناعي",
     "shipment_load_complete_error":"الرجاء اكمال معلومات الشحن",
     "shipment_created_success":"تم انشاء الشحنة بنجاح",
-    "total_co2":"انبعاثات الكربون",
+    "total_co2":"الانبعاثات",
     "distance":"المسافة",
     "period":"المدة الزمنية",
     "distance_from_loading":"البعد عن مكان التحميل",
@@ -93,7 +95,7 @@
     "date":"تاريخ",
     "note":"ملاحظات",
     "search_truck":"ابحث عن مركبة",
-    "create_shipment":"إنشاء شحنة",
+    "send_request":"أرسل طلب",
     "pick_date_error":"الرجاء اختيار تاريخ التحميل",
     
     "read_more":"اقرأ المزيد",
@@ -158,6 +160,7 @@
     "saved":"المحفوظات",
     "my_calculates":"حساباتي",
     "policy":"سياسة الخصوصية",
+    "policy_text":"بإنشائك حساب, تكون قد وافقت على\n",
     "settings":"الإعدادات",
     "help":"مساعدة",
     "log_out":"تسجيل خروج",
@@ -259,7 +262,8 @@
     "myshipments":"شحناتي",
     "my_trucks":"مركباتي",
     "order_shippment":"إنشاء شحنة",
-    "tracking":"تتبع شحنة",
+    "tracking":"التَّتبع",
+    "details":"التفاصيل",
     "tasks":"المهام"
 
 

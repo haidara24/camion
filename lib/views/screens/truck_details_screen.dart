@@ -26,12 +26,16 @@ class TruckDetailsScreen extends StatefulWidget {
   final int index;
   final String ops;
   final int subshipmentId;
+  final double distance;
+  final double weight;
   TruckDetailsScreen({
     Key? key,
     required this.truck,
     required this.index,
     required this.ops,
     required this.subshipmentId,
+    this.distance = 0,
+    this.weight = 0,
   }) : super(key: key);
 
   @override
@@ -146,6 +150,15 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
     return str.replaceRange(str.length - 1, null, ".");
   }
 
+  int calculatePrice(
+    double distance,
+    double weight,
+  ) {
+    double result = 0.0;
+    result = distance * (weight / 1000) * 550;
+    return result.toInt();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -162,287 +175,249 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                 title: AppLocalizations.of(context)!.translate('truck_info'),
               ),
               body: SingleChildScrollView(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height - 20.h,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         height: 10.h,
                       ),
-                      Card(
-                        elevation: 1,
-                        clipBehavior: Clip.antiAlias,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
+                      Image.network(
+                        widget.truck.images!.isNotEmpty
+                            ? widget.truck.images![0].image!
+                            : "",
+                        height: 250.h,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: 250.h,
+                            width: double.infinity,
+                            color: Colors.grey[300],
+                            child: Padding(
+                              padding: const EdgeInsets.all(60.0),
+                              child: SvgPicture.asset(
+                                  "assets/images/camion_loading.svg"),
+                            ),
+                          );
+                        },
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+
+                          return SizedBox(
+                            height: 250.h,
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SectionBody(
+                              text:
+                                  '${AppLocalizations.of(context)!.translate('long')}: ${widget.truck.long!}',
+                            ),
                           ),
-                        ),
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 15),
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Image.network(
-                              widget.truck.images!.isNotEmpty
-                                  ? widget.truck.images![0].image!
-                                  : "",
-                              height: 250.h,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 250.h,
-                                  width: double.infinity,
-                                  color: Colors.grey[300],
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(60.0),
-                                    child: SvgPicture.asset(
-                                        "assets/images/camion_loading.svg"),
-                                  ),
-                                );
-                              },
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
-
-                                return SizedBox(
-                                  height: 250.h,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      value:
-                                          loadingProgress.expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                    ),
-                                  ),
-                                );
-                              },
+                          Expanded(
+                            child: SectionBody(
+                              text:
+                                  '${AppLocalizations.of(context)!.translate('height')}: ${widget.truck.height!}',
                             ),
-                            SizedBox(
-                              height: 7.h,
+                          ),
+                          Expanded(
+                            child: SectionBody(
+                              text:
+                                  '${AppLocalizations.of(context)!.translate('width')}: ${widget.truck.width!}',
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: 175.h,
-                                    child: GoogleMap(
-                                      onMapCreated: (GoogleMapController
-                                          controller) async {
-                                        setState(() {
-                                          _controller = controller;
-                                          _controller.setMapStyle(_mapStyle);
-                                        });
-                                      },
-                                      myLocationButtonEnabled: false,
-                                      zoomGesturesEnabled: false,
-                                      scrollGesturesEnabled: false,
-                                      tiltGesturesEnabled: false,
-                                      rotateGesturesEnabled: false,
-                                      zoomControlsEnabled: false,
-                                      initialCameraPosition: CameraPosition(
-                                          target: LatLng(
-                                            double.parse(widget
-                                                .truck.locationLat!
-                                                .split(',')[0]),
-                                            double.parse(widget
-                                                .truck.locationLat!
-                                                .split(',')[1]),
-                                          ),
-                                          zoom: 14.47),
-                                      gestureRecognizers: {},
-                                      markers: {
-                                        Marker(
-                                          markerId: const MarkerId("truck"),
-                                          position: LatLng(
-                                            double.parse(widget
-                                                .truck.locationLat!
-                                                .split(',')[0]),
-                                            double.parse(widget
-                                                .truck.locationLat!
-                                                .split(',')[1]),
-                                          ),
-                                        )
-                                      },
-
-                                      // mapType: shipmentProvider.mapType,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  SectionTitle(
-                                    text:
-                                        '${AppLocalizations.of(context)!.translate('truck_type')}: ${localeState.value.languageCode == 'en' ? widget.truck.truckType!.name! : widget.truck.truckType!.nameAr!}',
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  SizedBox(
-                                    // width:
-                                    //     MediaQuery.of(context).size.width *
-                                    //         .4,
-                                    child: SectionBody(
-                                      text:
-                                          '${AppLocalizations.of(context)!.translate('truck_location')}: $position_name',
-                                    ),
-                                  ),
-                                  const Divider(),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: SectionBody(
-                                          text:
-                                              '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 40.h,
-                                        child: VerticalDivider(
-                                          color: Colors.grey[300],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: SectionBody(
-                                          text:
-                                              '${AppLocalizations.of(context)!.translate('empty_weight')}: ${f.format(widget.truck.emptyWeight)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: SectionBody(
-                                          text:
-                                              '${AppLocalizations.of(context)!.translate('long')}: ${widget.truck.long!}',
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 40.h,
-                                        child: VerticalDivider(
-                                          color: Colors.grey[300],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: SectionBody(
-                                          text:
-                                              '${AppLocalizations.of(context)!.translate('height')}: ${widget.truck.height!}',
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 40.h,
-                                        child: VerticalDivider(
-                                          color: Colors.grey[300],
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: SectionBody(
-                                          text:
-                                              '${AppLocalizations.of(context)!.translate('width')}: ${widget.truck.width!}',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const Divider(),
-
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  // Row(
-                                  //   mainAxisAlignment:
-                                  //       MainAxisAlignment.spaceAround,
-                                  //   children: [
-
-                                  //   ],),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  SizedBox(
-                                    width:
-                                        MediaQuery.of(context).size.width * .5,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        widget.truck.rating! >= 1
-                                            ? Icon(
-                                                Icons.star,
-                                                color: AppColor.deepYellow,
-                                              )
-                                            : Icon(
-                                                Icons.star_border,
-                                                color: AppColor.deepYellow,
-                                              ),
-                                        widget.truck.rating! >= 2
-                                            ? Icon(
-                                                Icons.star,
-                                                color: AppColor.deepYellow,
-                                              )
-                                            : Icon(
-                                                Icons.star_border,
-                                                color: AppColor.deepYellow,
-                                              ),
-                                        widget.truck.rating! >= 3
-                                            ? Icon(
-                                                Icons.star,
-                                                color: AppColor.deepYellow,
-                                              )
-                                            : Icon(
-                                                Icons.star_border,
-                                                color: AppColor.deepYellow,
-                                              ),
-                                        widget.truck.rating! >= 4
-                                            ? Icon(
-                                                Icons.star,
-                                                color: AppColor.deepYellow,
-                                              )
-                                            : Icon(
-                                                Icons.star_border,
-                                                color: AppColor.deepYellow,
-                                              ),
-                                        widget.truck.rating! == 5
-                                            ? Icon(
-                                                Icons.star,
-                                                color: AppColor.deepYellow,
-                                              )
-                                            : Icon(
-                                                Icons.star_border,
-                                                color: AppColor.deepYellow,
-                                              ),
-                                        // Text(
-                                        //   '(${widget.truck.rating!.toString()})',
-                                        //   style: TextStyle(
-                                        //     color: AppColor.deepYellow,
-                                        //     fontSize: 19,
-                                        //     fontWeight: FontWeight.bold,
-                                        //   ),
-                                        // ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: SectionBody(
+                              text:
+                                  '${AppLocalizations.of(context)!.translate('empty_weight')}: ${f.format(widget.truck.emptyWeight)} ${localeState.value.languageCode == 'en' ? "kg" : "كغ"}',
+                            ),
+                          ),
+                          Expanded(
+                            child: SectionBody(
+                              text:
+                                  '${AppLocalizations.of(context)!.translate('number_of_axels')}: ${widget.truck.numberOfAxels!}',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Divider(
+                        height: 32,
+                      ),
+                      SectionTitle(
+                        text:
+                            '${AppLocalizations.of(context)!.translate('truck_location')}: $position_name',
+                      ),
+                      SizedBox(
+                        height: 8.h,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8)),
+                        height: 175.h,
+                        child: GoogleMap(
+                          onMapCreated: (GoogleMapController controller) async {
+                            setState(() {
+                              _controller = controller;
+                              _controller.setMapStyle(_mapStyle);
+                            });
+                          },
+                          myLocationButtonEnabled: false,
+                          zoomGesturesEnabled: false,
+                          scrollGesturesEnabled: false,
+                          tiltGesturesEnabled: false,
+                          rotateGesturesEnabled: false,
+                          zoomControlsEnabled: false,
+                          initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                double.parse(
+                                    widget.truck.locationLat!.split(',')[0]),
+                                double.parse(
+                                    widget.truck.locationLat!.split(',')[1]),
+                              ),
+                              zoom: 14.47),
+                          gestureRecognizers: {},
+                          markers: {
+                            Marker(
+                              markerId: const MarkerId("truck"),
+                              position: LatLng(
+                                double.parse(
+                                    widget.truck.locationLat!.split(',')[0]),
+                                double.parse(
+                                    widget.truck.locationLat!.split(',')[1]),
                               ),
                             )
+                          },
+
+                          // mapType: shipmentProvider.mapType,
+                        ),
+                      ),
+                      const Divider(
+                        height: 32,
+                      ),
+                      SectionTitle(
+                        text: AppLocalizations.of(context)!.translate('price'),
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ((widget.truck.private_price != null &&
+                                      widget.truck.private_price! > 0) &&
+                                  (widget.truck.private_price! <
+                                      calculatePrice(
+                                          widget.distance, widget.weight)))
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SectionTitle(
+                                      text:
+                                          '${f.format(widget.truck.private_price)} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Text(
+                                      '${f.format(calculatePrice(widget.distance, widget.weight))}  ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 16,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : SectionTitle(
+                                  text:
+                                      '${f.format(calculatePrice(widget.distance, widget.weight))} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 7.h,
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * .5,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            widget.truck.rating! >= 1
+                                ? Icon(
+                                    Icons.star,
+                                    color: AppColor.deepYellow,
+                                  )
+                                : Icon(
+                                    Icons.star_border,
+                                    color: AppColor.deepYellow,
+                                  ),
+                            widget.truck.rating! >= 2
+                                ? Icon(
+                                    Icons.star,
+                                    color: AppColor.deepYellow,
+                                  )
+                                : Icon(
+                                    Icons.star_border,
+                                    color: AppColor.deepYellow,
+                                  ),
+                            widget.truck.rating! >= 3
+                                ? Icon(
+                                    Icons.star,
+                                    color: AppColor.deepYellow,
+                                  )
+                                : Icon(
+                                    Icons.star_border,
+                                    color: AppColor.deepYellow,
+                                  ),
+                            widget.truck.rating! >= 4
+                                ? Icon(
+                                    Icons.star,
+                                    color: AppColor.deepYellow,
+                                  )
+                                : Icon(
+                                    Icons.star_border,
+                                    color: AppColor.deepYellow,
+                                  ),
+                            widget.truck.rating! == 5
+                                ? Icon(
+                                    Icons.star,
+                                    color: AppColor.deepYellow,
+                                  )
+                                : Icon(
+                                    Icons.star_border,
+                                    color: AppColor.deepYellow,
+                                  ),
+                            // Text(
+                            //   '(${widget.truck.rating!.toString()})',
+                            //   style: TextStyle(
+                            //     color: AppColor.deepYellow,
+                            //     fontSize: 19,
+                            //     fontWeight: FontWeight.bold,
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -452,29 +427,33 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          widget.ops == "create_shipment"
+                          (widget.ops == "create_shipment")
                               ? SizedBox(
                                   width: MediaQuery.of(context).size.width * .9,
                                   child: Consumer<AddMultiShipmentProvider>(
                                       builder:
                                           (context, shipmentProvider, child) {
-                                    return CustomButton(
-                                      title: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('add_truck'),
-                                        style: TextStyle(
-                                          fontSize: 20.sp,
-                                        ),
-                                      ),
-                                      onTap: () {
-                                        // shipmentProvider.setTruck(
-                                        //     widget.truck, widget.index);
-                                        // shipmentProvider.addSelectedTruck(
-                                        //     widget.truck, 0);
-                                        Navigator.pop(context);
-                                        // Navigator.pop(context);
-                                      },
-                                    );
+                                    return !shipmentProvider.selectedTruckId
+                                            .contains(widget.truck.id)
+                                        ? CustomButton(
+                                            title: Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('add_truck'),
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              shipmentProvider.addSelectedTruck(
+                                                widget.truck,
+                                                widget.truck.truckType!.id!,
+                                              );
+
+                                              Navigator.pop(context);
+                                              // Navigator.pop(context);
+                                            },
+                                          )
+                                        : const SizedBox.shrink();
                                   }),
                                 )
                               : const SizedBox.shrink(),
