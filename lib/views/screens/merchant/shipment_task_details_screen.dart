@@ -480,6 +480,776 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                   ),
                                 ),
                                 widget.shipment.shipmentinstructionv2 == null
+                                    ? Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 3),
+                                        child: Card(
+                                          key: key2,
+                                          color: Colors.white,
+                                          elevation: 2,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Form(
+                                              key: _commodityInfoformKey,
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        SectionTitle(
+                                                          text: AppLocalizations
+                                                                  .of(context)!
+                                                              .translate(
+                                                                  'commodity_info'),
+                                                        ),
+                                                      ]),
+                                                  ListView.builder(
+                                                      shrinkWrap: true,
+                                                      physics:
+                                                          const NeverScrollableScrollPhysics(),
+                                                      itemCount: widget
+                                                          .shipment
+                                                          .shipmentItems!
+                                                          .length,
+                                                      itemBuilder:
+                                                          (context, index2) {
+                                                        return Stack(
+                                                          children: [
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                vertical: 3.0,
+                                                              ),
+                                                              child: Column(
+                                                                children: [
+                                                                  const SizedBox(
+                                                                    height: 8,
+                                                                  ),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        commodityName_controller[
+                                                                            index2],
+                                                                    onTap: () {
+                                                                      // BlocProvider.of<
+                                                                      //             BottomNavBarCubit>(
+                                                                      //         context)
+                                                                      //     .emitHide();
+                                                                      commodityName_controller[index2].selection = TextSelection(
+                                                                          baseOffset:
+                                                                              0,
+                                                                          extentOffset: commodityName_controller[index2]
+                                                                              .value
+                                                                              .text
+                                                                              .length);
+                                                                    },
+                                                                    // focusNode: _nodeWeight,
+                                                                    enabled:
+                                                                        false,
+                                                                    scrollPadding:
+                                                                        EdgeInsets
+                                                                            .only(
+                                                                      bottom: MediaQuery.of(context)
+                                                                              .viewInsets
+                                                                              .bottom +
+                                                                          20,
+                                                                    ),
+                                                                    textInputAction:
+                                                                        TextInputAction
+                                                                            .done,
+
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          20,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      labelText: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'commodity_name'),
+                                                                      contentPadding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          vertical:
+                                                                              11.0,
+                                                                          horizontal:
+                                                                              9.0),
+                                                                    ),
+                                                                    onTapOutside:
+                                                                        (event) {},
+                                                                    onEditingComplete:
+                                                                        () {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                    },
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                    },
+                                                                    autovalidateMode:
+                                                                        AutovalidateMode
+                                                                            .onUserInteraction,
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value!
+                                                                          .isEmpty) {
+                                                                        return AppLocalizations.of(context)!
+                                                                            .translate('insert_value_validate');
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                    onSaved:
+                                                                        (newValue) {
+                                                                      commodityName_controller[index2]
+                                                                              .text =
+                                                                          newValue!;
+                                                                    },
+                                                                    onFieldSubmitted:
+                                                                        (value) {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                      FocusManager
+                                                                          .instance
+                                                                          .primaryFocus
+                                                                          ?.unfocus();
+                                                                      // BlocProvider.of<
+                                                                      //             BottomNavBarCubit>(
+                                                                      //         context)
+                                                                      //     .emitShow();
+                                                                    },
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 16,
+                                                                  ),
+                                                                  BlocBuilder<
+                                                                      PackageTypeBloc,
+                                                                      PackageTypeState>(
+                                                                    builder:
+                                                                        (context,
+                                                                            state2) {
+                                                                      if (state2
+                                                                          is PackageTypeLoadedSuccess) {
+                                                                        return DropdownButtonHideUnderline(
+                                                                          child:
+                                                                              DropdownButton2<PackageType>(
+                                                                            isExpanded:
+                                                                                true,
+                                                                            hint:
+                                                                                Text(
+                                                                              AppLocalizations.of(context)!.translate('package_type'),
+                                                                              style: TextStyle(
+                                                                                fontSize: 18,
+                                                                                color: Theme.of(context).hintColor,
+                                                                              ),
+                                                                            ),
+                                                                            items: state2.packageTypes
+                                                                                .map((PackageType item) => DropdownMenuItem<PackageType>(
+                                                                                      value: item,
+                                                                                      child: SizedBox(
+                                                                                        width: 200,
+                                                                                        child: Text(
+                                                                                          item.name!,
+                                                                                          style: const TextStyle(
+                                                                                            fontSize: 17,
+                                                                                          ),
+                                                                                        ),
+                                                                                      ),
+                                                                                    ))
+                                                                                .toList(),
+                                                                            value:
+                                                                                packageType_controller[index2],
+                                                                            onChanged:
+                                                                                (PackageType? value) {
+                                                                              setState(() {
+                                                                                packageType_controller[index2] = value!;
+                                                                              });
+                                                                            },
+                                                                            buttonStyleData:
+                                                                                ButtonStyleData(
+                                                                              height: 50,
+                                                                              width: double.infinity,
+                                                                              padding: const EdgeInsets.symmetric(
+                                                                                horizontal: 9.0,
+                                                                              ),
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(12),
+                                                                                border: Border.all(
+                                                                                  color: Colors.black26,
+                                                                                ),
+                                                                                // color:
+                                                                                //     Colors.white,
+                                                                              ),
+                                                                              // elevation: 2,
+                                                                            ),
+                                                                            iconStyleData:
+                                                                                IconStyleData(
+                                                                              icon: const Icon(
+                                                                                Icons.keyboard_arrow_down_sharp,
+                                                                              ),
+                                                                              iconSize: 20,
+                                                                              iconEnabledColor: AppColor.deepYellow,
+                                                                              iconDisabledColor: Colors.grey,
+                                                                            ),
+                                                                            dropdownStyleData:
+                                                                                DropdownStyleData(
+                                                                              decoration: BoxDecoration(
+                                                                                borderRadius: BorderRadius.circular(14),
+                                                                                color: Colors.white,
+                                                                              ),
+                                                                              scrollbarTheme: ScrollbarThemeData(
+                                                                                radius: const Radius.circular(40),
+                                                                                thickness: MaterialStateProperty.all(6),
+                                                                                thumbVisibility: MaterialStateProperty.all(true),
+                                                                              ),
+                                                                            ),
+                                                                            menuItemStyleData:
+                                                                                const MenuItemStyleData(
+                                                                              height: 40,
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      } else if (state2
+                                                                          is PackageTypeLoadingProgress) {
+                                                                        return const Center(
+                                                                          child:
+                                                                              LinearProgressIndicator(),
+                                                                        );
+                                                                      } else if (state2
+                                                                          is PackageTypeLoadedFailed) {
+                                                                        return Center(
+                                                                          child:
+                                                                              InkWell(
+                                                                            onTap:
+                                                                                () {
+                                                                              BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
+                                                                            },
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                              children: [
+                                                                                Text(
+                                                                                  AppLocalizations.of(context)!.translate('list_error'),
+                                                                                  style: const TextStyle(color: Colors.red),
+                                                                                ),
+                                                                                const Icon(
+                                                                                  Icons.refresh,
+                                                                                  color: Colors.grey,
+                                                                                )
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                        );
+                                                                      } else {
+                                                                        return Container();
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 16,
+                                                                  ),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        commodityQuantity_controller[
+                                                                            index2],
+                                                                    onTap: () {
+                                                                      commodityQuantity_controller[index2].selection = TextSelection(
+                                                                          baseOffset:
+                                                                              0,
+                                                                          extentOffset: commodityQuantity_controller[index2]
+                                                                              .value
+                                                                              .text
+                                                                              .length);
+                                                                    },
+                                                                    // focusNode: _nodeWeight,
+                                                                    // enabled: !valueEnabled,
+                                                                    scrollPadding:
+                                                                        EdgeInsets
+                                                                            .only(
+                                                                      bottom: MediaQuery.of(context)
+                                                                              .viewInsets
+                                                                              .bottom +
+                                                                          20,
+                                                                    ),
+                                                                    textInputAction:
+                                                                        TextInputAction
+                                                                            .done,
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    inputFormatters: [
+                                                                      DecimalFormatter(),
+                                                                    ],
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            18),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      labelText: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'commodity_quantity'),
+                                                                      contentPadding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          vertical:
+                                                                              11.0,
+                                                                          horizontal:
+                                                                              9.0),
+                                                                    ),
+                                                                    onTapOutside:
+                                                                        (event) {
+                                                                      FocusManager
+                                                                          .instance
+                                                                          .primaryFocus
+                                                                          ?.unfocus();
+                                                                    },
+                                                                    onEditingComplete:
+                                                                        () {
+                                                                      FocusManager
+                                                                          .instance
+                                                                          .primaryFocus
+                                                                          ?.unfocus();
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                    },
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                    },
+                                                                    autovalidateMode:
+                                                                        AutovalidateMode
+                                                                            .onUserInteraction,
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value!
+                                                                          .isEmpty) {
+                                                                        return AppLocalizations.of(context)!
+                                                                            .translate('insert_value_validate');
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                    onSaved:
+                                                                        (newValue) {
+                                                                      commodityQuantity_controller[index2]
+                                                                              .text =
+                                                                          newValue!;
+                                                                    },
+                                                                    onFieldSubmitted:
+                                                                        (value) {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                      FocusManager
+                                                                          .instance
+                                                                          .primaryFocus
+                                                                          ?.unfocus();
+                                                                      // BlocProvider.of<
+                                                                      //             BottomNavBarCubit>(
+                                                                      //         context)
+                                                                      //     .emitShow();
+                                                                    },
+                                                                  ),
+                                                                  const SizedBox(
+                                                                    height: 16,
+                                                                  ),
+                                                                  TextFormField(
+                                                                    controller:
+                                                                        commodityWeight_controller[
+                                                                            index2],
+                                                                    onTap: () {
+                                                                      // BlocProvider.of<
+                                                                      //             BottomNavBarCubit>(
+                                                                      //         context)
+                                                                      //     .emitHide();
+                                                                      commodityWeight_controller[index2].selection = TextSelection(
+                                                                          baseOffset:
+                                                                              0,
+                                                                          extentOffset: commodityWeight_controller[index2]
+                                                                              .value
+                                                                              .text
+                                                                              .length);
+                                                                    },
+                                                                    // focusNode: _nodeWeight,
+                                                                    // enabled: !valueEnabled,
+                                                                    scrollPadding:
+                                                                        EdgeInsets
+                                                                            .only(
+                                                                      bottom: MediaQuery.of(context)
+                                                                              .viewInsets
+                                                                              .bottom +
+                                                                          20,
+                                                                    ),
+                                                                    textInputAction:
+                                                                        TextInputAction
+                                                                            .done,
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                    inputFormatters: [
+                                                                      DecimalFormatter(),
+                                                                    ],
+                                                                    style: const TextStyle(
+                                                                        fontSize:
+                                                                            20),
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      labelText: AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'commodity_weight'),
+                                                                      contentPadding: const EdgeInsets
+                                                                          .symmetric(
+                                                                          vertical:
+                                                                              11.0,
+                                                                          horizontal:
+                                                                              9.0),
+                                                                    ),
+                                                                    onTapOutside:
+                                                                        (event) {},
+                                                                    onEditingComplete:
+                                                                        () {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                    },
+                                                                    onChanged:
+                                                                        (value) {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                    },
+                                                                    autovalidateMode:
+                                                                        AutovalidateMode
+                                                                            .onUserInteraction,
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value!
+                                                                          .isEmpty) {
+                                                                        return AppLocalizations.of(context)!
+                                                                            .translate('insert_value_validate');
+                                                                      }
+                                                                      return null;
+                                                                    },
+                                                                    onSaved:
+                                                                        (newValue) {
+                                                                      commodityWeight_controller[index2]
+                                                                              .text =
+                                                                          newValue!;
+                                                                    },
+                                                                    onFieldSubmitted:
+                                                                        (value) {
+                                                                      // if (evaluateCo2()) {
+                                                                      //   calculateCo2Report();
+                                                                      // }
+                                                                      FocusManager
+                                                                          .instance
+                                                                          .primaryFocus
+                                                                          ?.unfocus();
+                                                                      // BlocProvider.of<BottomNavBarCubit>(
+                                                                      //         context)
+                                                                      //     .emitShow();
+                                                                    },
+                                                                  ),
+                                                                  widget.shipment.shipmentItems!.length -
+                                                                              1 !=
+                                                                          index2
+                                                                      ? const Divider()
+                                                                      : const SizedBox
+                                                                          .shrink(),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            (widget
+                                                                        .shipment
+                                                                        .shipmentItems!
+                                                                        .length >
+                                                                    1)
+                                                                ? Positioned(
+                                                                    left: 5,
+                                                                    // right: localeState
+                                                                    //             .value
+                                                                    //             .languageCode ==
+                                                                    //         'en'
+                                                                    //     ? null
+                                                                    //     : 5,
+                                                                    top: 5,
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          30,
+                                                                      width: 35,
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        color: AppColor
+                                                                            .deepYellow,
+                                                                        borderRadius:
+                                                                            const BorderRadius.only(
+                                                                          topLeft:
+                                                                              //  localeState
+                                                                              //             .value
+                                                                              //             .languageCode ==
+                                                                              //         'en'
+                                                                              //     ?
+                                                                              Radius.circular(12)
+                                                                          // : const Radius
+                                                                          //     .circular(
+                                                                          //     5)
+                                                                          ,
+                                                                          topRight:
+                                                                              // localeState
+                                                                              //             .value
+                                                                              //             .languageCode ==
+                                                                              //         'en'
+                                                                              //     ?
+                                                                              Radius.circular(5)
+                                                                          // :
+                                                                          // const Radius
+                                                                          //     .circular(
+                                                                          //     15)
+                                                                          ,
+                                                                          bottomLeft:
+                                                                              Radius.circular(5),
+                                                                          bottomRight:
+                                                                              Radius.circular(5),
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Center(
+                                                                        child:
+                                                                            Text(
+                                                                          (index2 + 1)
+                                                                              .toString(),
+                                                                          style:
+                                                                              const TextStyle(
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                : const SizedBox
+                                                                    .shrink(),
+                                                          ],
+                                                        );
+                                                      }),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : BlocBuilder<ReadInstructionBloc,
+                                        ReadInstructionState>(
+                                        builder: (context, state) {
+                                          if (state
+                                              is ReadInstructionLoadedSuccess) {
+                                            return Card(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 4),
+                                              color: Colors.white,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(16.0),
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SectionTitle(
+                                                            text: AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    'commodity_info'),
+                                                          ),
+                                                        ]),
+                                                    ListView.builder(
+                                                        shrinkWrap: true,
+                                                        physics:
+                                                            const NeverScrollableScrollPhysics(),
+                                                        itemCount: widget
+                                                            .shipment
+                                                            .shipmentItems!
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index2) {
+                                                          return Stack(
+                                                            children: [
+                                                              Card(
+                                                                color: Colors
+                                                                    .grey[50],
+                                                                margin:
+                                                                    const EdgeInsets
+                                                                        .all(5),
+                                                                child:
+                                                                    Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          10.0,
+                                                                      vertical:
+                                                                          7.5),
+                                                                  child: Column(
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
+                                                                    children: [
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            7,
+                                                                      ),
+                                                                      Container(
+                                                                        child: SectionBody(
+                                                                            text:
+                                                                                '${AppLocalizations.of(context)!.translate('commodity_name')}: ${state.instruction.commodityItems![index2].commodityName!}'),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            16,
+                                                                      ),
+                                                                      Container(
+                                                                        child: SectionBody(
+                                                                            text:
+                                                                                '${AppLocalizations.of(context)!.translate('commodity_quantity')}: ${state.instruction.commodityItems![index2].commodityQuantity!.toString()}'),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            12,
+                                                                      ),
+                                                                      Container(
+                                                                        child: SectionBody(
+                                                                            text:
+                                                                                '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${widget.shipment.shipmentItems![index2].commodityWeight!.toString()} كغ'),
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            12,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              (widget
+                                                                          .shipment
+                                                                          .shipmentItems!
+                                                                          .length >
+                                                                      1)
+                                                                  ? Positioned(
+                                                                      left: localeState.value.languageCode ==
+                                                                              "en"
+                                                                          ? null
+                                                                          : 5,
+                                                                      right: localeState.value.languageCode ==
+                                                                              "en"
+                                                                          ? 5
+                                                                          : null,
+                                                                      top: 5,
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            30,
+                                                                        width:
+                                                                            35,
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              AppColor.deepYellow,
+                                                                          borderRadius:
+                                                                              BorderRadius.only(
+                                                                            topLeft: localeState.value.languageCode == "en"
+                                                                                ? const Radius.circular(5)
+                                                                                : const Radius.circular(12),
+                                                                            topRight: localeState.value.languageCode == "en"
+                                                                                ? const Radius.circular(12)
+                                                                                : const Radius.circular(5),
+                                                                            bottomLeft:
+                                                                                const Radius.circular(5),
+                                                                            bottomRight:
+                                                                                const Radius.circular(5),
+                                                                          ),
+                                                                        ),
+                                                                        child:
+                                                                            Center(
+                                                                          child:
+                                                                              Text(
+                                                                            (index2 + 1).toString(),
+                                                                            style:
+                                                                                const TextStyle(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    )
+                                                                  : const SizedBox
+                                                                      .shrink(),
+                                                            ],
+                                                          );
+                                                        }),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          } else {
+                                            return Shimmer.fromColors(
+                                              baseColor: (Colors.grey[300])!,
+                                              highlightColor:
+                                                  (Colors.grey[100])!,
+                                              enabled: true,
+                                              direction: ShimmerDirection.ttb,
+                                              child: ListView.builder(
+                                                shrinkWrap: true,
+                                                itemBuilder: (_, __) => Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      margin: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 15,
+                                                          vertical: 5),
+                                                      height: 150.h,
+                                                      width: double.infinity,
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                itemCount: 1,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                widget.shipment.shipmentinstructionv2 == null
                                     ? EnsureVisibleWhenFocused(
                                         focusNode: _orderTypenode,
                                         child: Padding(
@@ -1461,776 +2231,6 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 3),
                                         child: Card(
-                                          key: key2,
-                                          color: Colors.white,
-                                          elevation: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Form(
-                                              key: _commodityInfoformKey,
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        SectionTitle(
-                                                          text: AppLocalizations
-                                                                  .of(context)!
-                                                              .translate(
-                                                                  'commodity_info'),
-                                                        ),
-                                                      ]),
-                                                  ListView.builder(
-                                                      shrinkWrap: true,
-                                                      physics:
-                                                          const NeverScrollableScrollPhysics(),
-                                                      itemCount: widget
-                                                          .shipment
-                                                          .shipmentItems!
-                                                          .length,
-                                                      itemBuilder:
-                                                          (context, index2) {
-                                                        return Stack(
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                vertical: 3.0,
-                                                              ),
-                                                              child: Column(
-                                                                children: [
-                                                                  const SizedBox(
-                                                                    height: 8,
-                                                                  ),
-                                                                  TextFormField(
-                                                                    controller:
-                                                                        commodityName_controller[
-                                                                            index2],
-                                                                    onTap: () {
-                                                                      // BlocProvider.of<
-                                                                      //             BottomNavBarCubit>(
-                                                                      //         context)
-                                                                      //     .emitHide();
-                                                                      commodityName_controller[index2].selection = TextSelection(
-                                                                          baseOffset:
-                                                                              0,
-                                                                          extentOffset: commodityName_controller[index2]
-                                                                              .value
-                                                                              .text
-                                                                              .length);
-                                                                    },
-                                                                    // focusNode: _nodeWeight,
-                                                                    enabled:
-                                                                        false,
-                                                                    scrollPadding:
-                                                                        EdgeInsets
-                                                                            .only(
-                                                                      bottom: MediaQuery.of(context)
-                                                                              .viewInsets
-                                                                              .bottom +
-                                                                          20,
-                                                                    ),
-                                                                    textInputAction:
-                                                                        TextInputAction
-                                                                            .done,
-
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      fontSize:
-                                                                          20,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ),
-                                                                    decoration:
-                                                                        InputDecoration(
-                                                                      labelText: AppLocalizations.of(
-                                                                              context)!
-                                                                          .translate(
-                                                                              'commodity_name'),
-                                                                      contentPadding: const EdgeInsets
-                                                                          .symmetric(
-                                                                          vertical:
-                                                                              11.0,
-                                                                          horizontal:
-                                                                              9.0),
-                                                                    ),
-                                                                    onTapOutside:
-                                                                        (event) {},
-                                                                    onEditingComplete:
-                                                                        () {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                    },
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                    },
-                                                                    autovalidateMode:
-                                                                        AutovalidateMode
-                                                                            .onUserInteraction,
-                                                                    validator:
-                                                                        (value) {
-                                                                      if (value!
-                                                                          .isEmpty) {
-                                                                        return AppLocalizations.of(context)!
-                                                                            .translate('insert_value_validate');
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                    onSaved:
-                                                                        (newValue) {
-                                                                      commodityName_controller[index2]
-                                                                              .text =
-                                                                          newValue!;
-                                                                    },
-                                                                    onFieldSubmitted:
-                                                                        (value) {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                      FocusManager
-                                                                          .instance
-                                                                          .primaryFocus
-                                                                          ?.unfocus();
-                                                                      // BlocProvider.of<
-                                                                      //             BottomNavBarCubit>(
-                                                                      //         context)
-                                                                      //     .emitShow();
-                                                                    },
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 16,
-                                                                  ),
-                                                                  BlocBuilder<
-                                                                      PackageTypeBloc,
-                                                                      PackageTypeState>(
-                                                                    builder:
-                                                                        (context,
-                                                                            state2) {
-                                                                      if (state2
-                                                                          is PackageTypeLoadedSuccess) {
-                                                                        return DropdownButtonHideUnderline(
-                                                                          child:
-                                                                              DropdownButton2<PackageType>(
-                                                                            isExpanded:
-                                                                                true,
-                                                                            hint:
-                                                                                Text(
-                                                                              AppLocalizations.of(context)!.translate('package_type'),
-                                                                              style: TextStyle(
-                                                                                fontSize: 18,
-                                                                                color: Theme.of(context).hintColor,
-                                                                              ),
-                                                                            ),
-                                                                            items: state2.packageTypes
-                                                                                .map((PackageType item) => DropdownMenuItem<PackageType>(
-                                                                                      value: item,
-                                                                                      child: SizedBox(
-                                                                                        width: 200,
-                                                                                        child: Text(
-                                                                                          item.name!,
-                                                                                          style: const TextStyle(
-                                                                                            fontSize: 17,
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    ))
-                                                                                .toList(),
-                                                                            value:
-                                                                                packageType_controller[index2],
-                                                                            onChanged:
-                                                                                (PackageType? value) {
-                                                                              setState(() {
-                                                                                packageType_controller[index2] = value!;
-                                                                              });
-                                                                            },
-                                                                            buttonStyleData:
-                                                                                ButtonStyleData(
-                                                                              height: 50,
-                                                                              width: double.infinity,
-                                                                              padding: const EdgeInsets.symmetric(
-                                                                                horizontal: 9.0,
-                                                                              ),
-                                                                              decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.circular(12),
-                                                                                border: Border.all(
-                                                                                  color: Colors.black26,
-                                                                                ),
-                                                                                // color:
-                                                                                //     Colors.white,
-                                                                              ),
-                                                                              // elevation: 2,
-                                                                            ),
-                                                                            iconStyleData:
-                                                                                IconStyleData(
-                                                                              icon: const Icon(
-                                                                                Icons.keyboard_arrow_down_sharp,
-                                                                              ),
-                                                                              iconSize: 20,
-                                                                              iconEnabledColor: AppColor.deepYellow,
-                                                                              iconDisabledColor: Colors.grey,
-                                                                            ),
-                                                                            dropdownStyleData:
-                                                                                DropdownStyleData(
-                                                                              decoration: BoxDecoration(
-                                                                                borderRadius: BorderRadius.circular(14),
-                                                                                color: Colors.white,
-                                                                              ),
-                                                                              scrollbarTheme: ScrollbarThemeData(
-                                                                                radius: const Radius.circular(40),
-                                                                                thickness: MaterialStateProperty.all(6),
-                                                                                thumbVisibility: MaterialStateProperty.all(true),
-                                                                              ),
-                                                                            ),
-                                                                            menuItemStyleData:
-                                                                                const MenuItemStyleData(
-                                                                              height: 40,
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      } else if (state2
-                                                                          is PackageTypeLoadingProgress) {
-                                                                        return const Center(
-                                                                          child:
-                                                                              LinearProgressIndicator(),
-                                                                        );
-                                                                      } else if (state2
-                                                                          is PackageTypeLoadedFailed) {
-                                                                        return Center(
-                                                                          child:
-                                                                              InkWell(
-                                                                            onTap:
-                                                                                () {
-                                                                              BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
-                                                                            },
-                                                                            child:
-                                                                                Row(
-                                                                              mainAxisAlignment: MainAxisAlignment.center,
-                                                                              children: [
-                                                                                Text(
-                                                                                  AppLocalizations.of(context)!.translate('list_error'),
-                                                                                  style: const TextStyle(color: Colors.red),
-                                                                                ),
-                                                                                const Icon(
-                                                                                  Icons.refresh,
-                                                                                  color: Colors.grey,
-                                                                                )
-                                                                              ],
-                                                                            ),
-                                                                          ),
-                                                                        );
-                                                                      } else {
-                                                                        return Container();
-                                                                      }
-                                                                    },
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 16,
-                                                                  ),
-                                                                  TextFormField(
-                                                                    controller:
-                                                                        commodityQuantity_controller[
-                                                                            index2],
-                                                                    onTap: () {
-                                                                      commodityQuantity_controller[index2].selection = TextSelection(
-                                                                          baseOffset:
-                                                                              0,
-                                                                          extentOffset: commodityQuantity_controller[index2]
-                                                                              .value
-                                                                              .text
-                                                                              .length);
-                                                                    },
-                                                                    // focusNode: _nodeWeight,
-                                                                    // enabled: !valueEnabled,
-                                                                    scrollPadding:
-                                                                        EdgeInsets
-                                                                            .only(
-                                                                      bottom: MediaQuery.of(context)
-                                                                              .viewInsets
-                                                                              .bottom +
-                                                                          20,
-                                                                    ),
-                                                                    textInputAction:
-                                                                        TextInputAction
-                                                                            .done,
-                                                                    keyboardType:
-                                                                        TextInputType
-                                                                            .number,
-                                                                    inputFormatters: [
-                                                                      DecimalFormatter(),
-                                                                    ],
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            18),
-                                                                    decoration:
-                                                                        InputDecoration(
-                                                                      labelText: AppLocalizations.of(
-                                                                              context)!
-                                                                          .translate(
-                                                                              'commodity_quantity'),
-                                                                      contentPadding: const EdgeInsets
-                                                                          .symmetric(
-                                                                          vertical:
-                                                                              11.0,
-                                                                          horizontal:
-                                                                              9.0),
-                                                                    ),
-                                                                    onTapOutside:
-                                                                        (event) {
-                                                                      FocusManager
-                                                                          .instance
-                                                                          .primaryFocus
-                                                                          ?.unfocus();
-                                                                    },
-                                                                    onEditingComplete:
-                                                                        () {
-                                                                      FocusManager
-                                                                          .instance
-                                                                          .primaryFocus
-                                                                          ?.unfocus();
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                    },
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                    },
-                                                                    autovalidateMode:
-                                                                        AutovalidateMode
-                                                                            .onUserInteraction,
-                                                                    validator:
-                                                                        (value) {
-                                                                      if (value!
-                                                                          .isEmpty) {
-                                                                        return AppLocalizations.of(context)!
-                                                                            .translate('insert_value_validate');
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                    onSaved:
-                                                                        (newValue) {
-                                                                      commodityQuantity_controller[index2]
-                                                                              .text =
-                                                                          newValue!;
-                                                                    },
-                                                                    onFieldSubmitted:
-                                                                        (value) {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                      FocusManager
-                                                                          .instance
-                                                                          .primaryFocus
-                                                                          ?.unfocus();
-                                                                      // BlocProvider.of<
-                                                                      //             BottomNavBarCubit>(
-                                                                      //         context)
-                                                                      //     .emitShow();
-                                                                    },
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 16,
-                                                                  ),
-                                                                  TextFormField(
-                                                                    controller:
-                                                                        commodityWeight_controller[
-                                                                            index2],
-                                                                    onTap: () {
-                                                                      // BlocProvider.of<
-                                                                      //             BottomNavBarCubit>(
-                                                                      //         context)
-                                                                      //     .emitHide();
-                                                                      commodityWeight_controller[index2].selection = TextSelection(
-                                                                          baseOffset:
-                                                                              0,
-                                                                          extentOffset: commodityWeight_controller[index2]
-                                                                              .value
-                                                                              .text
-                                                                              .length);
-                                                                    },
-                                                                    // focusNode: _nodeWeight,
-                                                                    // enabled: !valueEnabled,
-                                                                    scrollPadding:
-                                                                        EdgeInsets
-                                                                            .only(
-                                                                      bottom: MediaQuery.of(context)
-                                                                              .viewInsets
-                                                                              .bottom +
-                                                                          20,
-                                                                    ),
-                                                                    textInputAction:
-                                                                        TextInputAction
-                                                                            .done,
-                                                                    keyboardType:
-                                                                        TextInputType
-                                                                            .number,
-                                                                    inputFormatters: [
-                                                                      DecimalFormatter(),
-                                                                    ],
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            20),
-                                                                    decoration:
-                                                                        InputDecoration(
-                                                                      labelText: AppLocalizations.of(
-                                                                              context)!
-                                                                          .translate(
-                                                                              'commodity_weight'),
-                                                                      contentPadding: const EdgeInsets
-                                                                          .symmetric(
-                                                                          vertical:
-                                                                              11.0,
-                                                                          horizontal:
-                                                                              9.0),
-                                                                    ),
-                                                                    onTapOutside:
-                                                                        (event) {},
-                                                                    onEditingComplete:
-                                                                        () {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                    },
-                                                                    onChanged:
-                                                                        (value) {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                    },
-                                                                    autovalidateMode:
-                                                                        AutovalidateMode
-                                                                            .onUserInteraction,
-                                                                    validator:
-                                                                        (value) {
-                                                                      if (value!
-                                                                          .isEmpty) {
-                                                                        return AppLocalizations.of(context)!
-                                                                            .translate('insert_value_validate');
-                                                                      }
-                                                                      return null;
-                                                                    },
-                                                                    onSaved:
-                                                                        (newValue) {
-                                                                      commodityWeight_controller[index2]
-                                                                              .text =
-                                                                          newValue!;
-                                                                    },
-                                                                    onFieldSubmitted:
-                                                                        (value) {
-                                                                      // if (evaluateCo2()) {
-                                                                      //   calculateCo2Report();
-                                                                      // }
-                                                                      FocusManager
-                                                                          .instance
-                                                                          .primaryFocus
-                                                                          ?.unfocus();
-                                                                      // BlocProvider.of<BottomNavBarCubit>(
-                                                                      //         context)
-                                                                      //     .emitShow();
-                                                                    },
-                                                                  ),
-                                                                  widget.shipment.shipmentItems!.length -
-                                                                              1 !=
-                                                                          index2
-                                                                      ? const Divider()
-                                                                      : const SizedBox
-                                                                          .shrink(),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            (widget
-                                                                        .shipment
-                                                                        .shipmentItems!
-                                                                        .length >
-                                                                    1)
-                                                                ? Positioned(
-                                                                    left: 5,
-                                                                    // right: localeState
-                                                                    //             .value
-                                                                    //             .languageCode ==
-                                                                    //         'en'
-                                                                    //     ? null
-                                                                    //     : 5,
-                                                                    top: 5,
-                                                                    child:
-                                                                        Container(
-                                                                      height:
-                                                                          30,
-                                                                      width: 35,
-                                                                      decoration:
-                                                                          BoxDecoration(
-                                                                        color: AppColor
-                                                                            .deepYellow,
-                                                                        borderRadius:
-                                                                            const BorderRadius.only(
-                                                                          topLeft:
-                                                                              //  localeState
-                                                                              //             .value
-                                                                              //             .languageCode ==
-                                                                              //         'en'
-                                                                              //     ?
-                                                                              Radius.circular(12)
-                                                                          // : const Radius
-                                                                          //     .circular(
-                                                                          //     5)
-                                                                          ,
-                                                                          topRight:
-                                                                              // localeState
-                                                                              //             .value
-                                                                              //             .languageCode ==
-                                                                              //         'en'
-                                                                              //     ?
-                                                                              Radius.circular(5)
-                                                                          // :
-                                                                          // const Radius
-                                                                          //     .circular(
-                                                                          //     15)
-                                                                          ,
-                                                                          bottomLeft:
-                                                                              Radius.circular(5),
-                                                                          bottomRight:
-                                                                              Radius.circular(5),
-                                                                        ),
-                                                                      ),
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            Text(
-                                                                          (index2 + 1)
-                                                                              .toString(),
-                                                                          style:
-                                                                              const TextStyle(
-                                                                            color:
-                                                                                Colors.white,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                : const SizedBox
-                                                                    .shrink(),
-                                                          ],
-                                                        );
-                                                      }),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : BlocBuilder<ReadInstructionBloc,
-                                        ReadInstructionState>(
-                                        builder: (context, state) {
-                                          if (state
-                                              is ReadInstructionLoadedSuccess) {
-                                            return Card(
-                                              margin:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 4),
-                                              color: Colors.white,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(16.0),
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          SectionTitle(
-                                                            text: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'commodity_info'),
-                                                          ),
-                                                        ]),
-                                                    ListView.builder(
-                                                        shrinkWrap: true,
-                                                        physics:
-                                                            const NeverScrollableScrollPhysics(),
-                                                        itemCount: widget
-                                                            .shipment
-                                                            .shipmentItems!
-                                                            .length,
-                                                        itemBuilder:
-                                                            (context, index2) {
-                                                          return Stack(
-                                                            children: [
-                                                              Card(
-                                                                color: Colors
-                                                                    .grey[50],
-                                                                margin:
-                                                                    const EdgeInsets
-                                                                        .all(5),
-                                                                child:
-                                                                    Container(
-                                                                  width: double
-                                                                      .infinity,
-                                                                  padding: const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          10.0,
-                                                                      vertical:
-                                                                          7.5),
-                                                                  child: Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            7,
-                                                                      ),
-                                                                      Container(
-                                                                        child: SectionBody(
-                                                                            text:
-                                                                                '${AppLocalizations.of(context)!.translate('commodity_name')}: ${state.instruction.commodityItems![index2].commodityName!}'),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            16,
-                                                                      ),
-                                                                      Container(
-                                                                        child: SectionBody(
-                                                                            text:
-                                                                                '${AppLocalizations.of(context)!.translate('commodity_quantity')}: ${state.instruction.commodityItems![index2].commodityQuantity!.toString()}'),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            12,
-                                                                      ),
-                                                                      Container(
-                                                                        child: SectionBody(
-                                                                            text:
-                                                                                '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${widget.shipment.shipmentItems![index2].commodityWeight!.toString()} كغ'),
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            12,
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              (widget
-                                                                          .shipment
-                                                                          .shipmentItems!
-                                                                          .length >
-                                                                      1)
-                                                                  ? Positioned(
-                                                                      left: localeState.value.languageCode ==
-                                                                              "en"
-                                                                          ? null
-                                                                          : 5,
-                                                                      right: localeState.value.languageCode ==
-                                                                              "en"
-                                                                          ? 5
-                                                                          : null,
-                                                                      top: 5,
-                                                                      child:
-                                                                          Container(
-                                                                        height:
-                                                                            30,
-                                                                        width:
-                                                                            35,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              AppColor.deepYellow,
-                                                                          borderRadius:
-                                                                              BorderRadius.only(
-                                                                            topLeft: localeState.value.languageCode == "en"
-                                                                                ? const Radius.circular(5)
-                                                                                : const Radius.circular(12),
-                                                                            topRight: localeState.value.languageCode == "en"
-                                                                                ? const Radius.circular(12)
-                                                                                : const Radius.circular(5),
-                                                                            bottomLeft:
-                                                                                const Radius.circular(5),
-                                                                            bottomRight:
-                                                                                const Radius.circular(5),
-                                                                          ),
-                                                                        ),
-                                                                        child:
-                                                                            Center(
-                                                                          child:
-                                                                              Text(
-                                                                            (index2 + 1).toString(),
-                                                                            style:
-                                                                                const TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    )
-                                                                  : const SizedBox
-                                                                      .shrink(),
-                                                            ],
-                                                          );
-                                                        }),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          } else {
-                                            return Shimmer.fromColors(
-                                              baseColor: (Colors.grey[300])!,
-                                              highlightColor:
-                                                  (Colors.grey[100])!,
-                                              enabled: true,
-                                              direction: ShimmerDirection.ttb,
-                                              child: ListView.builder(
-                                                shrinkWrap: true,
-                                                itemBuilder: (_, __) => Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      margin: const EdgeInsets
-                                                          .symmetric(
-                                                          horizontal: 15,
-                                                          vertical: 5),
-                                                      height: 150.h,
-                                                      width: double.infinity,
-                                                      clipBehavior:
-                                                          Clip.antiAlias,
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                itemCount: 1,
-                                              ),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                widget.shipment.shipmentinstructionv2 == null
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3),
-                                        child: Card(
                                           key: key3,
                                           color: Colors.white,
                                           elevation: 2,
@@ -2505,33 +2505,14 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                   const SizedBox(
                                                     height: 16,
                                                   ),
-                                                  TextFormField(
-                                                    controller:
-                                                        final_weight_controller,
-                                                    enabled: false,
-                                                    style: const TextStyle(
-                                                        fontSize: 18),
-                                                    decoration: InputDecoration(
-                                                      labelText: AppLocalizations
-                                                              .of(context)!
-                                                          .translate(
-                                                              'commodity_gross_weight'),
-                                                      contentPadding:
-                                                          const EdgeInsets
-                                                              .symmetric(
-                                                              vertical: 11.0,
-                                                              horizontal: 9.0),
-                                                      suffix: Text(
-                                                        localeState.value
-                                                                    .languageCode ==
-                                                                "en"
-                                                            ? "kg"
-                                                            : "كغ",
-                                                      ),
-                                                      suffixStyle:
-                                                          const TextStyle(
-                                                              fontSize: 15),
-                                                    ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      SectionTitle(
+                                                          text:
+                                                              '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${final_weight_controller.text.isEmpty ? '----' : final_weight_controller.text} ${localeState.value.languageCode == "en" ? "kg" : "كغ"}'),
+                                                    ],
                                                   ),
                                                   const SizedBox(
                                                     height: 8,
@@ -2665,36 +2646,27 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                           .translate(
                                                               'upload_files'),
                                                     ),
-                                                    IconButton(
-                                                      onPressed: () async {
-                                                        var pickedImages =
-                                                            await _picker
-                                                                .pickMultiImage();
-                                                        for (var element
-                                                            in pickedImages) {
-                                                          _files.add(File(
-                                                              element.path));
-                                                        }
-                                                        setState(
-                                                          () {},
-                                                        );
-                                                      },
-                                                      icon: Card(
-                                                        elevation: 1,
-                                                        color: Colors.white,
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(8.0),
-                                                          child: Icon(
-                                                            Icons
-                                                                .cloud_upload_outlined,
-                                                            size: 36,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
                                                   ],
+                                                ),
+                                                const SizedBox(height: 16),
+                                                CustomButton(
+                                                  title: const Icon(
+                                                    Icons.cloud_upload_outlined,
+                                                    size: 35,
+                                                  ),
+                                                  onTap: () async {
+                                                    var pickedImages =
+                                                        await _picker
+                                                            .pickMultiImage();
+                                                    for (var element
+                                                        in pickedImages) {
+                                                      _files.add(
+                                                          File(element.path));
+                                                    }
+                                                    setState(
+                                                      () {},
+                                                    );
+                                                  },
                                                 ),
                                                 const SizedBox(height: 16),
                                                 Wrap(

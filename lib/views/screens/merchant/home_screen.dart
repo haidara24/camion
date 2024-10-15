@@ -506,8 +506,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/home.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
                                           const SizedBox(
                                             height: 4,
@@ -558,106 +558,57 @@ class _HomeScreenState extends State<HomeScreen>
                                             state.requests.length);
                                       }
                                     },
-                                    child: Stack(
-                                      clipBehavior: Clip.none,
-                                      children: [
-                                        navigationValue == 1
-                                            ? Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    "assets/icons/orange/my_shipments.svg",
-                                                    width: 30.w,
-                                                    height: 30.w,
-                                                  ),
-                                                  localeState.value
-                                                              .languageCode ==
-                                                          'en'
-                                                      ? const SizedBox(
-                                                          height: 4,
-                                                        )
-                                                      : const SizedBox.shrink(),
-                                                  FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'myshipments'),
-                                                      style: TextStyle(
-                                                          color: AppColor
-                                                              .deepYellow,
-                                                          fontSize: 12.sp),
-                                                    ),
-                                                  )
-                                                ],
-                                              )
-                                            : Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  SvgPicture.asset(
-                                                    "assets/icons/white/my_shipments.svg",
-                                                    width: 28.w,
-                                                    height: 28.w,
-                                                  ),
-                                                  localeState.value
-                                                              .languageCode ==
-                                                          'en'
-                                                      ? const SizedBox(
-                                                          height: 4,
-                                                        )
-                                                      : const SizedBox.shrink(),
-                                                  FittedBox(
-                                                    fit: BoxFit.scaleDown,
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'myshipments'),
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12.sp,
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
+                                    child: navigationValue == 1
+                                        ? Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/icons/orange/my_shipments.svg",
+                                                width: 28.w,
+                                                height: 28.w,
                                               ),
-                                        value.requestNum > 0
-                                            ? Positioned(
-                                                left: localeState.value
-                                                            .languageCode ==
-                                                        'en'
-                                                    ? -5
-                                                    : null,
-                                                right: localeState.value
-                                                            .languageCode ==
-                                                        'en'
-                                                    ? null
-                                                    : -5,
-                                                child: Container(
-                                                  height: 22.w,
-                                                  width: 22.w,
-                                                  decoration: BoxDecoration(
-                                                    color: AppColor.deepYellow,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            45),
-                                                  ),
-                                                  child: Center(
-                                                    child: Text(
-                                                        value.requestNum
-                                                            .toString(),
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                        )),
+                                              const SizedBox(
+                                                height: 4,
+                                              ),
+                                              FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate('myshipments'),
+                                                  style: TextStyle(
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                      fontSize: 12.sp),
+                                                ),
+                                              )
+                                            ],
+                                          )
+                                        : Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              SvgPicture.asset(
+                                                "assets/icons/white/my_shipments.svg",
+                                                width: 28.w,
+                                                height: 28.w,
+                                              ),
+                                              const SizedBox(
+                                                height: 4,
+                                              ),
+                                              FittedBox(
+                                                fit: BoxFit.scaleDown,
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate('myshipments'),
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 12.sp,
                                                   ),
                                                 ),
                                               )
-                                            : const SizedBox.shrink(),
-                                      ],
-                                    ),
+                                            ],
+                                          ),
                                   );
                                 }),
                               ),
@@ -670,9 +621,9 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/orange/add.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            "assets/icons/orange/search.svg",
+                                            width: 28.w,
+                                            height: 28.w,
                                             fit: BoxFit.fill,
                                           ),
                                           const SizedBox(
@@ -695,7 +646,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/white/add.svg",
+                                            "assets/icons/white/search.svg",
                                             width: 28.w,
                                             height: 28.w,
                                             fit: BoxFit.fill,
@@ -725,8 +676,8 @@ class _HomeScreenState extends State<HomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/location.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
                                           const SizedBox(
                                             height: 4,
@@ -795,17 +746,12 @@ class _HomeScreenState extends State<HomeScreen>
                                                   children: [
                                                     SvgPicture.asset(
                                                       "assets/icons/orange/tasks.svg",
-                                                      width: 30.w,
-                                                      height: 30.w,
+                                                      width: 28.w,
+                                                      height: 28.w,
                                                     ),
-                                                    localeState.value
-                                                                .languageCode ==
-                                                            'en'
-                                                        ? const SizedBox(
-                                                            height: 4,
-                                                          )
-                                                        : const SizedBox
-                                                            .shrink(),
+                                                    const SizedBox(
+                                                      height: 4,
+                                                    ),
                                                     Text(
                                                       AppLocalizations.of(
                                                               context)!
@@ -826,14 +772,9 @@ class _HomeScreenState extends State<HomeScreen>
                                                       width: 28.w,
                                                       height: 28.w,
                                                     ),
-                                                    localeState.value
-                                                                .languageCode ==
-                                                            'en'
-                                                        ? const SizedBox(
-                                                            height: 4,
-                                                          )
-                                                        : const SizedBox
-                                                            .shrink(),
+                                                    const SizedBox(
+                                                      height: 4,
+                                                    ),
                                                     Text(
                                                       AppLocalizations.of(
                                                               context)!
@@ -857,23 +798,26 @@ class _HomeScreenState extends State<HomeScreen>
                                                       ? null
                                                       : -5,
                                                   child: Container(
-                                                    height: 22.w,
-                                                    width: 22.w,
+                                                    padding: EdgeInsets.all(2),
                                                     decoration: BoxDecoration(
                                                       color:
                                                           AppColor.deepYellow,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              45),
+                                                              12),
                                                     ),
-                                                    child: Center(
-                                                      child: Text(
-                                                          value.taskNum
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
-                                                          )),
+                                                    constraints: BoxConstraints(
+                                                      minWidth: 22,
+                                                      minHeight: 22,
+                                                    ),
+                                                    child: Text(
+                                                      value.taskNum.toString(),
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 15,
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
                                                     ),
                                                   ),
                                                 )

@@ -26,6 +26,11 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
 
   final TextEditingController _phoneController = TextEditingController();
 
+// Phone number regular expression (e.g., starts with 09 and has 8 digits after)
+  final RegExp phoneRegExp = RegExp(r'^09\d{8}$');
+
+  bool isPhoneValid = false;
+
   Future<void> _login() async {
     _postData(context);
   }
@@ -36,6 +41,17 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
         _phoneController.text,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(() {
+      setState(() {
+        // Check if the entered text matches the phone number pattern
+        isPhoneValid = phoneRegExp.hasMatch(_phoneController.text);
+      });
+    });
   }
 
   @override
@@ -64,7 +80,7 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(
-                        height: 150.h,
+                        height: 100.h,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 17.w),
@@ -141,10 +157,6 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                                       .text.length);
                                         },
                                         validator: (value) {
-                                          // Regular expression to validate the phone number format 0999999999
-                                          final RegExp phoneRegExp =
-                                              RegExp(r'^09\d{8}$');
-
                                           if (value!.isEmpty) {
                                             return "Phone number is required";
                                           } else if (!phoneRegExp
@@ -172,6 +184,12 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                             color: Colors.grey,
                                             fontSize: 19.sp,
                                           ),
+                                          suffixIcon: isPhoneValid
+                                              ? Icon(
+                                                  Icons.check_circle_outline,
+                                                  color: AppColor.deepGreen,
+                                                )
+                                              : null,
                                           filled: true,
                                           fillColor: Colors.white,
                                         ),
@@ -243,7 +261,7 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                         }
                                       },
                                     ),
-                                    TermsOfUse(),
+                                    // TermsOfUse(),
                                   ],
                                 ),
                               ),

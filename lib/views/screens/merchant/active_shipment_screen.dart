@@ -169,7 +169,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -344,7 +344,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                     child: SvgPicture.asset(
                       "assets/icons/arrow_up.svg",
                       fit: BoxFit.contain,
-                      height: 12.h,
+                      height: 8.h,
                     ),
                   ),
                 )
@@ -414,6 +414,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                         icon: truckicon,
                       );
                       markers.add(truckMarker);
+                      print(index);
 
                       setState(() {});
                     },
@@ -631,7 +632,59 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
               return BlocConsumer<ActiveShipmentListBloc,
                   ActiveShipmentListState>(
                 listener: (context, state) {
-                  if (state is ActiveShipmentListLoadedSuccess) {}
+                  if (state is ActiveShipmentListLoadedSuccess) {
+                    setState(() {
+                      selectedIndex = 0;
+                      selectedTruck = 0;
+                      subshipment = state.shipments[0];
+                      truckLocation = state.shipments[0].truck!.location_lat!;
+                      startTracking = false;
+                    });
+                    initMapbounds(state.shipments[0]);
+                    markers = {};
+                    var pickupMarker = Marker(
+                      markerId: const MarkerId("pickup"),
+                      position: LatLng(
+                          double.parse(state.shipments[0].pathpoints!
+                              .singleWhere(
+                                  (element) => element.pointType == "P")
+                              .location!
+                              .split(",")[0]),
+                          double.parse(state.shipments[0].pathpoints!
+                              .singleWhere(
+                                  (element) => element.pointType == "P")
+                              .location!
+                              .split(",")[1])),
+                      icon: pickupicon,
+                    );
+                    markers.add(pickupMarker);
+                    var deliveryMarker = Marker(
+                      markerId: const MarkerId("delivery"),
+                      position: LatLng(
+                          double.parse(state.shipments[0].pathpoints!
+                              .singleWhere(
+                                  (element) => element.pointType == "D")
+                              .location!
+                              .split(",")[0]),
+                          double.parse(state.shipments[0].pathpoints!
+                              .singleWhere(
+                                  (element) => element.pointType == "D")
+                              .location!
+                              .split(",")[1])),
+                      icon: deliveryicon,
+                    );
+                    markers.add(deliveryMarker);
+                    var truckMarker = Marker(
+                      markerId: const MarkerId("truck"),
+                      position: LatLng(
+                          double.parse(truckLocation!.split(",")[0]),
+                          double.parse(truckLocation!.split(",")[1])),
+                      icon: truckicon,
+                    );
+                    markers.add(truckMarker);
+
+                    setState(() {});
+                  }
                 },
                 builder: (context, state) {
                   if (state is ActiveShipmentListLoadedSuccess) {

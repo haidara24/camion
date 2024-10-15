@@ -46,7 +46,7 @@ class _ChooseLoginRegisterScreenState extends State<ChooseLoginRegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: 150.h,
+                      height: 100.h,
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 17.w),

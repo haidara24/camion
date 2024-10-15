@@ -491,17 +491,17 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                           ],
                         ),
                       ),
-                      Positioned(
-                        top: -8,
-                        left: -8,
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(45)),
-                          child: getStatusImage(
-                              shipment.subshipments![index].shipmentStatus!),
-                        ),
-                      )
+                      // Positioned(
+                      //   top: -8,
+                      //   left: -8,
+                      //   child: Container(
+                      //     decoration: BoxDecoration(
+                      //         color: Colors.white,
+                      //         borderRadius: BorderRadius.circular(45)),
+                      //     child: getStatusImage(
+                      //         shipment.subshipments![index].shipmentStatus!),
+                      //   ),
+                      // )
                     ],
                   ),
           );
@@ -870,7 +870,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  .45,
+                                                  .4,
                                               margin: const EdgeInsets.all(1),
                                               decoration: BoxDecoration(
                                                 borderRadius:
@@ -1047,7 +1047,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  .45,
+                                                  .4,
                                               margin: const EdgeInsets.all(1),
                                               decoration: BoxDecoration(
                                                 borderRadius:

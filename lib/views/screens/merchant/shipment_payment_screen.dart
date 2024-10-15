@@ -217,7 +217,8 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                             SizedBox(
                               height: 7.h,
                             ),
-                            SectionBody(
+                            SectionTitle(
+                              size: 20,
                               text:
                                   '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(widget.shipment.distance!, widget.shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
                             ),
@@ -237,7 +238,8 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             SizedBox(
                                               height: 7.h,
                                             ),
-                                            SectionBody(
+                                            SectionTitle(
+                                              size: 20,
                                               text:
                                                   '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
                                             ),
@@ -335,7 +337,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                .28,
+                                                .25,
                                             decoration: BoxDecoration(
                                               border: Border.all(
                                                 color:
@@ -378,7 +380,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                .28,
+                                                .25,
                                           ),
                                         ),
                                         InkWell(
@@ -407,7 +409,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             width: MediaQuery.of(context)
                                                     .size
                                                     .width *
-                                                .28,
+                                                .25,
                                           ),
                                         ),
                                       ],

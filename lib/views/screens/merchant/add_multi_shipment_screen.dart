@@ -347,12 +347,11 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                     AbsorbPointer(
                       absorbing: true,
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          height: 32.h,
-                          width: 32.w,
-                          child:
-                              SvgPicture.asset("assets/icons/orange/add.svg"),
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.add_circle_outline_outlined,
+                          color: AppColor.deepYellow,
+                          size: 30,
                         ),
                       ),
                     ),
@@ -2090,7 +2089,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                             : const SizedBox
                                                                 .shrink(),
                                                         const SizedBox(
-                                                          height: 7,
+                                                          height: 16,
                                                         ),
                                                         Focus(
                                                           focusNode:
@@ -2224,7 +2223,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                          height: 12,
+                                                          height: 16,
                                                         ),
                                                         Focus(
                                                           focusNode:
@@ -2376,7 +2375,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                           ),
                                                         ),
                                                         const SizedBox(
-                                                          height: 12,
+                                                          height: 16,
                                                         ),
                                                         (shipmentProvider.count[
                                                                     selectedIndex] ==
@@ -2419,17 +2418,14 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                                           true,
                                                                       child:
                                                                           Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            8.0),
+                                                                        padding:
+                                                                            EdgeInsets.all(8.0),
                                                                         child:
-                                                                            SizedBox(
-                                                                          height:
-                                                                              32.h,
-                                                                          width:
-                                                                              32.w,
-                                                                          child:
-                                                                              SvgPicture.asset("assets/icons/orange/add.svg"),
+                                                                            Icon(
+                                                                          Icons
+                                                                              .add_circle_outline_outlined,
+                                                                          color:
+                                                                              AppColor.deepYellow,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2597,7 +2593,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                     height: 25.h,
                                                     width: 25.h,
                                                     child: SvgPicture.asset(
-                                                        "assets/icons/grey/search_for_truck.svg"),
+                                                        "assets/icons/grey/truck.svg"),
                                                   ),
                                                   const SizedBox(width: 8),
                                                   SectionTitle(
@@ -2886,7 +2882,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                           ],
                                         ),
                                         const SizedBox(
-                                          height: 8,
+                                          height: 16,
                                         ),
                                         Column(
                                           children: [
@@ -2931,7 +2927,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                               ),
                                             ),
                                             const SizedBox(
-                                              height: 8,
+                                              height: 16,
                                             ),
                                             InkWell(
                                               onTap: () {
@@ -2977,7 +2973,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                           ],
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          height: 16,
                                         ),
                                         Visibility(
                                           visible: shipmentProvider
@@ -3111,99 +3107,99 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                           ],
                                         ),
                                         const SizedBox(
-                                          height: 8,
+                                          height: 16,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            TextButton(
-                                              onPressed: () {
-                                                showDialog<void>(
-                                                  context: context,
-                                                  barrierDismissible:
-                                                      false, // user must tap button!
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      title: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'form_init')),
-                                                      content:
-                                                          SingleChildScrollView(
-                                                        child: ListBody(
-                                                          children: <Widget>[
-                                                            Text(
-                                                                AppLocalizations.of(
-                                                                        context)!
-                                                                    .translate(
-                                                                        'form_init_confirm'),
-                                                                style:
-                                                                    const TextStyle(
-                                                                        fontSize:
-                                                                            18)),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'no'),
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          18)),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                        TextButton(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'yes'),
-                                                              style:
-                                                                  const TextStyle(
-                                                                      fontSize:
-                                                                          18)),
-                                                          onPressed: () {
-                                                            shipmentProvider
-                                                                .initForm();
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                            setState(
-                                                              () {},
-                                                            );
-                                                          },
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('form_clear'),
-                                                style: TextStyle(
-                                                  fontSize: 20.sp,
-                                                  decoration:
-                                                      TextDecoration.underline,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                        // Row(
+                                        //   mainAxisAlignment:
+                                        //       MainAxisAlignment.spaceAround,
+                                        //   children: [
+                                        //     TextButton(
+                                        //       onPressed: () {
+                                        //         showDialog<void>(
+                                        //           context: context,
+                                        //           barrierDismissible:
+                                        //               false, // user must tap button!
+                                        //           builder:
+                                        //               (BuildContext context) {
+                                        //             return AlertDialog(
+                                        //               backgroundColor:
+                                        //                   Colors.white,
+                                        //               title: Text(
+                                        //                   AppLocalizations.of(
+                                        //                           context)!
+                                        //                       .translate(
+                                        //                           'form_init')),
+                                        //               content:
+                                        //                   SingleChildScrollView(
+                                        //                 child: ListBody(
+                                        //                   children: <Widget>[
+                                        //                     Text(
+                                        //                         AppLocalizations.of(
+                                        //                                 context)!
+                                        //                             .translate(
+                                        //                                 'form_init_confirm'),
+                                        //                         style:
+                                        //                             const TextStyle(
+                                        //                                 fontSize:
+                                        //                                     18)),
+                                        //                   ],
+                                        //                 ),
+                                        //               ),
+                                        //               actions: <Widget>[
+                                        //                 TextButton(
+                                        //                   child: Text(
+                                        //                       AppLocalizations.of(
+                                        //                               context)!
+                                        //                           .translate(
+                                        //                               'no'),
+                                        //                       style:
+                                        //                           const TextStyle(
+                                        //                               fontSize:
+                                        //                                   18)),
+                                        //                   onPressed: () {
+                                        //                     Navigator.of(
+                                        //                             context)
+                                        //                         .pop();
+                                        //                   },
+                                        //                 ),
+                                        //                 TextButton(
+                                        //                   child: Text(
+                                        //                       AppLocalizations.of(
+                                        //                               context)!
+                                        //                           .translate(
+                                        //                               'yes'),
+                                        //                       style:
+                                        //                           const TextStyle(
+                                        //                               fontSize:
+                                        //                                   18)),
+                                        //                   onPressed: () {
+                                        //                     shipmentProvider
+                                        //                         .initForm();
+                                        //                     Navigator.of(
+                                        //                             context)
+                                        //                         .pop();
+                                        //                     setState(
+                                        //                       () {},
+                                        //                     );
+                                        //                   },
+                                        //                 ),
+                                        //               ],
+                                        //             );
+                                        //           },
+                                        //         );
+                                        //       },
+                                        //       child: Text(
+                                        //         AppLocalizations.of(context)!
+                                        //             .translate('form_clear'),
+                                        //         style: TextStyle(
+                                        //           fontSize: 20.sp,
+                                        //           decoration:
+                                        //               TextDecoration.underline,
+                                        //         ),
+                                        //       ),
+                                        //     ),
+                                        //   ],
+                                        // ),
                                       ],
                                     ),
                                   ),

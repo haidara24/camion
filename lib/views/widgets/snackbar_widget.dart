@@ -4,7 +4,7 @@ void showCustomSnackBar({
   required BuildContext context,
   required String message,
   Color backgroundColor = Colors.green,
-  Duration duration = const Duration(seconds: 3),
+  Duration duration = const Duration(seconds: 5),
 }) {
   final overlay = Overlay.of(context);
 
@@ -37,7 +37,11 @@ void showCustomSnackBar({
                 Expanded(
                   child: Text(
                     message,
-                    style: const TextStyle(color: Colors.white, fontSize: 16),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 IconButton(

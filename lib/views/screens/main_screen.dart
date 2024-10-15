@@ -66,35 +66,31 @@ class _MainScreenState extends State<MainScreen> {
                               text: AppLocalizations.of(context)!
                                   .translate('no_posts'),
                             )
-                          : Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ListView.builder(
-                                itemCount: state.posts.length,
-                                itemBuilder: (context, index) {
-                                  final post = state.posts[index];
-                                  final now = DateTime.now();
-                                  final diff = now.difference(post.date!);
-                                  final languageCode =
-                                      localeState.value.languageCode;
+                          : ListView.builder(
+                              itemCount: state.posts.length,
+                              itemBuilder: (context, index) {
+                                final post = state.posts[index];
+                                final now = DateTime.now();
+                                final diff = now.difference(post.date!);
+                                final languageCode =
+                                    localeState.value.languageCode;
 
-                                  return PostCard(
-                                    post: post,
-                                    diffText: getTimeDifferenceText(
-                                        diff, languageCode),
-                                    isVisible: visiblePostId == post.id!,
-                                    onVisibilityToggle: () {
-                                      setState(() {
-                                        visiblePostId =
-                                            visiblePostId == post.id!
-                                                ? 0
-                                                : post.id!;
-                                      });
-                                    },
-                                    playDuration: playDuration,
-                                    languageCode: languageCode,
-                                  );
-                                },
-                              ),
+                                return PostCard(
+                                  post: post,
+                                  diffText:
+                                      getTimeDifferenceText(diff, languageCode),
+                                  isVisible: visiblePostId == post.id!,
+                                  onVisibilityToggle: () {
+                                    setState(() {
+                                      visiblePostId = visiblePostId == post.id!
+                                          ? 0
+                                          : post.id!;
+                                    });
+                                  },
+                                  playDuration: playDuration,
+                                  languageCode: languageCode,
+                                );
+                              },
                             );
                     } else if (state is PostLoadedFailed) {
                       return ErrorIndicator(onRetry: onRefresh);
