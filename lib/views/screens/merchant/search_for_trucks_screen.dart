@@ -402,28 +402,34 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                         horizontal: 16,
                                                         vertical: 10,
                                                       ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(16.0),
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            if (isSelected)
-                                                              Icon(
-                                                                Icons
-                                                                    .radio_button_checked,
-                                                                color: AppColor
-                                                                    .deepYellow,
-                                                              )
-                                                            else
-                                                              const Icon(
-                                                                Icons
-                                                                    .radio_button_off,
-                                                              ),
-                                                            Row(
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    4),
+                                                            child: (isSelected)
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .radio_button_checked,
+                                                                    color: AppColor
+                                                                        .deepYellow,
+                                                                  )
+                                                                : const Icon(
+                                                                    Icons
+                                                                        .radio_button_off,
+                                                                  ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 8.0,
+                                                            ),
+                                                            child: Row(
                                                               crossAxisAlignment:
                                                                   CrossAxisAlignment
                                                                       .center,
@@ -442,6 +448,8 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                             .center,
                                                                     children: [
                                                                       SectionTitle(
+                                                                        size:
+                                                                            16,
                                                                         text:
                                                                             '${AppLocalizations.of(context)!.translate('driver_name')}: ${state.trucks[index].driver_firstname} ${state.trucks[index].driver_lastname}',
                                                                       ),
@@ -451,7 +459,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                             size:
                                                                                 16,
                                                                             text:
-                                                                                '${AppLocalizations.of(context)!.translate('distance')}: ${state.trucks[index].distance} ${localeState.value.languageCode == "en" ? "km" : "كم"}',
+                                                                                '${AppLocalizations.of(context)!.translate('distance_from_loading')}: ${state.trucks[index].distance} ${localeState.value.languageCode == "en" ? "km" : "كم"}',
                                                                           ),
                                                                           // SizedBox(
                                                                           //   height:
@@ -500,6 +508,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                               crossAxisAlignment: CrossAxisAlignment.center,
                                                                               children: [
                                                                                 SectionTitle(
+                                                                                  size: 20,
                                                                                   text: '${f.format(state.trucks[index].private_price)} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
                                                                                 ),
                                                                                 const SizedBox(
@@ -516,49 +525,62 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                               ],
                                                                             )
                                                                           : SectionTitle(
+                                                                              size: 20,
                                                                               text: '${f.format(calculatePrice(shipmentProvider.distance, shipmentProvider.totalWeight[0]))} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
                                                                             ),
-                                                                      const SizedBox(
-                                                                          height:
-                                                                              8),
-                                                                      TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator
-                                                                              .push(
-                                                                            context,
-                                                                            MaterialPageRoute(
-                                                                              builder: (context) => TruckDetailsScreen(
-                                                                                truck: state.trucks[index],
-                                                                                index: 0,
-                                                                                ops: 'create_shipment',
-                                                                                subshipmentId: 0,
-                                                                                distance: shipmentProvider.distance,
-                                                                                weight: shipmentProvider.totalWeight[0],
-                                                                              ),
-                                                                            ),
-                                                                          );
-                                                                        },
-                                                                        child:
-                                                                            Text(
-                                                                          AppLocalizations.of(context)!
-                                                                              .translate("details"),
-                                                                          style:
-                                                                              TextStyle(
-                                                                            color:
-                                                                                AppColor.deepYellow,
-                                                                            fontSize:
-                                                                                17,
-                                                                          ),
-                                                                        ),
-                                                                      ),
                                                                     ],
                                                                   ),
                                                                 ),
                                                               ],
                                                             ),
-                                                          ],
-                                                        ),
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              TextButton(
+                                                                onPressed: () {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              TruckDetailsScreen(
+                                                                        truck: state
+                                                                            .trucks[index],
+                                                                        index:
+                                                                            0,
+                                                                        ops:
+                                                                            'create_shipment',
+                                                                        subshipmentId:
+                                                                            0,
+                                                                        distance:
+                                                                            shipmentProvider.distance,
+                                                                        weight:
+                                                                            shipmentProvider.totalWeight[0],
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                },
+                                                                child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          "details"),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: AppColor
+                                                                        .deepYellow,
+                                                                    // fontSize:
+                                                                    //     17,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ),
@@ -621,7 +643,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                             color: Colors.white,
                             border: Border(
                               top: BorderSide(
-                                  color: AppColor.darkGrey200, width: 2),
+                                  color: AppColor.lightGrey, width: 2),
                             ),
                           ),
                           width: MediaQuery.of(context).size.width,

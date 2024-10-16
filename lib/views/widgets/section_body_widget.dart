@@ -9,6 +9,7 @@ class SectionBody extends StatelessWidget {
     return Text(
       text,
       maxLines: 12,
+      // textAlign: TextAlign.start,
       style: const TextStyle(
         fontSize: 16,
         color: Colors.black87,

@@ -131,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen>
         {
           addShippmentProvider!.initShipment();
           setState(() {
-            title = AppLocalizations.of(context)!.translate('order_shippment');
+            title = AppLocalizations.of(context)!.translate('search_truck');
             currentScreen = AddMultiShipmentScreen();
           });
           break;
@@ -300,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 {
                                   setState(() {
                                     title = AppLocalizations.of(context)!
-                                        .translate('order_shippment');
+                                        .translate('search_truck');
                                   });
                                   break;
                                 }
@@ -621,7 +621,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/orange/search.svg",
+                                            "assets/icons/orange/search_for_truck.svg",
                                             width: 28.w,
                                             height: 28.w,
                                             fit: BoxFit.fill,
@@ -646,7 +646,7 @@ class _HomeScreenState extends State<HomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/white/search.svg",
+                                            "assets/icons/white/search_for_truck.svg",
                                             width: 28.w,
                                             height: 28.w,
                                             fit: BoxFit.fill,

@@ -69,15 +69,14 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  SectionBody(
+                    text: "  ${element.name!}",
+                  ),
                   FittedBox(
                     fit: BoxFit.scaleDown,
                     child: SectionBody(
-                      text:
-                          '${AppLocalizations.of(context)!.translate('pickup_address')} ${setLoadDate(deliveryDate, langCode)}',
+                      text: setLoadDate(deliveryDate, langCode),
                     ),
-                  ),
-                  SectionBody(
-                    text: "  ${element.name!}",
                   ),
                 ],
               ),
@@ -157,16 +156,16 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
               //   ),
               // ),
               endChild: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                // crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: SectionBody(
-                      text:
-                          '${AppLocalizations.of(context)!.translate('delivery_address')} ',
-                    ),
-                  ),
+                  // FittedBox(
+                  //   fit: BoxFit.scaleDown,
+                  //   child: SectionBody(
+                  //     text:
+                  //         '${AppLocalizations.of(context)!.translate('delivery_address')} ',
+                  //   ),
+                  // ),
                   SectionBody(
                     text: "  ${element.name!}",
                   ),

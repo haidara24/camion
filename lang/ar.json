@@ -74,7 +74,7 @@
     "total_co2":"الانبعاثات",
     "distance":"المسافة",
     "period":"المدة الزمنية",
-    "distance_from_loading":"البعد عن مكان التحميل",
+    "distance_from_loading":"البعد عن التحميل",
     "energy_consumption":"كمية الطاقة المستهلكة",
     "location_service_diabled":"خدمة تحديد الموقع متوقفة. الرجاء تفعيلالخدمة.",
     "add_station":"أضف محطة",
@@ -95,7 +95,7 @@
     "date":"تاريخ",
     "note":"ملاحظات",
     "search_truck":"ابحث عن مركبة",
-    "send_request":"أرسل طلب",
+    "send_request":"احجز الأن",
     "pick_date_error":"الرجاء اختيار تاريخ التحميل",
     
     "read_more":"اقرأ المزيد",

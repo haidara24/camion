@@ -112,31 +112,45 @@ class PostCard extends StatelessWidget {
                         curve: Curves.decelerate),
                 Visibility(
                   visible: isVisible,
-                  child: Column(
-                    children: [
-                      const Divider(),
-                      Text(
-                        languageCode == 'en' ? post.content! : post.contentAr!,
-                        maxLines: 1000,
+                  child: GestureDetector(
+                    onTap: onVisibilityToggle,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          const Divider(),
+                          Text(
+                            languageCode == 'en'
+                                ? post.content!
+                                : post.contentAr!,
+                            maxLines: 1000,
+                            style: TextStyle(
+                              fontSize: 15,
+                              height: 1.5,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: onVisibilityToggle,
-                      child: Text(
-                        AppLocalizations.of(context)!
-                            .translate(isVisible ? 'read_less' : 'read_more'),
-                        style: TextStyle(
-                          color: AppColor.deepYellow,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                !isVisible
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: onVisibilityToggle,
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('read_more'),
+                              style: TextStyle(
+                                color: AppColor.lightGrey,
+                              ),
+                            ),
+                          )
+                        ],
+                      )
+                    : const SizedBox.shrink(),
               ],
             ),
           )
