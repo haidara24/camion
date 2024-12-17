@@ -9,6 +9,7 @@ import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/data/services/places_service.dart';
 import 'package:camion/helpers/http_helper.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
@@ -936,23 +937,12 @@ class AddShippmentProvider extends ChangeNotifier {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.orange,
-          dismissDirection: DismissDirection.up,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height - 150,
-              left: 10,
-              right: 10),
-          content: const Text(
-            'Location services are disabled. Please enable the services',
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-        ),
+      showCustomSnackBar(
+        context: context,
+        backgroundColor: Colors.orange,
+        message: 'Location services are disabled. Please enable the services',
       );
+
       // setState(() {
       //   pickupLoading = false;
       // });
@@ -962,46 +952,25 @@ class AddShippmentProvider extends ChangeNotifier {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            backgroundColor: Colors.orange,
-            dismissDirection: DismissDirection.up,
-            behavior: SnackBarBehavior.floating,
-            margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).size.height - 150,
-                left: 10,
-                right: 10),
-            content: const Text(
-              'Location permissions are denied',
-              style: TextStyle(
-                fontSize: 18,
-              ),
-            ),
-          ),
+        showCustomSnackBar(
+          context: context,
+          backgroundColor: Colors.orange,
+          message: 'Location permissions are denied',
         );
+
         _pickupLoading[index] = false;
 
         return false;
       }
     }
     if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: Colors.orange,
-          dismissDirection: DismissDirection.up,
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-              bottom: MediaQuery.of(context).size.height - 150,
-              left: 10,
-              right: 10),
-          content: const Text(
+      showCustomSnackBar(
+        context: context,
+        backgroundColor: Colors.orange,
+        message:
             'Location permissions are permanently denied, we cannot request permissions.',
-            style: TextStyle(
-              fontSize: 18,
-            ),
-          ),
-        ),
       );
+
       _pickupLoading[index] = false;
 
       return false;

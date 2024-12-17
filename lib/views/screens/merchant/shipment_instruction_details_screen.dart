@@ -15,8 +15,10 @@ import 'package:shimmer/shimmer.dart';
 class ShipmentInstructionDetailsScreen extends StatelessWidget {
   final SubShipment shipment;
 
-  ShipmentInstructionDetailsScreen({Key? key, required this.shipment,})
-      : super(key: key);
+  ShipmentInstructionDetailsScreen({
+    Key? key,
+    required this.shipment,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -207,27 +209,21 @@ class ShipmentInstructionDetailsScreen extends StatelessWidget {
                                                   const SizedBox(
                                                     height: 7,
                                                   ),
-                                                  Container(
-                                                    child: SectionBody(
-                                                        text:
-                                                            '${AppLocalizations.of(context)!.translate('commodity_name')}: ${state.instruction.commodityItems![index2].commodityName!}'),
-                                                  ),
+                                                  SectionBody(
+                                                      text:
+                                                          '${AppLocalizations.of(context)!.translate('commodity_name')}: ${state.instruction.commodityItems![index2].commodityName!}'),
                                                   const SizedBox(
                                                     height: 12,
                                                   ),
-                                                  Container(
-                                                    child: SectionBody(
-                                                        text:
-                                                            '${AppLocalizations.of(context)!.translate('commodity_quantity')}: ${state.instruction.commodityItems![index2].commodityQuantity!.toString()}'),
-                                                  ),
+                                                  SectionBody(
+                                                      text:
+                                                          '${AppLocalizations.of(context)!.translate('commodity_quantity')}: ${state.instruction.commodityItems![index2].commodityQuantity!.toString()}'),
                                                   const SizedBox(
                                                     height: 12,
                                                   ),
-                                                  Container(
-                                                    child: SectionBody(
-                                                        text:
-                                                            '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${shipment.shipmentItems![index2].commodityWeight!.toString()} كغ'),
-                                                  ),
+                                                  SectionBody(
+                                                      text:
+                                                          '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${shipment.shipmentItems![index2].commodityWeight!.toString()} كغ'),
                                                   const SizedBox(
                                                     height: 12,
                                                   ),

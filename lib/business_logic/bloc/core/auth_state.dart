@@ -37,10 +37,6 @@ class AuthOwnerSuccessState extends AuthState {}
 
 class AuthMerchantSuccessState extends AuthState {}
 
-class AuthManagmentSuccessState extends AuthState {}
-
-class AuthCheckPointSuccessState extends AuthState {}
-
 class AuthLoginErrorState extends AuthState {
   final String? error;
   const AuthLoginErrorState(this.error);

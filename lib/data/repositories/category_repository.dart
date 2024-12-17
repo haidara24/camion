@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:camion/data/models/commodity_category_model.dart';
 import 'package:camion/helpers/http_helper.dart';
-import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CategoryRepository {

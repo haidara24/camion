@@ -21,6 +21,10 @@ class PhoneSignUpScreen extends StatefulWidget {
 
 class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
   final focusNode = FocusNode();
+  bool _isChecked = false;
+  final RegExp phoneRegExp = RegExp(r'^09\d{8}$');
+
+  bool isPhoneValid = false;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -40,6 +44,17 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
         _phoneController.text,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(() {
+      setState(() {
+        // Check if the entered text matches the phone number pattern
+        isPhoneValid = phoneRegExp.hasMatch(_phoneController.text);
+      });
+    });
   }
 
   @override
@@ -324,6 +339,7 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                           }
                                           return null;
                                         },
+
                                         onSaved: (newValue) {
                                           _phoneController.text = newValue!;
                                         },
@@ -343,6 +359,12 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                             color: Colors.grey,
                                             fontSize: 19.sp,
                                           ),
+                                          suffixIcon: isPhoneValid
+                                              ? Icon(
+                                                  Icons.check_circle_outline,
+                                                  color: AppColor.deepGreen,
+                                                )
+                                              : null,
                                           filled: true,
                                           fillColor: Colors.white,
                                         ),
@@ -400,6 +422,7 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                                 fontSize: 20.sp,
                                               ),
                                             ),
+                                            isEnabled: _isChecked,
                                             onTap: () {
                                               _formKey.currentState?.save();
 
@@ -414,7 +437,39 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                         }
                                       },
                                     ),
-                                    TermsOfUse(),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Checkbox(
+                                          value: _isChecked,
+                                          // fillColor: Colors.white,
+                                          activeColor: Colors
+                                              .orange, // Color when checked
+                                          checkColor: Colors
+                                              .white, // Color of the check mark itself
+                                          fillColor: MaterialStateProperty
+                                              .resolveWith<Color>(
+                                            (Set<MaterialState> states) {
+                                              if (states.contains(
+                                                  MaterialState.selected)) {
+                                                return Colors
+                                                    .orange; // Checked color
+                                              }
+                                              return Colors
+                                                  .white; // Unchecked color
+                                            },
+                                          ),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isChecked = value ?? false;
+                                            });
+                                          },
+                                        ),
+                                        SizedBox(width: 8),
+                                        TermsOfUse(),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),

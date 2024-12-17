@@ -1,7 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:camion/data/models/truck_model.dart';
-import 'package:camion/data/models/truck_type_model.dart';
 
 class Shipmentv2 {
   int? id;

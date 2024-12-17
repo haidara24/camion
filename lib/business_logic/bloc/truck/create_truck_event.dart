@@ -13,3 +13,10 @@ class CreateTruckButtonPressed extends CreateTruckEvent {
 
   CreateTruckButtonPressed(this.truck, this.files);
 }
+
+class CreateOwnerTruckButtonPressed extends CreateTruckEvent {
+  final Map<String, dynamic> truck;
+  final List<File> files;
+
+  CreateOwnerTruckButtonPressed(this.truck, this.files);
+}

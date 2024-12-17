@@ -6,9 +6,11 @@ import 'package:http/http.dart' as http;
 class UserService {
   static Future<List<TruckOwner>> searchTruckOwners(String query) async {
     List<TruckOwner> list = [];
-    final url = Uri.parse('${OWNERS_ENDPOINT}search/?q=$query');
-    final response = await http.get(url);
 
+    final url =
+        Uri.parse('${OWNERS_ENDPOINT}search_by_phone/?q=${query.substring(1)}');
+    final response = await http.get(url);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       var myDataString = utf8.decode(response.bodyBytes);
 

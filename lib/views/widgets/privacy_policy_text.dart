@@ -14,7 +14,7 @@ class TermsOfUse extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: RichText(
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.start,
         text: TextSpan(
           text: AppLocalizations.of(context)!.translate("policy_text"),
           style: const TextStyle(
@@ -22,23 +22,6 @@ class TermsOfUse extends StatelessWidget {
             color: Colors.white,
           ),
           children: [
-            // TextSpan(
-            //   text: "Terms & Conditions ",
-            //   style: TextStyle(fontWeight: FontWeight.bold),
-            //   recognizer: TapGestureRecognizer()
-            //     ..onTap = () {
-            //       showModal(
-            //         context: context,
-            //         configuration: FadeScaleTransitionConfiguration(),
-            //         builder: (context) {
-            //           return PolicyDialog(
-            //             mdFileName: 'terms_and_conditions.md',
-            //           );
-            //         },
-            //       );
-            //     },
-            // ),
-            // TextSpan(text: "and "),
             TextSpan(
               text: AppLocalizations.of(context)!.translate("policy"),
               style: TextStyle(

@@ -1,16 +1,13 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names
 
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:camion/constants/text_constants.dart';
-import 'package:camion/data/models/commodity_category_model.dart';
 import 'package:camion/data/models/place_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/data/services/places_service.dart';
-import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +18,6 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
 
 class AddMultiShipmentProvider extends ChangeNotifier {
-  Shipmentv2? _shipment;
-
-  Shipmentv2? get shipment => _shipment;
-
 /*----------------------------------*/
   // google map
   GoogleMapController? _mapController2;
@@ -235,35 +228,25 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<TextEditingController> _date_controller = [TextEditingController()];
   List<TextEditingController> get date_controller => _date_controller;
 
-  // Initialization method
-  void initShipment() {
-    if (_shipment == null) {
-      _shipment = Shipmentv2(subshipments: []);
-
-      notifyListeners();
-    }
-  }
-
-  initForm() {
+  void initForm() {
+    // Reset Google Map-related fields
     _center = const LatLng(35.363149, 35.932120);
-
     _zoom = 13.0;
 
+    // Reset commodity-related fields
     _commodityWeight_controllers = [
       [TextEditingController()]
     ];
-
     _commodityName_controllers = [
       [TextEditingController()]
     ];
-
     _totalWeight = [0.0];
-
-    _pathes = [];
-
     _addShipmentformKey = [GlobalKey<FormState>()];
+    _count = [1];
 
-    _pickup_controller = TextEditingController();
+    // Reset path-related fields
+    _pathes = [];
+    _pickup_controller.clear();
     _pickup_statename = "";
     _pickup_placeId = "";
     _pickup_location = "";
@@ -272,7 +255,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _pickup_position = null;
     _pickup_place = null;
 
-    _delivery_controller = TextEditingController();
+    _delivery_controller.clear();
     _delivery_statename = "";
     _delivery_placeId = "";
     _delivery_location = "";
@@ -288,66 +271,52 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _stoppoints_position = [];
     _stoppoints_place = [];
 
-    _truckType = null;
-
     _countpath = 1;
 
-    _count = [1];
+    // Reset truck-related fields
+    _truckType = null;
+    _trucks = [null];
+    _selectedTruckType = [null];
+    _selectedTruckTypeId = [0];
+    _truckConfirm = [false];
+    _truckError = [false];
+    _truckTypeError = false;
 
     _selectedTruckTypeNum = [];
     _truckTypeGroup = [];
     _truckTypeGroupId = [];
-
-    _selectedTruck = [];
-
-    _selectedTruckId = [0];
-
-    _trucks = [null];
-    _selectedTruckType = [null];
-    _selectedTruckTypeId = [0];
-
-    _truckConfirm = [false];
-
-    _pathConfirm = false;
-
-    _truckTypeError = false;
-
-    _truckError = [false];
-
-    _pathError = false;
-
-    _dateError = [false];
-
-    _pickupLoading = false;
-
-    _deliveryLoading = false;
-
-    _stoppointsLoading = [];
-
-    _pickuptextLoading = false;
-
-    _deliverytextLoading = false;
-
-    _stoppointstextLoading = [];
-
-    _pickupPosition = false;
-
-    _deliveryPosition = false;
-
-    _stoppointsPosition = [];
-
     _truckTypeController = [];
 
-    _distance = 0;
+    _selectedTruck = [];
+    _selectedTruckId = [0];
 
-    _period = "";
-
+    // Reset date/time-related fields
     _loadDate = [DateTime.now()];
-
     _loadTime = [DateTime.now()];
     _time_controller = [TextEditingController()];
-
     _date_controller = [TextEditingController()];
+
+    // Reset errors
+    _pathError = false;
+    _dateError = [false];
+
+    // Reset loading indicators
+    _pickupLoading = false;
+    _deliveryLoading = false;
+    _stoppointsLoading = [];
+    _pickuptextLoading = false;
+    _deliverytextLoading = false;
+    _stoppointstextLoading = [];
+
+    // Reset boolean flags
+    _pickupPosition = false;
+    _deliveryPosition = false;
+    _stoppointsPosition = [];
+    _pathConfirm = false;
+
+    // Reset other fields
+    _distance = 0;
+    _period = "";
   }
 
   calculateTotalWeight(int index) {
@@ -572,57 +541,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     // Notify listeners for state update
     notifyListeners();
   }
-
-  // addTruckType(TruckType truckType) {
-  //   _selectedTruckType.add(truckType);
-  //   _selectedTruckTypeId.add(truckType.id!);
-  //   // _selectedTruck.add();
-  //   // _selectedTruckId.add();
-  //   _selectedTruckTypeNum.add(1);
-  //   _commodityName_controllers.add([TextEditingController()]);
-  //   _commodityWeight_controllers.add([TextEditingController()]);
-  //   _truckTypeController.add(TextEditingController(text: "1"));
-  //   notifyListeners();
-  // }
-
-  // removeTruckType(TruckType truckType) {
-  //   var index = _selectedTruckTypeId.indexOf(truckType.id!);
-  //   _selectedTruckType.removeAt(index);
-  //   _selectedTruckTypeId.removeAt(index);
-  //   _selectedTruck.removeAt(index);
-  //   _selectedTruckId.removeAt(index);
-  //   _commodityName_controllers.removeAt(index);
-  //   _commodityWeight_controllers.removeAt(index);
-  //   _truckTypeController[index].text = "";
-  //   notifyListeners();
-  //   _selectedTruckTypeNum.removeAt(index);
-  //   _truckTypeController.removeAt(index);
-  //   notifyListeners();
-  // }
-
-  // increaseTruckType(
-  //   int id,
-  // ) {
-  //   _commodityName_controllers.add([TextEditingController()]);
-  //   _commodityWeight_controllers.add([TextEditingController()]);
-  //   _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]++;
-  //   _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
-  //       _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
-  //   notifyListeners();
-  // }
-
-  // decreaseTruckType(
-  //   int id,
-  // ) {
-  //   if (_selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)] > 1) {
-  //     _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)]--;
-  //     _commodityName_controllers.removeLast();
-  //     _commodityWeight_controllers.removeLast();
-  //     _truckTypeController[_selectedTruckTypeId.indexOf(id)].text =
-  //         _selectedTruckTypeNum[_selectedTruckTypeId.indexOf(id)].toString();
-  //   }
-  //   notifyListeners();
-  // }
 
   void addSelectedTruck(KTruck truck, int truckTypeId) {
     var index = _truckTypeGroupId.indexOf(truckTypeId);

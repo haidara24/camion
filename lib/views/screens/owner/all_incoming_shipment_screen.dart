@@ -6,20 +6,19 @@ import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_blo
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
-import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/providers/truck_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
+import 'package:camion/views/screens/driver/inprogress_shipment_details_screen.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
@@ -38,6 +37,7 @@ class _AllIncomingShippmentLogScreenState
   late TabController _tabController;
   int tabIndex = 0;
   int truckId = 0;
+  int driverId = 0;
   int selectedTruck = 0;
   final TextEditingController _driverController = TextEditingController();
 
@@ -116,24 +116,32 @@ class _AllIncomingShippmentLogScreenState
     }
   }
 
-  Widget pathList(List<KTruck> trucks) {
+  Widget driversList(List<KTruck> trucks) {
+    // Add a truck with id = 0 to the beginning of the list
+    List<KTruck> updatedTrucks = [
+      KTruck(id: 0, driver_firstname: "All", driver_lastname: ""),
+      ...trucks
+    ];
+
     return SizedBox(
-      height: 100.h,
+      height: 55.h,
       child: ListView.builder(
-        itemCount: trucks.length,
+        itemCount: updatedTrucks.length,
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return InkWell(
             onTap: () {
               setState(() {
-                truckId = trucks[index].id!;
+                print(updatedTrucks[index].truckuser);
+                truckId = updatedTrucks[index].id!;
+                driverId = updatedTrucks[index].truckuser ?? 0;
                 selectedTruck = index;
               });
               if (truckId != 0) {
                 if (tabIndex == 0) {
                   BlocProvider.of<DriverRequestsListBloc>(context)
-                      .add(DriverRequestsListLoadEvent(truckId));
+                      .add(DriverRequestsListLoadEvent(driverId));
                 } else {
                   BlocProvider.of<InprogressShipmentsBloc>(context)
                       .add(InprogressShipmentsLoadEvent("R", truckId));
@@ -148,83 +156,26 @@ class _AllIncomingShippmentLogScreenState
                 }
               }
             },
-            child: index == 0
-                ? Container(
-                    width: 100.w,
-                    margin: const EdgeInsets.all(5),
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(11),
-                      border: Border.all(
-                        color: selectedTruck == index
-                            ? AppColor.deepYellow
-                            : Colors.grey[400]!,
-                      ),
-                    ),
-                    child: Center(
-                        child: Text(
-                      "All",
-                      style: TextStyle(
-                        fontSize: 22.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    )),
-                  )
-                : Container(
-                    width: 130.w,
-                    margin: const EdgeInsets.all(5),
-                    padding: const EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(11),
-                      border: Border.all(
-                        color: selectedTruck == index
-                            ? AppColor.deepYellow
-                            : Colors.grey[400]!,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 40.h,
-                          width: 110.w,
-                          child: CachedNetworkImage(
-                            imageUrl: trucks[index].truckType!.image!,
-                            progressIndicatorBuilder:
-                                (context, url, downloadProgress) =>
-                                    Shimmer.fromColors(
-                              baseColor: (Colors.grey[300])!,
-                              highlightColor: (Colors.grey[100])!,
-                              enabled: true,
-                              child: Container(
-                                height: 40.h,
-                                width: 100.w,
-                                color: Colors.white,
-                              ),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              height: 40.h,
-                              width: 100.w,
-                              color: Colors.grey[300],
-                              child: Center(
-                                child: Text(AppLocalizations.of(context)!
-                                    .translate('image_load_error')),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 2.h,
-                        ),
-                        Text(
-                          "${trucks[index].driver_firstname!} ${trucks[index].driver_lastname!}",
-                          style: TextStyle(
-                            fontSize: 17.sp,
-                            color: AppColor.deepBlack,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+            child: Container(
+              width: index == 0 ? 100.w : 130.w,
+              margin: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(11),
+                border: Border.all(
+                  color: selectedTruck == index
+                      ? AppColor.deepYellow
+                      : Colors.grey[400]!,
+                ),
+              ),
+              child: Center(
+                child: SectionTitle(
+                  text: index == 0
+                      ? "All"
+                      : "${updatedTrucks[index].driver_firstname!} ${updatedTrucks[index].driver_lastname!}",
+                ),
+              ),
+            ),
           );
         },
       ),
@@ -252,8 +203,9 @@ class _AllIncomingShippmentLogScreenState
                     height: 5,
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 7,
+                    ),
                     child: TabBar(
                       controller: _tabController,
                       onTap: (value) {
@@ -265,7 +217,7 @@ class _AllIncomingShippmentLogScreenState
                                   .add(OwnerIncomingShipmentsLoadEvent());
                             } else {
                               BlocProvider.of<DriverRequestsListBloc>(context)
-                                  .add(DriverRequestsListLoadEvent(truckId));
+                                  .add(DriverRequestsListLoadEvent(driverId));
                             }
                             break;
                           case 1:
@@ -301,7 +253,7 @@ class _AllIncomingShippmentLogScreenState
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Consumer<TruckProvider>(
                         builder: (context, truckProvider, child) {
                       return BlocConsumer<OwnerTrucksBloc, OwnerTrucksState>(
@@ -315,7 +267,7 @@ class _AllIncomingShippmentLogScreenState
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                pathList(state.trucks),
+                                driversList(state.trucks),
                                 // DropdownButtonHideUnderline(
                                 //   child: DropdownButton2<KTruck?>(
                                 //     isExpanded: true,
@@ -552,12 +504,12 @@ class _AllIncomingShippmentLogScreenState
                                                                       .subshipment!
                                                                       .id!));
                                                           Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                        IncomingShipmentDetailsScreen(),
-                                                              ));
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  IncomingShipmentDetailsScreen(),
+                                                            ),
+                                                          );
                                                         },
                                                         child: AbsorbPointer(
                                                           absorbing: false,
@@ -582,9 +534,24 @@ class _AllIncomingShippmentLogScreenState
                                                                 Container(
                                                                   width: double
                                                                       .infinity,
-                                                                  height: 70.h,
-                                                                  color: AppColor
-                                                                      .deepYellow,
+                                                                  height: 80.h,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: AppColor
+                                                                          .deepYellow,
+                                                                      width: 1,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        const BorderRadius
+                                                                            .vertical(
+                                                                      top: Radius
+                                                                          .circular(
+                                                                              10),
+                                                                    ),
+                                                                  ),
                                                                   child: Row(
                                                                     mainAxisAlignment:
                                                                         MainAxisAlignment
@@ -593,7 +560,7 @@ class _AllIncomingShippmentLogScreenState
                                                                       Padding(
                                                                         padding: const EdgeInsets
                                                                             .all(
-                                                                            4.0),
+                                                                            8.0),
                                                                         child:
                                                                             Column(
                                                                           crossAxisAlignment:
@@ -722,15 +689,25 @@ class _AllIncomingShippmentLogScreenState
                                                 //     .difference(state.offers[index].createdDate!);
                                                 return InkWell(
                                                   onTap: () {
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(
-                                                    //       builder: (context) =>
-                                                    //           IncomingShipmentDetailsScreen(
-                                                    //               shipment:
-                                                    //                   state.shipments[
-                                                    //                       index]),
-                                                    //     ));
+                                                    BlocProvider.of<
+                                                                SubShipmentDetailsBloc>(
+                                                            context)
+                                                        .add(
+                                                            SubShipmentDetailsLoadEvent(
+                                                                state
+                                                                    .shipments[
+                                                                        index]
+                                                                    .id!));
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              InprogressShipmentDetailsScreen(
+                                                                  shipmentId: state
+                                                                      .shipments[
+                                                                          index]
+                                                                      .id!),
+                                                        ));
                                                   },
                                                   child: AbsorbPointer(
                                                     absorbing: false,
@@ -753,9 +730,23 @@ class _AllIncomingShippmentLogScreenState
                                                           Container(
                                                             width:
                                                                 double.infinity,
-                                                            height: 70.h,
-                                                            color: AppColor
-                                                                .deepYellow,
+                                                            height: 80.h,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              border:
+                                                                  Border.all(
+                                                                color: AppColor
+                                                                    .deepYellow,
+                                                                width: 1,
+                                                              ),
+                                                              borderRadius:
+                                                                  const BorderRadius
+                                                                      .vertical(
+                                                                top: Radius
+                                                                    .circular(
+                                                                        10),
+                                                              ),
+                                                            ),
                                                             child: Row(
                                                               mainAxisAlignment:
                                                                   MainAxisAlignment
@@ -765,7 +756,7 @@ class _AllIncomingShippmentLogScreenState
                                                                   padding:
                                                                       const EdgeInsets
                                                                           .all(
-                                                                          4.0),
+                                                                          8.0),
                                                                   child: Column(
                                                                     crossAxisAlignment:
                                                                         CrossAxisAlignment
@@ -948,8 +939,23 @@ class _AllIncomingShippmentLogScreenState
                                                                   width: double
                                                                       .infinity,
                                                                   height: 48.h,
-                                                                  color: AppColor
-                                                                      .deepYellow,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    border:
+                                                                        Border
+                                                                            .all(
+                                                                      color: AppColor
+                                                                          .deepYellow,
+                                                                      width: 1,
+                                                                    ),
+                                                                    borderRadius:
+                                                                        const BorderRadius
+                                                                            .vertical(
+                                                                      top: Radius
+                                                                          .circular(
+                                                                              10),
+                                                                    ),
+                                                                  ),
                                                                   child: Row(
                                                                     mainAxisAlignment:
                                                                         MainAxisAlignment
@@ -1070,15 +1076,25 @@ class _AllIncomingShippmentLogScreenState
                                                 //     .difference(state.offers[index].createdDate!);
                                                 return InkWell(
                                                   onTap: () {
-                                                    // Navigator.push(
-                                                    //     context,
-                                                    //     MaterialPageRoute(
-                                                    //       builder: (context) =>
-                                                    //           IncomingShipmentDetailsScreen(
-                                                    //               shipment:
-                                                    //                   state.shipments[
-                                                    //                       index]),
-                                                    //     ));
+                                                    BlocProvider.of<
+                                                                SubShipmentDetailsBloc>(
+                                                            context)
+                                                        .add(
+                                                            SubShipmentDetailsLoadEvent(
+                                                                state
+                                                                    .shipments[
+                                                                        index]
+                                                                    .id!));
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              InprogressShipmentDetailsScreen(
+                                                                  shipmentId: state
+                                                                      .shipments[
+                                                                          index]
+                                                                      .id!),
+                                                        ));
                                                   },
                                                   child: Card(
                                                     shape:
@@ -1100,39 +1116,56 @@ class _AllIncomingShippmentLogScreenState
                                                           width:
                                                               double.infinity,
                                                           height: 48.h,
-                                                          color: AppColor
-                                                              .deepYellow,
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Text(
-                                                                "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.shipments[index].shipment!} ${state.shipments[index].shipment!}",
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style:
-                                                                    TextStyle(
-                                                                  // color: AppColor.lightBlue,
-                                                                  fontSize:
-                                                                      17.sp,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            border: Border.all(
+                                                              color: AppColor
+                                                                  .deepYellow,
+                                                              width: 1,
+                                                            ),
+                                                            borderRadius:
+                                                                const BorderRadius
+                                                                    .vertical(
+                                                              top: Radius
+                                                                  .circular(10),
+                                                            ),
+                                                          ),
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
+                                                              children: [
+                                                                Text(
+                                                                  "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.shipments[index].merchant_first_name!} ${state.shipments[index].merchant_last_name!}",
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    // color: AppColor.lightBlue,
+                                                                    fontSize:
+                                                                        17.sp,
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                              Padding(
-                                                                padding: const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        11),
-                                                                child: Text(
-                                                                  '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
-                                                                  style: TextStyle(
-                                                                      // color: AppColor.lightBlue,
-                                                                      fontSize: 18.sp,
-                                                                      fontWeight: FontWeight.bold),
+                                                                Padding(
+                                                                  padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          11),
+                                                                  child: Text(
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
+                                                                    style: TextStyle(
+                                                                        // color: AppColor.lightBlue,
+                                                                        fontSize: 18.sp,
+                                                                        fontWeight: FontWeight.bold),
+                                                                  ),
                                                                 ),
-                                                              ),
-                                                            ],
+                                                              ],
+                                                            ),
                                                           ),
                                                         ),
                                                         ShipmentPathVerticalWidget(

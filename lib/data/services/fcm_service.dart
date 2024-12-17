@@ -22,9 +22,11 @@ class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationProvider? notificationProvider;
 
-  void firebaseInit(BuildContext context) {
+  void firebaseInit(BuildContext context) async {
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
+    requestNotificationPermission();
+
     FirebaseMessaging.onMessage.listen((message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification!.android;
@@ -44,21 +46,9 @@ class NotificationServices {
         // initLocalNotifications(context, message);
         // showNotification(message);
       }
-      if (notificationProvider != null) {
-        notificationProvider!.addNotReadedNotification();
-        BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-      }
     });
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  }
-
-  Future<void> _handleNewMessage(
-      BuildContext context, RemoteMessage message) async {
-    if (notificationProvider != null) {
-      await notificationProvider!.addNotReadedNotification();
-      BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    }
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(
@@ -68,25 +58,23 @@ class NotificationServices {
       name: "Camion",
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    if (notificationProvider != null) {
-      notificationProvider!.addNotReadedNotification();
-      // BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    }
+    // if (notificationProvider != null) {
+    //   notificationProvider!.addNotReadedNotification();
+    //   // BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
+    // }
     print("Handling a background message: ${message.messageId}");
   }
 
-  void requestNotificationPermission() async {
+  Future<void> requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
-      announcement: true,
       badge: true,
-      // carPlay: true,
-      // criticalAlert: true,
-      // provisional: true,
       sound: true,
+      provisional: false,
+      announcement: false,
+      carPlay: false,
+      criticalAlert: false,
     );
-
-    // messaging.re
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       if (kDebugMode) {
@@ -151,8 +139,7 @@ class NotificationServices {
           ),
         ),
       );
-    }
-    if (message.data['notefication_type'] == "O") {
+    } else if (message.data['notefication_type'] == "O") {
       BlocProvider.of<SubShipmentDetailsBloc>(context)
           .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
       Navigator.push(
@@ -166,10 +153,10 @@ class NotificationServices {
 
   Future forgroundMessage(
       BuildContext context, NotificationProvider provider) async {
-    if (notificationProvider != null) {
-      notificationProvider!.addNotReadedNotification();
-      BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    }
+    // if (notificationProvider != null) {
+    //   notificationProvider!.addNotReadedNotification();
+    //   BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
+    // }
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,

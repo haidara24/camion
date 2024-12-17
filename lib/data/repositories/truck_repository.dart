@@ -84,10 +84,7 @@ class TruckRepository {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
-      ktrucks.add(KTruck(
-        id: 0,
-        truckuser: 0,
-      ));
+
       for (var element in result) {
         ktrucks.add(KTruck.fromJson(element));
       }
@@ -322,10 +319,61 @@ class TruckRepository {
     request.fields['long'] = truck.long!.toString();
     request.fields['number_of_axels'] = truck.numberOfAxels!.toString();
     request.fields['truck_number'] = truck.truckNumber!.toString();
+    request.fields['traffic'] = truck.traffic!.toString();
     request.fields['empty_weight'] = truck.emptyWeight!.toString();
     request.fields['gross_weight'] = truck.grossWeight!.toString();
-    request.fields['traffic'] = truck.traffic!.toString();
-    request.fields['gpsId'] = truck.gpsId!.toString();
+    request.fields['gpsId'] = "";
+
+    var response = await request.send();
+    if (response.statusCode == 201) {
+      final respStr = await response.stream.bytesToString();
+      return KTruck.fromJson(jsonDecode(respStr));
+    } else {
+      final respStr = await response.stream.bytesToString();
+      return null;
+    }
+  }
+
+  Future<KTruck?> createKTruckForOwner(
+    Map<String, dynamic> truck,
+    List<File> files,
+  ) async {
+    prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token");
+    var request = http.MultipartRequest('POST', Uri.parse(TRUCKS_ENDPOINT));
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: "JWT $token",
+      HttpHeaders.contentTypeHeader: "multipart/form-data"
+    });
+
+    final uploadImages = <http.MultipartFile>[];
+    for (final imageFiles in files) {
+      uploadImages.add(
+        await http.MultipartFile.fromPath(
+          'files',
+          imageFiles.path,
+          filename: imageFiles.path.split('/').last,
+        ),
+      );
+    }
+    for (var element in uploadImages) {
+      request.files.add(element);
+    }
+    request.fields['driver_first_name'] = truck['driver_first_name'].toString();
+    request.fields['driver_last_name'] = truck['driver_last_name'].toString();
+    request.fields['driver_phone'] = truck['driver_phone'].toString();
+    request.fields['owner'] = truck['owner'].toString();
+    request.fields['truck_type'] = truck['truckType'].id.toString();
+    request.fields['location_lat'] = truck['locationLat'];
+    request.fields['height'] = truck['height'].toString();
+    request.fields['width'] = truck['width'].toString();
+    request.fields['long'] = truck['long'].toString();
+    request.fields['number_of_axels'] = truck['numberOfAxels'].toString();
+    request.fields['truck_number'] = truck['truckNumber'].toString();
+    request.fields['traffic'] = truck['traffic'].toString();
+    request.fields['empty_weight'] = truck['emptyWeight'].toString();
+    request.fields['gross_weight'] = truck['grossWeight'].toString();
+    request.fields['gpsId'] = "";
 
     var response = await request.send();
     if (response.statusCode == 201) {

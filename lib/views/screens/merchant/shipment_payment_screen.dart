@@ -161,11 +161,11 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                         ),
                       ),
                       color: Colors.white,
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
@@ -179,15 +179,18 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                 ),
                               ],
                             ),
-                          ),
-                          ShipmentPathVerticalWidget(
-                            pathpoints: widget.shipment.pathpoints!,
-                            pickupDate: widget.shipment.pickupDate!,
-                            deliveryDate: widget.shipment.deliveryDate!,
-                            langCode: localeState.value.languageCode,
-                            mini: false,
-                          ),
-                        ],
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            ShipmentPathVerticalWidget(
+                              pathpoints: widget.shipment.pathpoints!,
+                              pickupDate: widget.shipment.pickupDate!,
+                              deliveryDate: widget.shipment.deliveryDate!,
+                              langCode: localeState.value.languageCode,
+                              mini: false,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     SizedBox(

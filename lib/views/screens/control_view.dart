@@ -2,6 +2,7 @@ import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/views/screens/driver/driver_home_screen.dart';
 import 'package:camion/views/screens/merchant/home_screen.dart';
 import 'package:camion/views/screens/owner/owner_home_screen.dart';
@@ -23,9 +24,16 @@ class ControlView extends StatefulWidget {
 
 class _ControlViewState extends State<ControlView> {
   late SharedPreferences prefs;
+  NotificationServices notificationServices = NotificationServices();
+
   @override
   void initState() {
     super.initState();
+    notificationServices.requestNotificationPermission();
+    // notificationServices.forgroundMessage(context);
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
     initPrefs();
   }
 

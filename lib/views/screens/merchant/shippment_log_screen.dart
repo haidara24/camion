@@ -2,15 +2,18 @@ import 'dart:convert';
 import 'dart:core';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
+import 'package:camion/views/screens/merchant/subshipment_details_screen.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
@@ -24,7 +27,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
-import 'package:flutter/services.dart' show rootBundle;
 
 class ShippmentLogScreen extends StatefulWidget {
   ShippmentLogScreen({Key? key}) : super(key: key);
@@ -176,108 +178,101 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
     return latLngList;
   }
 
-  Set<Polyline> getRoutes(List<SubShipment> items) {
+  Set<Polyline> getRoutes(SubShipment items) {
     Set<Polyline> routes = <Polyline>{};
-    for (var i = 0; i < items.length; i++) {
-      routes.add(Polyline(
-        polylineId: PolylineId("route$i"),
-        points: deserializeLatLng(items[i].paths!),
-        color: getColorByIndex(i),
-        width: 4,
-      ));
-    }
+    routes.add(Polyline(
+      polylineId: PolylineId("route"),
+      points: deserializeLatLng(items.paths!),
+      color: AppColor.deepYellow,
+      width: 4,
+    ));
     return routes;
   }
 
-  Set<Marker> getMarkers(Shipmentv2 shipments) {
+  Set<Marker> getMarkers(SubShipment shipments) {
     Set<Marker> marker = <Marker>{};
-    for (var i = 0; i < shipments.subshipments!.length; i++) {
-      if (shipments.subshipments![i].pathpoints!
-              .singleWhere(
-                (element) => element.pointType == "P",
-                orElse: () => PathPoint(id: 0),
-              )
-              .id !=
-          0) {
-        marker.add(Marker(
-          markerId: MarkerId("pickupmarker$i"),
-          position: LatLng(
-              double.parse(shipments.subshipments![i].pathpoints!
-                  .singleWhere((element) => element.pointType == "P")
-                  .location!
-                  .split(",")[0]),
-              double.parse(shipments.subshipments![i].pathpoints!
-                  .singleWhere((element) => element.pointType == "P")
-                  .location!
-                  .split(",")[1])),
-          icon: pickupicon!,
-        ));
-      }
-      if (shipments.subshipments![i].pathpoints!
-              .singleWhere(
-                (element) => element.pointType == "D",
-                orElse: () => PathPoint(id: 0),
-              )
-              .id !=
-          0) {
-        marker.add(Marker(
-          markerId: MarkerId("deliverymarker$i"),
-          position: LatLng(
-              double.parse(shipments.subshipments![i].pathpoints!
-                  .singleWhere((element) => element.pointType == "D")
-                  .location!
-                  .split(",")[0]),
-              double.parse(shipments.subshipments![i].pathpoints!
-                  .singleWhere((element) => element.pointType == "D")
-                  .location!
-                  .split(",")[1])),
-          icon: deliveryicon,
-        ));
-      }
+    if (shipments.pathpoints!
+            .singleWhere(
+              (element) => element.pointType == "P",
+              orElse: () => PathPoint(id: 0),
+            )
+            .id !=
+        0) {
+      marker.add(Marker(
+        markerId: MarkerId("pickupmarker"),
+        position: LatLng(
+            double.parse(shipments.pathpoints!
+                .singleWhere((element) => element.pointType == "P")
+                .location!
+                .split(",")[0]),
+            double.parse(shipments.pathpoints!
+                .singleWhere((element) => element.pointType == "P")
+                .location!
+                .split(",")[1])),
+        icon: pickupicon!,
+      ));
+    }
+    if (shipments.pathpoints!
+            .singleWhere(
+              (element) => element.pointType == "D",
+              orElse: () => PathPoint(id: 0),
+            )
+            .id !=
+        0) {
+      marker.add(Marker(
+        markerId: MarkerId("deliverymarker"),
+        position: LatLng(
+            double.parse(shipments.pathpoints!
+                .singleWhere((element) => element.pointType == "D")
+                .location!
+                .split(",")[0]),
+            double.parse(shipments.pathpoints!
+                .singleWhere((element) => element.pointType == "D")
+                .location!
+                .split(",")[1])),
+        icon: deliveryicon,
+      ));
     }
     return marker;
   }
 
-  initMapbounds(Shipmentv2 shipment, int index) {
+  initMapbounds(SubShipment shipment, int index) {
     List<Marker> markers = [];
 
-    for (var i = 0; i < shipment.subshipments!.length; i++) {
-      var pickuplocation = shipment.subshipments![i].pathpoints!
-          .singleWhere((element) => element.pointType == "P")
-          .location!
-          .split(",");
-      markers.add(
-        Marker(
-          markerId: MarkerId("pickup$i"),
-          position: LatLng(
-              double.parse(pickuplocation[0]), double.parse(pickuplocation[1])),
-        ),
-      );
+    var pickuplocation = shipment.pathpoints!
+        .singleWhere((element) => element.pointType == "P")
+        .location!
+        .split(",");
+    markers.add(
+      Marker(
+        markerId: MarkerId("pickup"),
+        position: LatLng(
+            double.parse(pickuplocation[0]), double.parse(pickuplocation[1])),
+      ),
+    );
 
-      var deliverylocation = shipment.subshipments![i].pathpoints!
-          .singleWhere((element) => element.pointType == "D")
-          .location!
-          .split(",");
-      markers.add(
-        Marker(
-          markerId: MarkerId("delivery$i"),
-          position: LatLng(double.parse(deliverylocation[0]),
-              double.parse(deliverylocation[1])),
-        ),
-      );
+    var deliverylocation = shipment.pathpoints!
+        .singleWhere((element) => element.pointType == "D")
+        .location!
+        .split(",");
+    markers.add(
+      Marker(
+        markerId: MarkerId("delivery"),
+        position: LatLng(double.parse(deliverylocation[0]),
+            double.parse(deliverylocation[1])),
+      ),
+    );
 
-      for (var j = 0; j < shipment.subshipments![i].pathpoints!.length; j++) {
-        if (shipment.subshipments![i].pathpoints![j].pointType == "S") {
-          var stopLocation =
-              shipment.subshipments![i].pathpoints![j].location!.split(',');
-          markers.add(
-            Marker(
-              markerId: MarkerId("stop${(i + j)}"),
-              position: LatLng(
-                  double.parse(stopLocation[0]), double.parse(stopLocation[1])),
-            ),
-          );
-        }
+    for (var j = 0; j < shipment.pathpoints!.length; j++) {
+      if (shipment.pathpoints![j].pointType == "S") {
+        var stopLocation = shipment.pathpoints![j].location!.split(',');
+        markers.add(
+          Marker(
+            markerId: MarkerId("stop${(j)}"),
+            position: LatLng(
+                double.parse(stopLocation[0]), double.parse(stopLocation[1])),
+          ),
+        );
       }
     }
 
@@ -313,8 +308,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
 
   Future<void> onRefresh() async {
     tabIndex == 0
-        ? BlocProvider.of<ShipmentListBloc>(context)
-            .add(ShipmentListLoadEvent("P"))
+        ? BlocProvider.of<ShipmentRunningBloc>(context)
+            .add(ShipmentRunningLoadEvent("R"))
         : BlocProvider.of<MerchantRequestsListBloc>(context)
             .add(MerchantRequestsListLoadEvent());
   }
@@ -346,8 +341,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                         onTap: (value) {
                           switch (value) {
                             case 0:
-                              BlocProvider.of<ShipmentListBloc>(context)
-                                  .add(ShipmentListLoadEvent("P"));
+                              BlocProvider.of<ShipmentRunningBloc>(context)
+                                  .add(ShipmentRunningLoadEvent("R"));
                               break;
                             case 1:
                               BlocProvider.of<MerchantRequestsListBloc>(context)
@@ -385,7 +380,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(AppLocalizations.of(context)!
-                                        .translate('outcoming_orders')),
+                                        .translate('pending')),
                                     const SizedBox(width: 4),
                                     value.requestNum > 0
                                         ? Positioned(
@@ -419,10 +414,11 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: tabIndex == 0
-                          ? BlocConsumer<ShipmentListBloc, ShipmentListState>(
+                          ? BlocConsumer<ShipmentRunningBloc,
+                              ShipmentRunningState>(
                               listener: (context, state) {},
                               builder: (context, state) {
-                                if (state is ShipmentListLoadedSuccess &&
+                                if (state is ShipmentRunningLoadedSuccess &&
                                     pickupicon != null) {
                                   return state.shipments.isEmpty
                                       ? NoResultsWidget(
@@ -438,19 +434,17 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                             return InkWell(
                                               onTap: () {
                                                 BlocProvider.of<
-                                                            ShipmentDetailsBloc>(
+                                                            SubShipmentDetailsBloc>(
                                                         context)
                                                     .add(
-                                                        ShipmentDetailsLoadEvent(
-                                                            state
-                                                                .shipments[
-                                                                    index]
-                                                                .id!));
+                                                        SubShipmentDetailsLoadEvent(
+                                                  state.shipments[index].id!,
+                                                ));
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ShipmentDetailsScreen(
+                                                          SubShipmentDetailsScreen(
                                                         shipment: state
                                                             .shipments[index]
                                                             .id!,
@@ -538,8 +532,6 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 commodityItemsText(state
                                                                     .shipments[
                                                                         index]
-                                                                    .subshipments![
-                                                                        0]
                                                                     .shipmentItems!),
                                                                 overflow:
                                                                     TextOverflow
@@ -612,11 +604,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                             markers: getMarkers(
                                                                 state.shipments[
                                                                     index]),
-                                                            polylines:
-                                                                getRoutes(state
-                                                                    .shipments[
-                                                                        index]
-                                                                    .subshipments!),
+                                                            polylines: getRoutes(
+                                                                state.shipments[
+                                                                    index]),
                                                             // mapType: shipmentProvider.mapType,
                                                           ),
                                                         ),
@@ -708,6 +698,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                               .isApproved!
                                                           ? "A"
                                                           : "J",
+                                                      request:
+                                                          state.requests[index],
                                                     ),
                                                   ),
                                                 );

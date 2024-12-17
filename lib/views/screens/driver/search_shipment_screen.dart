@@ -1,5 +1,4 @@
 import 'package:camion/views/widgets/no_reaults_widget.dart';
-import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipments_widgets/shimmer_card.dart';
 import 'package:camion/views/widgets/shipments_widgets/subshipment_card.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,6 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/search_shipment_details_screen.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -98,7 +96,7 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
             body: RefreshIndicator(
               onRefresh: onRefresh,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: BlocConsumer<UnassignedShipmentListBloc,
                     UnassignedShipmentListState>(
                   listener: (context, state) {
@@ -108,9 +106,9 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
                     if (state is UnassignedShipmentListLoadedSuccess) {
                       return state.shipments.isEmpty
                           ? NoResultsWidget(
-                                          text: AppLocalizations.of(context)!
-                                              .translate("no_shipments"),
-                                        )
+                              text: AppLocalizations.of(context)!
+                                  .translate("no_shipments"),
+                            )
                           : ListView.builder(
                               itemCount: state.shipments.length,
                               shrinkWrap: true,

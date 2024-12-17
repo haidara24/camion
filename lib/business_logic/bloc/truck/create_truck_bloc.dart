@@ -23,5 +23,17 @@ class CreateTruckBloc extends Bloc<CreateTruckEvent, CreateTruckState> {
         emit(CreateTruckFailureState(e.toString()));
       }
     });
+
+    on<CreateOwnerTruckButtonPressed>((event, emit) async {
+      emit(CreateTruckLoadingProgressState());
+      try {
+        var result = await truckRepository.createKTruckForOwner(
+            event.truck, event.files);
+
+        emit(CreateTruckSuccessState(result!));
+      } catch (e) {
+        emit(CreateTruckFailureState(e.toString()));
+      }
+    });
   }
 }

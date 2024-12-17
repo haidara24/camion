@@ -2,13 +2,12 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
-import 'package:camion/views/screens/merchant/shipment_details_screen.dart';
+import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
@@ -177,8 +176,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 ),
                                               ),
                                             );
-                                          }
-                                          if (notificationProvider
+                                          } else if (notificationProvider
                                                   .notifications[index]!
                                                   .noteficationType ==
                                               "O") {
@@ -196,6 +194,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     IncomingShipmentDetailsScreen(),
+                                              ),
+                                            );
+                                          } else if (notificationProvider
+                                                  .notifications[index]!
+                                                  .noteficationType ==
+                                              "T") {
+                                            BlocProvider.of<
+                                                        SubShipmentDetailsBloc>(
+                                                    context)
+                                                .add(
+                                                    SubShipmentDetailsLoadEvent(
+                                                        notificationProvider
+                                                            .notifications[
+                                                                index]!
+                                                            .objectId!));
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SubShipmentDetailsScreen(),
                                               ),
                                             );
                                           }

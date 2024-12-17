@@ -54,9 +54,6 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
 
   bool startTracking = false;
 
-  TextEditingController dateController = TextEditingController();
-  TextEditingController timeController = TextEditingController();
-
   initMapbounds(SubShipment subshipment) async {
     setState(() {
       startTracking = false;
@@ -347,7 +344,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                       child: SvgPicture.asset(
                         "assets/icons/arrow_up.svg",
                         fit: BoxFit.contain,
-                        height: 8.h,
+                        height: 4.h,
                         width: 25.w,
                       ),
                     ),
@@ -426,7 +423,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                       padding: EdgeInsets.all(selectedTruck == index ? 0 : 3.0),
                       child: Container(
                         // height: selectedTruck == index ? 88.h : 80.h,
-                        width: selectedTruck == index ? 180.w : 175.w,
+                        width: selectedTruck == index ? 180.w : 180.w,
                         margin: const EdgeInsets.all(5),
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
@@ -453,7 +450,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                               children: [
                                 SizedBox(
                                   height: 25.h,
-                                  width: selectedTruck == index ? 122.w : 118.w,
+                                  width: selectedTruck == index ? 120.w : 118.w,
                                   child: CachedNetworkImage(
                                     imageUrl: subshipments[index]
                                         .truck!
@@ -473,7 +470,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                         Container(
                                       height: 25.h,
                                       width: selectedTruck == index
-                                          ? 122.w
+                                          ? 120.w
                                           : 118.w,
                                       color: Colors.grey[300],
                                       child: Center(

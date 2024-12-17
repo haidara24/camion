@@ -39,6 +39,7 @@ class PathStatisticsWidget extends StatelessWidget {
                   height: 4,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 20.h,
@@ -91,6 +92,7 @@ class PathStatisticsWidget extends StatelessWidget {
                   height: 4,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 20.h,
@@ -141,6 +143,7 @@ class PathStatisticsWidget extends StatelessWidget {
                   height: 4,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: 20.h,

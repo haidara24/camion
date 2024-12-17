@@ -46,7 +46,7 @@ const NOTIFICATIONS_ENDPOINT = '${DOMAIN}noti/notifications/';
 
 const GPS_DOMAIN = 'https://www.whatsgps.com/';
 const GPS_LOGIN = '${GPS_DOMAIN}user/login.do?name=Acrossmena&password=abc123';
-const GPS_CARINFO = '${GPS_DOMAIN}car/getByImei.do?imei=';
+const GPS_CARINFO = '${GPS_DOMAIN}car/getByImei.do?token=';
 
 class HttpHelper {
   static Future<http.Response> post(String url, Map<String, dynamic> body,

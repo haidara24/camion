@@ -2,13 +2,14 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
-import 'package:camion/business_logic/bloc/package_type_bloc.dart';
+import 'package:camion/business_logic/bloc/core/package_type_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/merchant_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
@@ -51,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen>
   String title = "Home";
   Widget currentScreen = MainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  NotificationServices notificationServices = NotificationServices();
+  // NotificationServices notificationServices = NotificationServices();
   late TabController _tabController;
   AddShippmentProvider? addShippmentProvider;
   late SharedPreferences prefs;
@@ -66,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen>
         .add(CommodityCategoryLoadEvent());
     BlocProvider.of<KCommodityCategoryBloc>(context)
         .add(KCommodityCategoryLoadEvent());
-    BlocProvider.of<ShipmentListBloc>(context).add(ShipmentListLoadEvent("P"));
+    BlocProvider.of<ShipmentRunningBloc>(context)
+        .add(ShipmentRunningLoadEvent("R"));
     BlocProvider.of<MerchantRequestsListBloc>(context)
         .add(MerchantRequestsListLoadEvent());
     BlocProvider.of<ShipmentTaskListBloc>(context)
@@ -75,10 +77,10 @@ class _HomeScreenState extends State<HomeScreen>
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
     BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
 
-    notificationServices.requestNotificationPermission();
-    notificationServices.firebaseInit(context);
-    notificationServices.setupInteractMessage(context);
-    notificationServices.isTokenRefresh();
+    // notificationServices.requestNotificationPermission();
+    // notificationServices.firebaseInit(context);
+    // notificationServices.setupInteractMessage(context);
+    // notificationServices.isTokenRefresh();
 
     _tabController = TabController(
       initialIndex: 0,
@@ -140,6 +142,7 @@ class _HomeScreenState extends State<HomeScreen>
         {
           BlocProvider.of<ActiveShipmentListBloc>(context)
               .add(ActiveShipmentListLoadEvent());
+          print("asdasdasd");
           setState(() {
             title = AppLocalizations.of(context)!.translate('tracking');
             currentScreen = ActiveShipmentScreen();
@@ -200,10 +203,11 @@ class _HomeScreenState extends State<HomeScreen>
 
                           // ignore: use_build_context_synchronously
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MerchantProfileScreen(),
-                              ));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MerchantProfileScreen(),
+                            ),
+                          );
                         },
                         child: Consumer<UserProvider>(
                             builder: (context, userProvider, child) {
@@ -240,16 +244,18 @@ class _HomeScreenState extends State<HomeScreen>
                                   ? Text(
                                       "",
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 26.sp,
-                                          fontWeight: FontWeight.bold),
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     )
                                   : Text(
                                       "${userProvider.user!.firstName!} ${userProvider.user!.lastName!}",
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 26.sp,
-                                          fontWeight: FontWeight.bold),
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     )
                             ],
                           );
@@ -485,7 +491,6 @@ class _HomeScreenState extends State<HomeScreen>
                             labelPadding: EdgeInsets.zero,
                             controller: _tabController,
                             indicatorColor: AppColor.deepYellow,
-                            // indicatorSize: TabBarIndicatorSize.tab,
                             dividerColor: Colors.transparent,
                             labelColor: AppColor.deepYellow,
                             unselectedLabelColor: Colors.white,

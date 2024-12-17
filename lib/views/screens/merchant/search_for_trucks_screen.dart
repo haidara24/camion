@@ -883,41 +883,24 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                           .selectedTruckTypeNum
                                                           .length;
                                                   i++) {
-                                                for (var count = 0;
-                                                    count <
-                                                        shipmentProvider
-                                                            .selectedTruckTypeNum[i];
-                                                    count++) {
-                                                  List<ShipmentItems>
-                                                      shipmentitems = [];
+                                                List<ShipmentItems>
+                                                    shipmentitems = [];
 
-                                                  double totalWeight = 0;
-                                                  for (var j = 0;
-                                                      j <
-                                                          shipmentProvider
-                                                              .commodityWeight_controllers[
-                                                                  commodityIndex]
-                                                              .length;
-                                                      j++) {
-                                                    ShipmentItems shipmentitem =
-                                                        ShipmentItems(
-                                                      commodityName: shipmentProvider
-                                                          .commodityName_controllers[
-                                                              commodityIndex][j]
-                                                          .text,
-                                                      commodityWeight: double.parse(
-                                                              shipmentProvider
-                                                                  .commodityWeight_controllers[
-                                                                      commodityIndex]
-                                                                      [j]
-                                                                  .text
-                                                                  .replaceAll(
-                                                                      ",", ""))
-                                                          .toInt(),
-                                                    );
-                                                    shipmentitems
-                                                        .add(shipmentitem);
-                                                    totalWeight += double.parse(
+                                                double totalWeight = 0;
+                                                for (var j = 0;
+                                                    j <
+                                                        shipmentProvider
+                                                            .commodityWeight_controllers[
+                                                                commodityIndex]
+                                                            .length;
+                                                    j++) {
+                                                  ShipmentItems shipmentitem =
+                                                      ShipmentItems(
+                                                    commodityName: shipmentProvider
+                                                        .commodityName_controllers[
+                                                            commodityIndex][j]
+                                                        .text,
+                                                    commodityWeight: double.parse(
                                                             shipmentProvider
                                                                 .commodityWeight_controllers[
                                                                     commodityIndex]
@@ -925,78 +908,86 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                 .text
                                                                 .replaceAll(
                                                                     ",", ""))
-                                                        .toInt();
-                                                  }
-                                                  SubShipment subshipment =
-                                                      SubShipment(
-                                                    shipmentStatus: "P",
-                                                    paths: jsonEncode(
-                                                        shipmentProvider
-                                                            .pathes),
-                                                    shipmentItems:
-                                                        shipmentitems,
-                                                    totalWeight:
-                                                        totalWeight.toInt(),
-                                                    distance: shipmentProvider
-                                                        .distance,
-                                                    price: calculatePrice(
-                                                        shipmentProvider
-                                                            .distance,
-                                                        totalWeight),
-                                                    period:
-                                                        shipmentProvider.period,
-                                                    pathpoints: points,
-                                                    truck: null,
-                                                    // truckTypes: truckTypes,
-                                                    pickupDate: DateTime(
-                                                      shipmentProvider
-                                                          .loadDate[
-                                                              commodityIndex]
-                                                          .year,
-                                                      shipmentProvider
-                                                          .loadDate[
-                                                              commodityIndex]
-                                                          .month,
-                                                      shipmentProvider
-                                                          .loadDate[
-                                                              commodityIndex]
-                                                          .day,
-                                                      shipmentProvider
-                                                          .loadTime[
-                                                              commodityIndex]
-                                                          .hour,
-                                                      shipmentProvider
-                                                          .loadTime[
-                                                              commodityIndex]
-                                                          .day,
-                                                    ),
-                                                    deliveryDate: DateTime(
-                                                      shipmentProvider
-                                                          .loadDate[
-                                                              commodityIndex]
-                                                          .year,
-                                                      shipmentProvider
-                                                          .loadDate[
-                                                              commodityIndex]
-                                                          .month,
-                                                      shipmentProvider
-                                                          .loadDate[
-                                                              commodityIndex]
-                                                          .day,
-                                                      shipmentProvider
-                                                          .loadTime[
-                                                              commodityIndex]
-                                                          .hour,
-                                                      shipmentProvider
-                                                          .loadTime[
-                                                              commodityIndex]
-                                                          .day,
-                                                    ),
+                                                        .toInt(),
                                                   );
-                                                  subshipmentsitems
-                                                      .add(subshipment);
-                                                  commodityIndex++;
+                                                  shipmentitems
+                                                      .add(shipmentitem);
+                                                  totalWeight += double.parse(
+                                                          shipmentProvider
+                                                              .commodityWeight_controllers[
+                                                                  commodityIndex]
+                                                                  [j]
+                                                              .text
+                                                              .replaceAll(
+                                                                  ",", ""))
+                                                      .toInt();
                                                 }
+                                                SubShipment subshipment =
+                                                    SubShipment(
+                                                  shipmentStatus: "P",
+                                                  paths: jsonEncode(
+                                                      shipmentProvider.pathes),
+                                                  shipmentItems: shipmentitems,
+                                                  totalWeight:
+                                                      totalWeight.toInt(),
+                                                  distance:
+                                                      shipmentProvider.distance,
+                                                  price: calculatePrice(
+                                                      shipmentProvider.distance,
+                                                      totalWeight),
+                                                  period:
+                                                      shipmentProvider.period,
+                                                  pathpoints: points,
+                                                  truck: null,
+                                                  // truckTypes: truckTypes,
+                                                  pickupDate: DateTime(
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .year,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .month,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .day,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .hour,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .day,
+                                                  ),
+                                                  deliveryDate: DateTime(
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .year,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .month,
+                                                    shipmentProvider
+                                                        .loadDate[
+                                                            commodityIndex]
+                                                        .day,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .hour,
+                                                    shipmentProvider
+                                                        .loadTime[
+                                                            commodityIndex]
+                                                        .day,
+                                                  ),
+                                                );
+                                                subshipmentsitems
+                                                    .add(subshipment);
+                                                commodityIndex++;
                                               }
 
                                               Shipmentv2 shipment = Shipmentv2(

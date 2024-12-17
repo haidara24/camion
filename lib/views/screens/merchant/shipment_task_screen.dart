@@ -206,29 +206,17 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                   width: double.infinity,
                                                   height: 48.h,
                                                   decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color:
-                                                            AppColor.deepYellow,
-                                                        width: 1,
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.vertical(
-                                                              top: Radius
-                                                                  .circular(10))
-                                                      // gradient: LinearGradient(
-                                                      //   begin: Alignment.topLeft,
-                                                      //   end:
-                                                      //       Alignment.bottomRight,
-                                                      //   colors: [
-                                                      //     AppColor.deepYellow,
-                                                      //     AppColor.deepYellow,
-                                                      //     AppColor.deepYellow,
-                                                      //     Colors.white,
-                                                      //   ],
-                                                      // ),
-                                                      // color:
-                                                      //     Colors.grey[300],
-                                                      ),
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                      width: 1,
+                                                    ),
+                                                    borderRadius:
+                                                        const BorderRadius
+                                                            .vertical(
+                                                      top: Radius.circular(10),
+                                                    ),
+                                                  ),
                                                   child: Row(
                                                     // mainAxisAlignment:
                                                     //     MainAxisAlignment.start,

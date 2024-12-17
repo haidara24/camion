@@ -144,7 +144,7 @@ class PostCard extends StatelessWidget {
                               AppLocalizations.of(context)!
                                   .translate('read_more'),
                               style: TextStyle(
-                                color: AppColor.lightGrey,
+                                color: AppColor.darkGrey200,
                               ),
                             ),
                           )

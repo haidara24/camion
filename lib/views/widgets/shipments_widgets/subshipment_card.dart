@@ -24,10 +24,14 @@ class SubShipmentCardWidget extends StatelessWidget {
       child: AbsorbPointer(
         absorbing: false,
         child: Card(
+          color: Colors.white,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(10),
             ),
+          ),
+          margin: const EdgeInsets.symmetric(
+            vertical: 8,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -3,7 +3,6 @@ import 'package:camion/constants/user_type.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/choose_login_register_screen.dart';
-import 'package:camion/views/screens/phone_login_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

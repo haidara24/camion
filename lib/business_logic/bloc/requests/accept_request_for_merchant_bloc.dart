@@ -15,8 +15,6 @@ class AcceptRequestForMerchantBloc
       try {
         var result = await requestRepository.acceptRequestForMerchant(
           event.id,
-          event.text,
-          event.extra,
         );
 
         emit(AcceptRequestForMerchantSuccessState(result));

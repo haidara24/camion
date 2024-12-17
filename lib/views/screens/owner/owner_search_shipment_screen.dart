@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
@@ -106,7 +105,7 @@ class _OwnerSearchShippmentScreenState
             body: RefreshIndicator(
               onRefresh: onRefresh,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: BlocBuilder<UnassignedShipmentListBloc,
                     UnassignedShipmentListState>(
                   builder: (context, state) {
@@ -157,7 +156,16 @@ class _OwnerSearchShippmentScreenState
                                           Container(
                                             width: double.infinity,
                                             height: 48.h,
-                                            color: AppColor.deepYellow,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: AppColor.deepYellow,
+                                                width: 1,
+                                              ),
+                                              borderRadius:
+                                                  const BorderRadius.vertical(
+                                                top: Radius.circular(10),
+                                              ),
+                                            ),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment

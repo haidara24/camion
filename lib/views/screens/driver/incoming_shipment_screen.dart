@@ -13,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
 class IncomingShippmentLogScreen extends StatefulWidget {
@@ -107,7 +106,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
   Future<void> onRefresh() async {
     if (tabIndex == 0) {
       BlocProvider.of<DriverRequestsListBloc>(context)
-          .add(DriverRequestsListLoadEvent(null));
+          .add(const DriverRequestsListLoadEvent(null));
     } else {
       BlocProvider.of<InprogressShipmentsBloc>(context)
           .add(InprogressShipmentsLoadEvent("R", null));
@@ -142,7 +141,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                           switch (value) {
                             case 0:
                               BlocProvider.of<DriverRequestsListBloc>(context)
-                                  .add(DriverRequestsListLoadEvent(null));
+                                  .add(const DriverRequestsListLoadEvent(null));
                               break;
                             case 1:
                               BlocProvider.of<InprogressShipmentsBloc>(context)
@@ -168,11 +167,8 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 8.h,
-                    ),
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: tabIndex == 0
                           ? BlocConsumer<DriverRequestsListBloc,
                               DriverRequestsListState>(
@@ -213,6 +209,11 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                               child: AbsorbPointer(
                                                 absorbing: false,
                                                 child: Card(
+                                                  elevation: 1,
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                    vertical: 8,
+                                                  ),
                                                   shape:
                                                       const RoundedRectangleBorder(
                                                     borderRadius:
@@ -230,8 +231,21 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                       Container(
                                                         width: double.infinity,
                                                         height: 48.h,
-                                                        color:
-                                                            AppColor.deepYellow,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            width: 1,
+                                                          ),
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    10),
+                                                          ),
+                                                        ),
                                                         child: Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
@@ -303,7 +317,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                           },
                                         );
                                 } else {
-                                  return ShimmerLoadingWidget();
+                                  return const ShimmerLoadingWidget();
                                 }
                               },
                             )
@@ -345,12 +359,17 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                     ));
                                               },
                                               child: Card(
+                                                elevation: 1,
                                                 shape:
                                                     const RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.all(
                                                     Radius.circular(10),
                                                   ),
+                                                ),
+                                                margin:
+                                                    const EdgeInsets.symmetric(
+                                                  vertical: 8,
                                                 ),
                                                 child: Column(
                                                   mainAxisAlignment:
@@ -361,8 +380,19 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                     Container(
                                                       width: double.infinity,
                                                       height: 48.h,
-                                                      color:
-                                                          AppColor.deepYellow,
+                                                      decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                          width: 1,
+                                                        ),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                .vertical(
+                                                          top: Radius.circular(
+                                                              10),
+                                                        ),
+                                                      ),
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -424,7 +454,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                           },
                                         );
                                 } else {
-                                  return ShimmerLoadingWidget();
+                                  return const ShimmerLoadingWidget();
                                 }
                               },
                             ),

@@ -7,11 +7,11 @@ import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/formatter.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -387,23 +387,13 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                   CreateTruckFixState>(
                                 listener: (context, state) {
                                   if (state is CreateTruckFixLoadedSuccess) {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(SnackBar(
+                                    showCustomSnackBar(
+                                      context: context,
                                       backgroundColor: AppColor.deepGreen,
-                                      dismissDirection: DismissDirection.up,
-                                      behavior: SnackBarBehavior.floating,
-                                      margin: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context)
-                                                  .size
-                                                  .height -
-                                              150,
-                                          left: 10,
-                                          right: 10),
-                                      content: Text(AppLocalizations.of(
-                                              context)!
-                                          .translate('new_spending_created')),
-                                      duration: const Duration(seconds: 5),
-                                    ));
+                                      message: AppLocalizations.of(context)!
+                                          .translate('new_spending_created'),
+                                    );
+
                                     BlocProvider.of<TruckFixListBloc>(context)
                                         .add(TruckFixListLoad(null));
                                     Navigator.pop(context);

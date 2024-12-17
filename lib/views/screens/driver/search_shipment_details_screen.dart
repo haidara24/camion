@@ -21,7 +21,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart' as loc;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -315,31 +314,29 @@ class _SearchShipmentDetailsScreenState
                     return state.trucks.isEmpty
                         ? Center(
                             child: Text(AppLocalizations.of(context)!
-                                .translate('no_shipments')),
+                                .translate('no_trucks')),
                           )
                         : ListView.separated(
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return index != 0
-                                  ? InkWell(
-                                      onTap: () {
-                                        BlocProvider.of<OrderTruckBloc>(context)
-                                            .add(OrderTruckButtonPressed(
-                                                widget.shipment.id!,
-                                                state.trucks[index].id!));
-                                        Navigator.pop(context);
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "${state.trucks[index].driver_firstname!} ${state.trucks[index].driver_lastname!}",
-                                          style: TextStyle(
-                                            fontSize: 18.sp,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink();
+                              return InkWell(
+                                onTap: () {
+                                  BlocProvider.of<OrderTruckBloc>(context).add(
+                                      OrderTruckButtonPressed(
+                                          widget.shipment.id!,
+                                          state.trucks[index].id!));
+                                  Navigator.pop(context);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "${state.trucks[index].driver_firstname!} ${state.trucks[index].driver_lastname!}",
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                    ),
+                                  ),
+                                ),
+                              );
                             },
                             separatorBuilder: (context, index) =>
                                 const Divider(),
@@ -440,7 +437,7 @@ class _SearchShipmentDetailsScreenState
                           child: ListView(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -470,9 +467,10 @@ class _SearchShipmentDetailsScreenState
                                     Commodity_info_widget(
                                         shipmentItems: shipmentstate
                                             .shipment.shipmentItems!),
-                                    const Divider(),
+                                    // const Divider(),
                                     Padding(
-                                      padding: const EdgeInsets.all(10.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 16.0),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
@@ -496,26 +494,40 @@ class _SearchShipmentDetailsScreenState
                                                   is OrderTruckLoadingProgressState) {
                                                 return CustomButton(
                                                   title: SizedBox(
-                                                    width: 70.w,
+                                                    // width: 70.w,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .89,
                                                     child: Center(
                                                       child: LoadingIndicator(),
                                                     ),
                                                   ),
                                                   onTap: () {},
-                                                  color: Colors.white,
+                                                  // color: Colors.white,
                                                 );
                                               } else {
                                                 return CustomButton(
                                                   title: SizedBox(
-                                                    width: 70.w,
+                                                    // width: 70.w,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .89,
                                                     child: Center(
                                                       child: Text(
                                                         AppLocalizations.of(
                                                                 context)!
-                                                            .translate('ok'),
+                                                            .translate(
+                                                                'send_request'),
                                                         style: const TextStyle(
-                                                            color:
-                                                                Colors.green),
+                                                          color: Colors.white,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -601,7 +613,7 @@ class _SearchShipmentDetailsScreenState
                                                       );
                                                     }
                                                   },
-                                                  color: Colors.white,
+                                                  // color: Colors.white,
                                                 );
                                               }
                                             },

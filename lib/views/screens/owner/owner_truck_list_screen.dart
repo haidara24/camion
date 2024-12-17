@@ -5,7 +5,6 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/owner/add_new_truck_screen.dart';
 import 'package:camion/views/screens/owner/owner_truck_details_screen.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -13,6 +13,7 @@ class Shipmentinstruction {
   int? truckWeight;
   int? finalWeight;
   List<CommodityItems>? commodityItems;
+  List<Docs>? docs;
 
   Shipmentinstruction({
     this.id,
@@ -29,6 +30,7 @@ class Shipmentinstruction {
     this.truckWeight,
     this.finalWeight,
     this.commodityItems,
+    this.docs,
   });
 
   Shipmentinstruction.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,14 @@ class Shipmentinstruction {
       });
     } else {
       commodityItems = <CommodityItems>[];
+    }
+    if (json['docs'] != null) {
+      docs = <Docs>[];
+      json['docs'].forEach((v) {
+        docs!.add(Docs.fromJson(v));
+      });
+    } else {
+      docs = <Docs>[];
     }
   }
 
@@ -106,6 +116,27 @@ class CommodityItems {
     data['commodity_weight'] = commodityWeight;
     data['commodity_quantity'] = commodityQuantity;
     data['package_type'] = packageType;
+    return data;
+  }
+}
+
+class Docs {
+  int? id;
+  String? file;
+
+  Docs({
+    this.id,
+    this.file,
+  });
+
+  Docs.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    file = json['file'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['file'] = file;
     return data;
   }
 }

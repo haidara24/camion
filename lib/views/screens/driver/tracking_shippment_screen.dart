@@ -29,6 +29,7 @@ import 'package:location/location.dart' as loc;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart' as intel;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TrackingShipmentScreen extends StatefulWidget {
@@ -115,9 +116,12 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   late BitmapDescriptor deliveryicon;
   late BitmapDescriptor parkicon;
   late BitmapDescriptor truckicon;
-  late LatLng truckLocation;
   late bool truckLocationassign;
   Set<Marker> markers = Set();
+  bool startTracking = false;
+  String? truckLocation = "";
+  StreamSubscription<loc.LocationData>? _locationSubscription;
+  Timer? _timer;
 
   Widget pathList(SubShipment subshipment, String language) {
     return GestureDetector(
@@ -254,6 +258,8 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
         useSafeArea: true,
         // isDismissible: false,
         // enableDrag: false,
+
+        backgroundColor: Colors.grey[200],
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(0),
@@ -266,6 +272,8 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
             }
           },
           child: Container(
+            color: Colors.white,
+
             padding: const EdgeInsets.all(8.0),
             // constraints:
             //     BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
@@ -566,6 +574,43 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     return latLngList;
   }
 
+  Future<void> _listenLocation() async {
+    var prefs = await SharedPreferences.getInstance();
+    int truckId = prefs.getInt("truckId") ?? 0;
+    String gpsId = prefs.getString("gpsId") ?? "";
+    _locationSubscription?.cancel();
+    _timer?.cancel();
+
+    if ((gpsId.isEmpty || gpsId.length < 8) && startTracking) {
+      _locationSubscription = location.onLocationChanged.handleError((onError) {
+        _locationSubscription?.cancel();
+        setState(() {
+          _locationSubscription = null;
+        });
+      }).listen((loc.LocationData currentlocation) async {
+        if (_timer == null || !_timer!.isActive) {
+          if (truckId != 0) {
+            print(currentlocation.latitude);
+            var jwt = prefs.getString("token");
+            var rs = await HttpHelper.get('$TRUCKS_ENDPOINT$truckId/',
+                apiToken: jwt);
+            if (rs.statusCode == 200) {
+              var myDataString = utf8.decode(rs.bodyBytes);
+
+              var result = jsonDecode(myDataString);
+              truckLocation = result["location_lat"];
+            }
+            _timer = Timer(const Duration(minutes: 1), () {});
+          }
+        }
+      });
+    }
+  }
+
+  _stopListening() {
+    _locationSubscription?.cancel();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -577,12 +622,15 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
       _mapStyle = string;
     });
     // calculateCo2Report();
+    _listenLocation();
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     timer.cancel();
+    _stopListening();
+
     super.dispose();
   }
 
@@ -615,8 +663,13 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
       builder: (context, localeState) {
         return SafeArea(
           child: Scaffold(
-            body: BlocBuilder<DriverActiveShipmentBloc,
+            body: BlocConsumer<DriverActiveShipmentBloc,
                 DriverActiveShipmentState>(
+              listener: (context, state) {
+                if (state is DriverActiveShipmentLoadedSuccess) {
+                  truckLocation = state.shipments[0].truck!.location_lat!;
+                }
+              },
               builder: (context, state) {
                 if (state is DriverActiveShipmentLoadedSuccess) {
                   if (state.shipments.isEmpty) {
@@ -728,6 +781,56 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                           pathList(
                             state.shipments[0],
                             localeState.value.languageCode,
+                          ),
+                          Positioned(
+                            bottom: 145,
+                            left: 5,
+                            child: InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  startTracking = !startTracking;
+                                });
+                                if (startTracking) {
+                                  print(truckLocation);
+                                  await _controller.animateCamera(CameraUpdate
+                                      .newCameraPosition(CameraPosition(
+                                          target: LatLng(
+                                            double.parse(
+                                                truckLocation!.split(",")[0]),
+                                            double.parse(
+                                                truckLocation!.split(",")[1]),
+                                          ),
+                                          zoom: 14.47)));
+                                } else {
+                                  initMapbounds(state.shipments[0]);
+                                }
+                              },
+                              child: AbsorbPointer(
+                                absorbing: false,
+                                child: SizedBox(
+                                  height: 45,
+                                  width: 45,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(45),
+                                      border: Border.all(
+                                        color: startTracking
+                                            ? Colors.orange
+                                            : Colors.white,
+                                        width: startTracking ? 2 : 0,
+                                      ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(180),
+                                      child: Image.asset(
+                                          "assets/icons/radar.gif",
+                                          gaplessPlayback: true,
+                                          fit: BoxFit.fill),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       );

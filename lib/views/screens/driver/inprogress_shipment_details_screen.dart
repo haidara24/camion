@@ -345,7 +345,7 @@ class _InprogressShipmentDetailsScreenState
                           child: ListView(
                             children: [
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(16.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -366,7 +366,9 @@ class _InprogressShipmentDetailsScreenState
                                       langCode: localeState.value.languageCode,
                                       mini: false,
                                     ),
-                                    const Divider(),
+                                    const Divider(
+                                      height: 32,
+                                    ),
                                     SectionTitle(
                                       text: AppLocalizations.of(context)!
                                           .translate("commodity_info"),
@@ -375,7 +377,9 @@ class _InprogressShipmentDetailsScreenState
                                     Commodity_info_widget(
                                         shipmentItems: shipmentstate
                                             .shipment.shipmentItems!),
-                                    const Divider(),
+                                    const Divider(
+                                      height: 32,
+                                    ),
                                     SectionTitle(
                                       text: AppLocalizations.of(context)!
                                           .translate(
@@ -387,7 +391,9 @@ class _InprogressShipmentDetailsScreenState
                                           shipmentstate.shipment.distance!,
                                       period: shipmentstate.shipment.period!,
                                     ),
-                                    const Divider(),
+                                    const Divider(
+                                      height: 32,
+                                    ),
                                     Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: BlocConsumer<ActivateShipmentBloc,

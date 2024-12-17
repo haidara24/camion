@@ -8,7 +8,6 @@ import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
-import 'package:camion/business_logic/bloc/truck_active_status_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
@@ -54,7 +53,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   String title = "Home";
   Widget currentScreen = MainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  NotificationServices notificationServices = NotificationServices();
+  // NotificationServices notificationServices = NotificationServices();
   late TabController _tabController;
   late SharedPreferences prefs;
   Timer? _timer;
@@ -96,6 +95,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
       }).listen((loc.LocationData currentlocation) async {
         if (_timer == null || !_timer!.isActive) {
           if (truckId != 0) {
+            print(currentlocation.latitude);
             var jwt = prefs.getString("token");
             var rs = await HttpHelper.patch(
                 '$TRUCKS_ENDPOINT$truckId/',
@@ -128,11 +128,11 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
 
-    notificationServices.requestNotificationPermission();
-    // notificationServices.forgroundMessage(context);
-    notificationServices.firebaseInit(context);
-    notificationServices.setupInteractMessage(context);
-    notificationServices.isTokenRefresh();
+    // notificationServices.requestNotificationPermission();
+    // // notificationServices.forgroundMessage(context);
+    // notificationServices.firebaseInit(context);
+    // notificationServices.setupInteractMessage(context);
+    // notificationServices.isTokenRefresh();
 
     _tabController = TabController(
       initialIndex: 0,
@@ -238,32 +238,33 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       SizedBox(
                         height: 35.h,
                       ),
-                      Consumer<UserProvider>(
-                          builder: (context, userProvider, child) {
-                        return InkWell(
-                          onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            var driver = prefs.getInt("truckuser");
+                      InkWell(
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          var driver = prefs.getInt("truckuser");
 
-                            // ignore: use_build_context_synchronously
-                            BlocProvider.of<DriverProfileBloc>(context)
-                                .add(DriverProfileLoad(driver!));
+                          // ignore: use_build_context_synchronously
+                          BlocProvider.of<DriverProfileBloc>(context)
+                              .add(DriverProfileLoad(driver!));
 
-                            // ignore: use_build_context_synchronously
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DriverProfileScreen(),
-                                ));
-                          },
-                          child: Row(
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DriverProfileScreen(),
+                            ),
+                          );
+                        },
+                        child: Consumer<UserProvider>(
+                            builder: (context, userProvider, child) {
+                          return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               CircleAvatar(
                                 backgroundColor: AppColor.deepYellow,
                                 radius: 35.h,
-                                child: (userProvider.driver == null)
+                                child: (userProvider.user == null)
                                     ? Center(
                                         child: LoadingIndicator(),
                                       )
@@ -271,13 +272,13 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         borderRadius:
                                             BorderRadius.circular(180),
                                         child: Image.network(
-                                          userProvider.driver!.image!,
+                                          userProvider.user!.image!,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Center(
                                             child: Text(
-                                              "${userProvider.driver!.firstname![0].toUpperCase()} ${userProvider.driver!.lastname![0].toUpperCase()}",
+                                              "${userProvider.user!.firstName![0].toUpperCase()} ${userProvider.user!.lastName![0].toUpperCase()}",
                                               style: TextStyle(
                                                 fontSize: 28.sp,
                                               ),
@@ -286,25 +287,27 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         ),
                                       ),
                               ),
-                              (userProvider.driver == null)
+                              (userProvider.user == null)
                                   ? Text(
                                       "",
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 26.sp,
-                                          fontWeight: FontWeight.bold),
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     )
                                   : Text(
-                                      "${userProvider.driver!.firstname!} ${userProvider.driver!.lastname!}",
+                                      "${userProvider.user!.firstName!} ${userProvider.user!.lastName!}",
                                       style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 26.sp,
-                                          fontWeight: FontWeight.bold),
+                                        color: Colors.white,
+                                        fontSize: 26.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     )
                             ],
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                      ),
                       SizedBox(
                         height: 15.h,
                       ),

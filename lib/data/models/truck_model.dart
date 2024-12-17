@@ -1,101 +1,5 @@
 import 'package:camion/data/models/truck_type_model.dart';
 
-class Truck {
-  int? id;
-  Truckuser? truckuser;
-  int? truckType;
-  String? location;
-  double? locationLat;
-  double? locationLang;
-  int? height;
-  int? width;
-  int? long;
-  int? numberOfAxels;
-  int? emptyWeight;
-  int? rating;
-  int? price;
-  int? fees;
-  int? extraFees;
-  bool? isOn;
-  int? currentShipmentId;
-  List<TruckImages>? images;
-
-  Truck(
-      {this.id,
-      this.truckuser,
-      this.truckType,
-      this.location,
-      this.locationLat,
-      this.locationLang,
-      this.height,
-      this.width,
-      this.long,
-      this.numberOfAxels,
-      this.emptyWeight,
-      this.rating,
-      this.price,
-      this.fees,
-      this.extraFees,
-      this.isOn,
-      this.currentShipmentId,
-      this.images});
-
-  Truck.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    truckuser = (json['truckuser'] != null)
-        ? Truckuser.fromJson(json['truckuser'])
-        : null;
-    truckType = json['truck_type'];
-    location = json['location'];
-    locationLat = json['location_lat'];
-    locationLang = json['location_lang'];
-    height = json['height'];
-    width = json['width'];
-    long = json['long'];
-    numberOfAxels = json['number_of_axels'];
-    emptyWeight = json['empty_weight'];
-    rating = json['rating'];
-    price = json['price'];
-    fees = json['fees'];
-    extraFees = json['extra_fees'];
-    isOn = json['isOn'];
-    currentShipmentId = json['currentShipmentId'] ?? 0;
-    if (json['images'] != null) {
-      images = <TruckImages>[];
-      json['images'].forEach((v) {
-        images!.add(TruckImages.fromJson(v));
-      });
-    }
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    if (truckuser != null) {
-      data['truckuser'] = truckuser!.toJson();
-    }
-    data['truck_type'] = truckType;
-    data['location'] = location;
-    data['location_lat'] = locationLat;
-    data['location_lang'] = locationLang;
-    data['height'] = height;
-    data['width'] = width;
-    data['long'] = long;
-    data['number_of_axels'] = numberOfAxels;
-    data['empty_weight'] = emptyWeight;
-    data['rating'] = rating;
-    data['price'] = price;
-    data['fees'] = fees;
-    data['extra_fees'] = extraFees;
-    data['isOn'] = isOn;
-    data['currentShipmentId'] = currentShipmentId;
-    if (images != null) {
-      data['images'] = images!.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }
-}
-
 class UserInfo {
   int? id;
   String? username;
@@ -319,6 +223,7 @@ class KTruck {
   int? distance;
   bool? isOn;
   String? gpsId;
+  int? carId;
   int? private_price;
   List<TruckImages>? images;
 
@@ -345,6 +250,7 @@ class KTruck {
     this.extraFees,
     this.isOn,
     this.gpsId,
+    this.carId,
     this.images,
     this.distance,
     this.private_price,
@@ -379,6 +285,7 @@ class KTruck {
     extraFees = json['extra_fees'];
     isOn = json['isOn'];
     gpsId = json['gpsId'];
+    carId = json['carId'];
     private_price = json['private_price'] ?? 0;
     distance = (json['distance'] ?? 0.0).toInt() ?? 0.0;
     if (json['images'] != null) {

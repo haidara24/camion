@@ -9,8 +9,8 @@ class AcceptRequestForMerchantEvent extends Equatable {
 
 class AcceptRequestButtonPressedEvent extends AcceptRequestForMerchantEvent {
   final int id;
-  final String text;
-  final double extra;
 
-  AcceptRequestButtonPressedEvent(this.id, this.text, this.extra);
+  AcceptRequestButtonPressedEvent(
+    this.id,
+  );
 }

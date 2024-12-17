@@ -263,7 +263,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                   ),
                   child: Center(
                     child: Text(
-                      "الشاحنة ${index + 1}",
+                      "${AppLocalizations.of(context)!.translate("truck")} ${index + 1}",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -332,6 +332,12 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                     );
                     provider.setPathError(
                       true,
+                    );
+                    Scrollable.ensureVisible(
+                      key1.currentContext!,
+                      duration: const Duration(
+                        milliseconds: 500,
+                      ),
                     );
                     provider.setTruckConfirm(true, selectedIndex);
                   }
@@ -502,7 +508,6 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       addShippmentProvider =
           Provider.of<AddMultiShipmentProvider>(context, listen: false);
-      addShippmentProvider!.initShipment();
 
       createMarkerIcons();
     });
@@ -1031,7 +1036,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                   height: 32.h,
                                   width: 32.w,
                                   child: SvgPicture.asset(
-                                      "assets/icons/orange/add.svg"),
+                                    "assets/icons/orange/add.svg",
+                                  ),
                                 ),
                               ),
                               const SizedBox(
@@ -1373,9 +1379,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                       height: 50.h,
                       width: 150.w,
                       child: Center(
-                        child: SectionBody(
+                        child: SectionTitle(
                           text: AppLocalizations.of(context)!
                               .translate("confirm"),
+                          // color: Colors.white,
                         ),
                       ),
                     ),
@@ -2632,13 +2639,15 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                                     ?.unfocus();
                                                                 setState(() {
                                                                   shipmentProvider
-                                                                      .setTruckError(
-                                                                          false,
-                                                                          selectedIndex);
-                                                                  shipmentProvider.setTruckType(
-                                                                      state.truckTypes[
-                                                                          index],
-                                                                      selectedIndex);
+                                                                      .setTruckTypeError(
+                                                                    false,
+                                                                  );
+                                                                  shipmentProvider
+                                                                      .setTruckType(
+                                                                    state.truckTypes[
+                                                                        index],
+                                                                    selectedIndex,
+                                                                  );
                                                                 });
                                                               },
                                                               child: Stack(
@@ -2828,7 +2837,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                     AppLocalizations.of(
                                                             context)!
                                                         .translate(
-                                                            'pick_date_error'),
+                                                            'select_truck_error'),
                                                     style: const TextStyle(
                                                       color: Colors.red,
                                                       fontSize: 17,
@@ -3033,8 +3042,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                           .text
                                                           .isNotEmpty) {
                                                     if (shipmentProvider
-                                                        .selectedTruckType
-                                                        .isNotEmpty) {
+                                                                .selectedTruckType[
+                                                            selectedIndex] !=
+                                                        null) {
                                                       List<int> types = [];
                                                       for (var element
                                                           in shipmentProvider
@@ -3096,97 +3106,89 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                     const SizedBox(
                                       height: 16,
                                     ),
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //       MainAxisAlignment.spaceAround,
-                                    //   children: [
-                                    //     TextButton(
-                                    //       onPressed: () {
-                                    //         showDialog<void>(
-                                    //           context: context,
-                                    //           barrierDismissible:
-                                    //               false, // user must tap button!
-                                    //           builder:
-                                    //               (BuildContext context) {
-                                    //             return AlertDialog(
-                                    //               backgroundColor:
-                                    //                   Colors.white,
-                                    //               title: Text(
-                                    //                   AppLocalizations.of(
-                                    //                           context)!
-                                    //                       .translate(
-                                    //                           'form_init')),
-                                    //               content:
-                                    //                   SingleChildScrollView(
-                                    //                 child: ListBody(
-                                    //                   children: <Widget>[
-                                    //                     Text(
-                                    //                         AppLocalizations.of(
-                                    //                                 context)!
-                                    //                             .translate(
-                                    //                                 'form_init_confirm'),
-                                    //                         style:
-                                    //                             const TextStyle(
-                                    //                                 fontSize:
-                                    //                                     18)),
-                                    //                   ],
-                                    //                 ),
-                                    //               ),
-                                    //               actions: <Widget>[
-                                    //                 TextButton(
-                                    //                   child: Text(
-                                    //                       AppLocalizations.of(
-                                    //                               context)!
-                                    //                           .translate(
-                                    //                               'no'),
-                                    //                       style:
-                                    //                           const TextStyle(
-                                    //                               fontSize:
-                                    //                                   18)),
-                                    //                   onPressed: () {
-                                    //                     Navigator.of(
-                                    //                             context)
-                                    //                         .pop();
-                                    //                   },
-                                    //                 ),
-                                    //                 TextButton(
-                                    //                   child: Text(
-                                    //                       AppLocalizations.of(
-                                    //                               context)!
-                                    //                           .translate(
-                                    //                               'yes'),
-                                    //                       style:
-                                    //                           const TextStyle(
-                                    //                               fontSize:
-                                    //                                   18)),
-                                    //                   onPressed: () {
-                                    //                     shipmentProvider
-                                    //                         .initForm();
-                                    //                     Navigator.of(
-                                    //                             context)
-                                    //                         .pop();
-                                    //                     setState(
-                                    //                       () {},
-                                    //                     );
-                                    //                   },
-                                    //                 ),
-                                    //               ],
-                                    //             );
-                                    //           },
-                                    //         );
-                                    //       },
-                                    //       child: Text(
-                                    //         AppLocalizations.of(context)!
-                                    //             .translate('form_clear'),
-                                    //         style: TextStyle(
-                                    //           fontSize: 20.sp,
-                                    //           decoration:
-                                    //               TextDecoration.underline,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            showDialog<void>(
+                                              context: context,
+                                              barrierDismissible:
+                                                  false, // user must tap button!
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  backgroundColor: Colors.white,
+                                                  title: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .translate('form_init')),
+                                                  content:
+                                                      SingleChildScrollView(
+                                                    child: ListBody(
+                                                      children: <Widget>[
+                                                        Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'form_init_confirm'),
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate('no'),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      18)),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    ),
+                                                    TextButton(
+                                                      child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate('yes'),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      18)),
+                                                      onPressed: () {
+                                                        shipmentProvider
+                                                            .initForm();
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        setState(
+                                                          () {},
+                                                        );
+                                                      },
+                                                    ),
+                                                  ],
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('form_clear'),
+                                            style: TextStyle(
+                                              fontSize: 20.sp,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ),

@@ -15,15 +15,16 @@ import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/providers/user_provider.dart';
+import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/owner/all_incoming_shipment_screen.dart';
 import 'package:camion/views/screens/owner/owner_active_shipment_screen.dart';
+import 'package:camion/views/screens/owner/owner_dashboard_screen.dart';
 import 'package:camion/views/screens/owner/owner_profile_screen.dart';
 import 'package:camion/views/screens/owner/owner_search_shipment_screen.dart';
-import 'package:camion/views/screens/owner/owner_truck_list_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -80,12 +81,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
         .add(OwnerActiveShipmentsLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
 
-    notificationServices.requestNotificationPermission();
-    // notificationServices.forgroundMessage(context);
-    notificationServices.firebaseInit(context);
-    notificationServices.setupInteractMessage(context);
-    notificationServices.isTokenRefresh();
-
+    // notificationServices.requestNotificationPermission();
+    // // notificationServices.forgroundMessage(context);
+    // notificationServices.firebaseInit(context);
+    // notificationServices.setupInteractMessage(context);
+    // notificationServices.isTokenRefresh();
+    GpsRepository.getTokenForGps();
     _tabController = TabController(
       initialIndex: 0,
       length: 5,
@@ -162,7 +163,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_trucks');
 
-            currentScreen = OwnerTruckListScreen();
+            currentScreen = OwnerDashboardScreen();
           });
           break;
         }
@@ -200,33 +201,33 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                       SizedBox(
                         height: 35.h,
                       ),
-                      Consumer<UserProvider>(
-                          builder: (context, userProvider, child) {
-                        return InkWell(
-                          onTap: () async {
-                            SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            var owner = prefs.getInt("truckowner");
-                            // ignore: use_build_context_synchronously
-                            BlocProvider.of<OwnerProfileBloc>(context)
-                                .add(OwnerProfileLoad(owner!));
+                      InkWell(
+                        onTap: () async {
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          var owner = prefs.getInt("truckowner");
+                          // ignore: use_build_context_synchronously
+                          BlocProvider.of<OwnerProfileBloc>(context)
+                              .add(OwnerProfileLoad(owner!));
 
-                            // ignore: use_build_context_synchronously
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    OwnerProfileScreen(user: _usermodel),
-                              ),
-                            );
-                          },
-                          child: Row(
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  OwnerProfileScreen(user: _usermodel),
+                            ),
+                          );
+                        },
+                        child: Consumer<UserProvider>(
+                            builder: (context, userProvider, child) {
+                          return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               CircleAvatar(
                                   backgroundColor: AppColor.deepYellow,
                                   radius: 35.h,
-                                  child: (userProvider.owner == null)
+                                  child: (userProvider.user == null)
                                       ? Center(
                                           child: LoadingIndicator(),
                                         )
@@ -234,13 +235,13 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           borderRadius:
                                               BorderRadius.circular(180),
                                           child: Image.network(
-                                            userProvider.owner!.image!,
+                                            userProvider.user!.image!,
                                             fit: BoxFit.fill,
                                             errorBuilder:
                                                 (context, error, stackTrace) =>
                                                     Center(
                                               child: Text(
-                                                "${userProvider.owner!.firstname![0].toUpperCase()} ${userProvider.owner!.lastname![0].toUpperCase()}",
+                                                "${userProvider.user!.firstName![0].toUpperCase()} ${userProvider.user!.lastName![0].toUpperCase()}",
                                                 style: TextStyle(
                                                   fontSize: 28.sp,
                                                 ),
@@ -248,7 +249,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                             ),
                                           ),
                                         )),
-                              (userProvider.owner == null)
+                              (userProvider.user == null)
                                   ? Text(
                                       "",
                                       style: TextStyle(
@@ -257,16 +258,16 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           fontWeight: FontWeight.bold),
                                     )
                                   : Text(
-                                      "${userProvider.owner!.firstname!} ${userProvider.owner!.lastname!}",
+                                      "${userProvider.user!.firstName!} ${userProvider.user!.lastName!}",
                                       style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 26.sp,
                                           fontWeight: FontWeight.bold),
                                     )
                             ],
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                      ),
                       SizedBox(
                         height: 15.h,
                       ),
@@ -453,7 +454,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                   builder: (context, state) {
                     if (state is BottomNavBarShown) {
                       return Container(
-                        height: 62.h,
+                        height: 75.h,
                         color: AppColor.deepBlack,
                         child: TabBar(
                           labelPadding: EdgeInsets.zero,
@@ -462,8 +463,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                           labelColor: AppColor.deepYellow,
                           dividerColor: Colors.transparent,
                           unselectedLabelColor: Colors.white,
-                          labelStyle: TextStyle(fontSize: 12.sp),
-                          unselectedLabelStyle: TextStyle(fontSize: 14.sp),
+                          // labelStyle: TextStyle(fontSize: 12.sp),
+                          // unselectedLabelStyle: TextStyle(fontSize: 14.sp),
                           padding: EdgeInsets.zero,
                           onTap: (value) {
                             changeSelectedValue(
@@ -479,14 +480,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/orange/home.svg",
-                                          width: 32.w,
-                                          height: 32.w,
+                                          width: 28.w,
+                                          height: 28.w,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         Text(
                                           AppLocalizations.of(context)!
                                               .translate('home'),
@@ -504,11 +503,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           width: 28.w,
                                           height: 28.w,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         Text(
                                           AppLocalizations.of(context)!
                                               .translate('home'),
@@ -528,14 +525,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/orange/my_shipments.svg",
-                                          width: 32.w,
-                                          height: 32.w,
+                                          width: 28.w,
+                                          height: 28.w,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Padding(
@@ -561,11 +556,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           width: 28.w,
                                           height: 28.w,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Padding(
@@ -593,14 +586,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                         SvgPicture.asset(
                                           "assets/icons/orange/search_for_truck.svg",
                                           width: 36.w,
-                                          height: 32.w,
+                                          height: 28.w,
                                           fit: BoxFit.fill,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Padding(
@@ -627,11 +618,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           height: 28.w,
                                           fit: BoxFit.fill,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         FittedBox(
                                           fit: BoxFit.scaleDown,
                                           child: Padding(
@@ -659,14 +648,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       children: [
                                         SvgPicture.asset(
                                           "assets/icons/orange/location.svg",
-                                          width: 32.w,
-                                          height: 32.w,
+                                          width: 28.w,
+                                          height: 28.w,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         Text(
                                           AppLocalizations.of(context)!
                                               .translate('tracking'),
@@ -684,11 +671,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           width: 28.w,
                                           height: 28.w,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         Text(
                                           AppLocalizations.of(context)!
                                               .translate('tracking'),
@@ -709,14 +694,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                         SvgPicture.asset(
                                           "assets/icons/orange/truck_order.svg",
                                           width: 36.w,
-                                          height: 32.w,
+                                          height: 28.w,
                                           fit: BoxFit.fill,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         Text(
                                           AppLocalizations.of(context)!
                                               .translate('my_trucks'),
@@ -735,11 +718,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                           height: 28.w,
                                           fit: BoxFit.fill,
                                         ),
-                                        localeState.value.languageCode == 'en'
-                                            ? const SizedBox(
-                                                height: 4,
-                                              )
-                                            : const SizedBox.shrink(),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
                                         Text(
                                           AppLocalizations.of(context)!
                                               .translate('my_trucks'),

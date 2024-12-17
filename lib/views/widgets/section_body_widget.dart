@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 class SectionBody extends StatelessWidget {
   final String text;
-  const SectionBody({Key? key, required this.text}) : super(key: key);
+  final Color? color;
+
+  const SectionBody({
+    Key? key,
+    required this.text,
+    this.color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -10,9 +16,9 @@ class SectionBody extends StatelessWidget {
       text,
       maxLines: 12,
       // textAlign: TextAlign.start,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 16,
-        color: Colors.black87,
+        color: color ?? Colors.black87,
       ),
     );
   }

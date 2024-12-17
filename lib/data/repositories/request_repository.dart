@@ -15,9 +15,12 @@ class RequestRepository {
     var jwt = prefs.getString("token");
     var driver = prefs.getInt('truckuser');
     var rs = await HttpHelper.get(
-        '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}',
+        '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}/',
         apiToken: jwt);
     approvalRequests = [];
+    print(
+        '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}/');
+    print(rs.body);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
       var result = jsonDecode(myDataString);
@@ -83,7 +86,8 @@ class RequestRepository {
   }
 
   Future<bool> acceptRequestForMerchant(
-      int id, String text, double extra_fees) async {
+    int id,
+  ) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
 
@@ -92,8 +96,8 @@ class RequestRepository {
         {
           "response_turn": "T",
           "is_approved": true,
-          "extra_fees_text": text,
-          "extra_fees": extra_fees
+          "extra_fees_text": "",
+          "extra_fees": ""
         },
         apiToken: jwt);
     if (rs.statusCode == 200) {

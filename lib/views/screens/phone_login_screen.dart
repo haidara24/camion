@@ -5,7 +5,6 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/verify_otp_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
-import 'package:camion/views/widgets/privacy_policy_text.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -158,10 +157,12 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                         },
                                         validator: (value) {
                                           if (value!.isEmpty) {
-                                            return "Phone number is required";
+                                            return AppLocalizations.of(context)!
+                                                .translate("phone_required");
                                           } else if (!phoneRegExp
                                               .hasMatch(value)) {
-                                            return "Enter a valid phone number";
+                                            return AppLocalizations.of(context)!
+                                                .translate("phone_valid");
                                           }
                                           return null;
                                         },

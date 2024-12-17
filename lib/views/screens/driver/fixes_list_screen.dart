@@ -3,10 +3,8 @@ import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart'
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/create_fix_screen.dart';
-import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
-import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

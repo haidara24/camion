@@ -2,7 +2,6 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class AddShipmentPathVerticalWidget extends StatelessWidget {

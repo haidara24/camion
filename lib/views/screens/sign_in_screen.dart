@@ -9,6 +9,7 @@ import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -245,34 +246,16 @@ class _SignInScreenState extends State<SignInScreen> {
                                       listener: (context, state) async {
                                         if (state is AuthDriverSuccessState ||
                                             state is AuthOwnerSuccessState ||
-                                            state is AuthMerchantSuccessState ||
-                                            state
-                                                is AuthManagmentSuccessState ||
-                                            state
-                                                is AuthCheckPointSuccessState) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
+                                            state is AuthMerchantSuccessState) {
+                                          showCustomSnackBar(
+                                            context: context,
                                             backgroundColor: AppColor.deepGreen,
-                                            dismissDirection:
-                                                DismissDirection.up,
-                                            behavior: SnackBarBehavior.floating,
-                                            margin: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context)
-                                                        .size
-                                                        .height -
-                                                    150,
-                                                left: 10,
-                                                right: 10),
-                                            content: localeState
+                                            message: localeState
                                                         .value.languageCode ==
                                                     'en'
-                                                ? const Text(
-                                                    'sign in successfully, welcome.')
-                                                : const Text(
-                                                    'تم تسجيل الدخول بنجاح! أهلا بك.'),
-                                            duration:
-                                                const Duration(seconds: 3),
-                                          ));
+                                                ? 'sign in successfully, welcome.'
+                                                : 'تم تسجيل الدخول بنجاح! أهلا بك.',
+                                          );
 
                                           Navigator.pushAndRemoveUntil(
                                             context,

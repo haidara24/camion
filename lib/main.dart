@@ -7,6 +7,11 @@ import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/gps_reports/over_speed_bloc.dart';
+import 'package:camion/business_logic/bloc/gps_reports/parking_report_bloc.dart';
+import 'package:camion/business_logic/bloc/gps_reports/total_milage_day_bloc.dart';
+import 'package:camion/business_logic/bloc/gps_reports/total_statistics_bloc.dart';
+import 'package:camion/business_logic/bloc/gps_reports/trip_report_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/incoming_shipments_bloc.dart';
@@ -24,7 +29,7 @@ import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_update_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
-import 'package:camion/business_logic/bloc/package_type_bloc.dart';
+import 'package:camion/business_logic/bloc/core/package_type_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/core/draw_route_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/shipment_update_status_bloc.dart';
@@ -36,7 +41,7 @@ import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.da
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
-import 'package:camion/business_logic/bloc/shipment_update_status_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_update_status_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/complete_sub_shipment_bloc.dart';
@@ -75,6 +80,7 @@ import 'package:camion/data/providers/truck_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/auth_repository.dart';
 import 'package:camion/data/repositories/category_repository.dart';
+import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/repositories/instruction_repository.dart';
 import 'package:camion/data/repositories/notification_repository.dart';
 import 'package:camion/data/repositories/post_repository.dart';
@@ -205,6 +211,9 @@ class MyApp extends StatelessWidget {
                   ),
                   RepositoryProvider(
                     create: (context) => StoreRepository(),
+                  ),
+                  RepositoryProvider(
+                    create: (context) => GpsRepository(),
                   ),
                 ],
                 child: MultiBlocProvider(
@@ -551,6 +560,31 @@ class MyApp extends StatelessWidget {
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),
                     ),
+                    BlocProvider(
+                      create: (context) => OverSpeedBloc(
+                          gpsRepository:
+                              RepositoryProvider.of<GpsRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => ParkingReportBloc(
+                          gpsRepository:
+                              RepositoryProvider.of<GpsRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TotalMilageDayBloc(
+                          gpsRepository:
+                              RepositoryProvider.of<GpsRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TotalStatisticsBloc(
+                          gpsRepository:
+                              RepositoryProvider.of<GpsRepository>(context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => TripReportBloc(
+                          gpsRepository:
+                              RepositoryProvider.of<GpsRepository>(context)),
+                    ),
                     BlocProvider(create: (context) => DrawRouteBloc()),
                     BlocProvider(create: (context) => BottomNavBarCubit()),
                     BlocProvider(
@@ -637,9 +671,13 @@ class MyApp extends StatelessWidget {
                               ),
                             ),
                           ),
-                          textTheme: GoogleFonts.tajawalTextTheme(
-                            Theme.of(context).textTheme,
-                          ),
+                          textTheme: localeState.value.languageCode == "en"
+                              ? GoogleFonts.tajawalTextTheme(
+                                  Theme.of(context).textTheme,
+                                )
+                              : GoogleFonts.instrumentSansTextTheme(
+                                  Theme.of(context).textTheme,
+                                ),
                           dividerColor: Colors.grey[400],
                           scaffoldBackgroundColor: Colors.white,
                         ),

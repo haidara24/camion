@@ -7,7 +7,6 @@ import 'package:camion/helpers/http_helper.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'auth_event.dart';
@@ -47,6 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
               Response userresponse =
                   await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
+              print(userresponse.statusCode);
               if (userresponse.statusCode == 200) {
                 var prefs = await SharedPreferences.getInstance();
 
@@ -60,10 +60,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                   if (userProfile.merchant != null) {
                     prefs.setInt("merchant", userProfile.merchant!);
                   }
-                  if (userProfile.truckowner != null) {
+                  if (userProfile.truckowner != null && userType == "Owner") {
                     prefs.setInt("truckowner", userProfile.truckowner!);
                   }
-                  if (userProfile.truckuser != null) {
+                  if (userProfile.truckuser != null && userType == "Driver") {
                     prefs.setInt("truckuser", userProfile.truckuser!);
                     Response driverResponse = await HttpHelper.get(
                         '$DRIVERS_ENDPOINT${userProfile.truckuser}/',
@@ -77,6 +77,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                       if (res['truck2'] != null) {
                         prefs.setInt("truckId", res['truck2']["id"]);
                         prefs.setString("gpsId", res['truck2']["gpsId"]);
+                        prefs.setInt("carId", res['truck2']["carId"]);
                       }
                     }
                   }

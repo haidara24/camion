@@ -1,10 +1,8 @@
-import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class ShipmentPathVerticalWidget extends StatelessWidget {
@@ -72,10 +70,13 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                   SectionBody(
                     text: "  ${element.name!}",
                   ),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: SectionBody(
-                      text: setLoadDate(deliveryDate, langCode),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SectionBody(
+                        text: setLoadDate(deliveryDate, langCode),
+                      ),
                     ),
                   ),
                 ],
@@ -116,8 +117,20 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
               ),
               alignment: TimelineAlign.start,
               // lineXY: .3,
-              endChild: SectionBody(
-                text: "  ${element.name!}",
+              endChild: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SectionBody(
+                        text: "  ${element.name!}",
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -156,7 +169,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
               //   ),
               // ),
               endChild: Column(
-                // crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // FittedBox(
@@ -166,8 +179,14 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                   //         '${AppLocalizations.of(context)!.translate('delivery_address')} ',
                   //   ),
                   // ),
-                  SectionBody(
-                    text: "  ${element.name!}",
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SectionBody(
+                        text: "  ${element.name!}",
+                      ),
+                    ),
                   ),
                 ],
               ),

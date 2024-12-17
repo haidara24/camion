@@ -139,7 +139,7 @@ class AuthRepository {
       data["status"] = response.statusCode;
       var jsonObject = jsonDecode(response.body);
 
-      print("verify otp status${response.statusCode}");
+      // print("verify otp status${response.statusCode}");
       print("verify otp body${response.body}");
 
       if (response.statusCode == 401 || response.statusCode == 400) {
@@ -172,6 +172,7 @@ class AuthRepository {
             prefs.setInt("truckuser", jsonObject["truck_user_id"]);
             prefs.setInt("truckId", jsonObject['truck_id'] ?? 0);
             prefs.setString("gpsId", jsonObject["gps_id"] ?? "");
+            prefs.setInt("carId", jsonObject["car_id"] ?? 0);
           }
         }
       }
@@ -287,12 +288,15 @@ class AuthRepository {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     firebaseToken = await messaging.getToken();
 
-    var refreshToken = prefs.getString("refresh");
     var jwt = prefs.getString("token");
 
     final response = await HttpHelper.post(
-        LOGOUT_ENDPOINT, {'refresh': refreshToken, 'fcm_token': firebaseToken},
-        apiToken: jwt);
+      LOGOUT_ENDPOINT,
+      {'fcm_token': firebaseToken},
+      // apiToken: jwt,
+    );
+
+    print(response.statusCode);
     if (response.statusCode == 204) {
       // Logout successful
     } else {

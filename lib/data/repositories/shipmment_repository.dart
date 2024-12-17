@@ -345,6 +345,8 @@ class ShipmentRepository {
 
   Future<List<SubShipment>> getActiveTruckShipments() async {
     subshipmentsA = [];
+    print("response.statusCode");
+
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var merchant = prefs.getInt("merchant") ?? 0;
@@ -354,6 +356,7 @@ class ShipmentRepository {
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
+    print(response.statusCode);
     if (response.statusCode == 200) {
       for (var element in json) {
         subshipmentsA.add(SubShipment.fromJson(element));
@@ -484,6 +487,8 @@ class ShipmentRepository {
       {"truck": driver},
       apiToken: token,
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -558,7 +563,7 @@ class ShipmentRepository {
 
     var rs =
         await HttpHelper.get('$SUB_SHIPPMENTSV2_ENDPOINT$id/', apiToken: jwt);
-
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

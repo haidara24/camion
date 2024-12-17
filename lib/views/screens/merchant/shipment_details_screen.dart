@@ -5,13 +5,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/re_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_payment_instruction_details_screeen.dart';
@@ -840,386 +837,367 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                               const Divider(
                                 height: 16,
                               ),
-                              // Visibility(
-                              //   visible: shipmentstate
-                              //           .shipment
-                              //           .subshipments![selectedIndex]
-                              //           .shipmentStatus! !=
-                              //       "P",
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.all(8.0),
-                              //     child: Row(
-                              //       mainAxisAlignment:
-                              //           MainAxisAlignment.spaceBetween,
-                              //       children: [
-                              //         InkWell(
-                              //           onTap: () {
-                              //             if (shipmentstate
-                              //                     .shipment
-                              //                     .subshipments![selectedIndex]
-                              //                     .shipmentinstructionv2 !=
-                              //                 null) {
-                              //               BlocProvider.of<
-                              //                           ReadInstructionBloc>(
-                              //                       context)
-                              //                   .add(
-                              //                 ReadInstructionLoadEvent(
-                              //                     shipmentstate
-                              //                         .shipment
-                              //                         .subshipments![
-                              //                             selectedIndex]
-                              //                         .shipmentinstructionv2!),
-                              //               );
-                              //               Navigator.push(
-                              //                 context,
-                              //                 MaterialPageRoute(
-                              //                   builder: (context) =>
-                              //                       ShipmentInstructionDetailsScreen(
-                              //                           shipment: shipmentstate
-                              //                                   .shipment
-                              //                                   .subshipments![
-                              //                               selectedIndex]),
-                              //                 ),
-                              //               );
-                              //             }
-                              //           },
-                              //           child: Stack(
-                              //             clipBehavior: Clip.none,
-                              //             children: [
-                              //               Container(
-                              //                 width: MediaQuery.of(context)
-                              //                         .size
-                              //                         .width *
-                              //                     .4,
-                              //                 margin: const EdgeInsets.all(1),
-                              //                 decoration: BoxDecoration(
-                              //                   borderRadius:
-                              //                       const BorderRadius.all(
-                              //                     Radius.circular(10),
-                              //                   ),
-                              //                   color: Colors.white,
-                              //                   border: Border.all(
-                              //                     color: shipmentstate
-                              //                                 .shipment
-                              //                                 .subshipments![
-                              //                                     selectedIndex]
-                              //                                 .shipmentinstructionv2 !=
-                              //                             null
-                              //                         ? AppColor.deepYellow
-                              //                         : AppColor.lightGrey,
-                              //                     width: 2,
-                              //                   ),
-                              //                 ),
-                              //                 child: Padding(
-                              //                   padding:
-                              //                       const EdgeInsets.all(5.0),
-                              //                   child: Column(
-                              //                     mainAxisAlignment:
-                              //                         MainAxisAlignment.start,
-                              //                     crossAxisAlignment:
-                              //                         CrossAxisAlignment.start,
-                              //                     children: [
-                              //                       Row(
-                              //                         children: [
-                              //                           // SizedBox(
-                              //                           //     height: 25.h,
-                              //                           //     width: 25.w,
-                              //                           //     child: SvgPicture.asset(
-                              //                           //         "assets/icons/instruction.svg")),
-                              //                           const SizedBox(
-                              //                             width: 5,
-                              //                           ),
-                              //                           SizedBox(
-                              //                             width: MediaQuery.of(
-                              //                                         context)
-                              //                                     .size
-                              //                                     .width *
-                              //                                 .35,
-                              //                             child: FittedBox(
-                              //                               fit: BoxFit
-                              //                                   .scaleDown,
-                              //                               child: Text(
-                              //                                 AppLocalizations.of(
-                              //                                         context)!
-                              //                                     .translate(
-                              //                                         'shipment_instruction'),
-                              //                                 style: TextStyle(
-                              //                                     // color: AppColor.lightBlue,
-                              //                                     fontSize:
-                              //                                         18.sp,
-                              //                                     fontWeight:
-                              //                                         FontWeight
-                              //                                             .bold),
-                              //                               ),
-                              //                             ),
-                              //                           ),
-                              //                         ],
-                              //                       ),
-                              //                       SizedBox(
-                              //                         height: 7.h,
-                              //                       ),
-                              //                       SizedBox(
-                              //                         width:
-                              //                             MediaQuery.of(context)
-                              //                                     .size
-                              //                                     .width *
-                              //                                 .4,
-                              //                         child: shipmentstate
-                              //                                     .shipment
-                              //                                     .subshipments![
-                              //                                         selectedIndex]
-                              //                                     .shipmentinstructionv2 ==
-                              //                                 null
-                              //                             ? Text(
-                              //                                 AppLocalizations.of(
-                              //                                         context)!
-                              //                                     .translate(
-                              //                                         'instruction_not_complete'),
-                              //                                 maxLines: 2,
-                              //                               )
-                              //                             : Text(
-                              //                                 AppLocalizations.of(
-                              //                                         context)!
-                              //                                     .translate(
-                              //                                         'instruction_complete'),
-                              //                                 maxLines: 2,
-                              //                               ),
-                              //                       ),
-                              //                     ],
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //               Positioned(
-                              //                 top: -5,
-                              //                 right: localeState
-                              //                             .value.languageCode ==
-                              //                         "en"
-                              //                     ? -5
-                              //                     : null,
-                              //                 left: localeState
-                              //                             .value.languageCode ==
-                              //                         "en"
-                              //                     ? null
-                              //                     : -5,
-                              //                 child: Container(
-                              //                   decoration: BoxDecoration(
-                              //                       color: Colors.white,
-                              //                       borderRadius:
-                              //                           BorderRadius.circular(
-                              //                               45)),
-                              //                   child: shipmentstate
-                              //                               .shipment
-                              //                               .subshipments![
-                              //                                   selectedIndex]
-                              //                               .shipmentinstructionv2 ==
-                              //                           null
-                              //                       ? Icon(
-                              //                           Icons
-                              //                               .warning_amber_rounded,
-                              //                           color:
-                              //                               AppColor.deepYellow,
-                              //                         )
-                              //                       : Icon(
-                              //                           Icons.check_circle,
-                              //                           color:
-                              //                               AppColor.deepYellow,
-                              //                         ),
-                              //                 ),
-                              //               ),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //         InkWell(
-                              //           onTap: () {
-                              //             if (shipmentstate
-                              //                     .shipment
-                              //                     .subshipments![selectedIndex]
-                              //                     .shipmentpaymentv2 !=
-                              //                 null) {
-                              //               BlocProvider.of<
-                              //                           ReadPaymentInstructionBloc>(
-                              //                       context)
-                              //                   .add(
-                              //                 ReadPaymentInstructionLoadEvent(
-                              //                     shipmentstate
-                              //                         .shipment
-                              //                         .subshipments![
-                              //                             selectedIndex]
-                              //                         .shipmentpaymentv2!),
-                              //               );
-                              //               Navigator.push(
-                              //                 context,
-                              //                 MaterialPageRoute(
-                              //                   builder: (context) =>
-                              //                       PaymentInstructionDetailsScreen(
-                              //                           shipment: shipmentstate
-                              //                                   .shipment
-                              //                                   .subshipments![
-                              //                               selectedIndex]),
-                              //                 ),
-                              //               );
-                              //             }
-                              //           },
-                              //           child: Stack(
-                              //             clipBehavior: Clip.none,
-                              //             children: [
-                              //               Container(
-                              //                 width: MediaQuery.of(context)
-                              //                         .size
-                              //                         .width *
-                              //                     .4,
-                              //                 margin: const EdgeInsets.all(1),
-                              //                 decoration: BoxDecoration(
-                              //                   borderRadius:
-                              //                       const BorderRadius.all(
-                              //                     Radius.circular(10),
-                              //                   ),
-                              //                   color: Colors.white,
-                              //                   border: Border.all(
-                              //                     color: shipmentstate
-                              //                                 .shipment
-                              //                                 .subshipments![
-                              //                                     selectedIndex]
-                              //                                 .shipmentpaymentv2 !=
-                              //                             null
-                              //                         ? AppColor.deepYellow
-                              //                         : AppColor.lightGrey,
-                              //                     width: 2,
-                              //                   ),
-                              //                 ),
-                              //                 child: Padding(
-                              //                   padding:
-                              //                       const EdgeInsets.all(5.0),
-                              //                   child: Column(
-                              //                     mainAxisAlignment:
-                              //                         MainAxisAlignment.start,
-                              //                     crossAxisAlignment:
-                              //                         CrossAxisAlignment.start,
-                              //                     children: [
-                              //                       Row(
-                              //                         children: [
-                              //                           // SizedBox(
-                              //                           //     height: 25.h,
-                              //                           //     width: 25.w,
-                              //                           //     child: SvgPicture.asset(
-                              //                           //         "assets/icons/payment.svg")),
-                              //                           const SizedBox(
-                              //                             width: 5,
-                              //                           ),
-                              //                           SizedBox(
-                              //                             width: MediaQuery.of(
-                              //                                         context)
-                              //                                     .size
-                              //                                     .width *
-                              //                                 .35,
-                              //                             child: FittedBox(
-                              //                               fit: BoxFit
-                              //                                   .scaleDown,
-                              //                               child: Text(
-                              //                                 AppLocalizations.of(
-                              //                                         context)!
-                              //                                     .translate(
-                              //                                         'payment_instruction'),
-                              //                                 style: TextStyle(
-                              //                                     // color: AppColor.lightBlue,
-                              //                                     fontSize:
-                              //                                         18.sp,
-                              //                                     fontWeight:
-                              //                                         FontWeight
-                              //                                             .bold),
-                              //                               ),
-                              //                             ),
-                              //                           ),
-                              //                         ],
-                              //                       ),
-                              //                       SizedBox(
-                              //                         height: 7.h,
-                              //                       ),
-                              //                       SizedBox(
-                              //                         width:
-                              //                             MediaQuery.of(context)
-                              //                                     .size
-                              //                                     .width *
-                              //                                 .4,
-                              //                         child: shipmentstate
-                              //                                     .shipment
-                              //                                     .subshipments![
-                              //                                         selectedIndex]
-                              //                                     .shipmentpaymentv2 ==
-                              //                                 null
-                              //                             ? Text(
-                              //                                 AppLocalizations.of(
-                              //                                         context)!
-                              //                                     .translate(
-                              //                                         'payment_not_complete'),
-                              //                                 maxLines: 2,
-                              //                               )
-                              //                             : Text(
-                              //                                 AppLocalizations.of(
-                              //                                         context)!
-                              //                                     .translate(
-                              //                                         'payment_complete'),
-                              //                                 maxLines: 2,
-                              //                               ),
-                              //                       ),
-                              //                     ],
-                              //                   ),
-                              //                 ),
-                              //               ),
-                              //               Positioned(
-                              //                 top: -5,
-                              //                 right: localeState
-                              //                             .value.languageCode ==
-                              //                         "en"
-                              //                     ? -5
-                              //                     : null,
-                              //                 left: localeState
-                              //                             .value.languageCode ==
-                              //                         "en"
-                              //                     ? null
-                              //                     : -5,
-                              //                 child: Container(
-                              //                   decoration: BoxDecoration(
-                              //                       color: Colors.white,
-                              //                       borderRadius:
-                              //                           BorderRadius.circular(
-                              //                               45)),
-                              //                   child: shipmentstate
-                              //                               .shipment
-                              //                               .subshipments![
-                              //                                   selectedIndex]
-                              //                               .shipmentpaymentv2 ==
-                              //                           null
-                              //                       ? Icon(
-                              //                           Icons
-                              //                               .warning_amber_rounded,
-                              //                           color:
-                              //                               AppColor.deepYellow,
-                              //                         )
-                              //                       : Icon(
-                              //                           Icons.check_circle,
-                              //                           color:
-                              //                               AppColor.deepYellow,
-                              //                         ),
-                              //                 ),
-                              //               ),
-                              //             ],
-                              //           ),
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
-                              // Visibility(
-                              //   visible: shipmentstate
-                              //           .shipment
-                              //           .subshipments![selectedIndex]
-                              //           .shipmentStatus! !=
-                              //       "P",
-                              //   child: const Divider(
-                              //     height: 12,
-                              //   ),
-                              // ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        if (shipmentstate
+                                                .shipment
+                                                .subshipments![selectedIndex]
+                                                .shipmentinstructionv2 !=
+                                            null) {
+                                          BlocProvider.of<ReadInstructionBloc>(
+                                                  context)
+                                              .add(
+                                            ReadInstructionLoadEvent(
+                                                shipmentstate
+                                                    .shipment
+                                                    .subshipments![
+                                                        selectedIndex]
+                                                    .shipmentinstructionv2!),
+                                          );
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ShipmentInstructionDetailsScreen(
+                                                      shipment: shipmentstate
+                                                              .shipment
+                                                              .subshipments![
+                                                          selectedIndex]),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            margin: const EdgeInsets.all(1),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: shipmentstate
+                                                            .shipment
+                                                            .subshipments![
+                                                                selectedIndex]
+                                                            .shipmentinstructionv2 !=
+                                                        null
+                                                    ? AppColor.deepYellow
+                                                    : AppColor.lightGrey,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      // SizedBox(
+                                                      //     height: 25.h,
+                                                      //     width: 25.w,
+                                                      //     child: SvgPicture.asset(
+                                                      //         "assets/icons/instruction.svg")),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            .35,
+                                                        child: FittedBox(
+                                                          fit: BoxFit.scaleDown,
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'shipment_instruction'),
+                                                            style: TextStyle(
+                                                                // color: AppColor.lightBlue,
+                                                                fontSize: 18.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 7.h,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .4,
+                                                    child: shipmentstate
+                                                                .shipment
+                                                                .subshipments![
+                                                                    selectedIndex]
+                                                                .shipmentinstructionv2 ==
+                                                            null
+                                                        ? Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'instruction_not_complete'),
+                                                            maxLines: 2,
+                                                          )
+                                                        : Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'instruction_complete'),
+                                                            maxLines: 2,
+                                                          ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: -5,
+                                            right: localeState
+                                                        .value.languageCode ==
+                                                    "en"
+                                                ? -5
+                                                : null,
+                                            left: localeState
+                                                        .value.languageCode ==
+                                                    "en"
+                                                ? null
+                                                : -5,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          45)),
+                                              child: shipmentstate
+                                                          .shipment
+                                                          .subshipments![
+                                                              selectedIndex]
+                                                          .shipmentinstructionv2 ==
+                                                      null
+                                                  ? Icon(
+                                                      Icons
+                                                          .warning_amber_rounded,
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                    )
+                                                  : Icon(
+                                                      Icons.check_circle,
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                    ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        if (shipmentstate
+                                                .shipment
+                                                .subshipments![selectedIndex]
+                                                .shipmentpaymentv2 !=
+                                            null) {
+                                          BlocProvider.of<
+                                                      ReadPaymentInstructionBloc>(
+                                                  context)
+                                              .add(
+                                            ReadPaymentInstructionLoadEvent(
+                                                shipmentstate
+                                                    .shipment
+                                                    .subshipments![
+                                                        selectedIndex]
+                                                    .shipmentpaymentv2!),
+                                          );
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PaymentInstructionDetailsScreen(
+                                                      shipment: shipmentstate
+                                                              .shipment
+                                                              .subshipments![
+                                                          selectedIndex]),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Stack(
+                                        clipBehavior: Clip.none,
+                                        children: [
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .4,
+                                            margin: const EdgeInsets.all(1),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                color: shipmentstate
+                                                            .shipment
+                                                            .subshipments![
+                                                                selectedIndex]
+                                                            .shipmentpaymentv2 !=
+                                                        null
+                                                    ? AppColor.deepYellow
+                                                    : AppColor.lightGrey,
+                                                width: 2,
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(5.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      // SizedBox(
+                                                      //     height: 25.h,
+                                                      //     width: 25.w,
+                                                      //     child: SvgPicture.asset(
+                                                      //         "assets/icons/payment.svg")),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            .35,
+                                                        child: FittedBox(
+                                                          fit: BoxFit.scaleDown,
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'payment_instruction'),
+                                                            style: TextStyle(
+                                                                // color: AppColor.lightBlue,
+                                                                fontSize: 18.sp,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(
+                                                    height: 7.h,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width *
+                                                            .4,
+                                                    child: shipmentstate
+                                                                .shipment
+                                                                .subshipments![
+                                                                    selectedIndex]
+                                                                .shipmentpaymentv2 ==
+                                                            null
+                                                        ? Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'payment_not_complete'),
+                                                            maxLines: 2,
+                                                          )
+                                                        : Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'payment_complete'),
+                                                            maxLines: 2,
+                                                          ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: -5,
+                                            right: localeState
+                                                        .value.languageCode ==
+                                                    "en"
+                                                ? -5
+                                                : null,
+                                            left: localeState
+                                                        .value.languageCode ==
+                                                    "en"
+                                                ? null
+                                                : -5,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          45)),
+                                              child: shipmentstate
+                                                          .shipment
+                                                          .subshipments![
+                                                              selectedIndex]
+                                                          .shipmentpaymentv2 ==
+                                                      null
+                                                  ? Icon(
+                                                      Icons
+                                                          .warning_amber_rounded,
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                    )
+                                                  : Icon(
+                                                      Icons.check_circle,
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                    ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(
+                                height: 12,
+                              ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!
                                     .translate("shipment_route"),
