@@ -6,21 +6,20 @@ class ApprovalRequest {
   String? driver_lastname;
   SimpleSubshipment? subshipment;
   String? responseTurn;
+  String? requestOwner;
   bool? isApproved;
   String? reason;
-  String? extratext;
-  double? extraFees;
 
-  ApprovalRequest(
-      {this.id,
-      this.driver_firstname,
-      this.driver_lastname,
-      this.subshipment,
-      this.responseTurn,
-      this.isApproved,
-      this.extratext,
-      this.reason,
-      this.extraFees});
+  ApprovalRequest({
+    this.id,
+    this.driver_firstname,
+    this.driver_lastname,
+    this.subshipment,
+    this.responseTurn,
+    this.requestOwner,
+    this.isApproved,
+    this.reason,
+  });
 
   ApprovalRequest.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -30,10 +29,9 @@ class ApprovalRequest {
         ? SimpleSubshipment.fromJson(json['subshipment'])
         : null;
     responseTurn = json['response_turn'];
+    requestOwner = json['request_owner'];
     isApproved = json['is_approved'];
     reason = json['reason'];
-    extratext = json['extra_fees_text'];
-    extraFees = json['extra_fees'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,10 +43,9 @@ class ApprovalRequest {
       data['subshipment'] = subshipment!.toJson();
     }
     data['response_turn'] = responseTurn;
+    data['request_owner'] = requestOwner;
     data['is_approved'] = isApproved;
     data['reason'] = reason;
-    data['extra_fees'] = extraFees;
-    data['extra_fees_text'] = extratext;
     return data;
   }
 }

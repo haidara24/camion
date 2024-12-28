@@ -96,10 +96,10 @@ class RequestRepository {
         {
           "response_turn": "T",
           "is_approved": true,
-          "extra_fees_text": "",
-          "extra_fees": ""
         },
         apiToken: jwt);
+    print(rs.statusCode);
+    print(rs.body);
     if (rs.statusCode == 200) {
       return true;
     } else {
@@ -114,6 +114,40 @@ class RequestRepository {
     var rs = await HttpHelper.patch(
         '$APPROVAL_REQUESTS_ENDPOINT$id/reject_request/',
         {"response_turn": "T", "is_approved": false, "reason": text},
+        apiToken: jwt);
+    if (rs.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> acceptRequestForDriver(
+    int id,
+  ) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs = await HttpHelper.patch(
+        '$APPROVAL_REQUESTS_ENDPOINT$id/accept_driver_request/',
+        {"response_turn": "D", "is_approved": true},
+        apiToken: jwt);
+    print(rs.statusCode);
+    print(rs.body);
+    if (rs.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> rejectRequestForDriver(int id) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var rs = await HttpHelper.patch(
+        '$APPROVAL_REQUESTS_ENDPOINT$id/reject_driver_request/',
+        {"response_turn": "D", "is_approved": false},
         apiToken: jwt);
     if (rs.statusCode == 200) {
       return true;

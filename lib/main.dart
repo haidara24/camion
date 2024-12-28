@@ -7,6 +7,7 @@ import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/assign_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/over_speed_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/parking_report_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/total_milage_day_bloc.dart';
@@ -27,6 +28,7 @@ import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_update_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_update_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/accept_request_for_driver_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/package_type_bloc.dart';
@@ -39,6 +41,7 @@ import 'package:camion/business_logic/bloc/profile/merchant_update_profile_bloc.
 import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/reject_request_for_driver_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_update_status_bloc.dart';
@@ -330,6 +333,18 @@ class MyApp extends StatelessWidget {
                                   context)),
                     ),
                     BlocProvider(
+                      create: (context) => AcceptRequestForDriverBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => RejectRequestForDriverBloc(
+                          requestRepository:
+                              RepositoryProvider.of<RequestRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
                       create: (context) => TrucksListBloc(
                           truckRepository:
                               RepositoryProvider.of<TruckRepository>(context)),
@@ -466,6 +481,12 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => OrderTruckBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => AssignShipmentBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),

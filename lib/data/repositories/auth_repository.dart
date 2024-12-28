@@ -69,6 +69,84 @@ class AuthRepository {
     }
   }
 
+  Future<dynamic> temploginWithPhone({required String phone}) async {
+    try {
+      String? firebaseToken = "";
+      FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        announcement: true,
+        badge: true,
+        sound: true,
+      );
+      // FirebaseMessaging messaging = FirebaseMessaging.instance;
+      // firebaseToken = await messaging.getToken();
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType") ?? "";
+      print(userType);
+      var newPhone = "00963${phone.substring(1)}";
+      Response response = await post(
+        Uri.parse(PHONE_LOGIN_ENDPOINT),
+        body: jsonEncode(
+            {"phone": newPhone, "role": userType, "fcm_token": firebaseToken}),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.acceptHeader: 'application/json'
+        },
+      );
+
+      final Map<String, dynamic> data = <String, dynamic>{};
+      data["status"] = response.statusCode;
+      var jsonObject = jsonDecode(response.body);
+
+      print(response.statusCode);
+      print(response.body);
+
+      if (response.statusCode == 401 || response.statusCode == 400) {
+        data["details"] = jsonObject["details"];
+        data["success"] = jsonObject["isSuccess"];
+      } else if (response.statusCode == 200) {
+        presisteToken(jsonObject);
+
+        data["token"] = jsonObject["access"];
+        data["details"] = jsonObject["details"];
+        data["success"] = jsonObject["isSuccess"];
+        prefs = await SharedPreferences.getInstance();
+        Response userresponse =
+            await HttpHelper.get(PROFILE_ENDPOINT, apiToken: data["token"]);
+        if (userresponse.statusCode == 200) {
+          var myDataString = utf8.decode(userresponse.bodyBytes);
+
+          prefs.setString("userProfile", myDataString);
+          var result = jsonDecode(myDataString);
+          userProvider.setUser(UserModel.fromJson(result));
+          var userType = prefs.getString("userType") ?? "";
+          // bool isLogin = prefs.getBool("isLogin") ?? false;
+
+          if (userType.isNotEmpty) {
+            if (userType == "Merchant") {
+              prefs.setInt("merchant", jsonObject["merchant_id"]);
+            }
+            if (userType == "Owner") {
+              prefs.setInt("truckowner", jsonObject["truck_owner_id"]);
+            }
+            if (userType == "Driver") {
+              prefs.setInt("truckuser", jsonObject["truck_user_id"]);
+              prefs.setInt("truckId", jsonObject['truck_id'] ?? 0);
+              prefs.setString("gpsId", jsonObject["gps_id"] ?? "");
+              prefs.setInt("carId", jsonObject["car_id"] ?? 0);
+            }
+          }
+        }
+      } else {
+        data["details"] = jsonObject["details"];
+        data["success"] = jsonObject["isSuccess"];
+      }
+      return data;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<dynamic> registerWithPhone({
     required String phone,
     required String first_name,
@@ -119,6 +197,87 @@ class AuthRepository {
       } else {
         data["details"] = jsonObject["details"];
         data["success"] = jsonObject["isSuccess"];
+      }
+      return data;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<dynamic> tempregisterWithPhone({
+    required String phone,
+    required String first_name,
+    required String last_name,
+  }) async {
+    try {
+      String? firebaseToken = "";
+      FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        announcement: true,
+        badge: true,
+        sound: true,
+      );
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      firebaseToken = await messaging.getToken();
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType") ?? "";
+      print(userType);
+      var newPhone = "00963${phone.substring(1)}";
+      Response response = await post(
+        Uri.parse(PHONE_REGISTER_ENDPOINT),
+        body: jsonEncode({
+          "phone": newPhone,
+          "role": userType,
+          'first_name': first_name,
+          'last_name': last_name,
+          "fcm_token": firebaseToken
+        }),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+          HttpHeaders.acceptHeader: 'application/json'
+        },
+      );
+
+      final Map<String, dynamic> data = <String, dynamic>{};
+      data["status"] = response.statusCode;
+      var jsonObject = jsonDecode(response.body);
+
+      // print("verify otp status${response.statusCode}");
+      print("verify otp body${response.body}");
+
+      if (response.statusCode == 401 || response.statusCode == 400) {
+        data["details"] = jsonObject["details"];
+      } else {
+        presisteToken(jsonObject);
+
+        data["token"] = jsonObject["access"];
+        prefs = await SharedPreferences.getInstance();
+        Response userresponse =
+            await HttpHelper.get(PROFILE_ENDPOINT, apiToken: data["token"]);
+        if (userresponse.statusCode == 200) {
+          var myDataString = utf8.decode(userresponse.bodyBytes);
+
+          prefs.setString("userProfile", myDataString);
+          var result = jsonDecode(myDataString);
+          userProvider.setUser(UserModel.fromJson(result));
+        }
+        var userType = prefs.getString("userType") ?? "";
+        bool isLogin = prefs.getBool("isLogin") ?? false;
+
+        if (userType.isNotEmpty) {
+          if (userType == "Merchant") {
+            prefs.setInt("merchant", jsonObject["merchant_id"]);
+          }
+          if (userType == "Owner") {
+            prefs.setInt("truckowner", jsonObject["truck_owner_id"]);
+          }
+          if (userType == "Driver") {
+            prefs.setInt("truckuser", jsonObject["truck_user_id"]);
+            prefs.setInt("truckId", jsonObject['truck_id'] ?? 0);
+            prefs.setString("gpsId", jsonObject["gps_id"] ?? "");
+            prefs.setInt("carId", jsonObject["car_id"] ?? 0);
+          }
+        }
       }
       return data;
     } catch (e) {

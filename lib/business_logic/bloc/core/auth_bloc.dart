@@ -98,11 +98,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<PhoneSignInButtonPressed>((event, emit) async {
       emit(AuthLoggingInProgressState());
       try {
-        var data = await authRepository.loginWithPhone(phone: event.phone);
+        prefs = await SharedPreferences.getInstance();
+        var userType = prefs.getString("userType") ?? "";
+
+        var data = await authRepository.temploginWithPhone(phone: event.phone);
+
+        print("status ${data["status"]}");
+
         if (data["status"] == 200) {
-          emit(PhoneAuthSuccessState(data));
+          switch (userType) {
+            case "Driver":
+              emit(AuthDriverSuccessState());
+              break;
+            case "Owner":
+              emit(AuthOwnerSuccessState());
+              break;
+            case "Merchant":
+              emit(AuthMerchantSuccessState());
+              break;
+            default:
+              emit(const AuthFailureState("خطأ في نوع المستخدم."));
+          }
         } else {
-          emit(PhoneAuthFailedState(data["details"]));
+          emit(AuthFailureState(data["details"]));
         }
       } catch (e) {
         emit(AuthFailureState(e.toString()));
@@ -150,15 +168,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignUpButtonPressed>((event, emit) async {
       emit(AuthLoggingInProgressState());
       try {
-        var data = await authRepository.registerWithPhone(
+        prefs = await SharedPreferences.getInstance();
+        var userType = prefs.getString("userType") ?? "";
+
+        var data = await authRepository.tempregisterWithPhone(
           phone: event.phone,
           first_name: event.first_name,
           last_name: event.last_name,
         );
+        print("status ${data["status"]}");
         if (data["status"] == 200) {
-          emit(PhoneAuthSuccessState(data));
+          switch (userType) {
+            case "Driver":
+              emit(AuthDriverSuccessState());
+              break;
+            case "Owner":
+              emit(AuthOwnerSuccessState());
+              break;
+            case "Merchant":
+              emit(AuthMerchantSuccessState());
+              break;
+            default:
+              emit(const AuthFailureState("خطأ في نوع المستخدم."));
+          }
+          // emit(PhoneAuthSuccessState(data));
         } else {
-          emit(PhoneAuthFailedState(data["details"]));
+          emit(AuthFailureState(data["details"]));
         }
       } catch (e) {
         emit(AuthFailureState(e.toString()));

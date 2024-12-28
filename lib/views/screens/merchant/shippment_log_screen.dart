@@ -5,19 +5,18 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/data/models/approval_request.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/subshipment_details_screen.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
-import 'package:camion/views/screens/merchant/shipment_details_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -115,6 +114,32 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
 
     var result = '${date.day}-$month-${date.year}';
     return result;
+  }
+
+  getIconSvg(ApprovalRequest request) {
+    var svgpath = "";
+
+    switch (request.requestOwner) {
+      case "T":
+        if (request.responseTurn == "D") {
+          return "assets/icons/grey/waiting.svg";
+        } else {
+          return request.isApproved!
+              ? "assets/icons/grey/notification_shipment_complete.svg"
+              : "assets/icons/grey/notification_shipment_cancelation.svg";
+        }
+      case "D":
+        if (request.responseTurn == "T") {
+          return "assets/icons/grey/waiting.svg";
+        } else {
+          return request.isApproved!
+              ? "assets/icons/grey/notification_shipment_complete.svg"
+              : "assets/icons/grey/notification_shipment_cancelation.svg";
+        }
+
+      default:
+        return "assets/icons/grey/waiting.svg";
+    }
   }
 
   String getOfferStatus(String offer) {
@@ -679,30 +704,54 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                           itemBuilder: (context, index) {
                                             return InkWell(
                                               onTap: () {
-                                                BlocProvider.of<
-                                                            RequestDetailsBloc>(
-                                                        context)
-                                                    .add(
-                                                        RequestDetailsLoadEvent(
-                                                            state
-                                                                .requests[index]
-                                                                .id!));
+                                                if (state.requests[index]
+                                                        .requestOwner ==
+                                                    "T") {
+                                                  BlocProvider.of<
+                                                              RequestDetailsBloc>(
+                                                          context)
+                                                      .add(
+                                                          RequestDetailsLoadEvent(
+                                                              state
+                                                                  .requests[
+                                                                      index]
+                                                                  .id!));
 
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ApprovalRequestDetailsScreen(
-                                                      type: state
-                                                              .requests[index]
-                                                              .isApproved!
-                                                          ? "A"
-                                                          : "J",
-                                                      request:
-                                                          state.requests[index],
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ApprovalRequestDetailsScreen(
+                                                        type: state
+                                                                .requests[index]
+                                                                .isApproved!
+                                                            ? "A"
+                                                            : "J",
+                                                        request: state
+                                                            .requests[index],
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
+                                                  );
+                                                } else {
+                                                  BlocProvider.of<
+                                                              SubShipmentDetailsBloc>(
+                                                          context)
+                                                      .add(
+                                                          SubShipmentDetailsLoadEvent(
+                                                              state
+                                                                  .requests[
+                                                                      index]
+                                                                  .subshipment!
+                                                                  .id!));
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            IncomingShipmentDetailsScreen(
+                                                                requestOwner:
+                                                                    "D"),
+                                                      ));
+                                                }
                                               },
                                               child: AbsorbPointer(
                                                 absorbing: false,
@@ -765,10 +814,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 child:
                                                                     SvgPicture
                                                                         .asset(
-                                                                  state.requests[index]
-                                                                          .isApproved!
-                                                                      ? "assets/icons/grey/notification_shipment_complete.svg"
-                                                                      : "assets/icons/grey/notification_shipment_cancelation.svg",
+                                                                  getIconSvg(state
+                                                                          .requests[
+                                                                      index]),
                                                                   height: 22.w,
                                                                   width: 22.w,
                                                                   fit: BoxFit
@@ -797,7 +845,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 child:
                                                                     SectionTitle(
                                                                   text:
-                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.id!}',
                                                                 ),
                                                               ),
                                                             ],

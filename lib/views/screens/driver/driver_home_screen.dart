@@ -195,7 +195,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
       case 3:
         {
           BlocProvider.of<DriverActiveShipmentBloc>(context)
-              .add(DriverActiveShipmentLoadEvent("A"));
+              .add(DriverActiveShipmentLoadEvent("R"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_path');
 

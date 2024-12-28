@@ -351,7 +351,7 @@ class ShipmentRepository {
     var jwt = prefs.getString("token");
     var merchant = prefs.getInt("merchant") ?? 0;
     var response = await HttpHelper.get(
-      "${SUB_SHIPPMENTSV2_ENDPOINT}merchant/$merchant/status/A/",
+      "${SUB_SHIPPMENTSV2_ENDPOINT}merchant/$merchant/status/R/",
       apiToken: jwt,
     );
     var myDataString = utf8.decode(response.bodyBytes);
@@ -471,7 +471,8 @@ class ShipmentRepository {
       {"truck": driver},
       apiToken: token,
     );
-
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -479,12 +480,12 @@ class ShipmentRepository {
     }
   }
 
-  Future<bool> assignDriver(int shipmentId, int driver) async {
+  Future<bool> assignDriver(int shipmentId, int truck) async {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
     var response = await HttpHelper.patch(
       "$SUB_SHIPPMENTSV2_ENDPOINT$shipmentId/assign_driver/",
-      {"truck": driver},
+      {"truck": truck},
       apiToken: token,
     );
     print(response.statusCode);
@@ -516,7 +517,7 @@ class ShipmentRepository {
     var jwt = prefs.getString("token");
     var response = await HttpHelper.patch(
       "$SUB_SHIPPMENTSV2_ENDPOINT$id/active_shipment/",
-      {"shipment_status": "A"},
+      {"shipment_status": "R"},
       apiToken: jwt,
     );
     final Map<String, dynamic> data = <String, dynamic>{};

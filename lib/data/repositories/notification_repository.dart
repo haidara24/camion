@@ -23,6 +23,7 @@ class NotificationRepository {
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
+        print(element["isread"]);
         notifications.add(NotificationModel.fromJson(element));
       }
     }

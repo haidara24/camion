@@ -26,6 +26,317 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
     this.request,
   }) : super(key: key);
 
+  Widget getMainPhoto(ApprovalRequest request) {
+    switch (request.requestOwner) {
+      case "T":
+        if (request.isApproved!) {
+          return Lottie.asset(
+            'assets/images/accept_order.json',
+            width: 550.w,
+            height: 400.w,
+            fit: BoxFit.fill,
+          );
+        } else {
+          return Lottie.asset(
+            'assets/images/reject_order.json',
+            width: 550.w,
+            height: 400.w,
+            fit: BoxFit.fill,
+          );
+        }
+      case "D":
+        if (request.isApproved!) {
+          return Lottie.asset(
+            'assets/images/accept_order.json',
+            width: 550.w,
+            height: 400.w,
+            fit: BoxFit.fill,
+          );
+        } else {
+          return Lottie.asset(
+            'assets/images/reject_order.json',
+            width: 550.w,
+            height: 400.w,
+            fit: BoxFit.fill,
+          );
+        }
+      default:
+        return Lottie.asset(
+          'assets/images/reject_order.json',
+          width: 550.w,
+          height: 400.w,
+          fit: BoxFit.fill,
+        );
+    }
+  }
+
+  Widget getExtraAction(ApprovalRequest request, BuildContext context) {
+    switch (request.requestOwner) {
+      case "T":
+        if (request.responseTurn == "D") {
+          return const SizedBox.shrink();
+        } else {
+          if (request.isApproved!) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      BlocConsumer<ShipmentUpdateStatusBloc,
+                          ShipmentUpdateStatusState>(
+                        listener: (context, acceptstate) {
+                          if (acceptstate
+                              is ShipmentUpdateStatusLoadedSuccess) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ControlView(),
+                                ),
+                                (route) => false);
+                          }
+                        },
+                        builder: (context, acceptstate) {
+                          if (acceptstate
+                              is ShipmentUpdateStatusLoadingProgress) {
+                            return CustomButton(
+                              title: SizedBox(
+                                width: MediaQuery.of(context).size.width * .83,
+                                child: Center(
+                                  child: LoadingIndicator(),
+                                ),
+                              ),
+                              onTap: () {},
+                              // color: Colors.white,
+                            );
+                          } else {
+                            return CustomButton(
+                              title: SizedBox(
+                                width: MediaQuery.of(context).size.width * .83,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('confirm'),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 16,
+                                    ),
+                                    SizedBox(
+                                      height: 30.w,
+                                      width: 30.w,
+                                      child: SvgPicture.asset(
+                                        "assets/icons/white/notification_shipment_complete.svg",
+                                        width: 30.w,
+                                        height: 30.w,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                BlocProvider.of<ShipmentUpdateStatusBloc>(
+                                        context)
+                                    .add(
+                                  ShipmentStatusUpdateEvent(
+                                    request.subshipment!.id!,
+                                    "R",
+                                  ),
+                                );
+                              },
+                              // color: Colors.white,
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CustomButton(
+                        title: SizedBox(
+                          width: MediaQuery.of(context).size.width * .83,
+                          child: Center(
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .translate("search_for_truck"),
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SearchTruckScreen(
+                                  subshipmentId: request.subshipment!.id!),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          }
+        }
+      case "D":
+        if (request.responseTurn == "T") {
+          return const SizedBox.shrink();
+        } else {
+          if (request.isApproved!) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 8,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      BlocConsumer<ShipmentUpdateStatusBloc,
+                          ShipmentUpdateStatusState>(
+                        listener: (context, acceptstate) {
+                          if (acceptstate
+                              is ShipmentUpdateStatusLoadedSuccess) {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ControlView(),
+                                ),
+                                (route) => false);
+                          }
+                        },
+                        builder: (context, acceptstate) {
+                          if (acceptstate
+                              is ShipmentUpdateStatusLoadingProgress) {
+                            return CustomButton(
+                              title: SizedBox(
+                                width: MediaQuery.of(context).size.width * .83,
+                                child: Center(
+                                  child: LoadingIndicator(),
+                                ),
+                              ),
+                              onTap: () {},
+                              // color: Colors.white,
+                            );
+                          } else {
+                            return CustomButton(
+                              title: SizedBox(
+                                width: MediaQuery.of(context).size.width * .83,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('confirm'),
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 16,
+                                    ),
+                                    SizedBox(
+                                      height: 30.w,
+                                      width: 30.w,
+                                      child: SvgPicture.asset(
+                                        "assets/icons/white/notification_shipment_complete.svg",
+                                        width: 30.w,
+                                        height: 30.w,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                BlocProvider.of<ShipmentUpdateStatusBloc>(
+                                        context)
+                                    .add(
+                                  ShipmentStatusUpdateEvent(
+                                    request.subshipment!.id!,
+                                    "R",
+                                  ),
+                                );
+                              },
+                              // color: Colors.white,
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        }
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  String getMainText(ApprovalRequest request) {
+    switch (request.requestOwner) {
+      case "T":
+        if (request.responseTurn == "D") {
+          return "request_waiting";
+        } else {
+          if (request.isApproved!) {
+            return "request_confirm";
+          } else {
+            return "request_reject";
+          }
+        }
+      case "D":
+        if (request.responseTurn == "T") {
+          return "request_waiting";
+        } else {
+          if (request.isApproved!) {
+            return "request_confirm";
+          } else {
+            return "request_reject";
+          }
+        }
+      default:
+        return "request_waiting";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -66,18 +377,17 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 8,
                                         ),
-                                        Lottie.asset(
-                                          'assets/images/accept_order.json',
-                                          width: 550.w,
-                                          height: 400.w,
-                                          fit: BoxFit.fill,
-                                        ),
+                                        getMainPhoto(request!),
                                         const SizedBox(
                                           height: 16,
                                         ),
                                         SectionTitle(
-                                            text: AppLocalizations.of(context)!
-                                                .translate("request_waiting")),
+                                          text: AppLocalizations.of(context)!
+                                              .translate(
+                                            getMainText(request!),
+                                          ),
+                                        ),
+                                        getExtraAction(request!, context),
                                       ],
                                     ),
                                   )

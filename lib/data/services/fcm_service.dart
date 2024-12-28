@@ -8,6 +8,7 @@ import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/firebase_options.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
+import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,7 +47,12 @@ class NotificationServices {
         // initLocalNotifications(context, message);
         // showNotification(message);
       }
+      if (notificationProvider != null) {
+        notificationProvider!.addNotReadedNotification();
+        // BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
+      }
     });
+    setupInteractMessage(context);
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
@@ -145,7 +151,17 @@ class NotificationServices {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => IncomingShipmentDetailsScreen(),
+          builder: (context) =>
+              IncomingShipmentDetailsScreen(requestOwner: "T"),
+        ),
+      );
+    } else if (message.data['notefication_type'] == "T") {
+      BlocProvider.of<SubShipmentDetailsBloc>(context)
+          .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SubShipmentDetailsScreen(),
         ),
       );
     }
@@ -168,13 +184,18 @@ class NotificationServices {
   static Future<void> markNotificationasRead(int id) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var url = 'https://matjari.app/camion/notifecations/$id/';
-    var response = await http.patch(Uri.parse(url),
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
-          HttpHeaders.acceptHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'JWT $jwt'
-        },
-        body: jsonEncode({"isread": true}));
+    var url = 'https://matjari.app/noti/notifications/$id/';
+    var response = await http.patch(
+      Uri.parse(url),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
+        HttpHeaders.acceptHeader: 'application/json',
+        HttpHeaders.authorizationHeader: 'JWT $jwt'
+      },
+      body: jsonEncode(
+        {"isread": true},
+      ),
+    );
+    print(response.statusCode);
   }
 }

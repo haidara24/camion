@@ -32,7 +32,6 @@ class _ControlViewState extends State<ControlView> {
     notificationServices.requestNotificationPermission();
     // notificationServices.forgroundMessage(context);
     notificationServices.firebaseInit(context);
-    notificationServices.setupInteractMessage(context);
     notificationServices.isTokenRefresh();
     initPrefs();
   }

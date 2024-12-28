@@ -876,12 +876,24 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                     .add(subshipment);
                                                 commodityIndex++;
                                               }
+                                              print(shipmentProvider
+                                                  .selectedTruckTypeNum.length);
+
+                                              int totalTrucknum = 0;
+                                              for (var element
+                                                  in shipmentProvider
+                                                      .selectedTruckTypeNum) {
+                                                totalTrucknum += element;
+                                              }
+
+                                              int remainingTruck =
+                                                  totalTrucknum -
+                                                      shipmentProvider
+                                                          .selectedTruckId
+                                                          .length;
 
                                               for (var i = 0;
-                                                  i <
-                                                      shipmentProvider
-                                                          .selectedTruckTypeNum
-                                                          .length;
+                                                  i < remainingTruck;
                                                   i++) {
                                                 List<ShipmentItems>
                                                     shipmentitems = [];

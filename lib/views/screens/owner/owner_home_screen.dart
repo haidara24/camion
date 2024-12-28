@@ -81,11 +81,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
         .add(OwnerActiveShipmentsLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
 
-    // notificationServices.requestNotificationPermission();
-    // // notificationServices.forgroundMessage(context);
-    // notificationServices.firebaseInit(context);
-    // notificationServices.setupInteractMessage(context);
-    // notificationServices.isTokenRefresh();
     GpsRepository.getTokenForGps();
     _tabController = TabController(
       initialIndex: 0,

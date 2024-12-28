@@ -10,8 +10,8 @@ class RejectRequestForMerchantBloc
   late RequestRepository requestRepository;
   RejectRequestForMerchantBloc({required this.requestRepository})
       : super(RejectRequestForMerchantInitial()) {
-    on<RejectRequestButtonPressedEvent>((event, emit) async {
-      emit(RejectRequestLoadingProgressState());
+    on<RejectRequestForMerchantButtonPressedEvent>((event, emit) async {
+      emit(RejectRequestForMerchantLoadingProgressState());
       try {
         var result = await requestRepository.rejectRequestForMerchant(
           event.id,

@@ -507,7 +507,9 @@ class _AllIncomingShippmentLogScreenState
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  IncomingShipmentDetailsScreen(),
+                                                                  IncomingShipmentDetailsScreen(
+                                                                      requestOwner:
+                                                                          "T"),
                                                             ),
                                                           );
                                                         },
@@ -911,7 +913,9 @@ class _AllIncomingShippmentLogScreenState
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  IncomingShipmentDetailsScreen(),
+                                                                  IncomingShipmentDetailsScreen(
+                                                                      requestOwner:
+                                                                          "T"),
                                                             ),
                                                           );
                                                         },

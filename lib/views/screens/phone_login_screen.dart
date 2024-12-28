@@ -2,6 +2,7 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/screens/verify_otp_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
@@ -201,34 +202,33 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                     ),
                                     BlocConsumer<AuthBloc, AuthState>(
                                       listener: (context, state) async {
-                                        if (state is PhoneAuthSuccessState) {
+                                        print(state);
+                                        if (state is AuthFailureState) {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            backgroundColor: Colors.red[300]!,
+                                            message: state.errorMessage!,
+                                          );
+                                        } else if (state
+                                            is AuthLoggingInProgressState) {
+                                        } else {
                                           showCustomSnackBar(
                                             context: context,
                                             backgroundColor: AppColor.deepGreen,
                                             message: localeState
                                                         .value.languageCode ==
                                                     'en'
-                                                ? 'sign in successfully, Please Verify.'
-                                                : 'تم تسجيل الدخول بنجاح! الرجاء تأكيد الحساب.',
+                                                ? 'sign in successfully!'
+                                                : 'تم تسجيل الدخول بنجاح!.',
                                           );
 
-                                          Navigator.push(
+                                          Navigator.pushAndRemoveUntil(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  VerifyOtpScreen(
-                                                isLogin: state.data["isLogin"],
-                                                phone: _phoneController.text,
-                                              ),
+                                                  const ControlView(),
                                             ),
-                                          );
-                                        }
-
-                                        if (state is PhoneAuthFailedState) {
-                                          showCustomSnackBar(
-                                            context: context,
-                                            backgroundColor: Colors.red[300]!,
-                                            message: state.error!,
+                                            (route) => false,
                                           );
                                         }
                                       },

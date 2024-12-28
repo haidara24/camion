@@ -1,11 +1,9 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
-import 'package:camion/business_logic/bloc/driver_shipments/inprogress_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
-import 'package:camion/views/screens/driver/inprogress_shipment_details_screen.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:camion/views/widgets/shipments_widgets/shimmer_card.dart';
@@ -25,22 +23,7 @@ class IncomingShippmentLogScreen extends StatefulWidget {
 
 class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  int tabIndex = 0;
-
   var f = intel.NumberFormat("#,###", "en_US");
-
-  @override
-  void initState() {
-    _tabController = TabController(length: 2, vsync: this);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _tabController.dispose();
-  }
 
   String setLoadDate(DateTime date) {
     List months = [
@@ -104,13 +87,8 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
   }
 
   Future<void> onRefresh() async {
-    if (tabIndex == 0) {
-      BlocProvider.of<DriverRequestsListBloc>(context)
-          .add(const DriverRequestsListLoadEvent(null));
-    } else {
-      BlocProvider.of<InprogressShipmentsBloc>(context)
-          .add(InprogressShipmentsLoadEvent("R", null));
-    }
+    BlocProvider.of<DriverRequestsListBloc>(context)
+        .add(const DriverRequestsListLoadEvent(null));
   }
 
   @override
@@ -133,331 +111,141 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 7, vertical: 7),
-                      child: TabBar(
-                        controller: _tabController,
-                        onTap: (value) {
-                          switch (value) {
-                            case 0:
-                              BlocProvider.of<DriverRequestsListBloc>(context)
-                                  .add(const DriverRequestsListLoadEvent(null));
-                              break;
-                            case 1:
-                              BlocProvider.of<InprogressShipmentsBloc>(context)
-                                  .add(InprogressShipmentsLoadEvent("R", null));
-                              break;
-                            default:
-                          }
-                          setState(() {
-                            tabIndex = value;
-                          });
-                        },
-                        tabs: [
-                          Tab(
-                            child: Center(
-                                child: Text(AppLocalizations.of(context)!
-                                    .translate('pending'))),
-                          ),
-                          Tab(
-                            child: Center(
-                                child: Text(AppLocalizations.of(context)!
-                                    .translate('inprogress'))),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: tabIndex == 0
-                          ? BlocConsumer<DriverRequestsListBloc,
-                              DriverRequestsListState>(
-                              listener: (context, state) {
-                                print(state);
-                              },
-                              builder: (context, state) {
-                                if (state is DriverRequestsListLoadedSuccess) {
-                                  return state.requests.isEmpty
-                                      ? NoResultsWidget(
-                                          text: AppLocalizations.of(context)!
-                                              .translate("no_in_orders"),
-                                        )
-                                      : ListView.builder(
-                                          itemCount: state.requests.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemBuilder: (context, index) {
-                                            return InkWell(
-                                              onTap: () {
-                                                BlocProvider.of<
-                                                            SubShipmentDetailsBloc>(
-                                                        context)
-                                                    .add(
-                                                        SubShipmentDetailsLoadEvent(
-                                                            state
-                                                                .requests[index]
-                                                                .subshipment!
-                                                                .id!));
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          IncomingShipmentDetailsScreen(),
-                                                    ));
-                                              },
-                                              child: AbsorbPointer(
-                                                absorbing: false,
-                                                child: Card(
-                                                  elevation: 1,
-                                                  margin: const EdgeInsets
-                                                      .symmetric(
-                                                    vertical: 8,
-                                                  ),
-                                                  shape:
-                                                      const RoundedRectangleBorder(
+                      child: BlocConsumer<DriverRequestsListBloc,
+                          DriverRequestsListState>(
+                        listener: (context, state) {
+                          print(state);
+                        },
+                        builder: (context, state) {
+                          if (state is DriverRequestsListLoadedSuccess) {
+                            return state.requests.isEmpty
+                                ? NoResultsWidget(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("no_in_orders"),
+                                  )
+                                : ListView.builder(
+                                    itemCount: state.requests.length,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          BlocProvider.of<
+                                                      SubShipmentDetailsBloc>(
+                                                  context)
+                                              .add(SubShipmentDetailsLoadEvent(
+                                                  state.requests[index]
+                                                      .subshipment!.id!));
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IncomingShipmentDetailsScreen(
+                                                        requestOwner: "D"),
+                                              ));
+                                        },
+                                        child: AbsorbPointer(
+                                          absorbing: false,
+                                          child: Card(
+                                            elevation: 1,
+                                            margin: const EdgeInsets.symmetric(
+                                              vertical: 8,
+                                            ),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                            ),
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Container(
+                                                  width: double.infinity,
+                                                  height: 48.h,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                      width: 1,
+                                                    ),
                                                     borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(10),
+                                                        const BorderRadius
+                                                            .vertical(
+                                                      top: Radius.circular(10),
                                                     ),
                                                   ),
-                                                  child: Column(
+                                                  child: Row(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
-                                                      Container(
-                                                        width: double.infinity,
-                                                        height: 48.h,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          border: Border.all(
-                                                            color: AppColor
-                                                                .deepYellow,
-                                                            width: 1,
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 4),
+                                                        child: Text(
+                                                          "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.firstname!} ${state.requests[index].subshipment!.lastname!}",
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: TextStyle(
+                                                            // color: AppColor.lightBlue,
+                                                            fontSize: 17.sp,
                                                           ),
-                                                          borderRadius:
-                                                              const BorderRadius
-                                                                  .vertical(
-                                                            top:
-                                                                Radius.circular(
-                                                                    10),
-                                                          ),
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          4),
-                                                              child: Text(
-                                                                "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.requests[index].subshipment!.firstname!} ${state.requests[index].subshipment!.lastname!}",
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style:
-                                                                    TextStyle(
-                                                                  // color: AppColor.lightBlue,
-                                                                  fontSize:
-                                                                      17.sp,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .symmetric(
-                                                                      horizontal:
-                                                                          4),
-                                                              child: Text(
-                                                                '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  // color: AppColor.lightBlue,
-                                                                  fontSize:
-                                                                      18.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
                                                         ),
                                                       ),
-                                                      ShipmentPathVerticalWidget(
-                                                        pathpoints: state
-                                                            .requests[index]
-                                                            .subshipment!
-                                                            .pathpoints!,
-                                                        pickupDate: state
-                                                            .requests[index]
-                                                            .subshipment!
-                                                            .pickupDate!,
-                                                        deliveryDate: state
-                                                            .requests[index]
-                                                            .subshipment!
-                                                            .pickupDate!,
-                                                        langCode: localeState
-                                                            .value.languageCode,
-                                                        mini: true,
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 4),
+                                                        child: Text(
+                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                          style: TextStyle(
+                                                            // color: AppColor.lightBlue,
+                                                            fontSize: 18.sp,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                } else {
-                                  return const ShimmerLoadingWidget();
-                                }
-                              },
-                            )
-                          : BlocBuilder<InprogressShipmentsBloc,
-                              InprogressShipmentsState>(
-                              builder: (context, state) {
-                                if (state is InprogressShipmentsLoadedSuccess) {
-                                  return state.shipments.isEmpty
-                                      ? NoResultsWidget(
-                                          text: AppLocalizations.of(context)!
-                                              .translate("no_shipments"),
-                                        )
-                                      : ListView.builder(
-                                          itemCount: state.shipments.length,
-                                          physics:
-                                              const NeverScrollableScrollPhysics(),
-                                          shrinkWrap: true,
-                                          itemBuilder: (context, index) {
-                                            return InkWell(
-                                              onTap: () {
-                                                BlocProvider.of<
-                                                            SubShipmentDetailsBloc>(
-                                                        context)
-                                                    .add(
-                                                        SubShipmentDetailsLoadEvent(
-                                                            state
-                                                                .shipments[
-                                                                    index]
-                                                                .id!));
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          InprogressShipmentDetailsScreen(
-                                                              shipmentId: state
-                                                                  .shipments[
-                                                                      index]
-                                                                  .id!),
-                                                    ));
-                                              },
-                                              child: Card(
-                                                elevation: 1,
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(10),
-                                                  ),
+                                                ShipmentPathVerticalWidget(
+                                                  pathpoints: state
+                                                      .requests[index]
+                                                      .subshipment!
+                                                      .pathpoints!,
+                                                  pickupDate: state
+                                                      .requests[index]
+                                                      .subshipment!
+                                                      .pickupDate!,
+                                                  deliveryDate: state
+                                                      .requests[index]
+                                                      .subshipment!
+                                                      .pickupDate!,
+                                                  langCode: localeState
+                                                      .value.languageCode,
+                                                  mini: true,
                                                 ),
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                  vertical: 8,
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      width: double.infinity,
-                                                      height: 48.h,
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                          color: AppColor
-                                                              .deepYellow,
-                                                          width: 1,
-                                                        ),
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                .vertical(
-                                                          top: Radius.circular(
-                                                              10),
-                                                        ),
-                                                      ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                            "${AppLocalizations.of(context)!.translate("merchant_name")}: ${state.shipments[index].shipment!} ${state.shipments[index].shipment!}",
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            style: TextStyle(
-                                                              // color: AppColor.lightBlue,
-                                                              fontSize: 17.sp,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        11),
-                                                            child: Text(
-                                                              '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
-                                                              style: TextStyle(
-                                                                  // color: AppColor.lightBlue,
-                                                                  fontSize:
-                                                                      18.sp,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                    ShipmentPathVerticalWidget(
-                                                      pathpoints: state
-                                                          .shipments[index]
-                                                          .pathpoints!,
-                                                      pickupDate: state
-                                                          .shipments[index]
-                                                          .pickupDate!,
-                                                      deliveryDate: state
-                                                          .shipments[index]
-                                                          .pickupDate!,
-                                                      langCode: localeState
-                                                          .value.languageCode,
-                                                      mini: true,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ).animate().slideX(
-                                                  duration: 350.ms,
-                                                  delay: 0.ms,
-                                                  begin: 1,
-                                                  end: 0,
-                                                  curve: Curves.easeInOutSine),
-                                            );
-                                          },
-                                        );
-                                } else {
-                                  return const ShimmerLoadingWidget();
-                                }
-                              },
-                            ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  );
+                          } else {
+                            return const ShimmerLoadingWidget();
+                          }
+                        },
+                      ),
                     ),
                     const SizedBox(
                       height: 15,

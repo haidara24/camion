@@ -7,10 +7,11 @@ class AcceptRequestForMerchantEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AcceptRequestButtonPressedEvent extends AcceptRequestForMerchantEvent {
+class AcceptRequestForMerchantButtonPressedEvent
+    extends AcceptRequestForMerchantEvent {
   final int id;
 
-  AcceptRequestButtonPressedEvent(
+  AcceptRequestForMerchantButtonPressedEvent(
     this.id,
   );
 }

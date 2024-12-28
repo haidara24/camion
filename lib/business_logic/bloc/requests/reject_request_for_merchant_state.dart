@@ -10,7 +10,8 @@ sealed class RejectRequestForMerchantState extends Equatable {
 final class RejectRequestForMerchantInitial
     extends RejectRequestForMerchantState {}
 
-class RejectRequestLoadingProgressState extends RejectRequestForMerchantState {}
+class RejectRequestForMerchantLoadingProgressState
+    extends RejectRequestForMerchantState {}
 
 class RejectRequestForMerchantSuccessState
     extends RejectRequestForMerchantState {

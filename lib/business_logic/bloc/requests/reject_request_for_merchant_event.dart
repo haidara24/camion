@@ -7,9 +7,10 @@ sealed class RejectRequestForMerchantEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class RejectRequestButtonPressedEvent extends RejectRequestForMerchantEvent {
+class RejectRequestForMerchantButtonPressedEvent
+    extends RejectRequestForMerchantEvent {
   final int id;
   final String text;
 
-  RejectRequestButtonPressedEvent(this.id, this.text);
+  RejectRequestForMerchantButtonPressedEvent(this.id, this.text);
 }

@@ -13,7 +13,9 @@ class NotificationProvider extends ChangeNotifier {
   int get notreadednotifications => _notreadednotifications;
 
   initNotifications(List<NotificationModel> noti) async {
+    print(noti.length);
     _notifications = noti;
+    print(_notifications.length);
     var prefs = await SharedPreferences.getInstance();
     _notreadednotifications = prefs.getInt("notreaded") ?? 0;
     notifyListeners();
@@ -32,7 +34,9 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   removeNotReadedNotification() async {
-    _notreadednotifications--;
+    if (_notreadednotifications > 0) {
+      _notreadednotifications--;
+    }
     var prefs = await SharedPreferences.getInstance();
     prefs.setInt("notreaded", _notreadednotifications);
     notifyListeners();
@@ -46,15 +50,14 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   markNotificationAsRead(int id) async {
-    var notification =
-        _notifications.firstWhere((n) => n!.id == id, orElse: () => null);
-    if (notification != null && !notification.isread!) {
-      notification.isread = true;
-      _notreadednotifications--;
-      var prefs = await SharedPreferences.getInstance();
-      await prefs.setInt("notreaded", _notreadednotifications);
-      notifyListeners();
-    }
+    var index = _notifications.indexWhere(
+      (element) => element!.id! == id,
+    );
+    _notifications[index]!.isread = true;
+    _notreadednotifications--;
+    var prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("notreaded", _notreadednotifications);
+    notifyListeners();
   }
 
   markOwnerNotificationAsRead(int id) {

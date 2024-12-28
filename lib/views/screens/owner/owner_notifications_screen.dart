@@ -205,7 +205,9 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          IncomingShipmentDetailsScreen(),
+                                                          IncomingShipmentDetailsScreen(
+                                                              requestOwner:
+                                                                  "T"),
                                                     ),
                                                   );
                                                 }
@@ -426,7 +428,9 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          IncomingShipmentDetailsScreen(),
+                                                          IncomingShipmentDetailsScreen(
+                                                              requestOwner:
+                                                                  "T"),
                                                     ),
                                                   );
                                                 }

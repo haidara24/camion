@@ -10,8 +10,8 @@ class AcceptRequestForMerchantBloc
   late RequestRepository requestRepository;
   AcceptRequestForMerchantBloc({required this.requestRepository})
       : super(AcceptRequestForMerchantInitial()) {
-    on<AcceptRequestButtonPressedEvent>((event, emit) async {
-      emit(AcceptRequestLoadingProgressState());
+    on<AcceptRequestForMerchantButtonPressedEvent>((event, emit) async {
+      emit(AcceptRequestForMerchantLoadingProgressState());
       try {
         var result = await requestRepository.acceptRequestForMerchant(
           event.id,

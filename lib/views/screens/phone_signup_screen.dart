@@ -1,7 +1,10 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/control_view.dart';
+import 'package:camion/views/screens/driver/create_truck_for%20driver.dart';
 import 'package:camion/views/screens/verify_otp_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
@@ -11,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PhoneSignUpScreen extends StatefulWidget {
   PhoneSignUpScreen({Key? key}) : super(key: key);
@@ -376,25 +380,63 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                     BlocConsumer<AuthBloc, AuthState>(
                                       listener: (context, state) async {
                                         if (state is PhoneAuthSuccessState) {
+                                          // Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) =>
+                                          //         VerifyOtpScreen(
+                                          //       isLogin: state.data["isLogin"],
+                                          //       phone: _phoneController.text,
+                                          //     ),
+                                          //   ),
+                                          // );
+                                        }
+                                        if (state is AuthDriverSuccessState) {
                                           showCustomSnackBar(
                                             context: context,
                                             backgroundColor: AppColor.deepGreen,
                                             message: localeState
                                                         .value.languageCode ==
                                                     'en'
-                                                ? 'sign in successfully, Please Verify.'
-                                                : 'تم تسجيل الدخول بنجاح! الرجاء تأكيد الحساب.',
+                                                ? 'sign in successfully!'
+                                                : 'تم تسجيل الدخول بنجاح!.',
                                           );
 
-                                          Navigator.push(
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          var driverId =
+                                              prefs.getInt("truckuser");
+                                          BlocProvider.of<TruckTypeBloc>(
+                                                  context)
+                                              .add(TruckTypeLoadEvent());
+
+                                          Navigator.pushAndRemoveUntil(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  VerifyOtpScreen(
-                                                isLogin: state.data["isLogin"],
-                                                phone: _phoneController.text,
-                                              ),
+                                                  CreateTruckForDriverScreen(
+                                                      driverId: driverId!),
                                             ),
+                                            (route) => false,
+                                          );
+                                        } else {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            backgroundColor: AppColor.deepGreen,
+                                            message: localeState
+                                                        .value.languageCode ==
+                                                    'en'
+                                                ? 'sign in successfully!'
+                                                : 'تم تسجيل الدخول بنجاح!.',
+                                          );
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const ControlView(),
+                                            ),
+                                            (route) => false,
                                           );
                                         }
 

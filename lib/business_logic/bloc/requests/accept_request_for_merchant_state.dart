@@ -10,7 +10,8 @@ class AcceptRequestForMerchantState extends Equatable {
 final class AcceptRequestForMerchantInitial
     extends AcceptRequestForMerchantState {}
 
-class AcceptRequestLoadingProgressState extends AcceptRequestForMerchantState {}
+class AcceptRequestForMerchantLoadingProgressState
+    extends AcceptRequestForMerchantState {}
 
 class AcceptRequestForMerchantSuccessState
     extends AcceptRequestForMerchantState {

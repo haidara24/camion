@@ -667,7 +667,9 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                 DriverActiveShipmentState>(
               listener: (context, state) {
                 if (state is DriverActiveShipmentLoadedSuccess) {
-                  truckLocation = state.shipments[0].truck!.location_lat!;
+                  truckLocation = state.shipments.isNotEmpty
+                      ? state.shipments[0].truck!.location_lat!
+                      : "";
                 }
               },
               builder: (context, state) {
@@ -680,159 +682,167 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                   } else {
                     return Consumer<ActiveShippmentProvider>(
                         builder: (context, shipmentProvider, child) {
-                      return Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height,
-                            child: GoogleMap(
-                              onMapCreated:
-                                  (GoogleMapController controller) async {
-                                setState(() {
-                                  _controller = controller;
-                                  _controller.setMapStyle(_mapStyle);
-                                });
+                      return Visibility(
+                        visible: state.shipments.isNotEmpty,
+                        replacement: NoResultsWidget(
+                          text: AppLocalizations.of(context)!
+                              .translate('no_active'),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.bottomCenter,
+                          children: [
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height,
+                              child: GoogleMap(
+                                onMapCreated:
+                                    (GoogleMapController controller) async {
+                                  setState(() {
+                                    _controller = controller;
+                                    _controller.setMapStyle(_mapStyle);
+                                  });
 
-                                initMapbounds(state.shipments[0]);
-                                markers = {};
-                                var pickupMarker = Marker(
-                                  markerId: const MarkerId("pickup"),
-                                  position: LatLng(
-                                      double.parse(state
-                                          .shipments[0].pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "P")
-                                          .location!
-                                          .split(",")[0]),
-                                      double.parse(state
-                                          .shipments[0].pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "P")
-                                          .location!
-                                          .split(",")[1])),
-                                  icon: pickupicon,
-                                  infoWindow: InfoWindow(
+                                  initMapbounds(state.shipments[0]);
+                                  markers = {};
+                                  var pickupMarker = Marker(
+                                    markerId: const MarkerId("pickup"),
+                                    position: LatLng(
+                                        double.parse(state
+                                            .shipments[0].pathpoints!
+                                            .singleWhere((element) =>
+                                                element.pointType == "P")
+                                            .location!
+                                            .split(",")[0]),
+                                        double.parse(state
+                                            .shipments[0].pathpoints!
+                                            .singleWhere((element) =>
+                                                element.pointType == "P")
+                                            .location!
+                                            .split(",")[1])),
+                                    icon: pickupicon,
+                                    infoWindow: InfoWindow(
+                                        title: state.shipments[0].pathpoints!
+                                            .singleWhere((element) =>
+                                                element.pointType == "P")
+                                            .name!),
+                                  );
+                                  markers.add(pickupMarker);
+                                  var deliveryMarker = Marker(
+                                    markerId: const MarkerId("delivery"),
+                                    position: LatLng(
+                                        double.parse(state
+                                            .shipments[0].pathpoints!
+                                            .singleWhere((element) =>
+                                                element.pointType == "D")
+                                            .location!
+                                            .split(",")[0]),
+                                        double.parse(state
+                                            .shipments[0].pathpoints!
+                                            .singleWhere((element) =>
+                                                element.pointType == "D")
+                                            .location!
+                                            .split(",")[1])),
+                                    icon: deliveryicon,
+                                    infoWindow: InfoWindow(
                                       title: state.shipments[0].pathpoints!
                                           .singleWhere((element) =>
-                                              element.pointType == "P")
-                                          .name!),
-                                );
-                                markers.add(pickupMarker);
-                                var deliveryMarker = Marker(
-                                  markerId: const MarkerId("delivery"),
-                                  position: LatLng(
-                                      double.parse(state
-                                          .shipments[0].pathpoints!
-                                          .singleWhere((element) =>
                                               element.pointType == "D")
-                                          .location!
-                                          .split(",")[0]),
-                                      double.parse(state
-                                          .shipments[0].pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "D")
-                                          .location!
-                                          .split(",")[1])),
-                                  icon: deliveryicon,
-                                  infoWindow: InfoWindow(
-                                    title: state.shipments[0].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "D")
-                                        .name!,
-                                  ),
-                                );
-                                markers.add(deliveryMarker);
-
-                                var truckMarker = Marker(
-                                  markerId: const MarkerId("truck"),
-                                  position: LatLng(
-                                      double.parse(state
-                                          .shipments[0].truck!.location_lat!
-                                          .split(",")[0]),
-                                      double.parse(state
-                                          .shipments[0].truck!.location_lat!
-                                          .split(",")[1])),
-                                  icon: truckicon,
-                                );
-                                markers.add(truckMarker);
-                                setState(() {});
-                              },
-                              zoomControlsEnabled: false,
-
-                              initialCameraPosition: const CameraPosition(
-                                  target: LatLng(35.363149, 35.932120),
-                                  zoom: 14.47),
-                              // gestureRecognizers: {},
-                              markers: markers,
-                              polylines: state.shipments.isNotEmpty
-                                  ? {
-                                      Polyline(
-                                        polylineId: const PolylineId("route"),
-                                        points: deserializeLatLng(
-                                            state.shipments[0].paths!),
-                                        color: AppColor.deepYellow,
-                                        width: 4,
-                                      ),
-                                    }
-                                  : {},
-                              // mapType: shipmentProvider.mapType,
-                            ),
-                          ),
-                          pathList(
-                            state.shipments[0],
-                            localeState.value.languageCode,
-                          ),
-                          Positioned(
-                            bottom: 145,
-                            left: 5,
-                            child: InkWell(
-                              onTap: () async {
-                                setState(() {
-                                  startTracking = !startTracking;
-                                });
-                                if (startTracking) {
-                                  print(truckLocation);
-                                  await _controller.animateCamera(CameraUpdate
-                                      .newCameraPosition(CameraPosition(
-                                          target: LatLng(
-                                            double.parse(
-                                                truckLocation!.split(",")[0]),
-                                            double.parse(
-                                                truckLocation!.split(",")[1]),
-                                          ),
-                                          zoom: 14.47)));
-                                } else {
-                                  initMapbounds(state.shipments[0]);
-                                }
-                              },
-                              child: AbsorbPointer(
-                                absorbing: false,
-                                child: SizedBox(
-                                  height: 45,
-                                  width: 45,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(45),
-                                      border: Border.all(
-                                        color: startTracking
-                                            ? Colors.orange
-                                            : Colors.white,
-                                        width: startTracking ? 2 : 0,
-                                      ),
+                                          .name!,
                                     ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(180),
-                                      child: Image.asset(
-                                          "assets/icons/radar.gif",
-                                          gaplessPlayback: true,
-                                          fit: BoxFit.fill),
+                                  );
+                                  markers.add(deliveryMarker);
+
+                                  var truckMarker = Marker(
+                                    markerId: const MarkerId("truck"),
+                                    position: LatLng(
+                                        double.parse(state
+                                            .shipments[0].truck!.location_lat!
+                                            .split(",")[0]),
+                                        double.parse(state
+                                            .shipments[0].truck!.location_lat!
+                                            .split(",")[1])),
+                                    icon: truckicon,
+                                  );
+                                  markers.add(truckMarker);
+                                  setState(() {});
+                                },
+                                zoomControlsEnabled: false,
+
+                                initialCameraPosition: const CameraPosition(
+                                    target: LatLng(35.363149, 35.932120),
+                                    zoom: 14.47),
+                                // gestureRecognizers: {},
+                                markers: markers,
+                                polylines: state.shipments.isNotEmpty
+                                    ? {
+                                        Polyline(
+                                          polylineId: const PolylineId("route"),
+                                          points: deserializeLatLng(
+                                              state.shipments[0].paths!),
+                                          color: AppColor.deepYellow,
+                                          width: 4,
+                                        ),
+                                      }
+                                    : {},
+                                // mapType: shipmentProvider.mapType,
+                              ),
+                            ),
+                            pathList(
+                              state.shipments[0],
+                              localeState.value.languageCode,
+                            ),
+                            Positioned(
+                              bottom: 145,
+                              left: 5,
+                              child: InkWell(
+                                onTap: () async {
+                                  setState(() {
+                                    startTracking = !startTracking;
+                                  });
+                                  if (startTracking) {
+                                    print(truckLocation);
+                                    await _controller.animateCamera(CameraUpdate
+                                        .newCameraPosition(CameraPosition(
+                                            target: LatLng(
+                                              double.parse(
+                                                  truckLocation!.split(",")[0]),
+                                              double.parse(
+                                                  truckLocation!.split(",")[1]),
+                                            ),
+                                            zoom: 14.47)));
+                                  } else {
+                                    initMapbounds(state.shipments[0]);
+                                  }
+                                },
+                                child: AbsorbPointer(
+                                  absorbing: false,
+                                  child: SizedBox(
+                                    height: 45,
+                                    width: 45,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(45),
+                                        border: Border.all(
+                                          color: startTracking
+                                              ? Colors.orange
+                                              : Colors.white,
+                                          width: startTracking ? 2 : 0,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(180),
+                                        child: Image.asset(
+                                            "assets/icons/radar.gif",
+                                            gaplessPlayback: true,
+                                            fit: BoxFit.fill),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                     });
                   }

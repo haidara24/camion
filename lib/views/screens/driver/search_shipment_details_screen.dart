@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/assign_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
@@ -321,8 +322,8 @@ class _SearchShipmentDetailsScreenState
                             itemBuilder: (context, index) {
                               return InkWell(
                                 onTap: () {
-                                  BlocProvider.of<OrderTruckBloc>(context).add(
-                                      OrderTruckButtonPressed(
+                                  BlocProvider.of<AssignShipmentBloc>(context)
+                                      .add(AssignShipmentButtonPressed(
                                           widget.shipment.id!,
                                           state.trucks[index].id!));
                                   Navigator.pop(context);
@@ -475,11 +476,11 @@ class _SearchShipmentDetailsScreenState
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          BlocConsumer<OrderTruckBloc,
-                                              OrderTruckState>(
+                                          BlocConsumer<AssignShipmentBloc,
+                                              AssignShipmentState>(
                                             listener: (context, state) {
                                               if (state
-                                                  is OrderTruckSuccessState) {
+                                                  is AssignShipmentSuccessState) {
                                                 Navigator.pushAndRemoveUntil(
                                                     context,
                                                     MaterialPageRoute(
@@ -491,7 +492,7 @@ class _SearchShipmentDetailsScreenState
                                             },
                                             builder: (context, state) {
                                               if (state
-                                                  is OrderTruckLoadingProgressState) {
+                                                  is AssignShipmentLoadingProgressState) {
                                                 return CustomButton(
                                                   title: SizedBox(
                                                     // width: 70.w,
@@ -594,10 +595,10 @@ class _SearchShipmentDetailsScreenState
                                                                       prefs.getInt(
                                                                           "truckId");
                                                                   BlocProvider.of<
-                                                                              OrderTruckBloc>(
+                                                                              AssignShipmentBloc>(
                                                                           context)
                                                                       .add(
-                                                                    OrderTruckButtonPressed(
+                                                                    AssignShipmentButtonPressed(
                                                                         widget
                                                                             .shipment
                                                                             .id!,

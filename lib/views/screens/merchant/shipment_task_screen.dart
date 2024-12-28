@@ -228,7 +228,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                           horizontal: 12,
                                                         ),
                                                         child: Text(
-                                                          "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}",
+                                                          "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}",
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           style: TextStyle(

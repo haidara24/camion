@@ -195,7 +195,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<TruckType?> _selectedTruckType = [null];
   List<TruckType?> get selectedTruckType => _selectedTruckType;
 
-  List<int> _selectedTruckTypeId = [0];
+  List<int> _selectedTruckTypeId = [-1];
   List<int> get selectedTruckTypeId => _selectedTruckTypeId;
 
   List<int> _selectedTruckTypeNum = [];
@@ -277,7 +277,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _truckType = null;
     _trucks = [null];
     _selectedTruckType = [null];
-    _selectedTruckTypeId = [0];
+    _selectedTruckTypeId = [-1];
     _truckConfirm = [false];
     _truckError = [false];
     _truckTypeError = false;
@@ -288,7 +288,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _truckTypeController = [];
 
     _selectedTruck = [];
-    _selectedTruckId = [0];
+    _selectedTruckId = [-1];
 
     // Reset date/time-related fields
     _loadDate = [DateTime.now()];
@@ -504,7 +504,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     // Check if the truck type is already selected for this path
     if (_selectedTruckTypeId[pathIndex] != truckType.id) {
       // If the current path has a different truck type, decrease the count of the previously selected type
-      if (_selectedTruckTypeId[pathIndex] != 0) {
+      if (_selectedTruckTypeId[pathIndex] != -1) {
         int oldTypeIndex =
             _truckTypeGroupId.indexOf(_selectedTruckTypeId[pathIndex]);
         if (oldTypeIndex != -1) {
@@ -534,9 +534,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _selectedTruckType[pathIndex] = truckType;
       _selectedTruckTypeId[pathIndex] = truckType.id!;
     }
-    print(_selectedTruckTypeId);
-    print(_truckTypeGroupId);
-    print(_selectedTruckTypeNum);
+    print("TruckType$_selectedTruckTypeId");
+    print("TypeGroup$_truckTypeGroupId");
+    print("TruckTypeNum$_selectedTruckTypeNum");
 
     // Notify listeners for state update
     notifyListeners();
