@@ -78,8 +78,8 @@ class AuthRepository {
         badge: true,
         sound: true,
       );
-      // FirebaseMessaging messaging = FirebaseMessaging.instance;
-      // firebaseToken = await messaging.getToken();
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      firebaseToken = await messaging.getToken();
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
       print(userType);
