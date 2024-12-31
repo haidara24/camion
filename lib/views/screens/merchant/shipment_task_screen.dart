@@ -186,6 +186,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                         child: AbsorbPointer(
                                           absorbing: false,
                                           child: Card(
+                                                  color:Colors.white,
                                             elevation: 1,
                                             shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(

@@ -38,9 +38,13 @@ class ActiveShippmentProvider extends ChangeNotifier {
     _polyline = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-      PointLatLng(position1.latitude, position1.longitude),
-      PointLatLng(position2.latitude, position2.longitude),
+      googleApiKey:"AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+      request: PolylineRequest(
+        origin: PointLatLng(position1.latitude, position1.longitude),
+        destination: PointLatLng(position2.latitude, position2.longitude),
+        mode: TravelMode.driving,
+        ),
+      
     );
     if (result.points.isNotEmpty) {
       result.points.forEach((element) {

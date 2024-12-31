@@ -410,16 +410,13 @@ class AddShippmentProvider extends ChangeNotifier {
 
     await polylinePoints
         .getRouteBetweenCoordinates(
-      "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-      PointLatLng(
-        _pickup_latlng[index]!.latitude,
-        _pickup_latlng[index]!.longitude,
-      ),
-      PointLatLng(
-        _delivery_latlng[index]!.latitude,
-        _delivery_latlng[index]!.longitude,
-      ),
-      wayPoints: waypoints,
+          googleApiKey:"AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+      request: PolylineRequest(
+        origin: PointLatLng(_pickup_latlng[index]!.latitude, _pickup_latlng[index]!.longitude),
+        destination: PointLatLng(_delivery_latlng[index]!.latitude, _delivery_latlng[index]!.longitude),
+        mode: TravelMode.driving,
+        wayPoints:  waypoints,
+        ),
     )
         .then(
       (result) {

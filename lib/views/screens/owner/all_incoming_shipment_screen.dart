@@ -516,6 +516,7 @@ class _AllIncomingShippmentLogScreenState
                                                         child: AbsorbPointer(
                                                           absorbing: false,
                                                           child: Card(
+                                                  color:Colors.white,
                                                             shape:
                                                                 const RoundedRectangleBorder(
                                                               borderRadius:
@@ -714,6 +715,7 @@ class _AllIncomingShippmentLogScreenState
                                                   child: AbsorbPointer(
                                                     absorbing: false,
                                                     child: Card(
+                                                  color:Colors.white,
                                                       shape:
                                                           const RoundedRectangleBorder(
                                                         borderRadius:
@@ -922,6 +924,7 @@ class _AllIncomingShippmentLogScreenState
                                                         child: AbsorbPointer(
                                                           absorbing: false,
                                                           child: Card(
+                                                  color:Colors.white,
                                                             shape:
                                                                 const RoundedRectangleBorder(
                                                               borderRadius:
@@ -1101,6 +1104,7 @@ class _AllIncomingShippmentLogScreenState
                                                         ));
                                                   },
                                                   child: Card(
+                                                  color:Colors.white,
                                                     shape:
                                                         const RoundedRectangleBorder(
                                                       borderRadius:

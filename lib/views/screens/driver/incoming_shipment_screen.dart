@@ -149,6 +149,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                         child: AbsorbPointer(
                                           absorbing: false,
                                           child: Card(
+                                                  color:Colors.white,
                                             elevation: 1,
                                             margin: const EdgeInsets.symmetric(
                                               vertical: 8,

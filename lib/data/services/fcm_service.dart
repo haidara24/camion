@@ -27,7 +27,7 @@ class NotificationServices {
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
     requestNotificationPermission();
-
+    getDeviceToken();
     FirebaseMessaging.onMessage.listen((message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification!.android;
@@ -101,8 +101,15 @@ class NotificationServices {
 
   //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
-    String? token = await messaging.getToken();
-    return token!;
+    String token = "";
+    if (Platform.isIOS) {
+        token = await messaging.getAPNSToken()??"";
+      }
+
+      if (Platform.isAndroid) {
+        token = await messaging.getToken()??"";
+      }
+    return token;
   }
 
   void isTokenRefresh() async {

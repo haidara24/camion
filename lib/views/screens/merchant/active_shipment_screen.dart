@@ -935,9 +935,12 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
 
     polylinePoints
         .getRouteBetweenCoordinates(
-      "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-      PointLatLng(d, e),
-      PointLatLng(f, g),
+          googleApiKey:"AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+      request: PolylineRequest(
+        origin: PointLatLng(d, e),
+        destination: PointLatLng(f, g),
+        mode: TravelMode.driving,
+        ),
     )
         .then((result) {
       if (result.points.isNotEmpty) {

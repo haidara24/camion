@@ -127,7 +127,7 @@ class PathStatisticsWidget extends StatelessWidget {
           // ),
           SizedBox(
             // height: 50.h,
-            width: MediaQuery.of(context).size.width * .35,
+            width: MediaQuery.of(context).size.width * .36,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -156,7 +156,7 @@ class PathStatisticsWidget extends StatelessWidget {
                     BlocBuilder<LocaleCubit, LocaleState>(
                       builder: (context, localeState) {
                         return SizedBox(
-                          width: MediaQuery.of(context).size.width * .28,
+                          // width: MediaQuery.of(context).size.width * .28,
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             child: SectionBody(

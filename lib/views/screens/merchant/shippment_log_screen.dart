@@ -408,9 +408,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                         .translate('pending')),
                                     const SizedBox(width: 4),
                                     value.requestNum > 0
-                                        ? Positioned(
-                                            left: -5,
-                                            child: Container(
+                                        ? Container(
                                               height: 25.w,
                                               width: 25.w,
                                               decoration: BoxDecoration(
@@ -425,8 +423,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       color: Colors.white,
                                                     )),
                                               ),
-                                            ),
-                                          )
+                                            )
                                         : const SizedBox.shrink(),
                                   ],
                                 ),
@@ -480,6 +477,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                               child: AbsorbPointer(
                                                 absorbing: false,
                                                 child: Card(
+                                                  color:Colors.white,
                                                   elevation: 1,
                                                   shape:
                                                       const RoundedRectangleBorder(
@@ -756,6 +754,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                               child: AbsorbPointer(
                                                 absorbing: false,
                                                 child: Card(
+                                                  color:Colors.white,
+
                                                   shape:
                                                       const RoundedRectangleBorder(
                                                     borderRadius:
@@ -804,8 +804,8 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                           child: Row(
                                                             children: [
                                                               Container(
-                                                                height: 35.w,
-                                                                width: 35.w,
+                                                                height: 28.w,
+                                                                width: 28.w,
                                                                 margin:
                                                                     const EdgeInsets
                                                                         .symmetric(

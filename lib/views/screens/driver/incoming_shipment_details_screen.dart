@@ -437,7 +437,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Center(
                                                         child:
                                                             LoadingIndicator(),
@@ -453,7 +453,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -572,7 +572,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Center(
                                                         child:
                                                             LoadingIndicator(),
@@ -588,7 +588,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -709,7 +709,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Center(
                                                         child:
                                                             LoadingIndicator(),
@@ -725,7 +725,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
@@ -904,7 +904,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Center(
                                                         child:
                                                             LoadingIndicator(),
@@ -920,7 +920,7 @@ class _IncomingShipmentDetailsScreenState
                                                           MediaQuery.of(context)
                                                                   .size
                                                                   .width *
-                                                              .3,
+                                                              .4,
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment

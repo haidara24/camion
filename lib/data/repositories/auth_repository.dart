@@ -79,10 +79,20 @@ class AuthRepository {
         sound: true,
       );
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-      firebaseToken = await messaging.getToken();
+      // firebaseToken = await messaging.getToken();
+      // if (Platform.isIOS) {
+      //   firebaseToken = await messaging.getAPNSToken();
+      // }
+        // firebaseToken = await messaging.getAPNSToken();
+      // print(firebaseToken);
+await Future.delayed(Duration(seconds: 1));
+        firebaseToken = await messaging.getToken();
+      if (Platform.isAndroid) {
+      }
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
       print(userType);
+      print(firebaseToken);
       var newPhone = "00963${phone.substring(1)}";
       Response response = await post(
         Uri.parse(PHONE_LOGIN_ENDPOINT),
@@ -218,7 +228,14 @@ class AuthRepository {
         sound: true,
       );
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-      firebaseToken = await messaging.getToken();
+      // firebaseToken = await messaging.getToken();
+      if (Platform.isIOS) {
+        firebaseToken = await messaging.getAPNSToken();
+      }
+
+      if (Platform.isAndroid) {
+        firebaseToken = await messaging.getToken();
+      }
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
       print(userType);
@@ -445,9 +462,15 @@ class AuthRepository {
       sound: true,
     );
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    firebaseToken = await messaging.getToken();
+    if (Platform.isIOS) {
+        firebaseToken = await messaging.getAPNSToken();
+      }
 
-    var jwt = prefs.getString("token");
+      if (Platform.isAndroid) {
+        firebaseToken = await messaging.getToken();
+      }
+
+    // var jwt = prefs.getString("token");
 
     final response = await HttpHelper.post(
       LOGOUT_ENDPOINT,

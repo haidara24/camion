@@ -365,16 +365,14 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     await polylinePoints
         .getRouteBetweenCoordinates(
-      "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-      PointLatLng(
-        _pickup_latlng!.latitude,
-        _pickup_latlng!.longitude,
-      ),
-      PointLatLng(
-        _delivery_latlng!.latitude,
-        _delivery_latlng!.longitude,
-      ),
-      wayPoints: waypoints,
+          googleApiKey:"AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+      request: PolylineRequest(
+        origin: PointLatLng(_pickup_latlng!.latitude, _pickup_latlng!.longitude),
+        destination: PointLatLng(_delivery_latlng!.latitude, _delivery_latlng!.longitude),
+        mode: TravelMode.driving,
+        wayPoints:  waypoints,
+        ),
+      
     )
         .then(
       (result) {
