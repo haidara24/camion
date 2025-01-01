@@ -176,9 +176,9 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
         }
       case "R":
         if (languageCode == "en") {
-          return "In Progress";
+          return "Running";
         } else {
-          return "قيد المعالجة";
+          return "جارية";
         }
       case "A":
         if (languageCode == "en") {
@@ -1196,7 +1196,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                 ),
                               ),
                               const Divider(
-                                height: 12,
+                                height: 24,
                               ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!

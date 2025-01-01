@@ -202,8 +202,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<UserLoggedOut>(
       (event, emit) async {
-        await authRepository.logout();
         emit(AuthInitial());
+        await authRepository.logout();
       },
     );
   }

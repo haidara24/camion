@@ -85,8 +85,8 @@ class AuthRepository {
       // }
         // firebaseToken = await messaging.getAPNSToken();
       // print(firebaseToken);
-await Future.delayed(Duration(seconds: 1));
-        firebaseToken = await messaging.getToken();
+      await Future.delayed(Duration(seconds: 1));
+      firebaseToken = await messaging.getToken();
       if (Platform.isAndroid) {
       }
       var prefs = await SharedPreferences.getInstance();
@@ -228,14 +228,9 @@ await Future.delayed(Duration(seconds: 1));
         sound: true,
       );
       FirebaseMessaging messaging = FirebaseMessaging.instance;
-      // firebaseToken = await messaging.getToken();
-      if (Platform.isIOS) {
-        firebaseToken = await messaging.getAPNSToken();
-      }
-
-      if (Platform.isAndroid) {
-        firebaseToken = await messaging.getToken();
-      }
+      await Future.delayed(Duration(seconds: 1));
+      firebaseToken = await messaging.getToken();
+      
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
       print(userType);
@@ -453,8 +448,9 @@ await Future.delayed(Duration(seconds: 1));
 
   Future<void> logout() async {
     var prefs = await SharedPreferences.getInstance();
-    String? firebaseToken = "";
+    var jwt = prefs.getString("token");
     prefs.clear();
+    String? firebaseToken = "";
     FirebaseMessaging.instance.requestPermission(
       alert: true,
       announcement: true,
@@ -462,20 +458,15 @@ await Future.delayed(Duration(seconds: 1));
       sound: true,
     );
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    if (Platform.isIOS) {
-        firebaseToken = await messaging.getAPNSToken();
-      }
+    await Future.delayed(Duration(seconds: 1));
+      firebaseToken = await messaging.getToken();
+      
 
-      if (Platform.isAndroid) {
-        firebaseToken = await messaging.getToken();
-      }
-
-    // var jwt = prefs.getString("token");
 
     final response = await HttpHelper.post(
       LOGOUT_ENDPOINT,
       {'fcm_token': firebaseToken},
-      // apiToken: jwt,
+      apiToken: jwt,
     );
 
     print(response.statusCode);

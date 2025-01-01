@@ -176,9 +176,9 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
         }
       case "R":
         if (languageCode == "en") {
-          return "In Progress";
+          return "Running";
         } else {
-          return "قيد المعالجة";
+          return "جارية";
         }
       case "A":
         if (languageCode == "en") {
@@ -632,7 +632,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                 ],
                               ),
                               const Divider(
-                                height: 16,
+                                height: 24,
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -657,13 +657,13 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                 ],
                               ),
                               const Divider(
-                                height: 16,
+                                height: 24,
                               ),
                               ShipmentInstructionCardsWidget(
                                 subshipment: shipmentstate.shipment,
                               ),
                               const Divider(
-                                height: 16,
+                                height: 24,
                               ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!
@@ -678,7 +678,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                 mini: false,
                               ),
                               const Divider(
-                                height: 32,
+                                height: 24,
                               ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!
@@ -689,7 +689,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                   shipmentItems:
                                       shipmentstate.shipment.shipmentItems),
                               const Divider(
-                                height: 32,
+                                height: 24,
                               ),
                               SectionTitle(
                                 text: AppLocalizations.of(context)!
@@ -701,7 +701,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                 period: shipmentstate.shipment.period!,
                               ),
                               const Divider(
-                                height: 32,
+                                height: 24,
                               ),
                               Visibility(
                                 visible: shipmentstate.shipment.truck == null &&

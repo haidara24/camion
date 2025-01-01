@@ -49,96 +49,99 @@ class PaymentInstructionDetailsScreen extends StatelessWidget {
                   ReadPaymentInstructionState>(
                 builder: (context, state) {
                   if (state is ReadPaymentInstructionLoadedSuccess) {
-                    return Column(
-                      children: [
-                        Card(
-                          elevation: 2,
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .translate('shipment_path_info'),
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        color: AppColor.darkGrey,
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          Card(
+                            elevation: 2,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('shipment_path_info'),
+                                        style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.darkGrey,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                ShipmentPathVerticalWidget(
-                                  pathpoints: shipment.pathpoints!,
-                                  pickupDate: shipment.pickupDate!,
-                                  deliveryDate: shipment.deliveryDate!,
-                                  langCode: localeState.value.languageCode,
-                                  mini: false,
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  ShipmentPathVerticalWidget(
+                                    pathpoints: shipment.pathpoints!,
+                                    pickupDate: shipment.pickupDate!,
+                                    deliveryDate: shipment.deliveryDate!,
+                                    langCode: localeState.value.languageCode,
+                                    mini: false,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                        Card(
-                          elevation: 1,
-                          clipBehavior: Clip.antiAlias,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          Card(
+                            elevation: 1,
+                            clipBehavior: Clip.antiAlias,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    width: double.infinity,
+                                  ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate('operation_cost'),
+                                  ),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  SectionBody(
+                                    text:
+                                        '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(shipment.distance!, shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
+                                  ),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  SectionBody(
+                                    text:
+                                        '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
+                                  ),
+                                  SizedBox(
+                                    height: 7.h,
+                                  ),
+                                  SectionBody(
+                                    text:
+                                        '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  width: double.infinity,
-                                ),
-                                SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate('operation_cost'),
-                                ),
-                                SizedBox(
-                                  height: 7.h,
-                                ),
-                                SectionBody(
-                                  text:
-                                      '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(shipment.distance!, shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
-                                ),
-                                SizedBox(
-                                  height: 7.h,
-                                ),
-                                SectionBody(
-                                  text:
-                                      '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
-                                ),
-                                SizedBox(
-                                  height: 7.h,
-                                ),
-                                SectionBody(
-                                  text:
-                                      '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
-                                ),
-                              ],
-                            ),
+                          SizedBox(
+                            height: 5.h,
                           ),
-                        ),
-                        SizedBox(
-                          height: 5.h,
-                        ),
-                      ],
+                        ],
+                      ),
                     );
                   } else {
                     return Shimmer.fromColors(

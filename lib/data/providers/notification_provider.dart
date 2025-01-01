@@ -54,7 +54,9 @@ class NotificationProvider extends ChangeNotifier {
       (element) => element!.id! == id,
     );
     _notifications[index]!.isread = true;
-    _notreadednotifications--;
+    if (_notreadednotifications > 0) {
+      _notreadednotifications--;
+    }
     var prefs = await SharedPreferences.getInstance();
     await prefs.setInt("notreaded", _notreadednotifications);
     notifyListeners();

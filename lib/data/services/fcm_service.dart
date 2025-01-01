@@ -102,13 +102,7 @@ class NotificationServices {
   //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
     String token = "";
-    if (Platform.isIOS) {
-        token = await messaging.getAPNSToken()??"";
-      }
-
-      if (Platform.isAndroid) {
         token = await messaging.getToken()??"";
-      }
     return token;
   }
 

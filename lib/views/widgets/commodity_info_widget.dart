@@ -5,6 +5,7 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as intel;
 
 class Commodity_info_widget extends StatelessWidget {
@@ -26,6 +27,7 @@ class Commodity_info_widget extends StatelessWidget {
             TableRow(children: [
               TableCell(
                 child: Container(
+                  height: 45.h,
                   decoration: BoxDecoration(
                       color: AppColor.deepYellow,
                       borderRadius: BorderRadius.only(
@@ -45,6 +47,7 @@ class Commodity_info_widget extends StatelessWidget {
               ),
               TableCell(
                 child: Container(
+                  height: 45.h,
                   decoration: BoxDecoration(
                       color: AppColor.deepYellow,
                       borderRadius: BorderRadius.only(

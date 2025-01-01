@@ -410,7 +410,7 @@ class _IncomingShipmentDetailsScreenState
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       widget.requestOwner == "T"
                                           ? BlocConsumer<
