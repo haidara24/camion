@@ -379,19 +379,16 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                     ),
                                     BlocConsumer<AuthBloc, AuthState>(
                                       listener: (context, state) async {
-                                        if (state is PhoneAuthSuccessState) {
-                                          // Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     builder: (context) =>
-                                          //         VerifyOtpScreen(
-                                          //       isLogin: state.data["isLogin"],
-                                          //       phone: _phoneController.text,
-                                          //     ),
-                                          //   ),
-                                          // );
-                                        }
-                                        if (state is AuthDriverSuccessState) {
+                                        if (state is AuthFailureState) {
+                                          showCustomSnackBar(
+                                            context: context,
+                                            backgroundColor: Colors.red[300]!,
+                                            message: state.errorMessage!,
+                                          );
+                                        } else if (state
+                                            is AuthLoggingInProgressState) {
+                                        } else if (state
+                                            is AuthDriverSuccessState) {
                                           showCustomSnackBar(
                                             context: context,
                                             backgroundColor: AppColor.deepGreen,
