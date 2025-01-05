@@ -293,7 +293,7 @@ class TruckRepository {
     var request = http.MultipartRequest('POST', Uri.parse(TRUCKS_ENDPOINT));
     request.headers.addAll({
       HttpHeaders.authorizationHeader: "JWT $token",
-      HttpHeaders.contentTypeHeader: "multipart/form-data"
+      // HttpHeaders.contentTypeHeader: "multipart/form-data"
     });
 
     final uploadImages = <http.MultipartFile>[];
@@ -311,7 +311,7 @@ class TruckRepository {
     }
 
     request.fields['truckuser'] = truck.truckuser!.toString();
-    request.fields['owner'] = truck.owner!.toString();
+    request.fields['owner'] = truck.phoneowner??"0";
     request.fields['truck_type'] = truck.truckType!.id!.toString();
     request.fields['location_lat'] = truck.locationLat!;
     request.fields['height'] = truck.height!.toString();
@@ -323,13 +323,15 @@ class TruckRepository {
     request.fields['empty_weight'] = truck.emptyWeight!.toString();
     request.fields['gross_weight'] = truck.grossWeight!.toString();
     request.fields['gpsId'] = "";
-
+print(request.fields);
     var response = await request.send();
+    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       return KTruck.fromJson(jsonDecode(respStr));
     } else {
       final respStr = await response.stream.bytesToString();
+      print(respStr);
       return null;
     }
   }
@@ -340,7 +342,7 @@ class TruckRepository {
   ) async {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    var request = http.MultipartRequest('POST', Uri.parse(TRUCKS_ENDPOINT));
+    var request = http.MultipartRequest('POST', Uri.parse("${TRUCKS_ENDPOINT}create-with-driver/"));
     request.headers.addAll({
       HttpHeaders.authorizationHeader: "JWT $token",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
@@ -364,7 +366,7 @@ class TruckRepository {
     request.fields['driver_phone'] = truck['driver_phone'].toString();
     request.fields['owner'] = truck['owner'].toString();
     request.fields['truck_type'] = truck['truckType'].id.toString();
-    request.fields['location_lat'] = truck['locationLat'];
+    request.fields['location_lat'] = "35.363149,35.932120";
     request.fields['height'] = truck['height'].toString();
     request.fields['width'] = truck['width'].toString();
     request.fields['long'] = truck['long'].toString();
@@ -374,13 +376,15 @@ class TruckRepository {
     request.fields['empty_weight'] = truck['emptyWeight'].toString();
     request.fields['gross_weight'] = truck['grossWeight'].toString();
     request.fields['gpsId'] = "";
-
+print(request.fields);
     var response = await request.send();
+    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       return KTruck.fromJson(jsonDecode(respStr));
     } else {
       final respStr = await response.stream.bytesToString();
+      print(respStr);
       return null;
     }
   }

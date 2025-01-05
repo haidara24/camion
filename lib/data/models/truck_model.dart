@@ -204,6 +204,7 @@ class KTruck {
   String? driver_firstname;
   String? driver_lastname;
   int? owner;
+  String? phoneowner;
   int? truckuser;
   TruckType? truckType;
   int? location;
@@ -232,6 +233,7 @@ class KTruck {
     this.driver_firstname,
     this.driver_lastname,
     this.owner,
+    this.phoneowner,
     this.truckuser,
     this.truckType,
     this.location,

@@ -1084,7 +1084,7 @@ class _CreateTruckForDriverScreenState
                                               if (istruckOwner) {
                                                 truck.owner = 0;
                                               } else {
-                                                truck.owner = truckowner;
+                                                truck.phoneowner = truckownerController.text;
                                               }
                                               truck.truckType = trucktype;
                                               truck.gpsId = gpsController.text;

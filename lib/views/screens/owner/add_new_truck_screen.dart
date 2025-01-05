@@ -989,7 +989,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                 height: 40.h,
                                                 width: 50.w,
                                                 child: SvgPicture.asset(
-                                                    "assets/icons/cloud.svg"),
+                                                    "assets/icons/grey/add_image.svg"),
                                               ),
                                             ),
                                           ),
