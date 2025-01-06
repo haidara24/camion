@@ -267,8 +267,8 @@ class _CreateTruckForDriverScreenState
                                       keyboardType: TextInputType.phone,
                                       onSubmitted: validateAndFetchOwner,
                                       decoration: InputDecoration(
-                                        labelText: "Truck Owner",
-                                        hintText: "Enter phone number",
+                                        labelText: AppLocalizations.of(context)!.translate('truck_owner_phone'),
+                                        hintText: AppLocalizations.of(context)!.translate('enter_phone'),
                                         errorText: isPhoneValid
                                             ? null
                                             : "Invalid phone number or owner not found",

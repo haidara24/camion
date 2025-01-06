@@ -377,17 +377,17 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 8,
                                         ),
-                                        getMainPhoto(request!),
+                                        getMainPhoto(state.request!),
                                         const SizedBox(
                                           height: 16,
                                         ),
                                         SectionTitle(
                                           text: AppLocalizations.of(context)!
                                               .translate(
-                                            getMainText(request!),
+                                            getMainText(state.request!),
                                           ),
                                         ),
-                                        getExtraAction(request!, context),
+                                        getExtraAction(state.request!, context),
                                       ],
                                     ),
                                   )

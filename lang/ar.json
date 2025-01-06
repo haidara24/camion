@@ -103,7 +103,7 @@
     "read_less":"اقرأ أقل",
     "since":"منذ",
     "day":"يوم",
-    "source":"المصدر",
+    "source":"الكاتب",
     "search":"بحث",
 
     "list_error":"حدث خطأ أثناء تحميل القائمة...",
@@ -229,9 +229,10 @@
     "driver_name":"اسم السائق",
     "select_driver":"اختر سائق",
     "address":"العنوان",
-    "first_name":"الاسم الأول",
-    "last_name":"الاسم الأخير",
+    "first_name":"الاسم",
+    "last_name":"الكنية",
     "truck_owner_phone_error":"المالك غير موجود الرجاء التأكد من رقم الجوال.",
+    "truck_owner_phone":"رقم الجوال المالك",
 
     "order_truck":"اطلب المركبة",
     "form_init":"تهيئة الفورم",

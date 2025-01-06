@@ -104,7 +104,7 @@
     "read_less":"Read less",
     "since":"Since",
     "day":"Day",
-    "source":"Source",
+    "source":"Author",
     "search":"Search",
 
     "list_error":"An error occurred during loading list...",
@@ -233,6 +233,7 @@
     "first_name":"First Name",
     "last_name":"Last Name",
     "truck_owner_phone_error":"Owner not found. Please check the phone number.",
+    "truck_owner_phone":"owner phone number",
 
     "order_truck":"Order Truck",
     "form_init":"Init Form",

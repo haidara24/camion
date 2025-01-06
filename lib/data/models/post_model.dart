@@ -8,6 +8,7 @@ class Post {
   DateTime? date;
   int? readCount;
   String? source;
+  String? sourceAr;
   String? content;
   String? contentAr;
   bool? is_saved;
@@ -20,6 +21,7 @@ class Post {
       this.date,
       this.readCount,
       this.source,
+      this.sourceAr,
       this.content,
       this.contentAr,
       this.is_saved});
@@ -32,6 +34,7 @@ class Post {
     date = DateTime.parse(json['date']);
     readCount = json['read_count'];
     source = json['source'];
+    sourceAr = json['source_ar'];
     content = json['content'];
     contentAr = json['content_ar'];
     is_saved = json['is_saved'];

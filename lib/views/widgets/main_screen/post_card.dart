@@ -102,7 +102,7 @@ class PostCard extends StatelessWidget {
                         delay: playDuration,
                         curve: Curves.decelerate)
                     .slideX(begin: 0.2, end: 0),
-                Text("${AppLocalizations.of(context)!.translate('source')}: ${post.source!}")
+                Text("${AppLocalizations.of(context)!.translate('source')}: ${languageCode=="en"? post.source!:post.sourceAr!}")
                     .animate()
                     .scaleXY(
                         begin: 0,
@@ -124,7 +124,7 @@ class PostCard extends StatelessWidget {
                                 ? post.content!
                                 : post.contentAr!,
                             maxLines: 1000,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 15,
                               height: 1.5,
                             ),
