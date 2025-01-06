@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/core/upload_image_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/merchant_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/merchant_update_profile_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -12,6 +15,8 @@ import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MerchantProfileScreen extends StatefulWidget {
   // final Merchant user;
@@ -37,6 +42,10 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
   TextEditingController addressController = TextEditingController();
 
   TextEditingController companyNameController = TextEditingController();
+
+  bool _loading = false;
+
+  final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
@@ -82,28 +91,94 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 65.h,
-                                    backgroundColor: AppColor.deepYellow,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(180),
-                                      child: SizedBox(
-                                        child: Image.network(
-                                          state.merchant.image ?? "",
-                                          fit: BoxFit.fill,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Center(
-                                            child: Text(
-                                              "${state.merchant.firstname![0].toUpperCase()} ${state.merchant.lastname![0].toUpperCase()}",
-                                              style: TextStyle(
-                                                fontSize: 28.sp,
-                                              ),
-                                            ),
+                                  Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 65.h,
+                                        backgroundColor: AppColor.deepYellow,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(180),
+                                          child: BlocConsumer<UploadImageBloc,
+                                              UploadImageState>(
+                                            listener:
+                                                (context, imagestate) async {
+                                              if (imagestate
+                                                  is UserImageUpdateSuccess) {
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+
+                                                var merchant =
+                                                    prefs.getInt("merchant");
+                                                // print(merchant);
+                                                // ignore: use_build_context_synchronously
+                                                BlocProvider.of<
+                                                            MerchantProfileBloc>(
+                                                        context)
+                                                    .add(MerchantProfileLoad(
+                                                        merchant!));
+                                              }
+                                              if (imagestate
+                                                  is UserImageUpdateError) {}
+                                            },
+                                            builder: (context, imagestate) {
+                                              if (imagestate
+                                                  is UserImageUpdateLoading) {
+                                                return Center(
+                                                  child: LoadingIndicator(),
+                                                );
+                                              } else {
+                                                return SizedBox(
+                                                  child: Image.network(
+                                                    state.merchant.image ?? "",
+                                                    fit: BoxFit.fill,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        Center(
+                                                      child: Text(
+                                                        "${state.merchant.firstname![0].toUpperCase()} ${state.merchant.lastname![0].toUpperCase()}",
+                                                        style: TextStyle(
+                                                          fontSize: 28.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
                                           ),
                                         ),
                                       ),
-                                    ),
+                                      Visibility(
+                                        visible: true,
+                                        child: Positioned(
+                                          child: IconButton(
+                                            onPressed: () async {
+                                              var pickedImage =
+                                                  await _picker.pickImage(
+                                                source: ImageSource.gallery,
+                                              );
+
+                                              if (pickedImage != null) {
+                                                var _image =
+                                                    File(pickedImage.path);
+                                                BlocProvider.of<
+                                                            UploadImageBloc>(
+                                                        context)
+                                                    .add(UpdateUserImage(
+                                                        _image));
+                                              }
+                                            },
+                                            icon: Icon(
+                                              Icons.cloud_upload_outlined,
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ],
                               ),

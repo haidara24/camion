@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen>
                           SharedPreferences prefs =
                               await SharedPreferences.getInstance();
                           var merchant = prefs.getInt("merchant");
-                          print(merchant);
+                          // print(merchant);
                           // ignore: use_build_context_synchronously
                           BlocProvider.of<MerchantProfileBloc>(context)
                               .add(MerchantProfileLoad(merchant!));

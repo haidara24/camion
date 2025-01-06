@@ -6,6 +6,7 @@ import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
+import 'package:camion/business_logic/bloc/core/upload_image_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/assign_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/over_speed_bloc.dart';
@@ -227,6 +228,12 @@ class MyApp extends StatelessWidget {
                             RepositoryProvider.of<AuthRepository>(context),
                         userProvider:
                             Provider.of<UserProvider>(context, listen: false),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => UploadImageBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
                       ),
                     ),
                     BlocProvider(
