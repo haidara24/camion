@@ -149,7 +149,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                         child: AbsorbPointer(
                                           absorbing: false,
                                           child: Card(
-                                                  color:Colors.white,
+                                            color: Colors.white,
                                             elevation: 1,
                                             margin: const EdgeInsets.symmetric(
                                               vertical: 8,
@@ -206,7 +206,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                                                 .symmetric(
                                                                 horizontal: 4),
                                                         child: Text(
-                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.id!}',
                                                           style: TextStyle(
                                                             // color: AppColor.lightBlue,
                                                             fontSize: 18.sp,

@@ -516,7 +516,7 @@ class _AllIncomingShippmentLogScreenState
                                                         child: AbsorbPointer(
                                                           absorbing: false,
                                                           child: Card(
-                                                  color:Colors.white,
+                                                            color: Colors.white,
                                                             shape:
                                                                 const RoundedRectangleBorder(
                                                               borderRadius:
@@ -595,7 +595,7 @@ class _AllIncomingShippmentLogScreenState
                                                                                 11),
                                                                         child:
                                                                             Text(
-                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.id!}',
                                                                           style: TextStyle(
                                                                               // color: AppColor.lightBlue,
                                                                               fontSize: 18.sp,
@@ -715,7 +715,7 @@ class _AllIncomingShippmentLogScreenState
                                                   child: AbsorbPointer(
                                                     absorbing: false,
                                                     child: Card(
-                                                  color:Colors.white,
+                                                      color: Colors.white,
                                                       shape:
                                                           const RoundedRectangleBorder(
                                                         borderRadius:
@@ -797,7 +797,7 @@ class _AllIncomingShippmentLogScreenState
                                                                       horizontal:
                                                                           11),
                                                                   child: Text(
-                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
                                                                     style: TextStyle(
                                                                         // color: AppColor.lightBlue,
                                                                         fontSize: 18.sp,
@@ -924,7 +924,7 @@ class _AllIncomingShippmentLogScreenState
                                                         child: AbsorbPointer(
                                                           absorbing: false,
                                                           child: Card(
-                                                  color:Colors.white,
+                                                            color: Colors.white,
                                                             shape:
                                                                 const RoundedRectangleBorder(
                                                               borderRadius:
@@ -986,7 +986,7 @@ class _AllIncomingShippmentLogScreenState
                                                                                 11),
                                                                         child:
                                                                             Text(
-                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.shipment!}',
+                                                                          '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.id!}',
                                                                           style: TextStyle(
                                                                               // color: AppColor.lightBlue,
                                                                               fontSize: 18.sp,
@@ -1104,7 +1104,7 @@ class _AllIncomingShippmentLogScreenState
                                                         ));
                                                   },
                                                   child: Card(
-                                                  color:Colors.white,
+                                                    color: Colors.white,
                                                     shape:
                                                         const RoundedRectangleBorder(
                                                       borderRadius:
@@ -1165,7 +1165,7 @@ class _AllIncomingShippmentLogScreenState
                                                                       horizontal:
                                                                           11),
                                                                   child: Text(
-                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].shipment!}',
+                                                                    '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}',
                                                                     style: TextStyle(
                                                                         // color: AppColor.lightBlue,
                                                                         fontSize: 18.sp,
