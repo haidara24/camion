@@ -738,35 +738,35 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                 right: 4,
                                 child: InkWell(
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            ShipmentDetailsMapScreen(
-                                          shipment: shipmentstate.shipment,
-                                        ),
-                                        transitionDuration:
-                                            const Duration(milliseconds: 1000),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          var begin = const Offset(0.0, -1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
+                                    // Navigator.push(
+                                    //   context,
+                                    //   PageRouteBuilder(
+                                    //     pageBuilder: (context, animation,
+                                    //             secondaryAnimation) =>
+                                    //         ShipmentDetailsMapScreen(
+                                    //       shipment: shipmentstate.shipment,
+                                    //     ),
+                                    //     transitionDuration:
+                                    //         const Duration(milliseconds: 1000),
+                                    //     transitionsBuilder: (context, animation,
+                                    //         secondaryAnimation, child) {
+                                    //       var begin = const Offset(0.0, -1.0);
+                                    //       var end = Offset.zero;
+                                    //       var curve = Curves.ease;
 
-                                          var tween = Tween(
-                                                  begin: begin, end: end)
-                                              .chain(CurveTween(curve: curve));
+                                    //       var tween = Tween(
+                                    //               begin: begin, end: end)
+                                    //           .chain(CurveTween(curve: curve));
 
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    ).then((value) {
-                                      initMapbounds(shipmentstate.shipment);
-                                    });
+                                    //       return SlideTransition(
+                                    //         position: animation.drive(tween),
+                                    //         child: child,
+                                    //       );
+                                    //     },
+                                    //   ),
+                                    // ).then((value) {
+                                    //   initMapbounds(shipmentstate.shipment);
+                                    // });
                                     // shipmentProvider.setMapMode(MapType.satellite);
                                   },
                                   child: const AbsorbPointer(

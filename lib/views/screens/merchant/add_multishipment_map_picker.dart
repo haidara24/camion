@@ -53,8 +53,11 @@ class _MultiShippmentPickUpMapScreenState
 
   initlocation() async {
     if (widget.location != null) {
-      await mapController.animateCamera(CameraUpdate.newCameraPosition(
-          CameraPosition(target: widget.location!, zoom: 14.47)));
+      await mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: widget.location!, zoom: 14.47),
+        ),
+      );
     }
   }
 

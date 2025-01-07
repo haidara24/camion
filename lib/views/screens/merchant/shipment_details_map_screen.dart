@@ -16,7 +16,7 @@ import 'package:intl/intl.dart' as intel;
 import 'package:shimmer/shimmer.dart';
 
 class ShipmentDetailsMapScreen extends StatefulWidget {
-  final Shipmentv2 shipment;
+  final SubShipment shipment;
 
   ShipmentDetailsMapScreen({Key? key, required this.shipment})
       : super(key: key);
@@ -42,8 +42,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
 
   initMapbounds() {
     List<Marker> markers = [];
-    var pickuplocation = widget
-        .shipment.subshipments![selectedIndex].pathpoints!
+    var pickuplocation = widget.shipment.pathpoints!
         .singleWhere((element) => element.pointType == "P")
         .location!
         .split(",");
@@ -55,8 +54,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
       ),
     );
 
-    var deliverylocation = widget
-        .shipment.subshipments![selectedIndex].pathpoints!
+    var deliverylocation = widget.shipment.pathpoints!
         .singleWhere((element) => element.pointType == "D")
         .location!
         .split(",");
@@ -84,142 +82,142 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
     _controller.animateCamera(cameraUpdate);
   }
 
-  Widget pathList(Shipmentv2 shipment) {
-    return SizedBox(
-      height: 115.h,
-      child: ListView.builder(
-        itemCount: shipment.subshipments!.length,
-        shrinkWrap: true,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              setState(() {
-                selectedIndex = index;
-                selectedTruck = index;
-              });
-              // initMapbounds(shipment);
-              // setLoadDate(shipment.subshipments![selectedIndex].pickupDate!);
-              // setLoadTime(shipment.subshipments![selectedIndex].pickupDate!);
-              markers = {};
-              var pickupMarker = Marker(
-                markerId: const MarkerId("pickup"),
-                position: LatLng(
-                    double.parse(shipment
-                        .subshipments![selectedIndex].pathpoints!
-                        .singleWhere((element) => element.pointType == "P")
-                        .location!
-                        .split(",")[0]),
-                    double.parse(shipment
-                        .subshipments![selectedIndex].pathpoints!
-                        .singleWhere((element) => element.pointType == "P")
-                        .location!
-                        .split(",")[1])),
-                icon: pickupicon,
-              );
-              markers.add(pickupMarker);
-              var deliveryMarker = Marker(
-                markerId: const MarkerId("delivery"),
-                position: LatLng(
-                    double.parse(shipment
-                        .subshipments![selectedIndex].pathpoints!
-                        .singleWhere((element) => element.pointType == "D")
-                        .location!
-                        .split(",")[0]),
-                    double.parse(shipment
-                        .subshipments![selectedIndex].pathpoints!
-                        .singleWhere((element) => element.pointType == "D")
-                        .location!
-                        .split(",")[1])),
-                icon: deliveryicon,
-              );
-              markers.add(deliveryMarker);
+  // Widget pathList(Shipmentv2 shipment) {
+  //   return SizedBox(
+  //     height: 115.h,
+  //     child: ListView.builder(
+  //       itemCount: shipment.subshipments!.length,
+  //       shrinkWrap: true,
+  //       scrollDirection: Axis.horizontal,
+  //       itemBuilder: (context, index) {
+  //         return InkWell(
+  //           onTap: () {
+  //             setState(() {
+  //               selectedIndex = index;
+  //               selectedTruck = index;
+  //             });
+  //             // initMapbounds(shipment);
+  //             // setLoadDate(shipment.pickupDate!);
+  //             // setLoadTime(shipment.pickupDate!);
+  //             markers = {};
+  //             var pickupMarker = Marker(
+  //               markerId: const MarkerId("pickup"),
+  //               position: LatLng(
+  //                   double.parse(shipment
+  //                       .pathpoints!
+  //                       .singleWhere((element) => element.pointType == "P")
+  //                       .location!
+  //                       .split(",")[0]),
+  //                   double.parse(shipment
+  //                       .pathpoints!
+  //                       .singleWhere((element) => element.pointType == "P")
+  //                       .location!
+  //                       .split(",")[1])),
+  //               icon: pickupicon,
+  //             );
+  //             markers.add(pickupMarker);
+  //             var deliveryMarker = Marker(
+  //               markerId: const MarkerId("delivery"),
+  //               position: LatLng(
+  //                   double.parse(shipment
+  //                       .pathpoints!
+  //                       .singleWhere((element) => element.pointType == "D")
+  //                       .location!
+  //                       .split(",")[0]),
+  //                   double.parse(shipment
+  //                       .pathpoints!
+  //                       .singleWhere((element) => element.pointType == "D")
+  //                       .location!
+  //                       .split(",")[1])),
+  //               icon: deliveryicon,
+  //             );
+  //             markers.add(deliveryMarker);
 
-              setState(() {});
-              initMapbounds();
-            },
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  width: 180.w,
-                  margin: const EdgeInsets.all(5),
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(11),
-                    border: Border.all(
-                      color: selectedTruck == index
-                          ? AppColor.deepYellow
-                          : Colors.grey[400]!,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 50.h,
-                        width: 175.w,
-                        child: CachedNetworkImage(
-                          imageUrl: shipment.subshipments![selectedIndex].truck!
-                              .truck_type_image!,
-                          progressIndicatorBuilder:
-                              (context, url, downloadProgress) =>
-                                  Shimmer.fromColors(
-                            baseColor: (Colors.grey[300])!,
-                            highlightColor: (Colors.grey[100])!,
-                            enabled: true,
-                            child: Container(
-                              height: 50.h,
-                              width: 175.w,
-                              color: Colors.white,
-                            ),
-                          ),
-                          errorWidget: (context, url, error) => Container(
-                            height: 50.h,
-                            width: 175.w,
-                            color: Colors.grey[300],
-                            child: Center(
-                              child: Text(AppLocalizations.of(context)!
-                                  .translate('image_load_error')),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 7.h,
-                      ),
-                      Text(
-                        "${shipment.subshipments![selectedIndex].driver_first_name!} ${shipment.subshipments![selectedIndex].driver_last_name!}",
-                        style: TextStyle(
-                          fontSize: 17.sp,
-                          color: AppColor.deepBlack,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: -5,
-                  left: -6,
-                  child: shipment.subshipments![selectedIndex].shipmentStatus ==
-                          "R"
-                      ? const Icon(
-                          Icons.circle,
-                          color: Colors.green,
-                          size: 25,
-                        )
-                      : Icon(
-                          Icons.warning_rounded,
-                          color: Colors.orange[300],
-                          size: 25,
-                        ),
-                )
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+  //             setState(() {});
+  //             initMapbounds();
+  //           },
+  //           child: Stack(
+  //             clipBehavior: Clip.none,
+  //             children: [
+  //               Container(
+  //                 width: 180.w,
+  //                 margin: const EdgeInsets.all(5),
+  //                 padding: const EdgeInsets.all(5),
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(11),
+  //                   border: Border.all(
+  //                     color: selectedTruck == index
+  //                         ? AppColor.deepYellow
+  //                         : Colors.grey[400]!,
+  //                   ),
+  //                 ),
+  //                 child: Column(
+  //                   children: [
+  //                     SizedBox(
+  //                       height: 50.h,
+  //                       width: 175.w,
+  //                       child: CachedNetworkImage(
+  //                         imageUrl: shipment.truck!
+  //                             .truck_type_image!,
+  //                         progressIndicatorBuilder:
+  //                             (context, url, downloadProgress) =>
+  //                                 Shimmer.fromColors(
+  //                           baseColor: (Colors.grey[300])!,
+  //                           highlightColor: (Colors.grey[100])!,
+  //                           enabled: true,
+  //                           child: Container(
+  //                             height: 50.h,
+  //                             width: 175.w,
+  //                             color: Colors.white,
+  //                           ),
+  //                         ),
+  //                         errorWidget: (context, url, error) => Container(
+  //                           height: 50.h,
+  //                           width: 175.w,
+  //                           color: Colors.grey[300],
+  //                           child: Center(
+  //                             child: Text(AppLocalizations.of(context)!
+  //                                 .translate('image_load_error')),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     SizedBox(
+  //                       height: 7.h,
+  //                     ),
+  //                     Text(
+  //                       "${shipment.driver_first_name!} ${shipment.driver_last_name!}",
+  //                       style: TextStyle(
+  //                         fontSize: 17.sp,
+  //                         color: AppColor.deepBlack,
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //               Positioned(
+  //                 top: -5,
+  //                 left: -6,
+  //                 child: shipment.shipmentStatus ==
+  //                         "R"
+  //                     ? const Icon(
+  //                         Icons.circle,
+  //                         color: Colors.green,
+  //                         size: 25,
+  //                       )
+  //                     : Icon(
+  //                         Icons.warning_rounded,
+  //                         color: Colors.orange[300],
+  //                         size: 25,
+  //                       ),
+  //               )
+  //             ],
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   late BitmapDescriptor pickupicon;
   late BitmapDescriptor deliveryicon;
@@ -243,11 +241,11 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
     var pickupMarker = Marker(
       markerId: const MarkerId("pickup"),
       position: LatLng(
-          double.parse(widget.shipment.subshipments![selectedIndex].pathpoints!
+          double.parse(widget.shipment.pathpoints!
               .singleWhere((element) => element.pointType == "P")
               .location!
               .split(",")[0]),
-          double.parse(widget.shipment.subshipments![selectedIndex].pathpoints!
+          double.parse(widget.shipment.pathpoints!
               .singleWhere((element) => element.pointType == "P")
               .location!
               .split(",")[1])),
@@ -257,11 +255,11 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
     var deliveryMarker = Marker(
       markerId: const MarkerId("delivery"),
       position: LatLng(
-          double.parse(widget.shipment.subshipments![selectedIndex].pathpoints!
+          double.parse(widget.shipment.pathpoints!
               .singleWhere((element) => element.pointType == "D")
               .location!
               .split(",")[0]),
-          double.parse(widget.shipment.subshipments![selectedIndex].pathpoints!
+          double.parse(widget.shipment.pathpoints!
               .singleWhere((element) => element.pointType == "D")
               .location!
               .split(",")[1])),
@@ -320,13 +318,11 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                 zoomControlsEnabled: false,
                 initialCameraPosition: CameraPosition(
                     target: LatLng(
-                        double.parse(widget
-                            .shipment.subshipments![selectedIndex].pathpoints!
+                        double.parse(widget.shipment.pathpoints!
                             .singleWhere((element) => element.pointType == "P")
                             .location!
                             .split(",")[0]),
-                        double.parse(widget
-                            .shipment.subshipments![selectedIndex].pathpoints!
+                        double.parse(widget.shipment.pathpoints!
                             .singleWhere((element) => element.pointType == "P")
                             .location!
                             .split(",")[1])),
@@ -336,8 +332,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                 polylines: {
                   Polyline(
                     polylineId: const PolylineId("route"),
-                    points: deserializeLatLng(
-                        widget.shipment.subshipments![selectedIndex].paths!),
+                    points: deserializeLatLng(widget.shipment.paths!),
                     color: AppColor.deepYellow,
                     width: 7,
                   ),
@@ -345,33 +340,33 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                 // mapType: shipmentProvider.mapType,
               ),
             ),
-            Container(
-              color: Colors.white,
-              height: 170.h,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate("assigned_trucks"),
-                    ),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                    pathList(widget.shipment),
-                    const SizedBox(
-                      height: 2,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // Container(
+            //   color: Colors.white,
+            //   height: 170.h,
+            //   width: double.infinity,
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(4.0),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         const SizedBox(
+            //           height: 5,
+            //         ),
+            //         SectionTitle(
+            //           text: AppLocalizations.of(context)!
+            //               .translate("assigned_trucks"),
+            //         ),
+            //         const SizedBox(
+            //           height: 2,
+            //         ),
+            //         pathList(widget.shipment),
+            //         const SizedBox(
+            //           height: 2,
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
