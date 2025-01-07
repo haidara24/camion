@@ -90,7 +90,7 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                       tabIndex = value;
                     });
                   },
-                  tabs: [
+                  tabs: const [
                     // first tab [you can add an icon using the icon property]
                     Tab(
                       child: Center(child: Text("إشعاراتي")),

@@ -15,7 +15,7 @@ import 'package:shimmer/shimmer.dart';
 
 class SearchTruckScreen extends StatefulWidget {
   final int subshipmentId;
-  SearchTruckScreen({Key? key, required this.subshipmentId}) : super(key: key);
+  const SearchTruckScreen({Key? key, required this.subshipmentId}) : super(key: key);
 
   @override
   State<SearchTruckScreen> createState() => _SearchTruckScreenState();
@@ -175,9 +175,9 @@ class _SearchTruckScreenState extends State<SearchTruckScreen> {
                                   ),
                                   scrollbarTheme: ScrollbarThemeData(
                                     radius: const Radius.circular(40),
-                                    thickness: MaterialStateProperty.all(6),
+                                    thickness: WidgetStateProperty.all(6),
                                     thumbVisibility:
-                                        MaterialStateProperty.all(true),
+                                        WidgetStateProperty.all(true),
                                   ),
                                 ),
                                 menuItemStyleData: const MenuItemStyleData(

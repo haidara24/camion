@@ -5,7 +5,7 @@ import 'package:lottie/lottie.dart';
 
 class NoResultsWidget extends StatelessWidget {
   final String text;
-  NoResultsWidget({
+  const NoResultsWidget({
     Key? key,
     required this.text,
   }) : super(key: key);

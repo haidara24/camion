@@ -56,7 +56,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
   late BitmapDescriptor truckicon;
   // late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
   bool startTracking = false;
 
   double _rightPosition = -MediaQueryData.fromView(
@@ -97,11 +97,11 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 130.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 130.0);
     _controller.animateCamera(cameraUpdate);
   }
 

@@ -210,7 +210,7 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 class TruckStatusWidget extends StatefulWidget {
-  TruckStatusWidget({Key? key}) : super(key: key);
+  const TruckStatusWidget({Key? key}) : super(key: key);
 
   @override
   State<TruckStatusWidget> createState() => _TruckStatusWidgetState();
@@ -232,10 +232,10 @@ class _TruckStatusWidgetState extends State<TruckStatusWidget> {
         builder: (providercontext, activeProvider, child) {
       return Column(
         children: [
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
               "${AppLocalizations.of(context)!.translate("truck_status")}: ${activeProvider.isOn ? AppLocalizations.of(context)!.translate("enabled") : AppLocalizations.of(context)!.translate("disabled")}"),
-          Spacer(),
+          const Spacer(),
           BlocConsumer<TruckActiveStatusBloc, TruckActiveStatusState>(
             listener: (context, state) {
               if (state is TruckActiveStatusLoadedFailed) {
@@ -269,7 +269,7 @@ class _TruckStatusWidgetState extends State<TruckStatusWidget> {
                       // });
                     },
                     title: Text(
-                        '${activeProvider.isOn ? AppLocalizations.of(context)!.translate("enabled") : AppLocalizations.of(context)!.translate("disabled")}'),
+                        activeProvider.isOn ? AppLocalizations.of(context)!.translate("enabled") : AppLocalizations.of(context)!.translate("disabled")),
                   ),
                 );
               } else if (loadstate is TruckActiveStatusLoadingProgress) {
@@ -283,11 +283,11 @@ class _TruckStatusWidgetState extends State<TruckStatusWidget> {
                   ),
                 );
               } else {
-                return SizedBox.shrink();
+                return const SizedBox.shrink();
               }
             },
           ),
-          Spacer(),
+          const Spacer(),
         ],
       );
     });

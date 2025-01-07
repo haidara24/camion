@@ -20,7 +20,7 @@ import 'package:lottie/lottie.dart';
 class ApprovalRequestDetailsScreen extends StatelessWidget {
   final String type;
   final ApprovalRequest? request;
-  ApprovalRequestDetailsScreen({
+  const ApprovalRequestDetailsScreen({
     Key? key,
     required this.type,
     this.request,
@@ -184,7 +184,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                             child: Text(
                               AppLocalizations.of(context)!
                                   .translate("search_for_truck"),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                               ),
                             ),
@@ -377,17 +377,17 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                         const SizedBox(
                                           height: 8,
                                         ),
-                                        getMainPhoto(state.request!),
+                                        getMainPhoto(state.request),
                                         const SizedBox(
                                           height: 16,
                                         ),
                                         SectionTitle(
                                           text: AppLocalizations.of(context)!
                                               .translate(
-                                            getMainText(state.request!),
+                                            getMainText(state.request),
                                           ),
                                         ),
-                                        getExtraAction(state.request!, context),
+                                        getExtraAction(state.request, context),
                                       ],
                                     ),
                                   )
@@ -588,7 +588,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                                   context)!
                                                               .translate(
                                                                   "search_for_truck"),
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                             color: Colors.white,
                                                           ),
                                                         ),

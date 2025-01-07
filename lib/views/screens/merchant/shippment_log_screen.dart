@@ -28,7 +28,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
 class ShippmentLogScreen extends StatefulWidget {
-  ShippmentLogScreen({Key? key}) : super(key: key);
+  const ShippmentLogScreen({Key? key}) : super(key: key);
 
   @override
   State<ShippmentLogScreen> createState() => _ShippmentLogScreenState();
@@ -46,7 +46,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   late BitmapDescriptor deliveryicon;
   List<Set<Marker>> markers = [];
 
-  List<GoogleMapController?> _maps = [];
+  final List<GoogleMapController?> _maps = [];
 
   List<Color> colors = [
     Colors.yellow[200]!,
@@ -206,7 +206,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   Set<Polyline> getRoutes(SubShipment items) {
     Set<Polyline> routes = <Polyline>{};
     routes.add(Polyline(
-      polylineId: PolylineId("route"),
+      polylineId: const PolylineId("route"),
       points: deserializeLatLng(items.paths!),
       color: AppColor.deepYellow,
       width: 4,
@@ -224,7 +224,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
             .id !=
         0) {
       marker.add(Marker(
-        markerId: MarkerId("pickupmarker"),
+        markerId: const MarkerId("pickupmarker"),
         position: LatLng(
             double.parse(shipments.pathpoints!
                 .singleWhere((element) => element.pointType == "P")
@@ -245,7 +245,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
             .id !=
         0) {
       marker.add(Marker(
-        markerId: MarkerId("deliverymarker"),
+        markerId: const MarkerId("deliverymarker"),
         position: LatLng(
             double.parse(shipments.pathpoints!
                 .singleWhere((element) => element.pointType == "D")
@@ -270,7 +270,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
         .split(",");
     markers.add(
       Marker(
-        markerId: MarkerId("pickup"),
+        markerId: const MarkerId("pickup"),
         position: LatLng(
             double.parse(pickuplocation[0]), double.parse(pickuplocation[1])),
       ),
@@ -282,7 +282,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
         .split(",");
     markers.add(
       Marker(
-        markerId: MarkerId("delivery"),
+        markerId: const MarkerId("delivery"),
         position: LatLng(double.parse(deliverylocation[0]),
             double.parse(deliverylocation[1])),
       ),
@@ -507,7 +507,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                   .deepYellow,
                                                               width: 1,
                                                             ),
-                                                            borderRadius: BorderRadius.vertical(top: Radius.circular(10))
+                                                            borderRadius: const BorderRadius.vertical(top: Radius.circular(10))
                                                             // gradient:
                                                             //     LinearGradient(
                                                             //   begin: Alignment
@@ -623,7 +623,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                         35.932120),
                                                                     zoom:
                                                                         14.47),
-                                                            gestureRecognizers: {},
+                                                            gestureRecognizers: const {},
                                                             markers: getMarkers(
                                                                 state.shipments[
                                                                     index]),
@@ -788,7 +788,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                             width: 1,
                                                           ),
                                                           borderRadius:
-                                                              BorderRadius
+                                                              const BorderRadius
                                                                   .vertical(
                                                             top:
                                                                 Radius.circular(

@@ -14,11 +14,11 @@ class OwnerNotificationsLoadingProgress extends OwnerNotificationsState {}
 class OwnerNotificationsLoadedSuccess extends OwnerNotificationsState {
   final List<NotificationModel> notifications;
 
-  OwnerNotificationsLoadedSuccess({required this.notifications});
+  const OwnerNotificationsLoadedSuccess({required this.notifications});
 }
 
 class OwnerNotificationsLoadedFailed extends OwnerNotificationsState {
   final String errorText;
 
-  OwnerNotificationsLoadedFailed({required this.errorText});
+  const OwnerNotificationsLoadedFailed({required this.errorText});
 }

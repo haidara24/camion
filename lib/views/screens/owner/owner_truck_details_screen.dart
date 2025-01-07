@@ -11,7 +11,7 @@ import 'package:shimmer/shimmer.dart';
 
 class OwnerTruckDetailsScreen extends StatefulWidget {
   final int truckId;
-  OwnerTruckDetailsScreen({Key? key, required this.truckId}) : super(key: key);
+  const OwnerTruckDetailsScreen({Key? key, required this.truckId}) : super(key: key);
 
   @override
   State<OwnerTruckDetailsScreen> createState() =>
@@ -251,7 +251,7 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen>
                             tabIndex = value;
                           });
                         },
-                        tabs: [
+                        tabs: const [
                           // first tab [you can add an icon using the icon property]
                           Tab(
                             child: Center(child: Text("معلومات المركبة")),

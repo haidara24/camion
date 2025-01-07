@@ -44,7 +44,7 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
   String enddate = "";
   OverlayEntry? overlayEntry;
   String positionName = "Loading address...";
-  LatLng location = LatLng(37.7749, -122.4194);
+  LatLng location = const LatLng(37.7749, -122.4194);
 
   _showDatePicker(String lang, bool startOrEnd) {
     cupertino.showCupertinoModalPopup(
@@ -211,7 +211,7 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                         ),
                         markers: {
                           Marker(
-                            markerId: MarkerId('location'),
+                            markerId: const MarkerId('location'),
                             position: location,
                           ),
                         },
@@ -238,7 +238,7 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
       ),
     );
 
-    Overlay.of(context)?.insert(overlayEntry!);
+    Overlay.of(context).insert(overlayEntry!);
     getAddressForPickupFromLatLng(location);
   }
 

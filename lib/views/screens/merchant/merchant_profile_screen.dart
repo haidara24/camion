@@ -20,7 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MerchantProfileScreen extends StatefulWidget {
   // final Merchant user;
-  MerchantProfileScreen({Key? key}) : super(key: key);
+  const MerchantProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<MerchantProfileScreen> createState() => _MerchantProfileScreenState();
@@ -43,7 +43,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
 
   TextEditingController companyNameController = TextEditingController();
 
-  bool _loading = false;
+  final bool _loading = false;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -163,16 +163,16 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                               );
 
                                               if (pickedImage != null) {
-                                                var _image =
+                                                var image =
                                                     File(pickedImage.path);
                                                 BlocProvider.of<
                                                             UploadImageBloc>(
                                                         context)
                                                     .add(UpdateUserImage(
-                                                        _image));
+                                                        image));
                                               }
                                             },
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.cloud_upload_outlined,
                                             ),
                                           ),

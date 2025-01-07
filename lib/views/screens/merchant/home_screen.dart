@@ -39,7 +39,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -430,7 +430,7 @@ class _HomeScreenState extends State<HomeScreen>
                                       Text(
                                           AppLocalizations.of(context)!
                                               .translate('log_out_confirm'),
-                                          style: TextStyle(fontSize: 18)),
+                                          style: const TextStyle(fontSize: 18)),
                                     ],
                                   ),
                                 ),
@@ -439,7 +439,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     child: Text(
                                         AppLocalizations.of(context)!
                                             .translate('no'),
-                                        style: TextStyle(fontSize: 18)),
+                                        style: const TextStyle(fontSize: 18)),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -448,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen>
                                     child: Text(
                                         AppLocalizations.of(context)!
                                             .translate('yes'),
-                                        style: TextStyle(fontSize: 18)),
+                                        style: const TextStyle(fontSize: 18)),
                                     onPressed: () {
                                       BlocProvider.of<AuthBloc>(context)
                                           .add(UserLoggedOut());
@@ -803,7 +803,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                       ? null
                                                       : -5,
                                                   child: Container(
-                                                    padding: EdgeInsets.all(2),
+                                                    padding: const EdgeInsets.all(2),
                                                     decoration: BoxDecoration(
                                                       color:
                                                           AppColor.deepYellow,
@@ -811,13 +811,13 @@ class _HomeScreenState extends State<HomeScreen>
                                                           BorderRadius.circular(
                                                               12),
                                                     ),
-                                                    constraints: BoxConstraints(
+                                                    constraints: const BoxConstraints(
                                                       minWidth: 22,
                                                       minHeight: 22,
                                                     ),
                                                     child: Text(
                                                       value.taskNum.toString(),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 15,
                                                       ),

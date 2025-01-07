@@ -15,7 +15,7 @@ import 'package:shimmer/shimmer.dart';
 class ShipmentInstructionDetailsScreen extends StatelessWidget {
   final SubShipment shipment;
 
-  ShipmentInstructionDetailsScreen({
+  const ShipmentInstructionDetailsScreen({
     Key? key,
     required this.shipment,
   }) : super(key: key);

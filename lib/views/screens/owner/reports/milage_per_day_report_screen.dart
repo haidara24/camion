@@ -1,5 +1,4 @@
 import 'package:camion/Localization/app_localizations.dart';
-import 'package:camion/business_logic/bloc/gps_reports/over_speed_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/total_milage_day_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';

@@ -21,7 +21,7 @@ import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:intl/intl.dart' as intel;
 
 class CreateFixScreen extends StatefulWidget {
-  CreateFixScreen({Key? key}) : super(key: key);
+  const CreateFixScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateFixScreen> createState() => _CreateFixScreenState();
@@ -30,11 +30,11 @@ class CreateFixScreen extends StatefulWidget {
 class _CreateFixScreenState extends State<CreateFixScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController _noteController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
 
-  TextEditingController _dateController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
 
-  TextEditingController _costController = TextEditingController();
+  final TextEditingController _costController = TextEditingController();
 
   DateTime fixDate = DateTime.now();
 
@@ -66,7 +66,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
           children: [
             TextButton(
                 onPressed: () {
-                  setLoadDate(fixDate!, lang);
+                  setLoadDate(fixDate, lang);
 
                   Navigator.pop(context);
                 },
@@ -212,9 +212,9 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                         scrollbarTheme: ScrollbarThemeData(
                                           radius: const Radius.circular(40),
                                           thickness:
-                                              MaterialStateProperty.all(6),
+                                              WidgetStateProperty.all(6),
                                           thumbVisibility:
-                                              MaterialStateProperty.all(true),
+                                              WidgetStateProperty.all(true),
                                         ),
                                       ),
                                       menuItemStyleData:
@@ -224,7 +224,7 @@ class _CreateFixScreenState extends State<CreateFixScreen> {
                                     ),
                                   );
                                 } else {
-                                  return LinearProgressIndicator();
+                                  return const LinearProgressIndicator();
                                 }
                               },
                             ),

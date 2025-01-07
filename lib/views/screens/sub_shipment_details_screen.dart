@@ -21,7 +21,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class SubShipmentDetailsScreen extends StatefulWidget {
-  SubShipmentDetailsScreen({
+  const SubShipmentDetailsScreen({
     Key? key,
   }) : super(key: key);
 
@@ -167,7 +167,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
 
   createMarkerIcons(SubShipment shipment) async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
@@ -331,7 +331,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                               .location!
                                               .split(",")[1])),
                                       zoom: 14.47),
-                                  gestureRecognizers: {},
+                                  gestureRecognizers: const {},
                                   markers: markers,
                                   polylines: {
                                     Polyline(
@@ -419,11 +419,11 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 50.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     mapcontroller.animateCamera(cameraUpdate);
     setState(() {});
   }

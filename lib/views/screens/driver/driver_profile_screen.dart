@@ -179,7 +179,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                                 AppLocalizations.of(context)!
                                                     .translate('first_name'),
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                                     vertical: 11.0,
                                                     horizontal: 9.0),
                                           ),
@@ -208,7 +208,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                           },
                                         ),
                                       ),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Expanded(
                                         child: TextFormField(
                                           controller: lastNameController,
@@ -232,7 +232,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                                 AppLocalizations.of(context)!
                                                     .translate('last_name'),
                                             contentPadding:
-                                                EdgeInsets.symmetric(
+                                                const EdgeInsets.symmetric(
                                                     vertical: 11.0,
                                                     horizontal: 9.0),
                                           ),
@@ -263,7 +263,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                     ],
                                   )
                                 : const SizedBox.shrink(),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             editMode
                                 ? TextFormField(
                                     controller: phoneController,
@@ -326,7 +326,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                       ),
                                     ],
                                   ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             editMode
                                 ? TextFormField(
                                     controller: emailController,
@@ -386,7 +386,7 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                           ],
                         ),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       editMode
                           ? Padding(
                               padding: const EdgeInsets.all(8.0),

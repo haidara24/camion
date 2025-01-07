@@ -46,7 +46,7 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
   String enddate = "";
   bool showOverlay = false;
   String positionName = "Loading address...";
-  LatLng location = LatLng(37.7749, -122.4194);
+  LatLng location = const LatLng(37.7749, -122.4194);
 
   _showDatePicker(String lang, bool startOrEnd) {
     cupertino.showCupertinoModalPopup(
@@ -191,7 +191,7 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
               absorbing: false,
               child: Container(
                 color: Colors.white,
-                padding: EdgeInsets.symmetric(vertical: 4),
+                padding: const EdgeInsets.symmetric(vertical: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -224,7 +224,7 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                 ),
                 markers: {
                   Marker(
-                    markerId: MarkerId('location'),
+                    markerId: const MarkerId('location'),
                     position: location,
                   ),
                 },

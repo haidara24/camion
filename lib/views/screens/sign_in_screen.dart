@@ -18,7 +18,7 @@ import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignInScreen extends StatefulWidget {
-  SignInScreen({Key? key}) : super(key: key);
+  const SignInScreen({Key? key}) : super(key: key);
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -261,7 +261,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  ControlView(),
+                                                  const ControlView(),
                                             ),
                                             (route) => false,
                                           );

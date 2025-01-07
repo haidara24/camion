@@ -9,7 +9,7 @@ class ECashPaymentCheckoutScreen extends StatefulWidget {
   final String url;
   final SubShipment shipment;
   final String amount;
-  ECashPaymentCheckoutScreen({
+  const ECashPaymentCheckoutScreen({
     Key? key,
     required this.url,
     required this.shipment,

@@ -14,7 +14,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
 class OwnerSearchShippmentScreen extends StatefulWidget {
-  OwnerSearchShippmentScreen({Key? key}) : super(key: key);
+  const OwnerSearchShippmentScreen({Key? key}) : super(key: key);
 
   @override
   State<OwnerSearchShippmentScreen> createState() =>

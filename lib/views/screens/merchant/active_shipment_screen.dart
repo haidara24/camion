@@ -31,7 +31,7 @@ import 'package:intl/intl.dart' as intel;
 import 'package:shimmer/shimmer.dart';
 
 class ActiveShipmentScreen extends StatefulWidget {
-  ActiveShipmentScreen({Key? key}) : super(key: key);
+  const ActiveShipmentScreen({Key? key}) : super(key: key);
 
   @override
   State<ActiveShipmentScreen> createState() => _ActiveShipmentScreenState();
@@ -98,11 +98,11 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 130.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 130.0);
     _controller.animateCamera(cameraUpdate);
 
     var response = await HttpHelper.get(
@@ -527,7 +527,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   late BitmapDescriptor truckicon;
   // late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
   final TruckRepository _truckRepository = TruckRepository();
   dynamic truckData;
 
@@ -574,10 +574,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   @override
   void dispose() {
     animcontroller.dispose();
-    if (_controller != null) {
-      _controller.dispose();
-    }
-    timer.cancel();
+    _controller.dispose();
+      timer.cancel();
     super.dispose();
   }
 
@@ -879,7 +877,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                     double.parse(truckLocation!.split(",")[0]),
                                     double.parse(truckLocation!.split(",")[1]),
                                   ),
-                                  infoWindow: InfoWindow(),
+                                  infoWindow: const InfoWindow(),
                                   icon: truckicon,
                                 );
                                 markers.add(truckMarker);
@@ -931,7 +929,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
 
   List<LatLng> getpolylineCoordinates(double d, double e, double f, double g) {
     PolylinePoints polylinePoints = PolylinePoints();
-    List<LatLng> _polylineCoordinates = [];
+    List<LatLng> polylineCoordinates = [];
 
     polylinePoints
         .getRouteBetweenCoordinates(
@@ -944,16 +942,16 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     )
         .then((result) {
       if (result.points.isNotEmpty) {
-        result.points.forEach((element) {
-          _polylineCoordinates.add(
+        for (var element in result.points) {
+          polylineCoordinates.add(
             LatLng(
               element.latitude,
               element.longitude,
             ),
           );
-        });
+        }
       }
     });
-    return _polylineCoordinates;
+    return polylineCoordinates;
   }
 }

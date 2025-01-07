@@ -396,6 +396,7 @@ class AddShippmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   void dispose() {
     _mapController.dispose();
     _mapController2!.dispose();
@@ -426,14 +427,14 @@ class AddShippmentProvider extends ChangeNotifier {
           // _isThereARoute = true;
           // _isThereARouteError = false;
           // _thereARoute = true;
-          result.points.forEach((element) {
+          for (var element in result.points) {
             _pathes[index].add(
               LatLng(
                 element.latitude,
                 element.longitude,
               ),
             );
-          });
+          }
         }
         initMapbounds(index);
       },
@@ -1117,7 +1118,7 @@ class AddShippmentProvider extends ChangeNotifier {
   }
 
   void addstoppoint(int index) {
-    if (_stoppoints_controller[index].length > 0) {
+    if (_stoppoints_controller[index].isNotEmpty) {
       if (_stoppoints_controller[index]
               [_stoppoints_controller[index].length - 1]
           .text

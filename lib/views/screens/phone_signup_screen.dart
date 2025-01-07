@@ -17,7 +17,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PhoneSignUpScreen extends StatefulWidget {
-  PhoneSignUpScreen({Key? key}) : super(key: key);
+  const PhoneSignUpScreen({Key? key}) : super(key: key);
 
   @override
   State<PhoneSignUpScreen> createState() => _PhoneSignUpScreenState();
@@ -383,7 +383,7 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                           showCustomSnackBar(
                                             context: context,
                                             backgroundColor: Colors.red[300]!,
-                                            message: state.errorMessage!,
+                                            message: state.errorMessage,
                                           );
                                         } else if (state
                                             is AuthLoggingInProgressState) {
@@ -487,11 +487,11 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                               .orange, // Color when checked
                                           checkColor: Colors
                                               .white, // Color of the check mark itself
-                                          fillColor: MaterialStateProperty
+                                          fillColor: WidgetStateProperty
                                               .resolveWith<Color>(
-                                            (Set<MaterialState> states) {
+                                            (Set<WidgetState> states) {
                                               if (states.contains(
-                                                  MaterialState.selected)) {
+                                                  WidgetState.selected)) {
                                                 return Colors
                                                     .orange; // Checked color
                                               }
@@ -505,8 +505,8 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                             });
                                           },
                                         ),
-                                        SizedBox(width: 8),
-                                        TermsOfUse(),
+                                        const SizedBox(width: 8),
+                                        const TermsOfUse(),
                                       ],
                                     ),
                                   ],

@@ -34,7 +34,7 @@ import 'package:shimmer/shimmer.dart';
 class ShipmentDetailsScreen extends StatefulWidget {
   final int shipment;
   final bool preview;
-  ShipmentDetailsScreen({
+  const ShipmentDetailsScreen({
     Key? key,
     required this.shipment,
     required this.preview,
@@ -544,7 +544,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
   bool instructionSelect = true;
 
   createMarkerIcons(Shipmentv2 shipment) async {
@@ -718,7 +718,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                             .location!
                                             .split(",")[1])),
                                     zoom: 14.45),
-                                gestureRecognizers: {},
+                                gestureRecognizers: const {},
                                 markers: markers,
                                 polylines: {
                                   Polyline(
@@ -1598,11 +1598,11 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 50.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     mapcontroller.animateCamera(cameraUpdate);
 
     // setState(() {});

@@ -10,12 +10,12 @@ sealed class DriverActiveShipmentEvent extends Equatable {
 class DriverActiveShipmentLoadEvent extends DriverActiveShipmentEvent {
   final String state;
 
-  DriverActiveShipmentLoadEvent(this.state);
+  const DriverActiveShipmentLoadEvent(this.state);
 }
 
 class DriverActiveShipmentForOwnerLoadEvent extends DriverActiveShipmentEvent {
   final String state;
   final int driver;
 
-  DriverActiveShipmentForOwnerLoadEvent(this.state, this.driver);
+  const DriverActiveShipmentForOwnerLoadEvent(this.state, this.driver);
 }

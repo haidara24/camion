@@ -18,7 +18,7 @@ import 'package:shimmer/shimmer.dart';
 class ShipmentDetailsMapScreen extends StatefulWidget {
   final SubShipment shipment;
 
-  ShipmentDetailsMapScreen({Key? key, required this.shipment})
+  const ShipmentDetailsMapScreen({Key? key, required this.shipment})
       : super(key: key);
 
   @override
@@ -225,7 +225,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
 
   createMarkerIcons() async {
     pickupicon = await BitmapDescriptor.fromAssetImage(

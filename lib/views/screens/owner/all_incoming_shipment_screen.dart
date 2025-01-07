@@ -24,7 +24,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
 class AllIncomingShippmentLogScreen extends StatefulWidget {
-  AllIncomingShippmentLogScreen({Key? key}) : super(key: key);
+  const AllIncomingShippmentLogScreen({Key? key}) : super(key: key);
 
   @override
   State<AllIncomingShippmentLogScreen> createState() =>

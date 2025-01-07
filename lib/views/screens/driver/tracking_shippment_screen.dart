@@ -33,7 +33,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TrackingShipmentScreen extends StatefulWidget {
-  TrackingShipmentScreen({
+  const TrackingShipmentScreen({
     Key? key,
   }) : super(key: key);
 
@@ -93,11 +93,11 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 130.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 130.0);
     _controller.animateCamera(cameraUpdate);
 
     var response = await HttpHelper.get(
@@ -117,7 +117,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   late BitmapDescriptor parkicon;
   late BitmapDescriptor truckicon;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
   bool startTracking = false;
   String? truckLocation = "";
   StreamSubscription<loc.LocationData>? _locationSubscription;
@@ -280,7 +280,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
             width: double.infinity,
             child: ListView(
               shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -293,7 +293,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                         absorbing: false,
                         child: Container(
                           width: MediaQuery.of(context).size.width * .8,
-                          padding: EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Center(
                             child: SizedBox(
                               height: 8.h,
@@ -479,7 +479,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     SizedBox(
                                       height: 30.w,
                                       width: 30.w,
@@ -866,11 +866,11 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 100.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 100.0);
     mapcontroller.animateCamera(cameraUpdate);
 
     setState(() {});

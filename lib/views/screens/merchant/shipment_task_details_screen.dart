@@ -38,7 +38,7 @@ import 'package:shimmer/shimmer.dart';
 class ShipmentTaskDetailsScreen extends StatefulWidget {
   final SubShipment shipment;
   // final bool hasinstruction;
-  ShipmentTaskDetailsScreen({
+  const ShipmentTaskDetailsScreen({
     Key? key,
     required this.shipment,
     // required this.hasinstruction,
@@ -113,7 +113,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
   List<TextEditingController> readpackageType_controller = [];
   List<PackageType?> packageType_controller = [null];
 
-  List<File> _files = [];
+  final List<File> _files = [];
   final ImagePicker _picker = ImagePicker();
 
   List<Widget> _buildFilesImages(List<Docs> list) {
@@ -772,8 +772,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                             scrollbarTheme:
                                                                                 ScrollbarThemeData(
                                                                               radius: const Radius.circular(40),
-                                                                              thickness: MaterialStateProperty.all(6),
-                                                                              thumbVisibility: MaterialStateProperty.all(true),
+                                                                              thickness: WidgetStateProperty.all(6),
+                                                                              thumbVisibility: WidgetStateProperty.all(true),
                                                                             ),
                                                                           ),
                                                                           menuItemStyleData:
@@ -2456,7 +2456,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                               (value) {},
                                                         ),
                                                       ),
-                                                      SizedBox(width: 8),
+                                                      const SizedBox(width: 8),
                                                       Expanded(
                                                         child: TextFormField(
                                                           controller:

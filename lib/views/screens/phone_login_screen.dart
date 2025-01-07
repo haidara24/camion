@@ -13,7 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PhoneSignInScreen extends StatefulWidget {
-  PhoneSignInScreen({Key? key}) : super(key: key);
+  const PhoneSignInScreen({Key? key}) : super(key: key);
 
   @override
   State<PhoneSignInScreen> createState() => _PhoneSignInScreenState();
@@ -207,7 +207,7 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                           showCustomSnackBar(
                                             context: context,
                                             backgroundColor: Colors.red[300]!,
-                                            message: state.errorMessage!,
+                                            message: state.errorMessage,
                                           );
                                         } else if (state
                                             is AuthLoggingInProgressState) {

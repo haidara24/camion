@@ -12,7 +12,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 // ignore: must_be_immutable
 class ChooseLoginRegisterScreen extends StatefulWidget {
-  ChooseLoginRegisterScreen({Key? key}) : super(key: key);
+  const ChooseLoginRegisterScreen({Key? key}) : super(key: key);
 
   @override
   State<ChooseLoginRegisterScreen> createState() =>

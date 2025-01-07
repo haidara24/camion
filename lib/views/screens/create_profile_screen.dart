@@ -22,7 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateProfileScreen extends StatefulWidget {
-  CreateProfileScreen({Key? key}) : super(key: key);
+  const CreateProfileScreen({Key? key}) : super(key: key);
 
   @override
   State<CreateProfileScreen> createState() => _CreateProfileScreenState();

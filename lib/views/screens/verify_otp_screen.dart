@@ -20,7 +20,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class VerifyOtpScreen extends StatefulWidget {
   final bool isLogin;
   final String phone;
-  VerifyOtpScreen({Key? key, required this.isLogin, required this.phone})
+  const VerifyOtpScreen({Key? key, required this.isLogin, required this.phone})
       : super(key: key);
 
   @override
@@ -233,14 +233,14 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 8,
                                   ),
                                   TextButton(
                                       onPressed: () {
                                         UserService.resendOtp(widget.phone);
                                       },
-                                      child: Text("resend otp"))
+                                      child: const Text("resend otp"))
                                 ],
                               ),
                             ),

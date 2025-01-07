@@ -49,7 +49,7 @@ class CustomSplashScreen extends StatefulWidget {
   /// If both futureNavigator and navigator are provided, futureNavigator will take priority
   final Future<Object>? futureNavigator;
 
-  CustomSplashScreen({
+  const CustomSplashScreen({super.key, 
     this.loaderColor = Colors.black,
     this.futureNavigator,
     this.navigator,
@@ -106,11 +106,11 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
                       children: [
                         CircleAvatar(
                           backgroundColor: Colors.transparent,
-                          child: widget.logo,
                           radius: widget.logoWidth,
+                          child: widget.logo,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 25.0),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 25.0),
                         ),
                         if (widget.title != null) widget.title!
                       ],
@@ -121,7 +121,7 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  padding: EdgeInsets.only(bottom: 25),
+                  padding: const EdgeInsets.only(bottom: 25),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -133,8 +133,8 @@ class _CustomSplashScreenState extends State<CustomSplashScreen> {
                             )
                           : Container(),
                       if (widget.loadingText.data!.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.0),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 20.0),
                         ),
                       Padding(
                         padding: widget.loadingTextPadding,

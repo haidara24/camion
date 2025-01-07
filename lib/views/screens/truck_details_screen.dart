@@ -28,7 +28,7 @@ class TruckDetailsScreen extends StatefulWidget {
   final int subshipmentId;
   final double distance;
   final double weight;
-  TruckDetailsScreen({
+  const TruckDetailsScreen({
     Key? key,
     required this.truck,
     required this.index,
@@ -45,7 +45,7 @@ class TruckDetailsScreen extends StatefulWidget {
 class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
   late GoogleMapController _controller;
 
-  String _mapStyle = "";
+  final String _mapStyle = "";
   String position_name = "";
 
   String getTruckType(int type) {
@@ -214,7 +214,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                               borderRadius:
                                                   BorderRadius.circular(180),
                                               child: Image.network(
-                                                "asd"!,
+                                                "asd",
                                                 height: 55.w,
                                                 width: 55.w,
                                                 fit: BoxFit.fill,
@@ -429,9 +429,9 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Icon(Icons.location_on_outlined,
+                                const Icon(Icons.location_on_outlined,
                                     color: Colors.grey),
-                                SizedBox(
+                                const SizedBox(
                                   width: 8,
                                 ),
                                 SectionTitle(
@@ -468,7 +468,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                           .split(',')[1]),
                                     ),
                                     zoom: 14.47),
-                                gestureRecognizers: {},
+                                gestureRecognizers: const {},
                                 markers: {
                                   Marker(
                                     markerId: const MarkerId("truck"),

@@ -272,7 +272,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                     lineXY: .5,
                                     startChild: SectionBody(
                                       text:
-                                          "  ${shipmentProvider.distance!} ${localeState.value.languageCode == "en" ? "km" : "كم"}",
+                                          "  ${shipmentProvider.distance} ${localeState.value.languageCode == "en" ? "km" : "كم"}",
                                     ),
                                   ),
                                 ),
@@ -308,7 +308,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                     // ),
                                     startChild: SectionBody(
                                       text:
-                                          "  ${shipmentProvider.pickup_statename!}",
+                                          "  ${shipmentProvider.pickup_statename}",
                                     ),
                                     endChild: SectionBody(
                                       text: AppLocalizations.of(context)!
@@ -409,7 +409,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                         children: [
                                                           Padding(
                                                             padding:
-                                                                EdgeInsets.all(
+                                                                const EdgeInsets.all(
                                                                     4),
                                                             child: (isSelected)
                                                                 ? Icon(

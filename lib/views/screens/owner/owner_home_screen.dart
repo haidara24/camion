@@ -36,7 +36,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OwnerHomeScreen extends StatefulWidget {
-  OwnerHomeScreen({Key? key}) : super(key: key);
+  const OwnerHomeScreen({Key? key}) : super(key: key);
 
   @override
   State<OwnerHomeScreen> createState() => _OwnerHomeScreenState();
@@ -158,7 +158,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_trucks');
 
-            currentScreen = OwnerDashboardScreen();
+            currentScreen = const OwnerDashboardScreen();
           });
           break;
         }
@@ -400,7 +400,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                       Text(
                                           AppLocalizations.of(context)!
                                               .translate('log_out_confirm'),
-                                          style: TextStyle(fontSize: 18)),
+                                          style: const TextStyle(fontSize: 18)),
                                     ],
                                   ),
                                 ),

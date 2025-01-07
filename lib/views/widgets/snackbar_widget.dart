@@ -28,7 +28,7 @@ void showCustomSnackBar({
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
                   blurRadius: 10,
-                  offset: Offset(0, 2),
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),

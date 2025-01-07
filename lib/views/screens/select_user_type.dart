@@ -12,7 +12,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
 class SelectUserType extends StatefulWidget {
-  SelectUserType({Key? key}) : super(key: key);
+  const SelectUserType({Key? key}) : super(key: key);
 
   @override
   State<SelectUserType> createState() => _SelectUserTypeState();
@@ -119,12 +119,12 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                               value: UserType.merchant,
                                               groupValue: userType,
                                               activeColor: AppColor.deepYellow,
-                                              fillColor: MaterialStateProperty
+                                              fillColor: WidgetStateProperty
                                                   .resolveWith<Color>(
-                                                      (Set<MaterialState>
+                                                      (Set<WidgetState>
                                                           states) {
                                                 if (states.contains(
-                                                    MaterialState.disabled)) {
+                                                    WidgetState.disabled)) {
                                                   return Colors.white
                                                       .withOpacity(.32);
                                                 }
@@ -170,12 +170,12 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                               value: UserType.driver,
                                               groupValue: userType,
                                               activeColor: AppColor.deepYellow,
-                                              fillColor: MaterialStateProperty
+                                              fillColor: WidgetStateProperty
                                                   .resolveWith<Color>(
-                                                      (Set<MaterialState>
+                                                      (Set<WidgetState>
                                                           states) {
                                                 if (states.contains(
-                                                    MaterialState.disabled)) {
+                                                    WidgetState.disabled)) {
                                                   return Colors.white
                                                       .withOpacity(.32);
                                                 }
@@ -221,12 +221,12 @@ class _SelectUserTypeState extends State<SelectUserType> {
                                               value: UserType.owner,
                                               groupValue: userType,
                                               activeColor: AppColor.deepYellow,
-                                              fillColor: MaterialStateProperty
+                                              fillColor: WidgetStateProperty
                                                   .resolveWith<Color>(
-                                                      (Set<MaterialState>
+                                                      (Set<WidgetState>
                                                           states) {
                                                 if (states.contains(
-                                                    MaterialState.disabled)) {
+                                                    WidgetState.disabled)) {
                                                   return Colors.white
                                                       .withOpacity(.32);
                                                 }

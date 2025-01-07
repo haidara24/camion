@@ -27,7 +27,7 @@ import 'package:intl/intl.dart' as intel;
 
 class InprogressShipmentDetailsScreen extends StatefulWidget {
   final int shipmentId;
-  InprogressShipmentDetailsScreen({Key? key, required this.shipmentId})
+  const InprogressShipmentDetailsScreen({Key? key, required this.shipmentId})
       : super(key: key);
 
   @override
@@ -162,7 +162,7 @@ class _InprogressShipmentDetailsScreenState
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
 
   createMarkerIcons(SubShipment shipment) async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
@@ -325,7 +325,7 @@ class _InprogressShipmentDetailsScreenState
                                             .location!
                                             .split(",")[1])),
                                     zoom: 14.47),
-                                gestureRecognizers: {},
+                                gestureRecognizers: const {},
                                 markers: markers,
                                 polylines: {
                                   Polyline(
@@ -559,11 +559,11 @@ class _InprogressShipmentDetailsScreenState
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 50.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     mapcontroller.animateCamera(cameraUpdate);
     setState(() {});
   }

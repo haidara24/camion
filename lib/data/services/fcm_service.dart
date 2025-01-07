@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';

@@ -7,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SelectTruckWidget extends StatefulWidget {
-  SelectTruckWidget({Key? key}) : super(key: key);
+  const SelectTruckWidget({Key? key}) : super(key: key);
 
   @override
   State<SelectTruckWidget> createState() => _SelectTruckWidgetState();

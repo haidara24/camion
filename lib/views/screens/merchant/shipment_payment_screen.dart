@@ -32,7 +32,7 @@ import 'package:shimmer/shimmer.dart';
 class ShipmentPaymentScreen extends StatefulWidget {
   final SubShipment shipment;
   final int subshipmentIndex;
-  ShipmentPaymentScreen({
+  const ShipmentPaymentScreen({
     Key? key,
     required this.shipment,
     required this.subshipmentIndex,

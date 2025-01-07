@@ -11,7 +11,7 @@ import 'package:camion/views/screens/driver/search_shipment_details_screen.dart'
 import 'package:intl/intl.dart' as intl;
 
 class SearchShippmentScreen extends StatefulWidget {
-  SearchShippmentScreen({Key? key}) : super(key: key);
+  const SearchShippmentScreen({Key? key}) : super(key: key);
 
   @override
   State<SearchShippmentScreen> createState() => _SearchShippmentScreenState();

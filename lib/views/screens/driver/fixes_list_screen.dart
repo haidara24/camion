@@ -35,11 +35,11 @@ class FixesListScreen extends StatelessWidget {
                     builder: (context) => CreateFixScreen(),
                   ),
                 ),
+                backgroundColor: AppColor.darkGrey,
                 child: Icon(
                   Icons.add,
                   color: Colors.white,
                 ),
-                backgroundColor: AppColor.darkGrey,
               ),
               body: SingleChildScrollView(
                 // physics: const NeverScrollableScrollPhysics(),

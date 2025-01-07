@@ -20,5 +20,5 @@ class FixTypeListLoadedSuccess extends FixTypeListState {
 class FixTypeListLoadedFailed extends FixTypeListState {
   final String errorstring;
 
-  FixTypeListLoadedFailed(this.errorstring);
+  const FixTypeListLoadedFailed(this.errorstring);
 }

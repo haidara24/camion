@@ -25,7 +25,7 @@ class UserService {
   }
 
   static Future<void> resendOtp(String phone) async {
-    var newPhone = "963" + phone.substring(1);
+    var newPhone = "963${phone.substring(1)}";
 
     final response =
         await HttpHelper.post(RESEND_OTP_ENDPOINT, {"phone": newPhone});

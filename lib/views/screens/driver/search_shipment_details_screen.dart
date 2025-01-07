@@ -167,7 +167,7 @@ class _SearchShipmentDetailsScreenState
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
 
   createMarkerIcons(SubShipment shipment) async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
@@ -418,7 +418,7 @@ class _SearchShipmentDetailsScreenState
                                             .location!
                                             .split(",")[1])),
                                     zoom: 14.47),
-                                gestureRecognizers: {},
+                                gestureRecognizers: const {},
                                 markers: markers,
                                 polylines: {
                                   Polyline(

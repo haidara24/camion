@@ -37,7 +37,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DriverHomeScreen extends StatefulWidget {
-  DriverHomeScreen({Key? key}) : super(key: key);
+  const DriverHomeScreen({Key? key}) : super(key: key);
 
   @override
   State<DriverHomeScreen> createState() => _DriverHomeScreenState();
@@ -65,7 +65,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     var driverId = prefs.getInt("truckuser");
 
     try {
-      final loc.LocationData _locationResult = await location.getLocation();
+      final loc.LocationData locationResult = await location.getLocation();
       // await FirebaseFirestore.instance
       //     .collection('location')
       //     .doc('driver${userprofile.id}')
@@ -252,7 +252,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DriverProfileScreen(),
+                              builder: (context) => const DriverProfileScreen(),
                             ),
                           );
                         },
@@ -395,7 +395,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => FixesListScreen(),
+                                builder: (context) => const FixesListScreen(),
                               ));
                           _scaffoldKey.currentState!.closeDrawer();
                         },

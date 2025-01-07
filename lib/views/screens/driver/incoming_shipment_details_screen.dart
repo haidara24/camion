@@ -30,7 +30,7 @@ import 'package:intl/intl.dart' as intel;
 
 class IncomingShipmentDetailsScreen extends StatefulWidget {
   final String requestOwner;
-  IncomingShipmentDetailsScreen({
+  const IncomingShipmentDetailsScreen({
     Key? key,
     required this.requestOwner,
   }) : super(key: key);
@@ -178,7 +178,7 @@ class _IncomingShipmentDetailsScreenState
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
-  Set<Marker> markers = Set();
+  Set<Marker> markers = {};
 
   createMarkerIcons(SubShipment shipment) async {
     pickupicon = await BitmapDescriptor.fromAssetImage(
@@ -342,7 +342,7 @@ class _IncomingShipmentDetailsScreenState
                                               .location!
                                               .split(",")[1])),
                                       zoom: 14.47),
-                                  gestureRecognizers: {},
+                                  gestureRecognizers: const {},
                                   markers: markers,
                                   polylines: {
                                     Polyline(
@@ -782,7 +782,7 @@ class _IncomingShipmentDetailsScreenState
                                                                     _rejectformKey,
                                                                 child: ListBody(
                                                                   children: <Widget>[
-                                                                    SectionBody(
+                                                                    const SectionBody(
                                                                         text:
                                                                             "الرجاء تحديد سبب الرفض"),
                                                                     TextFormField(
@@ -823,7 +823,7 @@ class _IncomingShipmentDetailsScreenState
                                                                         rejectTextController.text =
                                                                             newValue!;
                                                                         rejectText =
-                                                                            newValue!;
+                                                                            newValue;
                                                                       },
                                                                     ),
                                                                   ],
@@ -1052,11 +1052,11 @@ class _IncomingShipmentDetailsScreenState
     double rightMost = lats.reduce(max);
     double bottomMost = lngs.reduce(min);
 
-    LatLngBounds _bounds = LatLngBounds(
+    LatLngBounds bounds = LatLngBounds(
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(_bounds, 50.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     mapcontroller.animateCamera(cameraUpdate);
     setState(() {});
   }

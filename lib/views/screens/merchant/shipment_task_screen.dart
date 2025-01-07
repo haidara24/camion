@@ -18,7 +18,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 
 class ShipmentTaskScreen extends StatefulWidget {
-  ShipmentTaskScreen({Key? key}) : super(key: key);
+  const ShipmentTaskScreen({Key? key}) : super(key: key);
 
   @override
   State<ShipmentTaskScreen> createState() => _ShipmentTaskScreenState();
@@ -37,10 +37,6 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
     });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   String setLoadDate(DateTime date) {
     List months = [

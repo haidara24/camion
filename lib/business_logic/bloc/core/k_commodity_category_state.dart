@@ -14,7 +14,7 @@ class KCommodityCategoryLoadingProgress extends KCommodityCategoryState {}
 class KCommodityCategoryLoadedSuccess extends KCommodityCategoryState {
   final List<KCategory> commodityCategories;
 
-  KCommodityCategoryLoadedSuccess(this.commodityCategories);
+  const KCommodityCategoryLoadedSuccess(this.commodityCategories);
 }
 
 class KCommodityCategoryLoadedFailed extends KCommodityCategoryState {

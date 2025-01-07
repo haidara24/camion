@@ -37,7 +37,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:flutter/cupertino.dart' as cupertino;
 
 class AddMultiShipmentScreen extends StatefulWidget {
-  AddMultiShipmentScreen({Key? key}) : super(key: key);
+  const AddMultiShipmentScreen({Key? key}) : super(key: key);
 
   @override
   State<AddMultiShipmentScreen> createState() => _AddMultiShipmentScreenState();
@@ -47,7 +47,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
     with SingleTickerProviderStateMixin {
   // final ScrollController _scrollController = ScrollController();
   TabController? _tabController;
-  List<Tab> _tabs = [Tab(text: 'Tab 1'), Tab(icon: Icon(Icons.add))];
+  final List<Tab> _tabs = [const Tab(text: 'Tab 1'), const Tab(icon: Icon(Icons.add))];
 
   final FocusNode _nodeCommodityName = FocusNode();
   final FocusNode _nodeCommodityWeight = FocusNode();
@@ -355,7 +355,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                     AbsorbPointer(
                       absorbing: true,
                       child: Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Icon(
                           Icons.add_circle_outline_outlined,
                           color: AppColor.deepYellow,
@@ -1313,7 +1313,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                             target: valueProvider.center,
                             zoom: valueProvider.zoom,
                           ),
-                          gestureRecognizers: {},
+                          gestureRecognizers: const {},
                           markers: (valueProvider.pickup_latlng != null ||
                                   valueProvider.delivery_latlng != null)
                               ? {
@@ -1856,7 +1856,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                   absorbing: true,
                                                   child: Padding(
                                                     padding:
-                                                        EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(8.0),
                                                     child: Icon(
                                                       Icons.edit,
                                                       color:
@@ -1921,7 +1921,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                       shipmentProvider.center,
                                                   zoom: shipmentProvider.zoom,
                                                 ),
-                                                gestureRecognizers: {},
+                                                gestureRecognizers: const {},
                                                 markers: (shipmentProvider
                                                             .pickup_location
                                                             .isNotEmpty ||
@@ -2414,7 +2414,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                                 absorbing: true,
                                                                 child: Padding(
                                                                   padding:
-                                                                      EdgeInsets
+                                                                      const EdgeInsets
                                                                           .all(
                                                                               8.0),
                                                                   child: Icon(

@@ -15,7 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
   final UserModel user;
-  OwnerProfileScreen({Key? key, required this.user}) : super(key: key);
+  const OwnerProfileScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   State<OwnerProfileScreen> createState() => _OwnerProfileScreenState();

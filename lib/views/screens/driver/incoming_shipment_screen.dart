@@ -14,7 +14,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as intel;
 
 class IncomingShippmentLogScreen extends StatefulWidget {
-  IncomingShippmentLogScreen({Key? key}) : super(key: key);
+  const IncomingShippmentLogScreen({Key? key}) : super(key: key);
 
   @override
   State<IncomingShippmentLogScreen> createState() =>
