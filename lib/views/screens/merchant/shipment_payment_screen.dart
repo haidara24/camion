@@ -53,66 +53,6 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
 
   final ImagePicker _picker = ImagePicker();
 
-  String getTruckType(int type) {
-    switch (type) {
-      case 1:
-        return "سطحة";
-      case 2:
-        return "براد";
-      case 3:
-        return "حاوية";
-      case 4:
-        return "شحن";
-      case 5:
-        return "قاطرة ومقطورة";
-      case 6:
-        return "tier";
-      default:
-        return "سطحة";
-    }
-  }
-
-  String getEnTruckType(int type) {
-    switch (type) {
-      case 1:
-        return "Flatbed";
-      case 2:
-        return "Refrigerated";
-      case 3:
-        return "Container";
-      case 4:
-        return "Semi Trailer";
-      case 5:
-        return "Jumbo Trailer";
-      case 6:
-        return "tier";
-      default:
-        return "FlatBed";
-    }
-  }
-
-  String setLoadDate(DateTime date) {
-    List months = [
-      'jan',
-      'feb',
-      'mar',
-      'april',
-      'may',
-      'jun',
-      'july',
-      'aug',
-      'sep',
-      'oct',
-      'nov',
-      'dec'
-    ];
-    var mon = date.month;
-    var month = months[mon - 1];
-    var paymentDate = "";
-    paymentDate = '${date.year}-$month-${date.day}';
-    return paymentDate;
-  }
-
   Future<void> _checkAndRequestPermissions() async {
     if (await Permission.photos.isGranted) {
       print('Permission already granted');
@@ -126,6 +66,18 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
         print('Permission permanently denied by user');
         openAppSettings();
       }
+    }
+  }
+
+  getPaymentMethodName(String character, String lang) {
+    switch (character) {
+      case "E":
+        return "Ecash";
+      case "H":
+        return lang == "en" ? "Al Haram" : "الهرم";
+      case "B":
+        return lang == "en" ? "Al Barakah" : "البركة";
+      default:
     }
   }
 
@@ -244,7 +196,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             SectionTitle(
                                               size: 20,
                                               text:
-                                                  '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
+                                                  '${AppLocalizations.of(context)!.translate('payment_method')}: ${getPaymentMethodName(state.instruction.paymentMethod!, localeState.value.languageCode)}',
                                             ),
                                             SizedBox(
                                               height: 7.h,

@@ -247,11 +247,12 @@ class _CreateTruckForDriverScreenState
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SectionTitle(
-                                    text: "معلومات الشاحنة",
+                                    text: AppLocalizations.of(context)!
+                                        .translate('truck_info'),
                                   ),
                                 ],
                               ),
@@ -267,8 +268,10 @@ class _CreateTruckForDriverScreenState
                                       keyboardType: TextInputType.phone,
                                       onSubmitted: validateAndFetchOwner,
                                       decoration: InputDecoration(
-                                        labelText: AppLocalizations.of(context)!.translate('truck_owner_phone'),
-                                        hintText: AppLocalizations.of(context)!.translate('enter_phone'),
+                                        labelText: AppLocalizations.of(context)!
+                                            .translate('truck_owner_phone'),
+                                        hintText: AppLocalizations.of(context)!
+                                            .translate('enter_phone'),
                                         errorText: isPhoneValid
                                             ? null
                                             : "Invalid phone number or owner not found",
@@ -290,8 +293,7 @@ class _CreateTruckForDriverScreenState
                                     ),
                                     if (!isPhoneValid)
                                       const Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 8.0),
+                                        padding: EdgeInsets.only(top: 8.0),
                                         child: Text(
                                           "Owner not found. Please check the phone number.",
                                           style: TextStyle(
@@ -1058,24 +1060,20 @@ class _CreateTruckForDriverScreenState
                                                     longController.text)
                                                 .toInt();
                                             truck.truckNumber = double.parse(
-                                                    truckNumberController
-                                                        .text)
+                                                    truckNumberController.text)
                                                 .toInt();
                                             truck.traffic = double.parse(
                                                     trafficController.text)
                                                 .toInt();
-                                            truck
-                                                .numberOfAxels = double.parse(
+                                            truck.numberOfAxels = double.parse(
                                                     numberOfAxelsController
                                                         .text)
                                                 .toInt();
                                             truck.emptyWeight = double.parse(
-                                                    emptyWeightController
-                                                        .text)
+                                                    emptyWeightController.text)
                                                 .toInt();
                                             truck.grossWeight = double.parse(
-                                                    grossWeightController
-                                                        .text)
+                                                    grossWeightController.text)
                                                 .toInt();
 
                                             truck.truckuser = widget.driverId;
@@ -1083,7 +1081,8 @@ class _CreateTruckForDriverScreenState
                                             if (istruckOwner) {
                                               truck.owner = 0;
                                             } else {
-                                              truck.phoneowner = truckownerController.text;
+                                              truck.phoneowner =
+                                                  truckownerController.text;
                                             }
                                             truck.truckType = trucktype;
                                             truck.gpsId = gpsController.text;
@@ -1093,7 +1092,7 @@ class _CreateTruckForDriverScreenState
                                               CreateTruckButtonPressed(
                                                   truck, _files),
                                             );
-                                                                                    } else {
+                                          } else {
                                             // Scrollable.ensureVisible(
                                             //   key1.currentContext!,
                                             //   duration: const Duration(

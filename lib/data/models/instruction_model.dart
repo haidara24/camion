@@ -93,6 +93,8 @@ class CommodityItems {
   int? commodityWeight;
   int? commodityQuantity;
   int? packageType;
+  String? packageName;
+  String? packageNameAr;
 
   CommodityItems({
     this.id,
@@ -100,6 +102,8 @@ class CommodityItems {
     this.commodityWeight,
     this.commodityQuantity,
     this.packageType,
+    this.packageName,
+    this.packageNameAr,
   });
 
   CommodityItems.fromJson(Map<String, dynamic> json) {
@@ -108,6 +112,8 @@ class CommodityItems {
     commodityWeight = json['commodity_weight'];
     commodityQuantity = json['commodity_quantity'];
     packageType = json['package_type'];
+    packageName = json['package_name'];
+    packageNameAr = json['package_name_ar'];
   }
 
   Map<String, dynamic> toJson() {

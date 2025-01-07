@@ -20,6 +20,7 @@ import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
+import 'package:camion/views/widgets/shipments_widgets/shipment_instruction_cards_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -273,14 +274,13 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
           },
           child: Container(
             color: Colors.white,
-
             padding: const EdgeInsets.all(8.0),
-            // constraints:
-            //     BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+            constraints:
+                BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             width: double.infinity,
             child: ListView(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              // physics: const NeverScrollableScrollPhysics(),
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -403,7 +403,15 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                         ),
                       ],
                     ),
-                    const Divider(),
+                    const Divider(
+                      height: 24,
+                    ),
+                    ShipmentInstructionCardsWidget(
+                      subshipment: subshipment,
+                    ),
+                    const Divider(
+                      height: 24,
+                    ),
                     SectionTitle(
                       text: AppLocalizations.of(context)!
                           .translate("shipment_route"),
@@ -510,7 +518,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                         TextButton(
                                           child: Text(
                                               AppLocalizations.of(context)!
-                                                  .translate('cancel')),
+                                                  .translate('no')),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
@@ -518,7 +526,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                         TextButton(
                                           child: Text(
                                               AppLocalizations.of(context)!
-                                                  .translate('ok')),
+                                                  .translate('yes')),
                                           onPressed: () {
                                             BlocProvider.of<
                                                         CompleteSubShipmentBloc>(
