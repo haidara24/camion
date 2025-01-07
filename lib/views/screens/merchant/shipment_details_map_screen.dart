@@ -306,7 +306,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
         body: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height - 270.h,
+              height: MediaQuery.of(context).size.height - 162.h,
               child: GoogleMap(
                 onMapCreated: (GoogleMapController controller) async {
                   setState(() {
