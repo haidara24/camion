@@ -22,7 +22,7 @@ import 'package:image_picker/image_picker.dart';
 
 class AddNewTruckScreen extends StatefulWidget {
   final int ownerId;
-  AddNewTruckScreen({Key? key, required this.ownerId}) : super(key: key);
+  const AddNewTruckScreen({Key? key, required this.ownerId}) : super(key: key);
 
   @override
   State<AddNewTruckScreen> createState() => _AddNewTruckScreenState();
@@ -55,7 +55,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
-  List<File> _files = [];
+  final List<File> _files = [];
   final ImagePicker _picker = ImagePicker();
   LatLng? selectedPosition;
 
@@ -157,7 +157,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SectionTitle(
@@ -236,9 +236,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                           scrollbarTheme: ScrollbarThemeData(
                                             radius: const Radius.circular(40),
                                             thickness:
-                                                MaterialStateProperty.all(6),
+                                                WidgetStateProperty.all(6),
                                             thumbVisibility:
-                                                MaterialStateProperty.all(true),
+                                                WidgetStateProperty.all(true),
                                           ),
                                         ),
                                         menuItemStyleData:
@@ -564,7 +564,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                 decoration: InputDecoration(
                                   labelText: AppLocalizations.of(context)!
                                       .translate('truck_number'),
-                                  contentPadding: EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                       vertical: 11.0, horizontal: 9.0),
                                 ),
                                 onTapOutside: (event) {
@@ -608,7 +608,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                 decoration: InputDecoration(
                                   labelText: AppLocalizations.of(context)!
                                       .translate('truck_number'),
-                                  contentPadding: EdgeInsets.symmetric(
+                                  contentPadding: const EdgeInsets.symmetric(
                                       vertical: 11.0, horizontal: 9.0),
                                 ),
                                 onTapOutside: (event) {
@@ -784,7 +784,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SectionTitle(
@@ -1058,63 +1058,59 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                   .validate()) {
                                                 _newtruckFormKey.currentState
                                                     ?.save();
-                                                if (trucktype! != null) {
-                                                  Map<String, dynamic> truck = {
-                                                    'height': double.parse(
-                                                            heightController
-                                                                .text)
-                                                        .toInt(),
-                                                    'width': double.parse(
-                                                            widthController
-                                                                .text)
-                                                        .toInt(),
-                                                    'long': double.parse(
-                                                            longController.text)
-                                                        .toInt(),
-                                                    'truckNumber': double.parse(
-                                                            truckNumberController
-                                                                .text)
-                                                        .toInt(),
-                                                    'traffic': double.parse(
-                                                            trafficController
-                                                                .text)
-                                                        .toInt(),
-                                                    'numberOfAxels': double.parse(
-                                                            numberOfAxelsController
-                                                                .text)
-                                                        .toInt(),
-                                                    'emptyWeight': double.parse(
-                                                            emptyWeightController
-                                                                .text)
-                                                        .toInt(),
-                                                    'grossWeight': double.parse(
-                                                            grossWeightController
-                                                                .text)
-                                                        .toInt(),
-                                                    'locationLat': "",
-                                                    'driver_first_name':
-                                                        _firstNameController
-                                                            .text,
-                                                    'driver_last_name':
-                                                        _lastNameController
-                                                            .text,
-                                                    'driver_phone':
-                                                        _phoneController.text,
-                                                    'owner': widget.ownerId,
-                                                    'truckType': trucktype,
-                                                  };
+                                                Map<String, dynamic> truck = {
+                                                  'height': double.parse(
+                                                          heightController
+                                                              .text)
+                                                      .toInt(),
+                                                  'width': double.parse(
+                                                          widthController
+                                                              .text)
+                                                      .toInt(),
+                                                  'long': double.parse(
+                                                          longController.text)
+                                                      .toInt(),
+                                                  'truckNumber': double.parse(
+                                                          truckNumberController
+                                                              .text)
+                                                      .toInt(),
+                                                  'traffic': double.parse(
+                                                          trafficController
+                                                              .text)
+                                                      .toInt(),
+                                                  'numberOfAxels': double.parse(
+                                                          numberOfAxelsController
+                                                              .text)
+                                                      .toInt(),
+                                                  'emptyWeight': double.parse(
+                                                          emptyWeightController
+                                                              .text)
+                                                      .toInt(),
+                                                  'grossWeight': double.parse(
+                                                          grossWeightController
+                                                              .text)
+                                                      .toInt(),
+                                                  'locationLat': "",
+                                                  'driver_first_name':
+                                                      _firstNameController
+                                                          .text,
+                                                  'driver_last_name':
+                                                      _lastNameController
+                                                          .text,
+                                                  'driver_phone':
+                                                      _phoneController.text,
+                                                  'owner': widget.ownerId,
+                                                  'truckType': trucktype,
+                                                };
 
-                                                  BlocProvider.of<
-                                                              CreateTruckBloc>(
-                                                          context)
-                                                      .add(
-                                                    CreateOwnerTruckButtonPressed(
-                                                        truck, _files),
-                                                  );
-                                                } else {
-                                                  trucktypeError = true;
-                                                }
-                                              } else {
+                                                BlocProvider.of<
+                                                            CreateTruckBloc>(
+                                                        context)
+                                                    .add(
+                                                  CreateOwnerTruckButtonPressed(
+                                                      truck, _files),
+                                                );
+                                                                                            } else {
                                                 // Scrollable.ensureVisible(
                                                 //   key1.currentContext!,
                                                 //   duration: const Duration(

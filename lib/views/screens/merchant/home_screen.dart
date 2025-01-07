@@ -223,9 +223,11 @@ class _HomeScreenState extends State<HomeScreen>
                                       )
                                     : ClipRRect(
                                         borderRadius:
-                                            BorderRadius.circular(180),
+                                            BorderRadius.circular(45),
                                         child: Image.network(
                                           userProvider.user!.image!,
+                                          height: 70.h,
+                                          width: 70.h,
                                           fit: BoxFit.fill,
                                           errorBuilder:
                                               (context, error, stackTrace) =>

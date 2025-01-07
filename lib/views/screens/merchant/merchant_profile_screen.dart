@@ -134,6 +134,8 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                   child: Image.network(
                                                     state.merchant.image ?? "",
                                                     fit: BoxFit.fill,
+                                                    height: 130.h,
+                                          width: 130.h,
                                                     errorBuilder: (context,
                                                             error,
                                                             stackTrace) =>
@@ -155,13 +157,15 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                       Visibility(
                                         visible: true,
                                         child: Positioned(
+                                          bottom: -15,
+                                          left: -15,
                                           child: IconButton(
                                             onPressed: () async {
                                               var pickedImage =
                                                   await _picker.pickImage(
                                                 source: ImageSource.gallery,
                                               );
-
+                                          
                                               if (pickedImage != null) {
                                                 var image =
                                                     File(pickedImage.path);
@@ -172,8 +176,17 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                         image));
                                               }
                                             },
-                                            icon: const Icon(
-                                              Icons.cloud_upload_outlined,
+                                            icon: Container(
+                                              decoration: BoxDecoration(
+                                              color: AppColor.lightGrey,
+                                              borderRadius: BorderRadius.circular(45)
+                                            ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(5.0),
+                                                child: const Icon(
+                                                  Icons.cloud_upload_outlined,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ),

@@ -32,7 +32,7 @@ import 'package:http/http.dart' as http;
 
 class CreateTruckForDriverScreen extends StatefulWidget {
   final int driverId;
-  CreateTruckForDriverScreen({Key? key, required this.driverId})
+  const CreateTruckForDriverScreen({Key? key, required this.driverId})
       : super(key: key);
 
   @override
@@ -63,7 +63,7 @@ class _CreateTruckForDriverScreenState
   TextEditingController trafficController = TextEditingController();
   TextEditingController gpsController = TextEditingController();
 
-  List<File> _files = [];
+  final List<File> _files = [];
   final ImagePicker _picker = ImagePicker();
   LatLng? selectedPosition;
 
@@ -247,7 +247,7 @@ class _CreateTruckForDriverScreenState
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   SectionTitle(
@@ -289,9 +289,9 @@ class _CreateTruckForDriverScreenState
                                       ),
                                     ),
                                     if (!isPhoneValid)
-                                      Padding(
+                                      const Padding(
                                         padding:
-                                            const EdgeInsets.only(top: 8.0),
+                                            EdgeInsets.only(top: 8.0),
                                         child: Text(
                                           "Owner not found. Please check the phone number.",
                                           style: TextStyle(
@@ -387,9 +387,9 @@ class _CreateTruckForDriverScreenState
                                           scrollbarTheme: ScrollbarThemeData(
                                             radius: const Radius.circular(40),
                                             thickness:
-                                                MaterialStateProperty.all(6),
+                                                WidgetStateProperty.all(6),
                                             thumbVisibility:
-                                                MaterialStateProperty.all(true),
+                                                WidgetStateProperty.all(true),
                                           ),
                                         ),
                                         menuItemStyleData:
@@ -1045,59 +1045,55 @@ class _CreateTruckForDriverScreenState
                                               .validate()) {
                                             _newtruckFormKey.currentState
                                                 ?.save();
-                                            if (trucktype! != null) {
-                                              KTruck truck = KTruck();
-                                              truck.height = double.parse(
-                                                      heightController.text)
-                                                  .toInt();
-                                              truck.width = double.parse(
-                                                      widthController.text)
-                                                  .toInt();
-                                              truck.locationLat =
-                                                  "35.363149,35.932120";
-                                              truck.long = double.parse(
-                                                      longController.text)
-                                                  .toInt();
-                                              truck.truckNumber = double.parse(
-                                                      truckNumberController
-                                                          .text)
-                                                  .toInt();
-                                              truck.traffic = double.parse(
-                                                      trafficController.text)
-                                                  .toInt();
-                                              truck
-                                                  .numberOfAxels = double.parse(
-                                                      numberOfAxelsController
-                                                          .text)
-                                                  .toInt();
-                                              truck.emptyWeight = double.parse(
-                                                      emptyWeightController
-                                                          .text)
-                                                  .toInt();
-                                              truck.grossWeight = double.parse(
-                                                      grossWeightController
-                                                          .text)
-                                                  .toInt();
+                                            KTruck truck = KTruck();
+                                            truck.height = double.parse(
+                                                    heightController.text)
+                                                .toInt();
+                                            truck.width = double.parse(
+                                                    widthController.text)
+                                                .toInt();
+                                            truck.locationLat =
+                                                "35.363149,35.932120";
+                                            truck.long = double.parse(
+                                                    longController.text)
+                                                .toInt();
+                                            truck.truckNumber = double.parse(
+                                                    truckNumberController
+                                                        .text)
+                                                .toInt();
+                                            truck.traffic = double.parse(
+                                                    trafficController.text)
+                                                .toInt();
+                                            truck
+                                                .numberOfAxels = double.parse(
+                                                    numberOfAxelsController
+                                                        .text)
+                                                .toInt();
+                                            truck.emptyWeight = double.parse(
+                                                    emptyWeightController
+                                                        .text)
+                                                .toInt();
+                                            truck.grossWeight = double.parse(
+                                                    grossWeightController
+                                                        .text)
+                                                .toInt();
 
-                                              truck.truckuser = widget.driverId;
+                                            truck.truckuser = widget.driverId;
 
-                                              if (istruckOwner) {
-                                                truck.owner = 0;
-                                              } else {
-                                                truck.phoneowner = truckownerController.text;
-                                              }
-                                              truck.truckType = trucktype;
-                                              truck.gpsId = gpsController.text;
-                                              BlocProvider.of<CreateTruckBloc>(
-                                                      context)
-                                                  .add(
-                                                CreateTruckButtonPressed(
-                                                    truck, _files),
-                                              );
+                                            if (istruckOwner) {
+                                              truck.owner = 0;
                                             } else {
-                                              trucktypeError = true;
+                                              truck.phoneowner = truckownerController.text;
                                             }
-                                          } else {
+                                            truck.truckType = trucktype;
+                                            truck.gpsId = gpsController.text;
+                                            BlocProvider.of<CreateTruckBloc>(
+                                                    context)
+                                                .add(
+                                              CreateTruckButtonPressed(
+                                                  truck, _files),
+                                            );
+                                                                                    } else {
                                             // Scrollable.ensureVisible(
                                             //   key1.currentContext!,
                                             //   duration: const Duration(
