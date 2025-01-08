@@ -682,35 +682,31 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
               },
               builder: (context, state) {
                 if (state is DriverActiveShipmentLoadedSuccess) {
-                  if (state.shipments.isEmpty) {
-                    return NoResultsWidget(
-                      text:
-                          AppLocalizations.of(context)!.translate("no_active"),
-                    );
-                  } else {
-                    return Consumer<ActiveShippmentProvider>(
-                        builder: (context, shipmentProvider, child) {
-                      return Visibility(
-                        visible: state.shipments.isNotEmpty,
-                        replacement: NoResultsWidget(
-                          text: AppLocalizations.of(context)!
-                              .translate('no_active'),
-                        ),
-                        child: Stack(
-                          alignment: Alignment.bottomCenter,
-                          children: [
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height,
-                              child: GoogleMap(
-                                onMapCreated:
-                                    (GoogleMapController controller) async {
-                                  setState(() {
-                                    _controller = controller;
-                                    _controller.setMapStyle(_mapStyle);
-                                  });
+                  return Consumer<ActiveShippmentProvider>(
+                      builder: (context, shipmentProvider, child) {
+                    return Visibility(
+                      visible: true,
+                      replacement: NoResultsWidget(
+                        text: AppLocalizations.of(context)!
+                            .translate('no_active'),
+                      ),
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height,
+                            child: GoogleMap(
+                              onMapCreated:
+                                  (GoogleMapController controller) async {
+                                setState(() {
+                                  _controller = controller;
+                                  _controller.setMapStyle(_mapStyle);
+                                });
 
+                                markers = {};
+
+                                if (state.shipments.isNotEmpty) {
                                   initMapbounds(state.shipments[0]);
-                                  markers = {};
                                   var pickupMarker = Marker(
                                     markerId: const MarkerId("pickup"),
                                     position: LatLng(
@@ -758,7 +754,6 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                     ),
                                   );
                                   markers.add(deliveryMarker);
-
                                   var truckMarker = Marker(
                                     markerId: const MarkerId("truck"),
                                     position: LatLng(
@@ -771,89 +766,102 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                     icon: truckicon,
                                   );
                                   markers.add(truckMarker);
-                                  setState(() {});
-                                },
-                                zoomControlsEnabled: false,
+                                } else {
+                                  var truckMarker = Marker(
+                                    markerId: const MarkerId("truck"),
+                                    position: LatLng(
+                                        double.parse(
+                                            truckLocation!.split(",")[0]),
+                                        double.parse(
+                                            truckLocation!.split(",")[1])),
+                                    icon: truckicon,
+                                  );
+                                  markers.add(truckMarker);
+                                }
 
-                                initialCameraPosition: const CameraPosition(
-                                    target: LatLng(35.363149, 35.932120),
-                                    zoom: 14.47),
-                                // gestureRecognizers: {},
-                                markers: markers,
-                                polylines: state.shipments.isNotEmpty
-                                    ? {
-                                        Polyline(
-                                          polylineId: const PolylineId("route"),
-                                          points: deserializeLatLng(
-                                              state.shipments[0].paths!),
-                                          color: AppColor.deepYellow,
-                                          width: 4,
-                                        ),
-                                      }
-                                    : {},
-                                // mapType: shipmentProvider.mapType,
-                              ),
-                            ),
-                            pathList(
-                              state.shipments[0],
-                              localeState.value.languageCode,
-                            ),
-                            Positioned(
-                              bottom: 145,
-                              left: 5,
-                              child: InkWell(
-                                onTap: () async {
-                                  setState(() {
-                                    startTracking = !startTracking;
-                                  });
-                                  if (startTracking) {
-                                    print(truckLocation);
-                                    await _controller.animateCamera(CameraUpdate
-                                        .newCameraPosition(CameraPosition(
-                                            target: LatLng(
-                                              double.parse(
-                                                  truckLocation!.split(",")[0]),
-                                              double.parse(
-                                                  truckLocation!.split(",")[1]),
-                                            ),
-                                            zoom: 14.47)));
-                                  } else {
-                                    initMapbounds(state.shipments[0]);
-                                  }
-                                },
-                                child: AbsorbPointer(
-                                  absorbing: false,
-                                  child: SizedBox(
-                                    height: 45,
-                                    width: 45,
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(45),
-                                        border: Border.all(
-                                          color: startTracking
-                                              ? Colors.orange
-                                              : Colors.white,
-                                          width: startTracking ? 2 : 0,
-                                        ),
+                                setState(() {});
+                              },
+                              zoomControlsEnabled: false,
+
+                              initialCameraPosition: const CameraPosition(
+                                  target: LatLng(35.363149, 35.932120),
+                                  zoom: 14.47),
+                              // gestureRecognizers: {},
+                              markers: markers,
+                              polylines: state.shipments.isNotEmpty
+                                  ? {
+                                      Polyline(
+                                        polylineId: const PolylineId("route"),
+                                        points: deserializeLatLng(
+                                            state.shipments[0].paths!),
+                                        color: AppColor.deepYellow,
+                                        width: 4,
                                       ),
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(180),
-                                        child: Image.asset(
-                                            "assets/icons/radar.gif",
-                                            gaplessPlayback: true,
-                                            fit: BoxFit.fill),
+                                    }
+                                  : {},
+                              // mapType: shipmentProvider.mapType,
+                            ),
+                          ),
+                          state.shipments.isNotEmpty
+                              ? pathList(
+                                  state.shipments[0],
+                                  localeState.value.languageCode,
+                                )
+                              : const SizedBox.shrink(),
+                          Positioned(
+                            bottom: state.shipments.isNotEmpty ? 145 : 30,
+                            left: 5,
+                            child: InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  startTracking = !startTracking;
+                                });
+                                if (startTracking) {
+                                  print(truckLocation);
+                                  await _controller.animateCamera(CameraUpdate
+                                      .newCameraPosition(CameraPosition(
+                                          target: LatLng(
+                                            double.parse(
+                                                truckLocation!.split(",")[0]),
+                                            double.parse(
+                                                truckLocation!.split(",")[1]),
+                                          ),
+                                          zoom: 14.47)));
+                                } else {
+                                  initMapbounds(state.shipments[0]);
+                                }
+                              },
+                              child: AbsorbPointer(
+                                absorbing: false,
+                                child: SizedBox(
+                                  height: 45,
+                                  width: 45,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(45),
+                                      border: Border.all(
+                                        color: startTracking
+                                            ? Colors.orange
+                                            : Colors.white,
+                                        width: startTracking ? 2 : 0,
                                       ),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(180),
+                                      child: Image.asset(
+                                          "assets/icons/radar.gif",
+                                          gaplessPlayback: true,
+                                          fit: BoxFit.fill),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    });
-                  }
+                          ),
+                        ],
+                      ),
+                    );
+                  });
                 } else {
                   return Center(child: LoadingIndicator());
                 }

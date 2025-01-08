@@ -58,7 +58,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                   var result = jsonDecode(myDataString);
                   var userProfile = UserModel.fromJson(result);
                   userProvider.setUser(UserModel.fromJson(result));
-                  if (userProfile.merchant != null&& userType == "Merchant") {
+                  if (userProfile.merchant != null && userType == "Merchant") {
                     prefs.setInt("merchant", userProfile.merchant!);
                   }
                   if (userProfile.truckowner != null && userType == "Owner") {
@@ -72,14 +72,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                     if (driverResponse.statusCode == 200) {
                       var driverDataString =
                           utf8.decode(driverResponse.bodyBytes);
-                          print(driverDataString);
+                      print(driverDataString);
                       var res = jsonDecode(driverDataString);
                       userProvider.setDriver(Driver.fromJson(res));
 
                       if (res['truck2'] != null) {
                         prefs.setInt("truckId", res['truck2']);
-                        prefs.setString("gpsId", res["gpsId"]??"");
-                        prefs.setInt("carId", int.parse(res["carId"])??0);
+                        prefs.setString("gpsId", res["gpsId"] ?? "");
+                        prefs.setInt("carId", int.parse(res["carId"] ?? "0"));
                       }
                     }
                   }
