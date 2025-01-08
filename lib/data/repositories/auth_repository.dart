@@ -416,6 +416,7 @@ class AuthRepository {
   Future<String> get jwtOrEmpty async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    // print("jwt is null ${jwt }");
     if (jwt == null) return "";
     return jwt;
   }

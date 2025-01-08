@@ -81,7 +81,13 @@ class _ControlViewState extends State<ControlView> {
           } else if (state is InternetConnected) {
             // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
 
-            return BlocBuilder<AuthBloc, AuthState>(
+            return BlocConsumer<AuthBloc, AuthState>(
+              listener: (context, state) {
+                print(state);
+                if(state is AuthFailureState){
+                  print(state.errorMessage);
+                }
+              },
               builder: (context, state) {
                 if (state is AuthDriverSuccessState) {
                   //driver
