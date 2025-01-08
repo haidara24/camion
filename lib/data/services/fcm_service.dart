@@ -25,8 +25,10 @@ class NotificationServices {
   void firebaseInit(BuildContext context) async {
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
+
     requestNotificationPermission();
     getDeviceToken();
+
     FirebaseMessaging.onMessage.listen((message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification!.android;
@@ -48,7 +50,6 @@ class NotificationServices {
       }
       if (notificationProvider != null) {
         notificationProvider!.addNotReadedNotification();
-        // BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
       }
     });
     setupInteractMessage(context);
@@ -63,10 +64,6 @@ class NotificationServices {
       name: "Camion",
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    // if (notificationProvider != null) {
-    //   notificationProvider!.addNotReadedNotification();
-    //   // BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    // }
     print("Handling a background message: ${message.messageId}");
   }
 
@@ -101,7 +98,7 @@ class NotificationServices {
   //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
     String token = "";
-        token = await messaging.getToken()??"";
+    token = await messaging.getToken() ?? "";
     return token;
   }
 

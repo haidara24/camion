@@ -29,6 +29,8 @@ import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_update_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_update_profile_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/upload_image_id_bloc.dart';
+import 'package:camion/business_logic/bloc/profile/upload_trade_license_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/accept_request_for_driver_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
@@ -108,38 +110,31 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // you need to initialize firebase first
-  await Firebase.initializeApp(
-    name: "Camion",
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   // you need to initialize firebase first
+//   await Firebase.initializeApp(
+//     name: "Camion",
+//     options: DefaultFirebaseOptions.currentPlatform,
+//   );
 
-  print("Handling a background message: ${message.messageId}");
-}
+//   print("Handling a background message: ${message.messageId}");
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Permission.notification.isDenied.then((value) {
-  //   if (value) {
-  //     Permission.notification.request();
-  //   }
-  // });
+
   final LocaleCubit localeCubit = LocaleCubit();
   await localeCubit.initializeFromPreferences();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String lang = prefs.getString("language") ?? "ar";
-  // Stripe.publishableKey =
-  //     "pk_test_51IZr3HApYMiHRCEPfSdLaWzGSzImzW2kc61cSI4mYf3JptVXsfFj2SG1xcBLBgLVdvW8EXckH50FgzKZeNp454dK00xplc6hCI";
-  // Stripe.merchantIdentifier = "AcrossMena";
-  // await Stripe.instance.applySettings();
+
   await Firebase.initializeApp(
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   HttpOverrides.global = MyHttpOverrides();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: AppColor.deepBlack,
@@ -232,6 +227,18 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => UploadImageBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => UploadImageIdBloc(
+                        profileRepository:
+                            RepositoryProvider.of<ProfileRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => UploadTradeLicenseBloc(
                         profileRepository:
                             RepositoryProvider.of<ProfileRepository>(context),
                       ),

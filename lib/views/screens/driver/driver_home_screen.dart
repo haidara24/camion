@@ -269,11 +269,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         child: LoadingIndicator(),
                                       )
                                     : ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(180),
+                                        borderRadius: BorderRadius.circular(45),
                                         child: Image.network(
                                           userProvider.user!.image!,
                                           fit: BoxFit.fill,
+                                          height: 70.h,
+                                          width: 70.h,
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Center(

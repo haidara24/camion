@@ -1,4 +1,5 @@
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/core/upload_image_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_update_profile_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -12,6 +13,7 @@ import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
   final UserModel user;
@@ -78,28 +80,70 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  CircleAvatar(
-                                    radius: 65.h,
-                                    backgroundColor: AppColor.deepYellow,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(180),
-                                      child: SizedBox(
-                                        child: Image.network(
-                                          state.owner.image!,
-                                          fit: BoxFit.fill,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Center(
-                                            child: Text(
-                                              "${state.owner.firstname![0].toUpperCase()} ${state.owner.lastname![0].toUpperCase()}",
-                                              style: TextStyle(
-                                                fontSize: 28.sp,
-                                              ),
-                                            ),
+                                  Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 65.h,
+                                        backgroundColor: AppColor.deepYellow,
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(180),
+                                          child: BlocConsumer<UploadImageBloc,
+                                              UploadImageState>(
+                                            listener:
+                                                (context, imagestate) async {
+                                              if (imagestate
+                                                  is UserImageUpdateSuccess) {
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
+
+                                                var owner =
+                                                    prefs.getInt("truckowner");
+                                                // print(owner);
+                                                // ignore: use_build_context_synchronously
+                                                BlocProvider.of<
+                                                            OwnerProfileBloc>(
+                                                        context)
+                                                    .add(OwnerProfileLoad(
+                                                        owner!));
+                                              }
+                                              if (imagestate
+                                                  is UserImageUpdateError) {}
+                                            },
+                                            builder: (context, imagestate) {
+                                              if (imagestate
+                                                  is UserImageUpdateLoading) {
+                                                return Center(
+                                                  child: LoadingIndicator(),
+                                                );
+                                              } else {
+                                                return SizedBox(
+                                                  child: Image.network(
+                                                    state.owner.image ?? "",
+                                                    fit: BoxFit.fill,
+                                                    height: 130.h,
+                                                    width: 130.h,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        Center(
+                                                      child: Text(
+                                                        "${state.owner.firstname![0].toUpperCase()} ${state.owner.lastname![0].toUpperCase()}",
+                                                        style: TextStyle(
+                                                          fontSize: 28.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              }
+                                            },
                                           ),
                                         ),
                                       ),
-                                    ),
+                                    ],
                                   ),
                                 ],
                               ),

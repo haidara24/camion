@@ -41,6 +41,68 @@ class ProfileRepository {
     }
   }
 
+  Future<bool> updateMerchantImageId(File imageFile) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var request = http.MultipartRequest(
+        'PATCH', Uri.parse('${MERCHANTS_ENDPOINT}upload_Id/'));
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: "JWT $jwt",
+      HttpHeaders.contentTypeHeader: "multipart/form-data"
+    });
+
+    if (imageFile != null) {
+      final uploadImages = await http.MultipartFile.fromPath(
+        'image',
+        imageFile.path,
+        filename: imageFile.path.split('/').last,
+      );
+
+      request.files.add(uploadImages);
+    }
+    var rs = await request.send();
+    if (rs.statusCode == 200) {
+      final respStr = await rs.stream.bytesToString();
+
+      var result = jsonDecode(respStr);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> updateMerchantLicenseImage(File imageFile) async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+
+    var request = http.MultipartRequest(
+        'PATCH', Uri.parse('${MERCHANTS_ENDPOINT}upload_trade_license/'));
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: "JWT $jwt",
+      HttpHeaders.contentTypeHeader: "multipart/form-data"
+    });
+
+    if (imageFile != null) {
+      final uploadImages = await http.MultipartFile.fromPath(
+        'image',
+        imageFile.path,
+        filename: imageFile.path.split('/').last,
+      );
+
+      request.files.add(uploadImages);
+    }
+    var rs = await request.send();
+    if (rs.statusCode == 200) {
+      final respStr = await rs.stream.bytesToString();
+
+      var result = jsonDecode(respStr);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<Merchant?> getMerchant(int id) async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");

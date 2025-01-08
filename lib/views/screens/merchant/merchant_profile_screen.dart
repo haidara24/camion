@@ -135,7 +135,7 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                     state.merchant.image ?? "",
                                                     fit: BoxFit.fill,
                                                     height: 130.h,
-                                          width: 130.h,
+                                                    width: 130.h,
                                                     errorBuilder: (context,
                                                             error,
                                                             stackTrace) =>
@@ -165,24 +165,26 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                                   await _picker.pickImage(
                                                 source: ImageSource.gallery,
                                               );
-                                          
+
                                               if (pickedImage != null) {
                                                 var image =
                                                     File(pickedImage.path);
                                                 BlocProvider.of<
                                                             UploadImageBloc>(
                                                         context)
-                                                    .add(UpdateUserImage(
-                                                        image));
+                                                    .add(
+                                                        UpdateUserImage(image));
                                               }
                                             },
                                             icon: Container(
                                               decoration: BoxDecoration(
-                                              color: AppColor.lightGrey,
-                                              borderRadius: BorderRadius.circular(45)
-                                            ),
+                                                  color: AppColor.lightGrey,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          45)),
                                               child: Padding(
-                                                padding: const EdgeInsets.all(5.0),
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
                                                 child: const Icon(
                                                   Icons.cloud_upload_outlined,
                                                 ),
