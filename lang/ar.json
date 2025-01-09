@@ -240,6 +240,7 @@
     "form_clear":"إعادة التهيئة",
     "form_init_confirm":"هل أنت متأكد من تهيئة الفورم؟",
 
+    "maxspeed":"السرعة القصوى",
     "overspeed_count":"تعداد تجاوز السرعة",
     "total_overspeed":"تجاوز السرعة",
     "overspeed_report":"تقرير تجاوز السرعة",

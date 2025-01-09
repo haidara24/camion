@@ -241,6 +241,7 @@
     "form_clear":"Clear Form",
     "form_init_confirm":"Are you sure you want to init the form?",
 
+    "maxspeed":"Max Speed",
     "overspeed_count":"Over Speed Count",
     "total_overspeed":"Over Speed",
     "overspeed_report":"Over Speed Report",
