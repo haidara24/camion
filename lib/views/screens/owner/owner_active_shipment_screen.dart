@@ -15,7 +15,9 @@ import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
+import 'package:camion/views/widgets/shipments_widgets/shipment_instruction_cards_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -134,12 +136,12 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
           },
           child: Container(
             padding: const EdgeInsets.all(8.0),
-            // constraints:
-            //     BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+            constraints:
+                BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             width: double.infinity,
             child: ListView(
               shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
+              // physics: const NeverScrollableScrollPhysics(),
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -268,14 +270,18 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                         ),
                       ],
                     ),
-                    const Divider(),
-                    Text(
-                      "مسار الشحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    const Divider(
+                      height: 24,
+                    ),
+                    ShipmentInstructionCardsWidget(
+                      subshipment: subshipments[selectedIndex],
+                    ),
+                    const Divider(
+                      height: 24,
+                    ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("shipment_route"),
                     ),
                     ShipmentPathVerticalWidget(
                       pathpoints: subshipments[selectedIndex].pathpoints!,
@@ -285,25 +291,18 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                       mini: false,
                     ),
                     const Divider(),
-                    Text(
-                      "تفاصيل بضاعة الشاحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("commodity_info"),
                     ),
+                    const SizedBox(height: 4),
                     Commodity_info_widget(
                         shipmentItems:
                             subshipments[selectedIndex].shipmentItems!),
                     const Divider(),
-                    Text(
-                      "احصائيات مسار الشاحنة",
-                      style: TextStyle(
-                        // color: AppColor.lightBlue,
-                        fontSize: 19.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate("shipment_route_statistics"),
                     ),
                     PathStatisticsWidget(
                       distance: subshipments[selectedIndex].distance!,
