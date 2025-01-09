@@ -202,9 +202,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                             ),
                                           );
                                         } else if (notificationProvider
-                                                .notifications[index]!
-                                                .noteficationType ==
-                                            "T") {
+                                                    .notifications[index]!
+                                                    .noteficationType ==
+                                                "T" ||
+                                            notificationProvider
+                                                    .notifications[index]!
+                                                    .noteficationType ==
+                                                "C") {
                                           BlocProvider.of<
                                                       SubShipmentDetailsBloc>(
                                                   context)

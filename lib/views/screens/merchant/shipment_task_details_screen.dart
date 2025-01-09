@@ -712,7 +712,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                                     child: SizedBox(
                                                                                       width: 200,
                                                                                       child: Text(
-                                                                                        item.name!,
+                                                                                        localeState.value.languageCode == "en" ? item.name! : item.nameAr!,
                                                                                         style: const TextStyle(
                                                                                           fontSize: 17,
                                                                                         ),

@@ -152,7 +152,8 @@ class NotificationServices {
               IncomingShipmentDetailsScreen(requestOwner: "T"),
         ),
       );
-    } else if (message.data['notefication_type'] == "T") {
+    } else if (message.data['notefication_type'] == "T" ||
+        message.data['notefication_type'] == "C") {
       BlocProvider.of<SubShipmentDetailsBloc>(context)
           .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
       Navigator.push(

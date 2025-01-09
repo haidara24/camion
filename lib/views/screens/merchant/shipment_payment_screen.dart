@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/payment_create_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -417,6 +418,8 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                             builder: (context) => const ControlView(),
                           ),
                           (route) => false);
+                      BlocProvider.of<ShipmentTaskListBloc>(context)
+                          .add(ShipmentTaskListLoadEvent());
                     }
                   },
                   builder: (context, state) {
@@ -576,83 +579,6 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
               ),
               const Divider(),
               const SectionBody(text: "under development."),
-              // const SectionBody(text: "اسم الحساب : أكروس مينا"),
-              // widget.shipment.shipmentpaymentv2 == null
-              //     ? SizedBox(
-              //         width: MediaQuery.of(context).size.width * .9,
-              //         child: CustomButton(
-              //           title: _loading
-              //               ? const LoadingIndicator()
-              //               : Text(AppLocalizations.of(context)!
-              //                   .translate('pay_now')),
-              //           onTap: () async {
-              //             setState(() {
-              //               _loading = true;
-              //             });
-              //             var prefs = await SharedPreferences.getInstance();
-              //             var jwt = prefs.getString("token");
-              //             var amount = (0! +
-              //                     0!) *
-              //                 100;
-              //             final response = await HttpHelper.get(
-              //                 "https://matjari.app/make_payment/?amount=100",
-              //                 apiToken: jwt);
-              //             print(response.body);
-              //             print(response.statusCode);
-              //             var jsonBody = jsonDecode(response.body);
-              //             StripeModel stripeModel =
-              //                 StripeModel.fromJson(jsonBody);
-              //             if (stripeModel.paymentIntent! != "" &&
-              //                 stripeModel.paymentIntent != null) {
-              //               String _intent = stripeModel.paymentIntent!;
-              //               await stripe.Stripe.instance.initPaymentSheet(
-              //                 paymentSheetParameters:
-              //                     stripe.SetupPaymentSheetParameters(
-              //                   customFlow: false,
-              //                   merchantDisplayName: 'Camion',
-              //                   paymentIntentClientSecret:
-              //                       stripeModel.paymentIntent,
-              //                   customerEphemeralKeySecret:
-              //                       stripeModel.ephemeralKey,
-              //                   customerId: stripeModel.customer,
-              //                   applePay: const stripe.PaymentSheetApplePay(
-              //                     merchantCountryCode: 'US',
-              //                   ),
-              //                   googlePay: const stripe.PaymentSheetGooglePay(
-              //                     merchantCountryCode: 'US',
-              //                     testEnv: true,
-              //                   ),
-              //                   style: ThemeMode.light,
-              //                 ),
-              //               );
-              //               setState(() {
-              //                 _loading = false;
-              //               });
-              //               stripe.Stripe.instance
-              //                   .presentPaymentSheet()
-              //                   .onError((error, stackTrace) {
-              //                 print(error);
-              //               });
-              //               stripe.Stripe.instance
-              //                   .confirmPaymentSheetPayment()
-              //                   .then((value) {
-              //                 var amount = (widget.shipment.truck!.fees! +
-              //                     0!);
-              //                 ShipmentPayment payment = ShipmentPayment();
-              //                 payment.shipment = widget.shipment.id!;
-              //                 payment.amount = widget.shipment.truck!.fees;
-              //                 payment.paymentMethod = "S";
-              //                 payment.fees = widget.shipment.truck!.fees;
-              //                 payment.extraFees =
-              //                     0;
-              //                 // BlocProvider.of<PaymentCreateBloc>(context)
-              //                 //     .add(PaymentCreateButtonPressed(payment,));
-              //               });
-              //             }
-              //           },
-              //         ),
-              //       )
-              //     : const SizedBox.shrink()
               widget.shipment.shipmentpaymentv2 == null
                   ? SizedBox(
                       width: MediaQuery.of(context).size.width * .9,

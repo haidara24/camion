@@ -1,6 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-
 class Shipmentv2 {
   int? id;
   int? merchant;
@@ -268,15 +267,18 @@ class PathPoint {
 class PackageType {
   int? id;
   String? name;
+  String? nameAr;
 
   PackageType({
     this.id,
     this.name,
+    this.nameAr,
   });
 
   PackageType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    nameAr = json['name_ar'];
   }
 
   Map<String, dynamic> toJson() {
