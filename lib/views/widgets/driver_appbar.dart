@@ -7,6 +7,7 @@ import 'package:camion/data/providers/truck_active_status_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/notification_screen.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -159,6 +160,21 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
                           if (state is TruckActiveStatusLoadedSuccess) {
                             print(state.status);
                             activeProvider.setStatus(state.status);
+                            if (state.status) {
+                              showCustomSnackBar(
+                                context: context,
+                                backgroundColor: AppColor.deepGreen,
+                                message: AppLocalizations.of(context)!
+                                    .translate('truck_enabled'),
+                              );
+                            } else {
+                              showCustomSnackBar(
+                                context: context,
+                                backgroundColor: AppColor.deepGreen,
+                                message: AppLocalizations.of(context)!
+                                    .translate('truck_disabled'),
+                              );
+                            }
                           }
                         },
                         builder: (context, state) {
@@ -231,90 +247,4 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize => const Size(double.infinity, kToolbarHeight);
-}
-
-class TruckStatusWidget extends StatefulWidget {
-  const TruckStatusWidget({Key? key}) : super(key: key);
-
-  @override
-  State<TruckStatusWidget> createState() => _TruckStatusWidgetState();
-}
-
-class _TruckStatusWidgetState extends State<TruckStatusWidget> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      BlocProvider.of<TruckActiveStatusBloc>(context)
-          .add(LoadTruckActiveStatusEvent());
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<TruckActiveStatusProvider>(
-        builder: (providercontext, activeProvider, child) {
-      return Column(
-        children: [
-          const SizedBox(height: 8),
-          Text(
-              "${AppLocalizations.of(context)!.translate("truck_status")}: ${activeProvider.isOn ? AppLocalizations.of(context)!.translate("enabled") : AppLocalizations.of(context)!.translate("disabled")}"),
-          const Spacer(),
-          BlocConsumer<TruckActiveStatusBloc, TruckActiveStatusState>(
-            listener: (context, state) {
-              if (state is TruckActiveStatusLoadedFailed) {
-                print(state.errortext);
-              }
-              if (state is TruckActiveStatusLoadedSuccess) {
-                print(state.status);
-                activeProvider.setStatus(state.status);
-              }
-
-              // TODO: implement listener
-            },
-            builder: (context, loadstate) {
-              if (loadstate is TruckActiveStatusLoadedSuccess) {
-                return IconButton(
-                  onPressed: () {
-                    BlocProvider.of<TruckActiveStatusBloc>(context).add(
-                      UpdateTruckActiveStatusEvent(
-                        (activeProvider.isOn),
-                      ),
-                    );
-                  },
-                  icon: CheckboxListTile(
-                    controlAffinity: ListTileControlAffinity.leading,
-                    value: activeProvider.isOn,
-                    contentPadding: EdgeInsets.zero,
-                    enabled: false,
-                    onChanged: (value) {
-                      // setState(() {
-                      //   activeProvider.isOn = !activeProvider.isOn;
-                      // });
-                    },
-                    title: Text(activeProvider.isOn
-                        ? AppLocalizations.of(context)!.translate("enabled")
-                        : AppLocalizations.of(context)!.translate("disabled")),
-                  ),
-                );
-              } else if (loadstate is TruckActiveStatusLoadingProgress) {
-                return Center(
-                  child: SizedBox(
-                    height: 35.h,
-                    width: 35.h,
-                    child: LoadingIndicator(
-                      color: Colors.white,
-                    ),
-                  ),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            },
-          ),
-          const Spacer(),
-        ],
-      );
-    });
-  }
 }

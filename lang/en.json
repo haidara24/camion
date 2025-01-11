@@ -51,6 +51,8 @@
     "truck_info":"Truck Info",
     "truck_status":"Truck Status",
     "enabled":"Enabled",
+    "truck_enabled":"Truck is enabled now",
+    "truck_disabled":"Truck is not enabled now",
     "disabled":"Disabled",
     "select_truck":"Select Truck",
     "select_truck_type":"Select Truck Type",

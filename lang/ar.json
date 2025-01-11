@@ -51,6 +51,8 @@
     "truck_info":"معلومات المركبة",
     "truck_status":"حالة المركبة",
     "enabled":"مفعلة",
+    "truck_enabled":"الشاحنة نشطة الأن",
+    "truck_disabled":"الشاحنة غير نشطة الأن",
     "disabled":"غير مفعلة",
     "select_truck":"اختر مركبة",
     "select_truck_type":"اختر نوع المركبة",

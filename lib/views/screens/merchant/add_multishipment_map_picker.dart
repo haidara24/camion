@@ -113,13 +113,15 @@ class _MultiShippmentPickUpMapScreenState
                       selectedPosition = LatLng(
                           position.target.latitude, position.target.longitude);
                       myMarker = {};
-                      myMarker.add(
-                        Marker(
-                          markerId: MarkerId(widget.location.toString()),
-                          position: widget.location!,
-                          icon: widget.type == 0 ? pickupicon : deliveryicon,
-                        ),
-                      );
+                      if (widget.location != null) {
+                        myMarker.add(
+                          Marker(
+                            markerId: MarkerId(widget.location.toString()),
+                            position: widget.location!,
+                            icon: widget.type == 0 ? pickupicon : deliveryicon,
+                          ),
+                        );
+                      }
                       var newposition = LatLng(
                           position.target.latitude, position.target.longitude);
                       myMarker.add(Marker(
