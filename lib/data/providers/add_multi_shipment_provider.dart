@@ -852,7 +852,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             zoom: 14.47),
       ),
     );
-    _mapController2!.animateCamera(
+    if(_mapController2!=null){_mapController2!.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
             target: LatLng(
@@ -861,7 +861,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             ),
             zoom: 14.47),
       ),
-    );
+    );}
   }
 
   Future<void> getAddressForDeliveryFromMapPicker(LatLng position) async {
