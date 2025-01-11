@@ -365,14 +365,15 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     await polylinePoints
         .getRouteBetweenCoordinates(
-          googleApiKey:"AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+      googleApiKey: "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
       request: PolylineRequest(
-        origin: PointLatLng(_pickup_latlng!.latitude, _pickup_latlng!.longitude),
-        destination: PointLatLng(_delivery_latlng!.latitude, _delivery_latlng!.longitude),
+        origin:
+            PointLatLng(_pickup_latlng!.latitude, _pickup_latlng!.longitude),
+        destination: PointLatLng(
+            _delivery_latlng!.latitude, _delivery_latlng!.longitude),
         mode: TravelMode.driving,
-        wayPoints:  waypoints,
-        ),
-      
+        wayPoints: waypoints,
+      ),
     )
         .then(
       (result) {
@@ -827,16 +828,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _pickup_placeId = getAdministrativeAreaPlaceId(result);
       _pickup_location = "${position.latitude},${position.longitude}";
     }
-    // var responseEng = await http.get(
-    //   Uri.parse(
-    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    // );
-    // if (responseEng.statusCode == 200) {
-    //   var result = jsonDecode(responseEng.body);
 
-    //   _pickup_eng_string[index] =
-    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    // }
     if (_delivery_controller.text.isNotEmpty &&
         _pickup_controller.text.isNotEmpty) {
       getPolyPoints();

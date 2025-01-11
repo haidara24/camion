@@ -22,11 +22,11 @@ class MultiShippmentPickUpMapScreen extends StatefulWidget {
 
 class _MultiShippmentPickUpMapScreenState
     extends State<MultiShippmentPickUpMapScreen> {
-  static CameraPosition _initialCameraPosition = const CameraPosition(
+  final CameraPosition _initialCameraPosition = const CameraPosition(
     target: LatLng(35.363149, 35.932120),
     zoom: 9,
   );
-  Set<Marker> myMarker = new Set();
+  Set<Marker> myMarker = {};
   late GoogleMapController mapController;
 
   void _onMapCreated(GoogleMapController controller) {
@@ -43,21 +43,34 @@ class _MultiShippmentPickUpMapScreenState
   late BitmapDescriptor deliveryicon;
 
   createMarkerIcons() async {
-    pickupicon = await BitmapDescriptor.fromAssetImage(
+    pickupicon = await BitmapDescriptor.asset(
         const ImageConfiguration(size: Size(30, 50)),
         "assets/icons/location1.png");
-    deliveryicon = await BitmapDescriptor.fromAssetImage(
+    deliveryicon = await BitmapDescriptor.asset(
         const ImageConfiguration(), "assets/icons/location2.png");
     setState(() {});
   }
 
   initlocation() async {
     if (widget.location != null) {
+      // Animate the camera to the provided location
       await mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(target: widget.location!, zoom: 14.47),
         ),
       );
+
+      // Add a marker at the provided location
+      myMarker.add(
+        Marker(
+          markerId: MarkerId(widget.location.toString()),
+          position: widget.location!,
+          icon: widget.type == 0 ? pickupicon : deliveryicon,
+        ),
+      );
+
+      // Update the state to display the marker on the map
+      setState(() {});
     }
   }
 
@@ -66,8 +79,7 @@ class _MultiShippmentPickUpMapScreenState
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       addShippmentProvider =
           Provider.of<AddMultiShipmentProvider>(context, listen: false);
-      createMarkerIcons();
-      // initlocation();
+      createMarkerIcons().then((_) => initlocation());
     });
     super.initState();
   }
@@ -100,7 +112,14 @@ class _MultiShippmentPickUpMapScreenState
                     setState(() {
                       selectedPosition = LatLng(
                           position.target.latitude, position.target.longitude);
-                      myMarker = new Set();
+                      myMarker = {};
+                      myMarker.add(
+                        Marker(
+                          markerId: MarkerId(widget.location.toString()),
+                          position: widget.location!,
+                          icon: widget.type == 0 ? pickupicon : deliveryicon,
+                        ),
+                      );
                       var newposition = LatLng(
                           position.target.latitude, position.target.longitude);
                       myMarker.add(Marker(
@@ -108,8 +127,6 @@ class _MultiShippmentPickUpMapScreenState
                           position: newposition,
                           icon: widget.type == 0 ? pickupicon : deliveryicon));
                     });
-                    // Get.find<PropertyController>()
-                    //     .setCurrentPosition(position);
                   },
                   markers: myMarker,
                   myLocationEnabled: true,
@@ -119,11 +136,6 @@ class _MultiShippmentPickUpMapScreenState
                   // mapType: controller.currentMapType,
                   mapToolbarEnabled: true,
                 ),
-                // const Icon(
-                //   Icons.location_pin,
-                //   size: 45,
-                //   color: Colors.red,
-                // )
               ],
             ),
             selectedPosition != null
@@ -174,33 +186,6 @@ class _MultiShippmentPickUpMapScreenState
                           ),
                   )
                 : const SizedBox.shrink(),
-            Positioned(
-              bottom: 25.h,
-              left: 20.w,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  // FloatingActionButton(
-                  //   foregroundColor: Colors.black,
-                  //   onPressed: () {
-                  //     controller.gotolocation();
-                  //   },
-                  //   child: const Icon(Icons.center_focus_strong),
-                  // ),
-                  // const SizedBox(
-                  //   height: 10,
-                  // ),
-                  // FloatingActionButton(
-                  //   tooltip: "تغيير نمط الخريطة",
-                  //   foregroundColor: Colors.black,
-                  //   onPressed: () => controller.changeMapType(),
-                  //   child: controller.currentMapType == MapType.normal
-                  //       ? Image.asset("assets/icons/sattalite_map.png")
-                  //       : Image.asset("assets/icons/normal_map.png"),
-                  // ),
-                ],
-              ),
-            ),
           ],
         ),
       ),

@@ -82,36 +82,39 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                 child: cupertino.CupertinoDatePicker(
                   backgroundColor: Colors.white10,
                   initialDateTime: startOrEnd ? startTime : endTime,
-                  maximumDate: startOrEnd ? null : startTime.add(const Duration(days: 30)),
+                  maximumDate: startOrEnd
+                      ? null
+                      : startTime.add(const Duration(days: 30)),
                   minimumDate: startOrEnd ? null : startTime,
                   mode: cupertino.CupertinoDatePickerMode.date,
                   onDateTimeChanged: (value) {
                     setState(() {
-                    if (startOrEnd) {
-                      // Update startTime
-                      startTime = value;
-                      startdate_controller.text =
-                          "${startTime.year}-${startTime.month}-${startTime.day}";
-                      startdate =
-                          "${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}:${startTime.second}";
+                      if (startOrEnd) {
+                        // Update startTime
+                        startTime = value;
+                        startdate_controller.text =
+                            "${startTime.year}-${startTime.month}-${startTime.day}";
+                        startdate =
+                            "${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}:${startTime.second}";
 
-                      // Adjust endTime if it exceeds startTime + 30 days
-                      if (endTime.isAfter(startTime.add(const Duration(days: 30)))) {
-                        endTime = startTime.add(const Duration(days: 30));
+                        // Adjust endTime if it exceeds startTime + 30 days
+                        if (endTime
+                            .isAfter(startTime.add(const Duration(days: 30)))) {
+                          endTime = startTime.add(const Duration(days: 30));
+                          enddate_controller.text =
+                              "${endTime.year}-${endTime.month}-${endTime.day}";
+                          enddate =
+                              "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
+                        }
+                      } else {
+                        // Update endTime
+                        endTime = value;
                         enddate_controller.text =
                             "${endTime.year}-${endTime.month}-${endTime.day}";
                         enddate =
                             "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
                       }
-                    } else {
-                      // Update endTime
-                      endTime = value;
-                      enddate_controller.text =
-                          "${endTime.year}-${endTime.month}-${endTime.day}";
-                      enddate =
-                          "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
-                    }
-                  });
+                    });
                   },
                 ),
               ),
@@ -190,26 +193,29 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      const Spacer(),
-                      SectionTitle(
-                        text: AppLocalizations.of(context)!
-                            .translate('choose_shippment_path'),
-                        size: 20,
-                      ),
-                      const Spacer(),
-                      const SizedBox(
-                        width: 25,
-                      ),
-                    ],
+                  Container(
+                    color: Colors.white,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.arrow_back),
+                        ),
+                        const Spacer(),
+                        SectionTitle(
+                          text: AppLocalizations.of(context)!
+                              .translate('choose_shippment_path'),
+                          size: 20,
+                        ),
+                        const Spacer(),
+                        const SizedBox(
+                          width: 25,
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 8.h,
@@ -253,6 +259,83 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
 
     Overlay.of(context).insert(overlayEntry!);
     getAddressForPickupFromLatLng(location);
+  }
+
+  showMapModalSheet(BuildContext context, String lang) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(0),
+        ),
+      ),
+      builder: (context) => Container(
+        color: Colors.grey[200],
+        padding: const EdgeInsets.all(16.0),
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+        width: double.infinity,
+        child: ListView(
+          // shrinkWrap: true,
+          // physics: NeverScrollableScrollPhysics(),
+          children: [
+            Container(
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  const Spacer(),
+                  SectionTitle(
+                    text: AppLocalizations.of(context)!
+                        .translate('choose_shippment_path'),
+                    size: 20,
+                  ),
+                  const Spacer(),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 150,
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: location,
+                  zoom: 15,
+                ),
+                markers: {
+                  Marker(
+                    markerId: const MarkerId('location'),
+                    position: location,
+                  ),
+                },
+              ),
+            ),
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: Text(
+                positionName,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -397,10 +480,12 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                           ),
                         ],
                       ),
-                      SectionBody(text: "${AppLocalizations.of(context)!.translate("maxspeed")}: 70 km"),
+                      SectionBody(
+                          text:
+                              "${AppLocalizations.of(context)!.translate("maxspeed")}: 70 km"),
                       const SizedBox(
-                            height: 16,
-                          ),
+                        height: 16,
+                      ),
                       BlocBuilder<OverSpeedBloc, OverSpeedState>(
                         builder: (context, state) {
                           if (state is OverSpeedLoadedSuccess) {
@@ -532,7 +617,12 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                                                           ["lat"],
                                                       state.result[index]
                                                           ["lon"]);
-                                                  showMapOverlay();
+                                                  getAddressForPickupFromLatLng(
+                                                      location);
+                                                  showMapModalSheet(
+                                                      context,
+                                                      localeState
+                                                          .value.languageCode);
                                                 },
                                                 icon: Icon(
                                                   Icons.location_on,
