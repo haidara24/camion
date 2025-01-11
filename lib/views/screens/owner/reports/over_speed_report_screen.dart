@@ -279,7 +279,7 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
         width: double.infinity,
         child: ListView(
           // shrinkWrap: true,
-          // physics: NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           children: [
             Container(
               color: Colors.white,
@@ -306,7 +306,7 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height - 150,
+              height: MediaQuery.of(context).size.height - 50,
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(
                   target: location,
@@ -320,18 +320,18 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                 },
               ),
             ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Text(
-                positionName,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
+            // const SizedBox(height: 16),
+            // Container(
+            //   padding: const EdgeInsets.all(16),
+            //   decoration: BoxDecoration(
+            //     color: Colors.white,
+            //     borderRadius: BorderRadius.circular(15),
+            //   ),
+            //   child: Text(
+            //     positionName,
+            //     style: const TextStyle(fontSize: 16),
+            //   ),
+            // ),
           ],
         ),
       ),
