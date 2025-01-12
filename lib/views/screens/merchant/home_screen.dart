@@ -222,8 +222,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         child: LoadingIndicator(),
                                       )
                                     : ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(45),
+                                        borderRadius: BorderRadius.circular(45),
                                         child: Image.network(
                                           userProvider.user!.image!,
                                           height: 70.h,
@@ -565,57 +564,89 @@ class _HomeScreenState extends State<HomeScreen>
                                             state.requests.length);
                                       }
                                     },
-                                    child: navigationValue == 1
-                                        ? Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              SvgPicture.asset(
-                                                "assets/icons/orange/my_shipments.svg",
-                                                width: 28.w,
-                                                height: 28.w,
-                                              ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate('myshipments'),
-                                                  style: TextStyle(
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                      fontSize: 12.sp),
-                                                ),
+                                    child: Stack(
+                                      clipBehavior: Clip.none,
+                                      children: [
+                                        navigationValue == 1
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/orange/my_shipments.svg",
+                                                    width: 28.w,
+                                                    height: 28.w,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'myshipments'),
+                                                      style: TextStyle(
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                          fontSize: 12.sp),
+                                                    ),
+                                                  )
+                                                ],
                                               )
-                                            ],
-                                          )
-                                        : Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              SvgPicture.asset(
-                                                "assets/icons/white/my_shipments.svg",
-                                                width: 28.w,
-                                                height: 28.w,
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/white/my_shipments.svg",
+                                                    width: 28.w,
+                                                    height: 28.w,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'myshipments'),
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 12.sp,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              const SizedBox(
-                                                height: 4,
-                                              ),
-                                              FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate('myshipments'),
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12.sp,
+                                        value.requestNum > 0
+                                            ? Positioned(
+                                                left: 15,
+                                                child: Container(
+                                                  height: 22.w,
+                                                  width: 22.w,
+                                                  decoration: BoxDecoration(
+                                                    color: AppColor.deepYellow,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                        value.requestNum
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                        )),
                                                   ),
                                                 ),
                                               )
-                                            ],
-                                          ),
+                                            : const SizedBox.shrink(),
+                                      ],
+                                    ),
                                   );
                                 }),
                               ),
@@ -805,7 +836,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                       ? null
                                                       : -5,
                                                   child: Container(
-                                                    padding: const EdgeInsets.all(2),
+                                                    padding:
+                                                        const EdgeInsets.all(2),
                                                     decoration: BoxDecoration(
                                                       color:
                                                           AppColor.deepYellow,
@@ -813,7 +845,8 @@ class _HomeScreenState extends State<HomeScreen>
                                                           BorderRadius.circular(
                                                               12),
                                                     ),
-                                                    constraints: const BoxConstraints(
+                                                    constraints:
+                                                        const BoxConstraints(
                                                       minWidth: 22,
                                                       minHeight: 22,
                                                     ),

@@ -341,181 +341,198 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                         )
                       : const SizedBox.shrink(),
                   selectedTruck >= 0
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                final now = DateTime.now();
-                                final startTime =
-                                    now.subtract(const Duration(days: 29));
-                                final dateFormat =
-                                    intel.DateFormat('yyyy-MM-dd HH:mm:ss');
+                      ? (trucks[selectedTruck].gpsId!.isEmpty ||
+                              trucks[selectedTruck].gpsId!.length < 8)
+                          ? Center(
+                              child: SectionBody(
+                                  text:
+                                      "this truck has no GPS device to show statistics.\n please contact us to get one."),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    final now = DateTime.now();
+                                    final startTime =
+                                        now.subtract(const Duration(days: 29));
+                                    final dateFormat =
+                                        intel.DateFormat('yyyy-MM-dd HH:mm:ss');
 
-                                final formattedStartTime =
-                                    dateFormat.format(startTime);
-                                final formattedEndTime = dateFormat.format(now);
+                                    final formattedStartTime =
+                                        dateFormat.format(startTime);
+                                    final formattedEndTime =
+                                        dateFormat.format(now);
 
-                                BlocProvider.of<OverSpeedBloc>(context).add(
-                                    OverSpeedLoadEvent(
-                                        formattedStartTime,
-                                        formattedEndTime,
-                                        trucks[selectedTruck].carId!));
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          OverSpeedReportScreen(
-                                              start: startTime,
-                                              end: now,
-                                              carId:
-                                                  trucks[selectedTruck].carId!),
-                                    ));
-                              },
-                              icon: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/icons/overspeed.svg",
-                                    height: 50.h,
-                                    width: 50.h,
+                                    BlocProvider.of<OverSpeedBloc>(context).add(
+                                        OverSpeedLoadEvent(
+                                            formattedStartTime,
+                                            formattedEndTime,
+                                            trucks[selectedTruck].carId!));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              OverSpeedReportScreen(
+                                                  start: startTime,
+                                                  end: now,
+                                                  carId: trucks[selectedTruck]
+                                                      .carId!),
+                                        ));
+                                  },
+                                  icon: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/icons/overspeed.svg",
+                                        height: 50.h,
+                                        width: 50.h,
+                                      ),
+                                      SectionBody(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("total_overspeed")),
+                                      Text(state.result["overSpeeds"]
+                                          .toString()),
+                                    ],
                                   ),
-                                  SectionBody(
-                                      text: AppLocalizations.of(context)!
-                                          .translate("total_overspeed")),
-                                  Text(state.result["overSpeeds"].toString()),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                final now = DateTime.now();
-                                final startTime =
-                                    now.subtract(const Duration(days: 29));
-                                final dateFormat =
-                                    intel.DateFormat('yyyy-MM-dd HH:mm:ss');
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    final now = DateTime.now();
+                                    final startTime =
+                                        now.subtract(const Duration(days: 29));
+                                    final dateFormat =
+                                        intel.DateFormat('yyyy-MM-dd HH:mm:ss');
 
-                                final formattedStartTime =
-                                    dateFormat.format(startTime);
-                                final formattedEndTime = dateFormat.format(now);
+                                    final formattedStartTime =
+                                        dateFormat.format(startTime);
+                                    final formattedEndTime =
+                                        dateFormat.format(now);
 
-                                BlocProvider.of<ParkingReportBloc>(context).add(
-                                    ParkingReportLoadEvent(
-                                        formattedStartTime,
-                                        formattedEndTime,
-                                        trucks[selectedTruck].carId!));
+                                    BlocProvider.of<ParkingReportBloc>(context)
+                                        .add(ParkingReportLoadEvent(
+                                            formattedStartTime,
+                                            formattedEndTime,
+                                            trucks[selectedTruck].carId!));
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ParkingReportScreen(
-                                          start: startTime,
-                                          end: now,
-                                          carId: trucks[selectedTruck].carId!),
-                                    ));
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/icons/total_stops.svg",
-                                    height: 50.h,
-                                    width: 50.h,
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              ParkingReportScreen(
+                                                  start: startTime,
+                                                  end: now,
+                                                  carId: trucks[selectedTruck]
+                                                      .carId!),
+                                        ));
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/icons/total_stops.svg",
+                                        height: 50.h,
+                                        width: 50.h,
+                                      ),
+                                      SectionBody(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("total_parking")),
+                                      Text(state.result["stops"].toString()),
+                                    ],
                                   ),
-                                  SectionBody(
-                                      text: AppLocalizations.of(context)!
-                                          .translate("total_parking")),
-                                  Text(state.result["stops"].toString()),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                final now = DateTime.now();
-                                final startTime =
-                                    now.subtract(const Duration(days: 29));
-                                final dateFormat =
-                                    intel.DateFormat('yyyy-MM-dd HH:mm:ss');
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    final now = DateTime.now();
+                                    final startTime =
+                                        now.subtract(const Duration(days: 29));
+                                    final dateFormat =
+                                        intel.DateFormat('yyyy-MM-dd HH:mm:ss');
 
-                                final formattedStartTime =
-                                    dateFormat.format(startTime);
-                                final formattedEndTime = dateFormat.format(now);
+                                    final formattedStartTime =
+                                        dateFormat.format(startTime);
+                                    final formattedEndTime =
+                                        dateFormat.format(now);
 
-                                BlocProvider.of<TotalMilageDayBloc>(context)
-                                    .add(TotalMilageDayLoadEvent(
-                                        formattedStartTime,
-                                        formattedEndTime,
-                                        trucks[selectedTruck].carId!));
+                                    BlocProvider.of<TotalMilageDayBloc>(context)
+                                        .add(TotalMilageDayLoadEvent(
+                                            formattedStartTime,
+                                            formattedEndTime,
+                                            trucks[selectedTruck].carId!));
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          MilagePerDayReportScreen(
-                                              start: startTime,
-                                              end: now,
-                                              carId:
-                                                  trucks[selectedTruck].carId!),
-                                    ));
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/icons/orange/shipment_path.svg",
-                                    height: 50.h,
-                                    width: 50.h,
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MilagePerDayReportScreen(
+                                                  start: startTime,
+                                                  end: now,
+                                                  carId: trucks[selectedTruck]
+                                                      .carId!),
+                                        ));
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/icons/orange/shipment_path.svg",
+                                        height: 50.h,
+                                        width: 50.h,
+                                      ),
+                                      SectionBody(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("total_mileage")),
+                                      Text(state.result["totalMileage"]
+                                          .toString()),
+                                    ],
                                   ),
-                                  SectionBody(
-                                      text: AppLocalizations.of(context)!
-                                          .translate("total_mileage")),
-                                  Text(state.result["totalMileage"].toString()),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                final now = DateTime.now();
-                                final startTime =
-                                    now.subtract(const Duration(days: 29));
-                                final dateFormat =
-                                    intel.DateFormat('yyyy-MM-dd HH:mm:ss');
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    final now = DateTime.now();
+                                    final startTime =
+                                        now.subtract(const Duration(days: 29));
+                                    final dateFormat =
+                                        intel.DateFormat('yyyy-MM-dd HH:mm:ss');
 
-                                final formattedStartTime =
-                                    dateFormat.format(startTime);
-                                final formattedEndTime = dateFormat.format(now);
+                                    final formattedStartTime =
+                                        dateFormat.format(startTime);
+                                    final formattedEndTime =
+                                        dateFormat.format(now);
 
-                                BlocProvider.of<TripReportBloc>(context).add(
-                                    TripReportLoadEvent(
-                                        formattedStartTime,
-                                        formattedEndTime,
-                                        trucks[selectedTruck].carId!));
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => TripReportScreen(
-                                          start: startTime,
-                                          end: now,
-                                          carId: trucks[selectedTruck].carId!),
-                                    ));
-                              },
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SvgPicture.asset(
-                                    "assets/icons/total_trips.svg",
-                                    height: 50.h,
-                                    width: 50.h,
+                                    BlocProvider.of<TripReportBloc>(context)
+                                        .add(TripReportLoadEvent(
+                                            formattedStartTime,
+                                            formattedEndTime,
+                                            trucks[selectedTruck].carId!));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              TripReportScreen(
+                                                  start: startTime,
+                                                  end: now,
+                                                  carId: trucks[selectedTruck]
+                                                      .carId!),
+                                        ));
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        "assets/icons/total_trips.svg",
+                                        height: 50.h,
+                                        width: 50.h,
+                                      ),
+                                      SectionBody(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("total_trips")),
+                                      const Text(""),
+                                    ],
                                   ),
-                                  SectionBody(
-                                      text: AppLocalizations.of(context)!
-                                          .translate("total_trips")),
-                                  const Text(""),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
+                                ),
+                              ],
+                            )
                       : const SizedBox.shrink(),
                 ],
               );
@@ -658,7 +675,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                           // mapType: shipmentProvider.mapType,
                         ),
                         Positioned(
-                          top: 5,
+                          top: -5,
                           right: 5,
                           child: IconButton(
                             onPressed: () {

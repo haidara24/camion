@@ -124,10 +124,13 @@ class _MultiShippmentPickUpMapScreenState
                       }
                       var newposition = LatLng(
                           position.target.latitude, position.target.longitude);
-                      myMarker.add(Marker(
+                      myMarker.add(
+                        Marker(
                           markerId: MarkerId(newposition.toString()),
                           position: newposition,
-                          icon: widget.type == 0 ? pickupicon : deliveryicon));
+                          // icon: widget.type == 0 ? pickupicon : deliveryicon,
+                        ),
+                      );
                     });
                   },
                   markers: myMarker,
