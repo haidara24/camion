@@ -8,6 +8,7 @@ import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_active_status_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
@@ -127,7 +128,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     _listenLocation();
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
-
+BlocProvider.of<DriverRequestsListBloc>(context)
+              .add(const DriverRequestsListLoadEvent(null));
+              BlocProvider.of<TruckActiveStatusBloc>(context)
+                                    .add(
+                                  LoadTruckActiveStatusEvent(),
+                                );
     // notificationServices.requestNotificationPermission();
     // // notificationServices.forgroundMessage(context);
     // notificationServices.firebaseInit(context);
