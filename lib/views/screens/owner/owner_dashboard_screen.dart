@@ -157,10 +157,12 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
 
                         final formattedStartTime = dateFormat.format(startTime);
                         final formattedEndTime = dateFormat.format(now);
-
-                        BlocProvider.of<TotalStatisticsBloc>(context).add(
-                            TotalStatisticsLoadEvent(formattedStartTime,
-                                formattedEndTime, trucks[index].carId!));
+                        if (!(trucks[selectedTruck].gpsId==null|| trucks[selectedTruck].gpsId!.isEmpty ||
+                            trucks[selectedTruck].gpsId!.length < 8)) {
+                          BlocProvider.of<TotalStatisticsBloc>(context).add(
+                              TotalStatisticsLoadEvent(formattedStartTime,
+                                  formattedEndTime, trucks[index].carId!));
+                        }
                       },
                       child: Padding(
                         padding:
@@ -341,7 +343,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                         )
                       : const SizedBox.shrink(),
                   selectedTruck >= 0
-                      ? (trucks[selectedTruck].gpsId!.isEmpty ||
+                      ? (trucks[selectedTruck].gpsId==null||trucks[selectedTruck].gpsId!.isEmpty ||
                               trucks[selectedTruck].gpsId!.length < 8)
                           ? Center(
                               child: SectionBody(
