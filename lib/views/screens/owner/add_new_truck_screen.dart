@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -19,6 +20,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddNewTruckScreen extends StatefulWidget {
   final int ownerId;
@@ -1007,7 +1009,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: BlocConsumer<CreateTruckBloc,
                                         CreateTruckState>(
-                                      listener: (context, state) {
+                                      listener: (context, state) async {
                                         if (state is CreateTruckSuccessState) {
                                           // instructionProvider.addInstruction(state.shipment);
 
@@ -1021,14 +1023,15 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                 : 'تم اضافة مركبة جديدة..',
                                           );
 
-                                          // BlocProvider.of<
-                                          //             ReadInstructionBloc>(
-                                          //         context)
-                                          //     .add(ReadInstructionLoadEvent(
-                                          //         state.shipment.id!));
-                                          // setState(() {
-                                          //   hasinstruction = true;
-                                          // });
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          var owner =
+                                              prefs.getInt("truckowner");
+                                          // ignore: use_build_context_synchronously
+                                          BlocProvider.of<OwnerProfileBloc>(
+                                                  context)
+                                              .add(OwnerProfileLoad(owner!));
                                           Navigator.pop(context);
                                         }
                                         if (state is CreateTruckFailureState) {
@@ -1060,12 +1063,10 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                     ?.save();
                                                 Map<String, dynamic> truck = {
                                                   'height': double.parse(
-                                                          heightController
-                                                              .text)
+                                                          heightController.text)
                                                       .toInt(),
                                                   'width': double.parse(
-                                                          widthController
-                                                              .text)
+                                                          widthController.text)
                                                       .toInt(),
                                                   'long': double.parse(
                                                           longController.text)
@@ -1092,11 +1093,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                       .toInt(),
                                                   'locationLat': "",
                                                   'driver_first_name':
-                                                      _firstNameController
-                                                          .text,
+                                                      _firstNameController.text,
                                                   'driver_last_name':
-                                                      _lastNameController
-                                                          .text,
+                                                      _lastNameController.text,
                                                   'driver_phone':
                                                       _phoneController.text,
                                                   'owner': widget.ownerId,
@@ -1110,7 +1109,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                   CreateOwnerTruckButtonPressed(
                                                       truck, _files),
                                                 );
-                                                                                            } else {
+                                              } else {
                                                 // Scrollable.ensureVisible(
                                                 //   key1.currentContext!,
                                                 //   duration: const Duration(
