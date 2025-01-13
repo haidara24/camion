@@ -54,7 +54,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   String title = "Home";
   Widget currentScreen = MainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  // NotificationServices notificationServices = NotificationServices();
+
   late TabController _tabController;
   late SharedPreferences prefs;
   Timer? _timer;
@@ -128,17 +128,11 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     _listenLocation();
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
-BlocProvider.of<DriverRequestsListBloc>(context)
-              .add(const DriverRequestsListLoadEvent(null));
-              BlocProvider.of<TruckActiveStatusBloc>(context)
-                                    .add(
-                                  LoadTruckActiveStatusEvent(),
-                                );
-    // notificationServices.requestNotificationPermission();
-    // // notificationServices.forgroundMessage(context);
-    // notificationServices.firebaseInit(context);
-    // notificationServices.setupInteractMessage(context);
-    // notificationServices.isTokenRefresh();
+    BlocProvider.of<DriverRequestsListBloc>(context)
+        .add(const DriverRequestsListLoadEvent(null));
+    BlocProvider.of<TruckActiveStatusBloc>(context).add(
+      LoadTruckActiveStatusEvent(),
+    );
 
     _tabController = TabController(
       initialIndex: 0,

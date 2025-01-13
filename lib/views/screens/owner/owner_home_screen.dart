@@ -53,7 +53,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
   String title = "Home";
   Widget currentScreen = MainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  NotificationServices notificationServices = NotificationServices();
+
   late TabController _tabController;
   bool userloading = true;
   late UserModel _usermodel;

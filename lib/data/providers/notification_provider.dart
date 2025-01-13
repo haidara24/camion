@@ -16,8 +16,12 @@ class NotificationProvider extends ChangeNotifier {
     print(noti.length);
     _notifications = noti;
     print(_notifications.length);
-    var prefs = await SharedPreferences.getInstance();
-    _notreadednotifications = prefs.getInt("notreaded") ?? 0;
+    _notreadednotifications = 0;
+    for (var element in _notifications) {
+      if (!element!.isread!) {
+        _notreadednotifications++;
+      }
+    }
     notifyListeners();
   }
 

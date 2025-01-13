@@ -19,41 +19,51 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationServices {
   //initialising firebase message plugin
+  static final NotificationServices _instance =
+      NotificationServices._internal();
+
+  // Private constructor
+  NotificationServices._internal();
+
+  // Factory constructor
+  factory NotificationServices() {
+    return _instance;
+  }
+
+  // Firebase messaging instance
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   NotificationProvider? notificationProvider;
 
+  bool _isInitialized = false;
+
+// Initialize Firebase messaging and avoid duplicate listeners
   void firebaseInit(BuildContext context) async {
+    if (_isInitialized) return;
+    _isInitialized = true;
+
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
 
     requestNotificationPermission();
     getDeviceToken();
 
+    // Listen for foreground messages
     FirebaseMessaging.onMessage.listen((message) {
       RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification!.android;
+      AndroidNotification? android = message.notification?.android;
 
       if (kDebugMode) {
-        print("notifications title:${notification!.title}");
-        print("notifications body:${notification.body}");
-        print('count:${android!.count}');
-        print('data:${message.data.toString()}');
+        print("notifications title: ${notification?.title}");
+        print("notifications body: ${notification?.body}");
+        print('count: ${android?.count}');
+        print('data: ${message.data.toString()}');
       }
 
-      if (Platform.isIOS) {
-        forgroundMessage(context, notificationProvider!);
-      }
-
-      if (Platform.isAndroid) {
-        // initLocalNotifications(context, message);
-        // showNotification(message);
-      }
-      if (notificationProvider != null) {
-        notificationProvider!.addNotReadedNotification();
-      }
+      // Handle foreground notifications
+      forgroundMessage(context, notificationProvider!);
     });
-    setupInteractMessage(context);
 
+    setupInteractMessage(context);
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
@@ -167,10 +177,10 @@ class NotificationServices {
 
   Future forgroundMessage(
       BuildContext context, NotificationProvider provider) async {
-    // if (notificationProvider != null) {
-    //   notificationProvider!.addNotReadedNotification();
-    //   BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    // }
+    if (notificationProvider != null) {
+      notificationProvider!.addNotReadedNotification();
+      // BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
+    }
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,

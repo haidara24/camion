@@ -24,15 +24,11 @@ class ControlView extends StatefulWidget {
 
 class _ControlViewState extends State<ControlView> {
   late SharedPreferences prefs;
-  NotificationServices notificationServices = NotificationServices();
 
   @override
   void initState() {
     super.initState();
-    notificationServices.requestNotificationPermission();
-    // notificationServices.forgroundMessage(context);
-    notificationServices.firebaseInit(context);
-    notificationServices.isTokenRefresh();
+    NotificationServices().firebaseInit(context);
     initPrefs();
   }
 
@@ -84,7 +80,7 @@ class _ControlViewState extends State<ControlView> {
             return BlocConsumer<AuthBloc, AuthState>(
               listener: (context, state) {
                 print(state);
-                if(state is AuthFailureState){
+                if (state is AuthFailureState) {
                   print(state.errorMessage);
                 }
               },

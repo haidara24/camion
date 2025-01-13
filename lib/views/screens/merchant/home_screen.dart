@@ -52,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen>
   String title = "Home";
   Widget currentScreen = MainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  // NotificationServices notificationServices = NotificationServices();
   late TabController _tabController;
   AddShippmentProvider? addShippmentProvider;
   late SharedPreferences prefs;
@@ -76,11 +75,6 @@ class _HomeScreenState extends State<HomeScreen>
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
     BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
-
-    // notificationServices.requestNotificationPermission();
-    // notificationServices.firebaseInit(context);
-    // notificationServices.setupInteractMessage(context);
-    // notificationServices.isTokenRefresh();
 
     _tabController = TabController(
       initialIndex: 0,

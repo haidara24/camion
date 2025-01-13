@@ -288,7 +288,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _truckTypeController = [];
 
     _selectedTruck = [];
-    _selectedTruckId = [-1];
+    _selectedTruckId = [];
 
     // Reset date/time-related fields
     _loadDate = [DateTime.now()];
@@ -852,16 +852,18 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             zoom: 14.47),
       ),
     );
-    if(_mapController2!=null){_mapController2!.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(
-              double.parse(pickuplocation[0]),
-              double.parse(pickuplocation[1]),
-            ),
-            zoom: 14.47),
-      ),
-    );}
+    if (_mapController2 != null) {
+      _mapController2!.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(
+                double.parse(pickuplocation[0]),
+                double.parse(pickuplocation[1]),
+              ),
+              zoom: 14.47),
+        ),
+      );
+    }
   }
 
   Future<void> getAddressForDeliveryFromMapPicker(LatLng position) async {
