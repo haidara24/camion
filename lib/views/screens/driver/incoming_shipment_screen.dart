@@ -142,8 +142,7 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    IncomingShipmentDetailsScreen(
-                                                        requestOwner: "D"),
+                                                    IncomingShipmentDetailsScreen(),
                                               ));
                                         },
                                         child: AbsorbPointer(

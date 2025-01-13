@@ -268,173 +268,6 @@ class _AllIncomingShippmentLogScreenState
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 driversList(state.trucks),
-                                // DropdownButtonHideUnderline(
-                                //   child: DropdownButton2<KTruck?>(
-                                //     isExpanded: true,
-                                //     barrierLabel: AppLocalizations.of(context)!
-                                //         .translate('select_driver'),
-                                //     hint: Text(
-                                //       AppLocalizations.of(context)!
-                                //           .translate('select_driver'),
-                                //       style: TextStyle(
-                                //         fontSize: 18,
-                                //         color: Theme.of(context).hintColor,
-                                //       ),
-                                //     ),
-                                //     items: state.trucks
-                                //         .map((KTruck item) =>
-                                //             DropdownMenuItem<KTruck>(
-                                //               value: item,
-                                //               child: Text(
-                                //                 "${item.truckuser!.usertruck!.firstName!} ${item.truckuser!.usertruck!.lastName!}",
-                                //                 style: const TextStyle(
-                                //                   fontSize: 17,
-                                //                 ),
-                                //               ),
-                                //             ))
-                                //         .toList(),
-                                //     value: truckProvider.selectedTruck,
-                                //     onChanged: (KTruck? value) {
-                                //       truckProvider.setSelectedTruck(value!);
-                                //       setState(() {
-                                //         truckId = value.id!;
-                                //       });
-                                //       if (truckId != 0) {
-                                //         if (tabIndex == 0) {
-                                //           BlocProvider.of<
-                                //                       DriverRequestsListBloc>(
-                                //                   context)
-                                //               .add(DriverRequestsListLoadEvent(
-                                //                   truckId));
-                                //         } else {
-                                //           BlocProvider.of<
-                                //                       InprogressShipmentsBloc>(
-                                //                   context)
-                                //               .add(InprogressShipmentsLoadEvent(
-                                //                   "R", truckId));
-                                //         }
-                                //       } else {
-                                //         if (tabIndex == 0) {
-                                //           BlocProvider.of<
-                                //                       OwnerIncomingShipmentsBloc>(
-                                //                   context)
-                                //               .add(
-                                //                   OwnerIncomingShipmentsLoadEvent());
-                                //         } else {
-                                //           BlocProvider.of<
-                                //                       OwnerShipmentListBloc>(
-                                //                   context)
-                                //               .add(OwnerShipmentListLoadEvent(
-                                //                   "R"));
-                                //         }
-                                //       }
-                                //     },
-                                //     buttonStyleData: ButtonStyleData(
-                                //       height: 50,
-                                //       width: double.infinity,
-                                //       padding: const EdgeInsets.symmetric(
-                                //         horizontal: 9.0,
-                                //       ),
-                                //       decoration: BoxDecoration(
-                                //         borderRadius: BorderRadius.circular(12),
-                                //         border: Border.all(
-                                //           color: Colors.black26,
-                                //         ),
-                                //         color: Colors.white,
-                                //       ),
-                                //       // elevation: 2,
-                                //     ),
-                                //     iconStyleData: IconStyleData(
-                                //       icon: const Icon(
-                                //         Icons.keyboard_arrow_down_sharp,
-                                //       ),
-                                //       iconSize: 20,
-                                //       iconEnabledColor: AppColor.lightYellow,
-                                //       iconDisabledColor: Colors.grey,
-                                //     ),
-                                //     dropdownSearchData: DropdownSearchData(
-                                //       searchController: _driverController,
-                                //       searchInnerWidgetHeight: 60,
-                                //       searchInnerWidget: Container(
-                                //         height: 60,
-                                //         padding: const EdgeInsets.only(
-                                //           top: 8,
-                                //           bottom: 4,
-                                //           right: 8,
-                                //           left: 8,
-                                //         ),
-                                //         child: TextFormField(
-                                //           expands: true,
-                                //           maxLines: null,
-                                //           controller: _driverController,
-                                //           onTapOutside: (event) {
-                                //             BlocProvider.of<BottomNavBarCubit>(
-                                //                     context)
-                                //                 .emitShow();
-                                //           },
-                                //           onTap: () {
-                                //             BlocProvider.of<BottomNavBarCubit>(
-                                //                     context)
-                                //                 .emitHide();
-                                //             _driverController.selection =
-                                //                 TextSelection(
-                                //                     baseOffset: 0,
-                                //                     extentOffset:
-                                //                         _driverController
-                                //                             .value.text.length);
-                                //           },
-                                //           decoration: InputDecoration(
-                                //             isDense: true,
-                                //             contentPadding:
-                                //                 const EdgeInsets.symmetric(
-                                //               horizontal: 10,
-                                //               vertical: 8,
-                                //             ),
-                                //             hintText:
-                                //                 AppLocalizations.of(context)!
-                                //                     .translate('select_driver'),
-                                //             hintStyle:
-                                //                 const TextStyle(fontSize: 17),
-                                //             border: OutlineInputBorder(
-                                //               borderRadius:
-                                //                   BorderRadius.circular(8),
-                                //             ),
-                                //           ),
-                                //           onFieldSubmitted: (value) {
-                                //             BlocProvider.of<BottomNavBarCubit>(
-                                //                     context)
-                                //                 .emitShow();
-                                //           },
-                                //         ),
-                                //       ),
-                                //       searchMatchFn: (item, searchValue) {
-                                //         return item.value!.truckuser!.usertruck!
-                                //             .firstName!
-                                //             .contains(searchValue);
-                                //       },
-                                //     ),
-                                //     onMenuStateChange: (isOpen) {
-                                //       if (!isOpen) {
-                                //         _driverController.clear();
-                                //       }
-                                //     },
-                                //     dropdownStyleData: DropdownStyleData(
-                                //       decoration: BoxDecoration(
-                                //         borderRadius: BorderRadius.circular(14),
-                                //         color: Colors.white,
-                                //       ),
-                                //       scrollbarTheme: ScrollbarThemeData(
-                                //         radius: const Radius.circular(40),
-                                //         thickness: MaterialStateProperty.all(6),
-                                //         thumbVisibility:
-                                //             MaterialStateProperty.all(true),
-                                //       ),
-                                //     ),
-                                //     menuItemStyleData: MenuItemStyleData(
-                                //       height: 40.h,
-                                //     ),
-                                //   ),
-                                // ),
                               ],
                             );
                           } else if (state is OwnerTrucksLoadedFailed) {
@@ -507,9 +340,7 @@ class _AllIncomingShippmentLogScreenState
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  IncomingShipmentDetailsScreen(
-                                                                      requestOwner:
-                                                                          "T"),
+                                                                  IncomingShipmentDetailsScreen(),
                                                             ),
                                                           );
                                                         },
@@ -915,9 +746,7 @@ class _AllIncomingShippmentLogScreenState
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  IncomingShipmentDetailsScreen(
-                                                                      requestOwner:
-                                                                          "T"),
+                                                                  IncomingShipmentDetailsScreen(),
                                                             ),
                                                           );
                                                         },

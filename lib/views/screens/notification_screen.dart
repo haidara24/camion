@@ -7,6 +7,7 @@ import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
+import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
@@ -155,15 +156,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                     padding: const EdgeInsets.all(12),
                                     child: ListTile(
                                       // contentPadding: EdgeInsets.zero,
-                                      onTap: () {
+                                      onTap: () async {
                                         if (notificationProvider
-                                                    .notifications[index]!
-                                                    .noteficationType ==
-                                                "A" ||
-                                            notificationProvider
-                                                    .notifications[index]!
-                                                    .noteficationType ==
-                                                "J") {
+                                                .notifications[index]!
+                                                .noteficationType ==
+                                            "J") {
                                           BlocProvider.of<RequestDetailsBloc>(
                                                   context)
                                               .add(RequestDetailsLoadEvent(
@@ -186,22 +183,50 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 .notifications[index]!
                                                 .noteficationType ==
                                             "O") {
-                                          BlocProvider.of<
-                                                      SubShipmentDetailsBloc>(
-                                                  context)
-                                              .add(SubShipmentDetailsLoadEvent(
-                                                  notificationProvider
-                                                      .notifications[index]!
-                                                      .objectId!));
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  IncomingShipmentDetailsScreen(
-                                                      requestOwner: "T"),
-                                            ),
-                                          );
+                                          var prefs = await SharedPreferences
+                                              .getInstance();
+                                          var userType =
+                                              prefs.getString("userType");
+                                          if (userType == "Driver") {
+                                            BlocProvider.of<
+                                                        SubShipmentDetailsBloc>(
+                                                    context)
+                                                .add(
+                                                    SubShipmentDetailsLoadEvent(
+                                                        notificationProvider
+                                                            .notifications[
+                                                                index]!
+                                                            .objectId!));
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IncomingShipmentDetailsScreen(),
+                                              ),
+                                            );
+                                          } else if (userType == "Merchant") {
+                                            BlocProvider.of<
+                                                        SubShipmentDetailsBloc>(
+                                                    context)
+                                                .add(
+                                                    SubShipmentDetailsLoadEvent(
+                                                        notificationProvider
+                                                            .notifications[
+                                                                index]!
+                                                            .objectId!));
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    IncomingRequestForDriverScreen(),
+                                              ),
+                                            );
+                                          }
                                         } else if (notificationProvider
+                                                    .notifications[index]!
+                                                    .noteficationType ==
+                                                "A" ||
+                                            notificationProvider
                                                     .notifications[index]!
                                                     .noteficationType ==
                                                 "T" ||

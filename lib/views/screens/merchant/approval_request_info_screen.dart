@@ -27,313 +27,81 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
   }) : super(key: key);
 
   Widget getMainPhoto(ApprovalRequest request) {
-    switch (request.requestOwner) {
-      case "T":
-        if (request.isApproved!) {
-          return Lottie.asset(
-            'assets/images/accept_order.json',
-            width: 550.w,
-            height: 400.w,
-            fit: BoxFit.fill,
-          );
-        } else {
-          return Lottie.asset(
-            'assets/images/reject_order.json',
-            width: 550.w,
-            height: 400.w,
-            fit: BoxFit.fill,
-          );
-        }
-      case "D":
-        if (request.isApproved!) {
-          return Lottie.asset(
-            'assets/images/accept_order.json',
-            width: 550.w,
-            height: 400.w,
-            fit: BoxFit.fill,
-          );
-        } else {
-          return Lottie.asset(
-            'assets/images/reject_order.json',
-            width: 550.w,
-            height: 400.w,
-            fit: BoxFit.fill,
-          );
-        }
-      default:
-        return Lottie.asset(
-          'assets/images/reject_order.json',
-          width: 550.w,
-          height: 400.w,
-          fit: BoxFit.fill,
-        );
+    if (request.isApproved!) {
+      return Lottie.asset(
+        'assets/images/accept_order.json',
+        width: 550.w,
+        height: 400.w,
+        fit: BoxFit.fill,
+      );
+    } else {
+      return Lottie.asset(
+        'assets/images/reject_order.json',
+        width: 550.w,
+        height: 400.w,
+        fit: BoxFit.fill,
+      );
     }
   }
 
   Widget getExtraAction(ApprovalRequest request, BuildContext context) {
-    switch (request.requestOwner) {
-      case "T":
-        if (request.responseTurn == "D") {
-          return const SizedBox.shrink();
-        } else {
-          if (request.isApproved!) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      BlocConsumer<ShipmentUpdateStatusBloc,
-                          ShipmentUpdateStatusState>(
-                        listener: (context, acceptstate) {
-                          if (acceptstate
-                              is ShipmentUpdateStatusLoadedSuccess) {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ControlView(),
-                                ),
-                                (route) => false);
-                          }
-                        },
-                        builder: (context, acceptstate) {
-                          if (acceptstate
-                              is ShipmentUpdateStatusLoadingProgress) {
-                            return CustomButton(
-                              title: SizedBox(
-                                width: MediaQuery.of(context).size.width * .83,
-                                child: Center(
-                                  child: LoadingIndicator(),
-                                ),
-                              ),
-                              onTap: () {},
-                              // color: Colors.white,
-                            );
-                          } else {
-                            return CustomButton(
-                              title: SizedBox(
-                                width: MediaQuery.of(context).size.width * .83,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('confirm'),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ),
-                                    SizedBox(
-                                      height: 30.w,
-                                      width: 30.w,
-                                      child: SvgPicture.asset(
-                                        "assets/icons/white/notification_shipment_complete.svg",
-                                        width: 30.w,
-                                        height: 30.w,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                BlocProvider.of<ShipmentUpdateStatusBloc>(
-                                        context)
-                                    .add(
-                                  ShipmentStatusUpdateEvent(
-                                    request.subshipment!.id!,
-                                    "R",
-                                  ),
-                                );
-                              },
-                              // color: Colors.white,
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      CustomButton(
-                        title: SizedBox(
-                          width: MediaQuery.of(context).size.width * .83,
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                  .translate("search_for_truck"),
-                              style: const TextStyle(
-                                color: Colors.white,
-                              ),
-                            ),
+    if (request.responseTurn == "D") {
+      return const SizedBox.shrink();
+    } else {
+      if (request.isApproved!) {
+        return const SizedBox.shrink();
+      } else {
+        return Column(
+          children: [
+            const SizedBox(
+              height: 8,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  CustomButton(
+                    title: SizedBox(
+                      width: MediaQuery.of(context).size.width * .83,
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .translate("search_for_truck"),
+                          style: const TextStyle(
+                            color: Colors.white,
                           ),
                         ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SearchTruckScreen(
-                                  subshipmentId: request.subshipment!.id!),
-                            ),
-                          );
-                        },
                       ),
-                    ],
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchTruckScreen(
+                              subshipmentId: request.subshipment!.id!),
+                        ),
+                      );
+                    },
                   ),
-                ),
-              ],
-            );
-          }
-        }
-      case "D":
-        if (request.responseTurn == "T") {
-          return const SizedBox.shrink();
-        } else {
-          if (request.isApproved!) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 8,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      BlocConsumer<ShipmentUpdateStatusBloc,
-                          ShipmentUpdateStatusState>(
-                        listener: (context, acceptstate) {
-                          if (acceptstate
-                              is ShipmentUpdateStatusLoadedSuccess) {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ControlView(),
-                                ),
-                                (route) => false);
-                          }
-                        },
-                        builder: (context, acceptstate) {
-                          if (acceptstate
-                              is ShipmentUpdateStatusLoadingProgress) {
-                            return CustomButton(
-                              title: SizedBox(
-                                width: MediaQuery.of(context).size.width * .83,
-                                child: Center(
-                                  child: LoadingIndicator(),
-                                ),
-                              ),
-                              onTap: () {},
-                              // color: Colors.white,
-                            );
-                          } else {
-                            return CustomButton(
-                              title: SizedBox(
-                                width: MediaQuery.of(context).size.width * .83,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('confirm'),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 16,
-                                    ),
-                                    SizedBox(
-                                      height: 30.w,
-                                      width: 30.w,
-                                      child: SvgPicture.asset(
-                                        "assets/icons/white/notification_shipment_complete.svg",
-                                        width: 30.w,
-                                        height: 30.w,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              onTap: () {
-                                BlocProvider.of<ShipmentUpdateStatusBloc>(
-                                        context)
-                                    .add(
-                                  ShipmentStatusUpdateEvent(
-                                    request.subshipment!.id!,
-                                    "R",
-                                  ),
-                                );
-                              },
-                              // color: Colors.white,
-                            );
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          } else {
-            return const SizedBox.shrink();
-          }
-        }
-      default:
-        return const SizedBox.shrink();
+                ],
+              ),
+            ),
+          ],
+        );
+      }
     }
   }
 
   String getMainText(ApprovalRequest request) {
-    switch (request.requestOwner) {
-      case "T":
-        if (request.responseTurn == "D") {
-          return "request_waiting";
-        } else {
-          if (request.isApproved!) {
-            return "request_confirm";
-          } else {
-            return "request_reject";
-          }
-        }
-      case "D":
-        if (request.responseTurn == "T") {
-          return "request_waiting";
-        } else {
-          if (request.isApproved!) {
-            return "request_confirm";
-          } else {
-            return "request_reject";
-          }
-        }
-      default:
-        return "request_waiting";
+    if (request.responseTurn == "D") {
+      return "request_waiting";
+    } else {
+      if (request.isApproved!) {
+        return "request_confirm";
+      } else {
+        return "request_reject";
+      }
     }
   }
 
@@ -366,32 +134,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                         builder: (context, state) {
                           if (state is RequestDetailsLoadedSuccess) {
                             return (request == null
-                                    ? true
-                                    : (request!.responseTurn) == "D")
-                                ? Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        getMainPhoto(state.request),
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        SectionTitle(
-                                          text: AppLocalizations.of(context)!
-                                              .translate(
-                                            getMainText(state.request),
-                                          ),
-                                        ),
-                                        getExtraAction(state.request, context),
-                                      ],
-                                    ),
-                                  )
-                                : type == "A"
+                                ? (type == "A"
                                     ? Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
@@ -415,126 +158,6 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                         context)!
                                                     .translate(
                                                         "request_confirm")),
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  BlocConsumer<
-                                                      ShipmentUpdateStatusBloc,
-                                                      ShipmentUpdateStatusState>(
-                                                    listener:
-                                                        (context, acceptstate) {
-                                                      if (acceptstate
-                                                          is ShipmentUpdateStatusLoadedSuccess) {
-                                                        Navigator
-                                                            .pushAndRemoveUntil(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                  builder:
-                                                                      (context) =>
-                                                                          const ControlView(),
-                                                                ),
-                                                                (route) =>
-                                                                    false);
-                                                      }
-                                                    },
-                                                    builder:
-                                                        (context, acceptstate) {
-                                                      if (acceptstate
-                                                          is ShipmentUpdateStatusLoadingProgress) {
-                                                        return CustomButton(
-                                                          title: SizedBox(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                .83,
-                                                            child: Center(
-                                                              child:
-                                                                  LoadingIndicator(),
-                                                            ),
-                                                          ),
-                                                          onTap: () {},
-                                                          // color: Colors.white,
-                                                        );
-                                                      } else {
-                                                        return CustomButton(
-                                                          title: SizedBox(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                .83,
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Center(
-                                                                  child: Text(
-                                                                    AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'confirm'),
-                                                                    style:
-                                                                        const TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          18,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                const SizedBox(
-                                                                  width: 16,
-                                                                ),
-                                                                SizedBox(
-                                                                  height: 30.w,
-                                                                  width: 30.w,
-                                                                  child:
-                                                                      SvgPicture
-                                                                          .asset(
-                                                                    "assets/icons/white/notification_shipment_complete.svg",
-                                                                    width: 30.w,
-                                                                    height:
-                                                                        30.w,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          onTap: () {
-                                                            BlocProvider.of<
-                                                                        ShipmentUpdateStatusBloc>(
-                                                                    context)
-                                                                .add(
-                                                              ShipmentStatusUpdateEvent(
-                                                                state
-                                                                    .request
-                                                                    .subshipment!
-                                                                    .id!,
-                                                                "R",
-                                                              ),
-                                                            );
-                                                          },
-                                                          // color: Colors.white,
-                                                        );
-                                                      }
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
                                           ],
                                         ),
                                       )
@@ -588,7 +211,8 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                                                   context)!
                                                               .translate(
                                                                   "search_for_truck"),
-                                                          style: const TextStyle(
+                                                          style:
+                                                              const TextStyle(
                                                             color: Colors.white,
                                                           ),
                                                         ),
@@ -613,7 +237,34 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                      );
+                                      ))
+                                : (request!.responseTurn) == "D"
+                                    ? const SizedBox.shrink()
+                                    : Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const SizedBox(
+                                              height: 8,
+                                            ),
+                                            getMainPhoto(state.request),
+                                            const SizedBox(
+                                              height: 16,
+                                            ),
+                                            SectionTitle(
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                getMainText(state.request),
+                                              ),
+                                            ),
+                                            getExtraAction(
+                                                state.request, context),
+                                          ],
+                                        ),
+                                      ));
                           } else {
                             return Expanded(
                               child: Center(child: LoadingIndicator()),

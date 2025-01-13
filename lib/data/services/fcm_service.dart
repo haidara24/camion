@@ -7,6 +7,7 @@ import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/firebase_options.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
+import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -138,7 +139,7 @@ class NotificationServices {
     });
   }
 
-  void handleMessage(BuildContext context, RemoteMessage message) {
+  void handleMessage(BuildContext context, RemoteMessage message) async {
     if (message.data['notefication_type'] == "A" ||
         message.data['notefication_type'] == "J") {
       BlocProvider.of<RequestDetailsBloc>(context)
@@ -153,15 +154,27 @@ class NotificationServices {
         ),
       );
     } else if (message.data['notefication_type'] == "O") {
-      BlocProvider.of<SubShipmentDetailsBloc>(context)
-          .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              IncomingShipmentDetailsScreen(requestOwner: "T"),
-        ),
-      );
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        BlocProvider.of<SubShipmentDetailsBloc>(context)
+            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IncomingShipmentDetailsScreen(),
+          ),
+        );
+      } else if (userType == "Merchant") {
+        BlocProvider.of<SubShipmentDetailsBloc>(context)
+            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IncomingRequestForDriverScreen(),
+          ),
+        );
+      }
     } else if (message.data['notefication_type'] == "T" ||
         message.data['notefication_type'] == "C") {
       BlocProvider.of<SubShipmentDetailsBloc>(context)

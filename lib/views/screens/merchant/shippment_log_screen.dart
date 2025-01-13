@@ -13,6 +13,7 @@ import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
+import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/merchant/subshipment_details_screen.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
@@ -72,9 +73,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       createMarkerIcons();
     });
-    // rootBundle.loadString('assets/style/map_style.json').then((string) {
-    //   _mapStyle = string;
-    // });
+
     super.initState();
   }
 
@@ -333,10 +332,10 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
 
   Future<void> onRefresh() async {
     tabIndex == 0
-        ? BlocProvider.of<ShipmentRunningBloc>(context)
-            .add(ShipmentRunningLoadEvent("R"))
-        : BlocProvider.of<MerchantRequestsListBloc>(context)
-            .add(MerchantRequestsListLoadEvent());
+        ? BlocProvider.of<MerchantRequestsListBloc>(context)
+            .add(MerchantRequestsListLoadEvent())
+        : BlocProvider.of<ShipmentRunningBloc>(context)
+            .add(ShipmentRunningLoadEvent("R"));
   }
 
   @override
@@ -366,12 +365,12 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                         onTap: (value) {
                           switch (value) {
                             case 0:
-                              BlocProvider.of<ShipmentRunningBloc>(context)
-                                  .add(ShipmentRunningLoadEvent("R"));
-                              break;
-                            case 1:
                               BlocProvider.of<MerchantRequestsListBloc>(context)
                                   .add(MerchantRequestsListLoadEvent());
+                              break;
+                            case 1:
+                              BlocProvider.of<ShipmentRunningBloc>(context)
+                                  .add(ShipmentRunningLoadEvent("R"));
                               break;
                             default:
                           }
@@ -381,11 +380,6 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                         },
                         tabs: [
                           // first tab [you can add an icon using the icon property]
-                          Tab(
-                            child: Center(
-                                child: Text(AppLocalizations.of(context)!
-                                    .translate('running'))),
-                          ),
 
                           Tab(
                             child: Center(child: Consumer<RequestNumProvider>(
@@ -409,33 +403,38 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                     const SizedBox(width: 4),
                                     value.requestNum > 0
                                         ? Container(
-                                              height: 25.w,
-                                              width: 25.w,
-                                              decoration: BoxDecoration(
-                                                color: AppColor.deepYellow,
-                                                borderRadius:
-                                                    BorderRadius.circular(45),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                    value.requestNum.toString(),
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    )),
-                                              ),
-                                            )
+                                            height: 25.w,
+                                            width: 25.w,
+                                            decoration: BoxDecoration(
+                                              color: AppColor.deepYellow,
+                                              borderRadius:
+                                                  BorderRadius.circular(45),
+                                            ),
+                                            child: Center(
+                                              child: Text(
+                                                  value.requestNum.toString(),
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                  )),
+                                            ),
+                                          )
                                         : const SizedBox.shrink(),
                                   ],
                                 ),
                               );
                             })),
                           ),
+                          Tab(
+                            child: Center(
+                                child: Text(AppLocalizations.of(context)!
+                                    .translate('running'))),
+                          ),
                         ],
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: tabIndex == 0
+                      child: tabIndex != 0
                           ? BlocConsumer<ShipmentRunningBloc,
                               ShipmentRunningState>(
                               listener: (context, state) {},
@@ -477,7 +476,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                               child: AbsorbPointer(
                                                 absorbing: false,
                                                 child: Card(
-                                                  color:Colors.white,
+                                                  color: Colors.white,
                                                   elevation: 1,
                                                   shape:
                                                       const RoundedRectangleBorder(
@@ -745,17 +744,14 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            IncomingShipmentDetailsScreen(
-                                                                requestOwner:
-                                                                    "D"),
+                                                            IncomingRequestForDriverScreen(),
                                                       ));
                                                 }
                                               },
                                               child: AbsorbPointer(
                                                 absorbing: false,
                                                 child: Card(
-                                                  color:Colors.white,
-
+                                                  color: Colors.white,
                                                   shape:
                                                       const RoundedRectangleBorder(
                                                     borderRadius:

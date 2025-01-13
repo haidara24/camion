@@ -28,18 +28,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
 
-class IncomingShipmentDetailsScreen extends StatefulWidget {
-  const IncomingShipmentDetailsScreen({
+class IncomingRequestForDriverScreen extends StatefulWidget {
+  const IncomingRequestForDriverScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<IncomingShipmentDetailsScreen> createState() =>
-      _IncomingShipmentDetailsScreenState();
+  State<IncomingRequestForDriverScreen> createState() =>
+      _IncomingRequestForDriverScreenState();
 }
 
-class _IncomingShipmentDetailsScreenState
-    extends State<IncomingShipmentDetailsScreen> {
+class _IncomingRequestForDriverScreenState
+    extends State<IncomingRequestForDriverScreen> {
   late GoogleMapController _controller;
 
   String _mapStyle = "";
@@ -410,11 +410,11 @@ class _IncomingShipmentDetailsScreenState
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      BlocConsumer<AcceptRequestForMerchantBloc,
-                                          AcceptRequestForMerchantState>(
+                                      BlocConsumer<AcceptRequestForDriverBloc,
+                                          AcceptRequestForDriverState>(
                                         listener: (context, acceptstate) {
                                           if (acceptstate
-                                              is AcceptRequestForMerchantSuccessState) {
+                                              is AcceptRequestForDriverSuccessState) {
                                             Navigator.pushAndRemoveUntil(
                                                 context,
                                                 MaterialPageRoute(
@@ -426,7 +426,7 @@ class _IncomingShipmentDetailsScreenState
                                         },
                                         builder: (context, acceptstate) {
                                           if (acceptstate
-                                              is AcceptRequestForMerchantLoadingProgressState) {
+                                              is AcceptRequestLoadingProgressState) {
                                             return CustomButton(
                                               title: SizedBox(
                                                 width: MediaQuery.of(context)
@@ -514,11 +514,12 @@ class _IncomingShipmentDetailsScreenState
                                                                   .translate(
                                                                       'ok')),
                                                           onPressed: () {
+                                                            print("asd");
                                                             BlocProvider.of<
-                                                                        AcceptRequestForMerchantBloc>(
+                                                                        AcceptRequestForDriverBloc>(
                                                                     context)
                                                                 .add(
-                                                              AcceptRequestForMerchantButtonPressedEvent(
+                                                              AcceptRequestButtonPressedEvent(
                                                                 shipmentstate
                                                                     .shipment
                                                                     .approvalrequest!,
@@ -539,11 +540,11 @@ class _IncomingShipmentDetailsScreenState
                                           }
                                         },
                                       ),
-                                      BlocConsumer<RejectRequestForMerchantBloc,
-                                          RejectRequestForMerchantState>(
+                                      BlocConsumer<RejectRequestForDriverBloc,
+                                          RejectRequestForDriverState>(
                                         listener: (context, rejectstate) {
                                           if (rejectstate
-                                              is RejectRequestForMerchantSuccessState) {
+                                              is RejectRequestForDriverSuccessState) {
                                             Navigator.pushAndRemoveUntil(
                                                 context,
                                                 MaterialPageRoute(
@@ -555,7 +556,7 @@ class _IncomingShipmentDetailsScreenState
                                         },
                                         builder: (context, rejectstate) {
                                           if (rejectstate
-                                              is RejectRequestForMerchantLoadingProgressState) {
+                                              is RejectRequestLoadingProgressState) {
                                             return CustomButton(
                                               title: SizedBox(
                                                 width: MediaQuery.of(context)
@@ -623,67 +624,8 @@ class _IncomingShipmentDetailsScreenState
                                                                   context)!
                                                               .translate(
                                                                   'reject')),
-                                                      content:
-                                                          SingleChildScrollView(
-                                                        child: Form(
-                                                          key: _rejectformKey,
-                                                          child: ListBody(
-                                                            children: <Widget>[
-                                                              const SectionBody(
-                                                                  text:
-                                                                      "الرجاء تحديد سبب الرفض"),
-                                                              TextFormField(
-                                                                controller:
-                                                                    rejectTextController,
-                                                                onTap: () {
-                                                                  rejectTextController.selection = TextSelection(
-                                                                      baseOffset:
-                                                                          0,
-                                                                      extentOffset: rejectTextController
-                                                                          .value
-                                                                          .text
-                                                                          .length);
-                                                                },
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        18.sp),
-                                                                scrollPadding: EdgeInsets.only(
-                                                                    bottom: MediaQuery.of(context)
-                                                                            .viewInsets
-                                                                            .bottom +
-                                                                        50),
-                                                                decoration:
-                                                                    InputDecoration(
-                                                                  hintText:
-                                                                      'سبب الرفض',
-                                                                  hintStyle: TextStyle(
-                                                                      fontSize:
-                                                                          18.sp),
-                                                                ),
-                                                                validator:
-                                                                    (value) {
-                                                                  if (value!
-                                                                      .isEmpty) {
-                                                                    return AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'insert_value_validate');
-                                                                  }
-                                                                  return null;
-                                                                },
-                                                                onSaved:
-                                                                    (newValue) {
-                                                                  rejectTextController
-                                                                          .text =
-                                                                      newValue!;
-                                                                  rejectText =
-                                                                      newValue;
-                                                                },
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
+                                                      content: const SizedBox
+                                                          .shrink(),
                                                       actions: <Widget>[
                                                         TextButton(
                                                           child: Text(
@@ -711,14 +653,13 @@ class _IncomingShipmentDetailsScreenState
                                                                   .currentState!
                                                                   .save();
                                                               BlocProvider.of<
-                                                                          RejectRequestForMerchantBloc>(
+                                                                          RejectRequestForDriverBloc>(
                                                                       context)
                                                                   .add(
-                                                                RejectRequestForMerchantButtonPressedEvent(
+                                                                RejectRequestButtonPressedEvent(
                                                                   shipmentstate
                                                                       .shipment
                                                                       .approvalrequest!,
-                                                                  rejectText,
                                                                 ),
                                                               );
                                                               Navigator.of(
@@ -736,7 +677,7 @@ class _IncomingShipmentDetailsScreenState
                                             );
                                           }
                                         },
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
