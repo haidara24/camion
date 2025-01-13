@@ -618,7 +618,8 @@ class _HomeScreenState extends State<HomeScreen>
                                               ),
                                         value.requestNum > 0
                                             ? Positioned(
-                                                left: 15,
+                                                right: -7.w,
+                                                top: -5.h,
                                                 child: Container(
                                                   height: 22.w,
                                                   width: 22.w,
@@ -819,39 +820,29 @@ class _HomeScreenState extends State<HomeScreen>
                                                 ),
                                           value.taskNum > 0
                                               ? Positioned(
-                                                  left: localeState.value
-                                                              .languageCode ==
-                                                          'en'
-                                                      ? -5
-                                                      : null,
-                                                  right: localeState.value
-                                                              .languageCode ==
-                                                          'en'
-                                                      ? null
-                                                      : -5,
+                                                  right: -7.w,
+                                                  top: -5.h,
                                                   child: Container(
-                                                    padding:
-                                                        const EdgeInsets.all(2),
+                                                    height: 22.w,
+                                                    width: 22.w,
                                                     decoration: BoxDecoration(
                                                       color:
                                                           AppColor.deepYellow,
                                                       borderRadius:
                                                           BorderRadius.circular(
-                                                              12),
+                                                              45),
                                                     ),
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                      minWidth: 22,
-                                                      minHeight: 22,
-                                                    ),
-                                                    child: Text(
-                                                      value.taskNum.toString(),
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 15,
+                                                    child: Center(
+                                                      child: Text(
+                                                        value.taskNum
+                                                            .toString(),
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          // fontSize: 15,
+                                                        ),
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
-                                                      textAlign:
-                                                          TextAlign.center,
                                                     ),
                                                   ),
                                                 )

@@ -409,8 +409,8 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                         children: [
                                                           Padding(
                                                             padding:
-                                                                const EdgeInsets.all(
-                                                                    4),
+                                                                const EdgeInsets
+                                                                    .all(4),
                                                             child: (isSelected)
                                                                 ? Icon(
                                                                     Icons
@@ -771,9 +771,11 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                     shipmentitems = [];
 
                                                 double totalWeight = 0;
-                                                print("commodityIndex${commodityIndex}");
+                                                print(
+                                                    "commodityIndex${commodityIndex}");
                                                 print(shipmentProvider
-                                                            .commodityWeight_controllers.length);
+                                                    .commodityWeight_controllers
+                                                    .length);
                                                 for (var j = 0;
                                                     j <
                                                         shipmentProvider
@@ -850,7 +852,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                     shipmentProvider
                                                         .loadTime[
                                                             commodityIndex]
-                                                        .day,
+                                                        .minute,
                                                   ),
                                                   deliveryDate: DateTime(
                                                     shipmentProvider
@@ -872,7 +874,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                     shipmentProvider
                                                         .loadTime[
                                                             commodityIndex]
-                                                        .day,
+                                                        .minute,
                                                   ),
                                                 );
                                                 subshipmentsitems
