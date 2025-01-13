@@ -94,78 +94,98 @@ class _MerchantProfileScreenState extends State<MerchantProfileScreen> {
                                   Stack(
                                     clipBehavior: Clip.none,
                                     children: [
-                                      CircleAvatar(
-                                        radius: 65.h,
-                                        backgroundColor: AppColor.deepYellow,
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(180),
-                                          child: BlocConsumer<UploadImageBloc,
-                                              UploadImageState>(
-                                            listener:
-                                                (context, imagestate) async {
-                                              if (imagestate
-                                                  is UserImageUpdateSuccess) {
-                                                SharedPreferences prefs =
-                                                    await SharedPreferences
-                                                        .getInstance();
-
-                                                var merchant =
-                                                    prefs.getInt("merchant");
-                                                // print(merchant);
-                                                // ignore: use_build_context_synchronously
-                                                BlocProvider.of<
-                                                            MerchantProfileBloc>(
-                                                        context)
-                                                    .add(MerchantProfileLoad(
-                                                        merchant!));
-                                              }
-                                              if (imagestate
-                                                  is UserImageUpdateError) {}
-                                            },
-                                            builder: (context, imagestate) {
-                                              if (imagestate
-                                                  is UserImageUpdateLoading) {
-                                                return Center(
-                                                  child: LoadingIndicator(),
-                                                );
-                                              } else {
-                                                return SizedBox(
-                                                  child: Image.network(
-                                                    state.merchant.image ?? "",
-                                                    fit: BoxFit.fill,
-                                                    height: 130.h,
-                                                    width: 130.h,
-                                                    errorBuilder: (context,
-                                                            error,
-                                                            stackTrace) =>
-                                                        Center(
-                                                      child: Text(
-                                                        "${state.merchant.firstname![0].toUpperCase()} ${state.merchant.lastname![0].toUpperCase()}",
-                                                        style: TextStyle(
-                                                          fontSize: 28.sp,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: true,
-                                        child: Positioned(
-                                          bottom: -15,
-                                          left: -15,
-                                          child: IconButton(
-                                            onPressed: () async {
+                                      GestureDetector(
+                                        onTap: ()async {
+                                          print("asd");
                                               var pickedImage =
                                                   await _picker.pickImage(
                                                 source: ImageSource.gallery,
                                               );
-
+                                          
+                                              if (pickedImage != null) {
+                                                var image =
+                                                    File(pickedImage.path);
+                                                BlocProvider.of<
+                                                            UploadImageBloc>(
+                                                        context)
+                                                    .add(
+                                                        UpdateUserImage(image));
+                                              }
+                                        },
+                                        child: CircleAvatar(
+                                          radius: 65.h,
+                                          backgroundColor: AppColor.deepYellow,
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(180),
+                                            child: BlocConsumer<UploadImageBloc,
+                                                UploadImageState>(
+                                              listener:
+                                                  (context, imagestate) async {
+                                                if (imagestate
+                                                    is UserImageUpdateSuccess) {
+                                                  SharedPreferences prefs =
+                                                      await SharedPreferences
+                                                          .getInstance();
+                                        
+                                                  var merchant =
+                                                      prefs.getInt("merchant");
+                                                  // print(merchant);
+                                                  // ignore: use_build_context_synchronously
+                                                  BlocProvider.of<
+                                                              MerchantProfileBloc>(
+                                                          context)
+                                                      .add(MerchantProfileLoad(
+                                                          merchant!));
+                                                }
+                                                if (imagestate
+                                                    is UserImageUpdateError) {}
+                                              },
+                                              builder: (context, imagestate) {
+                                                if (imagestate
+                                                    is UserImageUpdateLoading) {
+                                                  return Center(
+                                                    child: LoadingIndicator(),
+                                                  );
+                                                } else {
+                                                  return SizedBox(
+                                                    child: Image.network(
+                                                      state.merchant.image ?? "",
+                                                      fit: BoxFit.fill,
+                                                      height: 130.h,
+                                                      width: 130.h,
+                                                      errorBuilder: (context,
+                                                              error,
+                                                              stackTrace) =>
+                                                          Center(
+                                                        child: Text(
+                                                          "${state.merchant.firstname![0].toUpperCase()} ${state.merchant.lastname![0].toUpperCase()}",
+                                                          style: TextStyle(
+                                                            fontSize: 28.sp,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: false,
+                                        child: Positioned(
+                                          bottom: 0,
+                                          left: 0,
+                                          child: IconButton(
+                                            onPressed: () async {
+                                              print("asd");
+                                              var pickedImage =
+                                                  await _picker.pickImage(
+                                                source: ImageSource.gallery,
+                                              );
+                                          
                                               if (pickedImage != null) {
                                                 var image =
                                                     File(pickedImage.path);

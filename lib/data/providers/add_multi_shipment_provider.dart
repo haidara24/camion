@@ -486,6 +486,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   setLoadTime(DateTime time, int index) {
     _time_controller[index].text = '${intl.DateFormat.jm().format(time)} ';
     _loadTime[index] = time;
+    print(_loadTime[index]);
     notifyListeners();
   }
 

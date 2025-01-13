@@ -771,6 +771,9 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                     shipmentitems = [];
 
                                                 double totalWeight = 0;
+                                                print("commodityIndex${commodityIndex}");
+                                                print(shipmentProvider
+                                                            .commodityWeight_controllers.length);
                                                 for (var j = 0;
                                                     j <
                                                         shipmentProvider

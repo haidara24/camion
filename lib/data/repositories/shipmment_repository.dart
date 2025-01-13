@@ -439,6 +439,7 @@ class ShipmentRepository {
 
     print("qwe11");
     for (var element in shipment.subshipments!) {
+      print(element.pickupDate);
       var item = element.toJson();
       sub_shipments.add(item);
     }
@@ -449,6 +450,7 @@ class ShipmentRepository {
     request.fields['merchant'] = userModel.merchant!.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);
     // print(jsonEncode(sub_shipments));
+    // print(request.fields);
     var response = await request.send();
     print(response.statusCode);
     if (response.statusCode == 201) {
