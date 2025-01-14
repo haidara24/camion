@@ -25,7 +25,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
     var month = lang == "en"
         ? TextConstants.monthsEn[mon - 1]
         : TextConstants.monthsAr[mon - 1];
-    return '${date.day}-$month-${date.year}, ${date.minute}:${date.hour}';
+    return '${date.day}-$month-${date.year}, ${date.hour}:${date.minute}';
   }
 
   List<Widget> stoppoints(BuildContext context) {

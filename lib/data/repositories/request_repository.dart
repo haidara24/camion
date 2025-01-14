@@ -57,6 +57,7 @@ class RequestRepository {
         '${APPROVAL_REQUESTS_ENDPOINT}merchant/$merchant/',
         apiToken: jwt);
     merchantapprovalRequests = [];
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

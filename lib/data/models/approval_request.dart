@@ -58,7 +58,7 @@ class SimpleSubshipment {
   List<PathPoint>? pathpoints;
   DateTime? pickupDate;
   double? distance;
-  double? weight;
+  int? weight;
 
   SimpleSubshipment({
     this.id,

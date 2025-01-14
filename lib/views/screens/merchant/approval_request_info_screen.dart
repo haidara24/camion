@@ -81,7 +81,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                           builder: (context) => SearchTruckScreen(
                             subshipmentId: request.subshipment!.id!,
                             distance: request.subshipment!.distance!,
-                            weight: request.subshipment!.weight!,
+                            weight: request.subshipment!.weight!.toDouble(),
                           ),
                         ),
                       );
