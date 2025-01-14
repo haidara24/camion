@@ -479,6 +479,7 @@ class _IncomingShipmentDetailsScreenState
                                                 ),
                                               ),
                                               onTap: () {
+                                                print("accept");
                                                 showDialog<void>(
                                                   context: context,
                                                   barrierDismissible:
