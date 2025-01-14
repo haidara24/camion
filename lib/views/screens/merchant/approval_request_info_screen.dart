@@ -79,7 +79,10 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => SearchTruckScreen(
-                              subshipmentId: request.subshipment!.id!),
+                            subshipmentId: request.subshipment!.id!,
+                            distance: request.subshipment!.distance!,
+                            weight: request.subshipment!.weight!,
+                          ),
                         ),
                       );
                     },

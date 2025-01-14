@@ -57,6 +57,8 @@ class SimpleSubshipment {
   String? lastname;
   List<PathPoint>? pathpoints;
   DateTime? pickupDate;
+  double? distance;
+  double? weight;
 
   SimpleSubshipment({
     this.id,
@@ -65,6 +67,8 @@ class SimpleSubshipment {
     this.lastname,
     this.pathpoints,
     this.pickupDate,
+    this.distance,
+    this.weight,
   });
 
   SimpleSubshipment.fromJson(Map<String, dynamic> json) {
@@ -72,6 +76,8 @@ class SimpleSubshipment {
     shipment = json['shipment'];
     firstname = json['first_name'];
     lastname = json['last_name'];
+    distance = json['distance'];
+    weight = json['total_weight'];
 
     if (json['path_points'] != null) {
       pathpoints = <PathPoint>[];

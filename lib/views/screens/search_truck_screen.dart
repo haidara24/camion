@@ -15,7 +15,14 @@ import 'package:shimmer/shimmer.dart';
 
 class SearchTruckScreen extends StatefulWidget {
   final int subshipmentId;
-  const SearchTruckScreen({Key? key, required this.subshipmentId}) : super(key: key);
+  final double distance;
+  final double weight;
+  const SearchTruckScreen({
+    Key? key,
+    required this.subshipmentId,
+    this.distance = 0,
+    this.weight = 0,
+  }) : super(key: key);
 
   @override
   State<SearchTruckScreen> createState() => _SearchTruckScreenState();
@@ -266,6 +273,8 @@ class _SearchTruckScreenState extends State<SearchTruckScreen> {
                                                     ops: 'assign_new_truck',
                                                     subshipmentId:
                                                         widget.subshipmentId,
+                                                    distance: widget.distance,
+                                                    weight: widget.weight,
                                                   ),
                                                 ));
                                             // Navigator.pop(context);
