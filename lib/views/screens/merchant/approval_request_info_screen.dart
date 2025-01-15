@@ -241,9 +241,7 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                           ],
                                         ),
                                       ))
-                                : (request!.responseTurn) == "D"
-                                    ? const SizedBox.shrink()
-                                    : Padding(
+                                : Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
                                           crossAxisAlignment:

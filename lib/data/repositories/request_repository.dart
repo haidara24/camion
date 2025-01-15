@@ -60,6 +60,7 @@ class RequestRepository {
     print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
+    print(myDataString);
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
