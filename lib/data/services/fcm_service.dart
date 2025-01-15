@@ -2,7 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/firebase_options.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
@@ -131,12 +135,41 @@ class NotificationServices {
     if (initialMessage != null) {
       // ignore: use_build_context_synchronously
       handleMessage(context, initialMessage);
+      loadAppAesstes(context, initialMessage);
     }
 
     //when app ins background
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       handleMessage(context, event);
     });
+  }
+
+  void loadAppAesstes(BuildContext context, RemoteMessage message) async {
+    if (message.data['notefication_type'] == "A" ||
+        message.data['notefication_type'] == "J") {
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        BlocProvider.of<DriverRequestsListBloc>(context)
+            .add(const DriverRequestsListLoadEvent(null));
+      } else if (userType == "Merchant") {
+        BlocProvider.of<ShipmentRunningBloc>(context)
+            .add(ShipmentRunningLoadEvent("R"));
+        BlocProvider.of<MerchantRequestsListBloc>(context)
+            .add(MerchantRequestsListLoadEvent());
+        BlocProvider.of<ShipmentTaskListBloc>(context)
+            .add(ShipmentTaskListLoadEvent());
+      }
+    } else if (message.data['notefication_type'] == "O") {
+    } else if (message.data['notefication_type'] == "T" ||
+        message.data['notefication_type'] == "C") {
+      BlocProvider.of<ShipmentRunningBloc>(context)
+          .add(ShipmentRunningLoadEvent("R"));
+      BlocProvider.of<MerchantRequestsListBloc>(context)
+          .add(MerchantRequestsListLoadEvent());
+      BlocProvider.of<ShipmentTaskListBloc>(context)
+          .add(ShipmentTaskListLoadEvent());
+    }
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) async {
