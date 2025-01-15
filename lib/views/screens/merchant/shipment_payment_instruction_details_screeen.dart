@@ -30,6 +30,18 @@ class PaymentInstructionDetailsScreen extends StatelessWidget {
     return result.toInt();
   }
 
+  getPaymentMethodName(String character, String lang) {
+    switch (character) {
+      case "E":
+        return "Ecash";
+      case "H":
+        return lang == "en" ? "Al Haram" : "الهرم";
+      case "B":
+        return lang == "en" ? "Al Barakah" : "البركة";
+      default:
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -124,7 +136,7 @@ class PaymentInstructionDetailsScreen extends StatelessWidget {
                                   ),
                                   SectionBody(
                                     text:
-                                        '${AppLocalizations.of(context)!.translate('payment_method')}: ${state.instruction.paymentMethod!}',
+                                        '${AppLocalizations.of(context)!.translate('payment_method')}: ${getPaymentMethodName(state.instruction.paymentMethod!, localeState.value.languageCode)}',
                                   ),
                                   SizedBox(
                                     height: 7.h,

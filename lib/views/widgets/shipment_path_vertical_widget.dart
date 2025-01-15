@@ -25,7 +25,16 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
     var month = lang == "en"
         ? TextConstants.monthsEn[mon - 1]
         : TextConstants.monthsAr[mon - 1];
-    return '${date.day}-$month-${date.year}, ${date.hour}:${date.minute}';
+
+    // Determine AM/PM
+    String period = date.hour >= 12
+        ? (lang == "en" ? 'PM' : 'م')
+        : (lang == "en" ? 'AM' : 'ص');
+
+    // Convert hour to 12-hour format
+    int hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
+
+    return '${date.day}-$month-${date.year}, $hour:${date.minute.toString().padLeft(2, '0')} $period';
   }
 
   List<Widget> stoppoints(BuildContext context) {
@@ -54,15 +63,6 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
               ),
               // afterLineStyle: LineStyle(),
               alignment: TimelineAlign.start,
-
-              // lineXY: .3,
-              // startChild: FittedBox(
-              //   fit: BoxFit.scaleDown,
-              //   child: SectionBody(
-              //     text:
-              //         '${AppLocalizations.of(context)!.translate('pickup_address')} \n${setLoadDate(deliveryDate, langCode)}',
-              //   ),
-              // ),
               endChild: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

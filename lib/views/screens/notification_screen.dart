@@ -1,6 +1,7 @@
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
+import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/notification_provider.dart';
@@ -8,6 +9,7 @@ import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
+import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
 import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';

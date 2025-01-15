@@ -47,70 +47,97 @@ class _ControlViewState extends State<ControlView> {
     }
   }
 
+  DateTime? lastBackPressTime;
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<InternetCubit, InternetState>(
-        builder: (context, state) {
-          if (state is InternetLoading) {
-            return Center(
-              child: LoadingIndicator(),
-            );
-          } else if (state is InternetDisConnected) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Lottie.asset(
-                  'assets/images/no_internet.json',
-                  width: 210.w,
-                  height: 150.h,
-                  fit: BoxFit.fill,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                const Center(
-                  child: SectionTitle(text: "no internet connection"),
-                ),
-              ],
-            );
-          } else if (state is InternetConnected) {
-            // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+    return WillPopScope(
+      onWillPop: () async {
+        DateTime now = DateTime.now();
 
-            return BlocConsumer<AuthBloc, AuthState>(
-              listener: (context, state) {
-                print(state);
-                if (state is AuthFailureState) {
-                  print(state.errorMessage);
-                }
-              },
-              builder: (context, state) {
-                if (state is AuthDriverSuccessState) {
-                  //driver
+        if (lastBackPressTime == null ||
+            now.difference(lastBackPressTime!) > const Duration(seconds: 2)) {
+          lastBackPressTime = now;
 
-                  return DriverHomeScreen();
-                } else if (state is AuthOwnerSuccessState) {
-                  //owner
-                  BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+          // Show Snackbar
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'اضغط مرة أخرى لإغلاق التطبيق',
+                style: TextStyle(fontSize: 16),
+              ),
+              duration: Duration(seconds: 2),
+            ),
+          );
 
-                  return OwnerHomeScreen();
-                } else if (state is AuthMerchantSuccessState) {
-                  //merchant
-                  return HomeScreen();
-                } else if (state is AuthInitial) {
-                  BlocProvider.of<AuthBloc>(context).add(AuthCheckRequested());
-                  return Center(
-                    child: LoadingIndicator(),
-                  );
-                } else {
-                  return SelectUserType();
-                }
-              },
-            );
-          } else {
-            return const Center();
-          }
-        },
+          return false; // Prevent exit on the first press
+        }
+        return true; // Exit the app on the second press within 2 seconds
+      },
+      child: Scaffold(
+        body: BlocBuilder<InternetCubit, InternetState>(
+          builder: (context, state) {
+            if (state is InternetLoading) {
+              return Center(
+                child: LoadingIndicator(),
+              );
+            } else if (state is InternetDisConnected) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Lottie.asset(
+                    'assets/images/no_internet.json',
+                    width: 210.w,
+                    height: 150.h,
+                    fit: BoxFit.fill,
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  const Center(
+                    child: SectionTitle(text: "no internet connection"),
+                  ),
+                ],
+              );
+            } else if (state is InternetConnected) {
+              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+
+              return BlocConsumer<AuthBloc, AuthState>(
+                listener: (context, state) {
+                  print(state);
+                  if (state is AuthFailureState) {
+                    print(state.errorMessage);
+                  }
+                },
+                builder: (context, state) {
+                  if (state is AuthDriverSuccessState) {
+                    //driver
+
+                    return const DriverHomeScreen();
+                  } else if (state is AuthOwnerSuccessState) {
+                    //owner
+                    BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+
+                    return const OwnerHomeScreen();
+                  } else if (state is AuthMerchantSuccessState) {
+                    //merchant
+                    return const HomeScreen();
+                  } else if (state is AuthInitial) {
+                    BlocProvider.of<AuthBloc>(context)
+                        .add(AuthCheckRequested());
+                    return Center(
+                      child: LoadingIndicator(),
+                    );
+                  } else {
+                    return const SelectUserType();
+                  }
+                },
+              );
+            } else {
+              return const Center();
+            }
+          },
+        ),
       ),
     );
   }

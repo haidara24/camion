@@ -983,6 +983,17 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                             11.0,
                                                                         horizontal:
                                                                             9.0),
+                                                                    suffix:
+                                                                        Text(
+                                                                      localeState.value.languageCode ==
+                                                                              "en"
+                                                                          ? "kg"
+                                                                          : "كغ",
+                                                                    ),
+                                                                    suffixStyle:
+                                                                        const TextStyle(
+                                                                            fontSize:
+                                                                                15),
                                                                   ),
                                                                   onTapOutside:
                                                                       (event) {},
@@ -1213,7 +1224,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                     ),
                                                                     SectionBody(
                                                                         text:
-                                                                            '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${widget.shipment.shipmentItems![index2].commodityWeight!.toString()} كغ'),
+                                                                            '${AppLocalizations.of(context)!.translate('commodity_weight')}: ${widget.shipment.shipmentItems![index2].commodityWeight!.toString()} ${localeState.value.languageCode == "en" ? "kg" : "كغ"}'),
                                                                     const SizedBox(
                                                                       height:
                                                                           12,
@@ -2647,19 +2658,19 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                       ),
                                                       SectionBody(
                                                           text:
-                                                              '${AppLocalizations.of(context)!.translate('first_weight')}: ${state.instruction.truckWeight!.toString()}'),
+                                                              '${AppLocalizations.of(context)!.translate('first_weight')}: ${state.instruction.truckWeight!.toString()} ${localeState.value.languageCode == "en" ? "kg" : "كغ"}'),
                                                       const SizedBox(
                                                         height: 8,
                                                       ),
                                                       SectionBody(
                                                           text:
-                                                              '${AppLocalizations.of(context)!.translate('second_weight')}: ${state.instruction.netWeight!.toString()}'),
+                                                              '${AppLocalizations.of(context)!.translate('second_weight')}: ${state.instruction.netWeight!.toString()} ${localeState.value.languageCode == "en" ? "kg" : "كغ"}'),
                                                       const SizedBox(
                                                         height: 8,
                                                       ),
                                                       SectionBody(
                                                           text:
-                                                              '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${state.instruction.finalWeight!.toString()}'),
+                                                              '${AppLocalizations.of(context)!.translate('commodity_gross_weight')}: ${state.instruction.finalWeight!.toString()} ${localeState.value.languageCode == "en" ? "kg" : "كغ"}'),
                                                       const SizedBox(
                                                         height: 8,
                                                       ),

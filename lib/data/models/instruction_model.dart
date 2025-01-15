@@ -174,7 +174,8 @@ class ShipmentPayment {
     amount = json['amount'];
     fees = json['fees'];
     extraFees = json['extra_fees'];
-    created_date = DateTime.parse(json['created_date']);
+    created_date =
+        DateTime.parse(json['created_date']).add(const Duration(hours: 3));
     paymentMethod = json['payment_method'];
     file = json['file'];
   }
