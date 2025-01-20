@@ -1,10 +1,12 @@
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/upload_image_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_update_profile_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/driver/add_new_price_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
@@ -429,6 +431,150 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                             ),
                           ],
                         ),
+                      ),
+                      BlocConsumer<TruckPricesListBloc, TruckPricesListState>(
+                        listener: (context, state) {
+                          // TODO: implement listener
+                        },
+                        builder: (context, pricestate) {
+                          if (pricestate is TruckPricesListLoadedSuccess) {
+                            return Column(
+                              children: [
+                                const Divider(),
+                                const Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SectionTitle(text: "أسعاري"),
+                                  ],
+                                ),
+                                pricestate.prices.isNotEmpty
+                                    ? Table(
+                                        border: TableBorder.all(
+                                          color: Colors.grey[400]!,
+                                          width: 1,
+                                        ),
+                                        children: [
+                                          TableRow(children: [
+                                            TableCell(
+                                              child: Container(
+                                                color: AppColor.lightYellow,
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Text("المحافظة 1"),
+                                                ),
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Container(
+                                                color: AppColor.lightYellow,
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Text("المحافظة 2"),
+                                                ),
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Container(
+                                                color: AppColor.lightYellow,
+                                                child: const Padding(
+                                                  padding: EdgeInsets.all(8.0),
+                                                  child: Text("السعر"),
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
+                                          ...List.generate(
+                                            pricestate.prices.length,
+                                            (index) => TableRow(children: [
+                                              TableCell(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(localeState.value
+                                                              .languageCode ==
+                                                          "en"
+                                                      ? pricestate.prices[index]
+                                                          .point1En!
+                                                      : pricestate.prices[index]
+                                                          .point1!),
+                                                ),
+                                              ),
+                                              TableCell(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                      "${pricestate.prices[index].value!.toString()} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}"),
+                                                ),
+                                              ),
+                                            ]),
+                                          ),
+                                        ],
+                                      )
+                                    : const Padding(
+                                        padding: EdgeInsets.all(8.0),
+                                        child: Text("لم يتم إضافة أية أسعار"),
+                                      ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        // shipmentProvider
+                                        //     .additem(
+                                        //         selectedIndex);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddNewPriceScreen(
+                                                    truckId:
+                                                        state.driver.truck!),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        "إضافة سعر جديد  ",
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: AppColor.deepYellow,
+                                        ),
+                                      ),
+                                    ),
+                                    // InkWell(
+                                    //   onTap: () =>
+                                    //       shipmentProvider
+                                    //           .additem(selectedIndex),
+                                    //   child:
+                                    //       AbsorbPointer(
+                                    //     absorbing:
+                                    //         true,
+                                    //     child:
+                                    //         Padding(
+                                    //       padding: const EdgeInsets
+                                    //           .all(
+                                    //           8.0),
+                                    //       child:
+                                    //           SizedBox(
+                                    //         height:
+                                    //             32.h,
+                                    //         width:
+                                    //             32.w,
+                                    //         child:
+                                    //             SvgPicture.asset("assets/icons/add.svg"),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          } else {
+                            return LoadingIndicator();
+                          }
+                        },
                       ),
                       const Spacer(),
                       editMode

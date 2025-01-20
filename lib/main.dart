@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:camion/Localization/app_localizations_setup.dart';
+import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
+import 'package:camion/business_logic/bloc/core/governorates_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
 import 'package:camion/business_logic/bloc/core/search_category_list_bloc.dart';
@@ -86,6 +88,7 @@ import 'package:camion/data/providers/truck_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/auth_repository.dart';
 import 'package:camion/data/repositories/category_repository.dart';
+import 'package:camion/data/repositories/core_repository.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/repositories/instruction_repository.dart';
 import 'package:camion/data/repositories/notification_repository.dart';
@@ -94,6 +97,7 @@ import 'package:camion/data/repositories/profile_repository.dart';
 import 'package:camion/data/repositories/request_repository.dart';
 import 'package:camion/data/repositories/shipmment_repository.dart';
 import 'package:camion/data/repositories/store_repository.dart';
+import 'package:camion/data/repositories/truck_price_repository.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
 import 'package:camion/firebase_options.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -175,6 +179,12 @@ class MyApp extends StatelessWidget {
                     create: (context) => PostRepository(),
                   ),
                   RepositoryProvider(
+                    create: (context) => TruckPriceRepository(),
+                  ),
+                  RepositoryProvider(
+                    create: (context) => CoreRepository(),
+                  ),
+                  RepositoryProvider(
                     create: (context) => NotificationRepository(),
                   ),
                   RepositoryProvider(
@@ -210,6 +220,19 @@ class MyApp extends StatelessWidget {
                             RepositoryProvider.of<AuthRepository>(context),
                         userProvider:
                             Provider.of<UserProvider>(context, listen: false),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => TruckPricesListBloc(
+                        truckPriceRepository:
+                            RepositoryProvider.of<TruckPriceRepository>(
+                                context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => GovernoratesListBloc(
+                        coreRepository:
+                            RepositoryProvider.of<CoreRepository>(context),
                       ),
                     ),
                     BlocProvider(

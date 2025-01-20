@@ -12,6 +12,7 @@ import 'package:camion/data/services/places_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/formatter.dart';
 import 'package:camion/views/screens/merchant/add_multishipment_map_picker.dart';
+import 'package:camion/views/screens/merchant/add_path_screen.dart';
 import 'package:camion/views/screens/merchant/search_for_trucks_screen.dart';
 import 'package:camion/views/widgets/add_shipment_vertical_path_widget.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
@@ -47,7 +48,10 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
     with SingleTickerProviderStateMixin {
   // final ScrollController _scrollController = ScrollController();
   TabController? _tabController;
-  final List<Tab> _tabs = [const Tab(text: 'Tab 1'), const Tab(icon: Icon(Icons.add))];
+  final List<Tab> _tabs = [
+    const Tab(text: 'Tab 1'),
+    const Tab(icon: Icon(Icons.add))
+  ];
 
   final FocusNode _nodeCommodityName = FocusNode();
   final FocusNode _nodeCommodityWeight = FocusNode();
@@ -1405,255 +1409,6 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
     return result.toInt();
   }
 
-  // showTruckTypeModalSheet(BuildContext context, String lang) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     useSafeArea: true,
-  //     // shape: const RoundedRectangleBorder(
-  //     //   borderRadius: BorderRadius.vertical(
-  //     //     top: Radius.circular(0),
-  //     //   ),
-  //     // ),
-  //     builder: (context) => Consumer<AddMultiShipmentProvider>(
-  //       builder: (context, valueProvider, child) {
-  //         return Stack(
-  //           alignment: Alignment.bottomCenter,
-  //           children: [
-  //             Container(
-  //               color: Colors.grey[200],
-  //               padding: const EdgeInsets.all(8.0),
-  //               constraints: BoxConstraints(
-  //                   maxHeight: MediaQuery.of(context).size.height),
-  //               width: MediaQuery.of(context).size.width,
-  //               child: ListView(
-  //                 // shrinkWrap: true,
-  //                 // physics: NeverScrollableScrollPhysics(),
-  //                 children: [
-  //                   Padding(
-  //                     padding: const EdgeInsets.all(8.0),
-  //                     child: Row(
-  //                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                       children: [
-  //                         IconButton(
-  //                           onPressed: () {
-  //                             Navigator.pop(context);
-  //                           },
-  //                           icon: const Icon(Icons.arrow_back),
-  //                         ),
-  //                         const Spacer(),
-  //                         SectionTitle(
-  //                           text: AppLocalizations.of(context)!
-  //                               .translate('select_truck_type'),
-  //                         ),
-  //                         const Spacer(),
-  //                         const SizedBox(
-  //                           width: 25,
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   SizedBox(
-  //                     height: 8.h,
-  //                   ),
-  //                   BlocBuilder<TruckTypeBloc, TruckTypeState>(
-  //                     builder: (context, typestate) {
-  //                       if (typestate is TruckTypeLoadedSuccess) {
-  //                         return ListView.builder(
-  //                           itemCount: typestate.truckTypes.length,
-  //                           shrinkWrap: true,
-  //                           itemBuilder: (context, index) {
-  //                             return StatefulBuilder(
-  //                                 builder: (context, menuSetState) {
-  //                               // var isSelected = valueProvider.selectedTruckType
-  //                               //     .contains(typestate.truckTypes[index]);
-  //                               return InkWell(
-  //                                 onTap: () {
-  //                                   // isSelected
-  //                                   //     ? valueProvider.removeTruckType(
-  //                                   //         typestate.truckTypes[index])
-  //                                   //     : valueProvider.addTruckType(
-  //                                   //         typestate.truckTypes[index]);
-  //                                   // valueProvider.setTruckTypeError(false);
-  //                                   // //This rebuilds the StatefulWidget to update the button's text
-  //                                   // setState(() {
-  //                                   //   isSelected = valueProvider.selectedTruckTypeId
-  //                                   //       .contains(typestate.truckTypes[index].id);
-  //                                   // });
-  //                                   //This rebuilds the dropdownMenu Widget to update the check mark
-  //                                   // menuSetState(() {});
-  //                                 },
-  //                                 child: Padding(
-  //                                   padding: const EdgeInsets.all(8.0),
-  //                                   child: Column(
-  //                                     children: [
-  //                                       Row(
-  //                                         children: [
-  //                                           Checkbox(
-  //                                             onChanged: (checked) {
-  //                                               if (!(checked ?? false)) {
-  //                                                 valueProvider.removeTruckType(
-  //                                                     typestate
-  //                                                         .truckTypes[index]);
-  //                                               } else {
-  //                                                 valueProvider.addTruckType(
-  //                                                     typestate
-  //                                                         .truckTypes[index]);
-  //                                               }
-  //                                               setState(() {});
-  //                                               menuSetState(() {});
-  //                                             },
-  //                                             value: valueProvider
-  //                                                 .selectedTruckType
-  //                                                 .contains(typestate
-  //                                                     .truckTypes[index]),
-  //                                           ),
-  //                                           const SizedBox(width: 16),
-  //                                           Column(
-  //                                             children: [
-  //                                               SizedBox(
-  //                                                 height: 45.h,
-  //                                                 width: 135.w,
-  //                                                 child: CachedNetworkImage(
-  //                                                   imageUrl: typestate
-  //                                                       .truckTypes[index]
-  //                                                       .image!,
-  //                                                   progressIndicatorBuilder:
-  //                                                       (context, url,
-  //                                                               downloadProgress) =>
-  //                                                           Shimmer.fromColors(
-  //                                                     baseColor:
-  //                                                         (Colors.grey[300])!,
-  //                                                     highlightColor:
-  //                                                         (Colors.grey[100])!,
-  //                                                     enabled: true,
-  //                                                     child: Container(
-  //                                                       height: 45.h,
-  //                                                       width: 135.w,
-  //                                                       color: Colors.white,
-  //                                                     ),
-  //                                                   ),
-  //                                                   errorWidget:
-  //                                                       (context, url, error) =>
-  //                                                           Container(
-  //                                                     height: 45.h,
-  //                                                     width: 155.w,
-  //                                                     color: Colors.grey[300],
-  //                                                     child: Center(
-  //                                                       child: Text(
-  //                                                           AppLocalizations.of(
-  //                                                                   context)!
-  //                                                               .translate(
-  //                                                                   'image_load_error')),
-  //                                                     ),
-  //                                                   ),
-  //                                                 ),
-  //                                               ),
-  //                                               SizedBox(height: 8.h),
-  //                                               Center(
-  //                                                 child: SectionBody(
-  //                                                   text: lang == "en"
-  //                                                       ? typestate
-  //                                                           .truckTypes[index]
-  //                                                           .name!
-  //                                                       : typestate
-  //                                                           .truckTypes[index]
-  //                                                           .nameAr!,
-  //                                                 ),
-  //                                               ),
-  //                                             ],
-  //                                           ),
-  //                                         ],
-  //                                       ),
-  //                                       const Divider(),
-  //                                     ],
-  //                                   ),
-  //                                 ),
-  //                               );
-  //                             });
-  //                           },
-  //                         );
-  //                       } else if (typestate is TruckTypeLoadingProgress) {
-  //                         return const Center(
-  //                           child: LinearProgressIndicator(),
-  //                         );
-  //                       } else if (typestate is TruckTypeLoadedFailed) {
-  //                         return Center(
-  //                           child: InkWell(
-  //                             onTap: () {
-  //                               BlocProvider.of<TruckTypeBloc>(context)
-  //                                   .add(TruckTypeLoadEvent());
-  //                             },
-  //                             child: Row(
-  //                               mainAxisAlignment: MainAxisAlignment.center,
-  //                               children: [
-  //                                 Text(
-  //                                   AppLocalizations.of(context)!
-  //                                       .translate('list_error'),
-  //                                   style: const TextStyle(color: Colors.red),
-  //                                 ),
-  //                                 const Icon(
-  //                                   Icons.refresh,
-  //                                   color: Colors.grey,
-  //                                 )
-  //                               ],
-  //                             ),
-  //                           ),
-  //                         );
-  //                       } else {
-  //                         return Container();
-  //                       }
-  //                     },
-  //                   ),
-  //                   SizedBox(
-  //                     height: 8.h,
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //             Positioned(
-  //               bottom: 0,
-  //               child: Container(
-  //                 height: 80.h,
-  //                 decoration: BoxDecoration(
-  //                   color: Colors.white,
-  //                   border: Border(
-  //                     top: BorderSide(color: AppColor.darkGrey200, width: 2),
-  //                   ),
-  //                 ),
-  //                 width: MediaQuery.of(context).size.width,
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.symmetric(vertical: 2.5),
-  //                   child: Row(
-  //                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //                     children: [
-  //                       SizedBox(
-  //                         width: MediaQuery.of(context).size.width * .92,
-  //                         child: CustomButton(
-  //                           title: Text(
-  //                             AppLocalizations.of(context)!
-  //                                 .translate('confirm'),
-  //                             style: TextStyle(
-  //                               fontSize: 20.sp,
-  //                             ),
-  //                           ),
-  //                           onTap: () {
-  //                             Navigator.pop(context);
-  //                           },
-  //                         ),
-  //                       ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ),
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -1701,10 +1456,17 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                         children: [
                                           InkWell(
                                             onTap: () {
-                                              showShipmentPathModalSheet(
-                                                  context,
-                                                  localeState
-                                                      .value.languageCode);
+                                              // showShipmentPathModalSheet(
+                                              //     context,
+                                              //     localeState
+                                              //         .value.languageCode);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AddPathScreen(),
+                                                ),
+                                              );
                                               if (shipmentProvider
                                                   .pathConfirm) {}
                                             },
@@ -1733,10 +1495,17 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                           !(shipmentProvider.pathConfirm)
                                               ? InkWell(
                                                   onTap: () {
-                                                    showShipmentPathModalSheet(
-                                                        context,
-                                                        localeState.value
-                                                            .languageCode);
+                                                    // showShipmentPathModalSheet(
+                                                    //     context,
+                                                    //     localeState.value
+                                                    //         .languageCode);
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AddPathScreen(),
+                                                      ),
+                                                    );
                                                   },
                                                   child: AbsorbPointer(
                                                     absorbing: true,
@@ -1831,10 +1600,17 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                             children: [
                                               InkWell(
                                                 onTap: () {
-                                                  showShipmentPathModalSheet(
-                                                      context,
-                                                      localeState
-                                                          .value.languageCode);
+                                                  // showShipmentPathModalSheet(
+                                                  //     context,
+                                                  //     localeState
+                                                  //         .value.languageCode);
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddPathScreen(),
+                                                    ),
+                                                  );
                                                 },
                                                 child: Text(
                                                   AppLocalizations.of(context)!
@@ -1847,16 +1623,25 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                 ),
                                               ),
                                               InkWell(
-                                                onTap: () =>
-                                                    showShipmentPathModalSheet(
-                                                        context,
-                                                        localeState.value
-                                                            .languageCode),
+                                                onTap: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddPathScreen(),
+                                                    ),
+                                                  );
+                                                  // showShipmentPathModalSheet(
+                                                  //     context,
+                                                  //     localeState.value
+                                                  //         .languageCode),
+                                                },
                                                 child: AbsorbPointer(
                                                   absorbing: true,
                                                   child: Padding(
                                                     padding:
-                                                        const EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     child: Icon(
                                                       Icons.edit,
                                                       color:
@@ -2416,7 +2201,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                                   padding:
                                                                       const EdgeInsets
                                                                           .all(
-                                                                              8.0),
+                                                                          8.0),
                                                                   child: Icon(
                                                                     Icons
                                                                         .add_circle_outline_outlined,

@@ -534,10 +534,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _selectedTruckType[pathIndex] = truckType;
       _selectedTruckTypeId[pathIndex] = truckType.id!;
     }
-    print("TruckType$_selectedTruckTypeId");
-    print("TypeGroup$_truckTypeGroupId");
-    print("TruckTypeNum$_selectedTruckTypeNum");
-
     // Notify listeners for state update
     notifyListeners();
   }
@@ -919,16 +915,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _delivery_statename = getAdministrativeAreaName(result);
       _delivery_placeId = getAdministrativeAreaPlaceId(result);
     }
-    // var responseEng = await http.get(
-    //   Uri.parse(
-    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    // );
-    // if (responseEng.statusCode == 200) {
-    //   var result = jsonDecode(responseEng.body);
-
-    //   _delivery_eng_string =
-    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    // }
     _delivery_location =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
     if (_delivery_controller.text.isNotEmpty &&
@@ -959,16 +945,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _stoppoints_controller[index].text = getAddressName(result);
     }
 
-    // var responseEng = await http.get(
-    //   Uri.parse(
-    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    // );
-    // if (responseEng.statusCode == 200) {
-    //   var result = jsonDecode(responseEng.body);
-
-    //   _stoppoints_eng_string[index] =
-    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    // }
     _stoppoints_location[index] =
         "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
     if (_delivery_controller.text.isNotEmpty &&
@@ -1103,17 +1079,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
       _stoppoints_controller[index].text = getAddressName(result);
     }
-
-    // var responseEng = await http.get(
-    //   Uri.parse(
-    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    // );
-    // if (responseEng.statusCode == 200) {
-    //   var result = jsonDecode(responseEng.body);
-
-    //   _stoppoints_eng_string[index][index2] =
-    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    // }
     _pickupLoading = false;
 
     if (_delivery_controller.text.isNotEmpty &&
@@ -1157,17 +1122,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _delivery_statename = getAdministrativeAreaName(result);
       _delivery_placeId = getAdministrativeAreaPlaceId(result);
     }
-
-    // var responseEng = await http.get(
-    //   Uri.parse(
-    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    // );
-    // if (responseEng.statusCode == 200) {
-    //   var result = jsonDecode(responseEng.body);
-
-    //   _delivery_eng_string =
-    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    // }
     _deliveryLoading = false;
     if (_delivery_controller.text.isNotEmpty &&
         _pickup_controller.text.isNotEmpty) {
