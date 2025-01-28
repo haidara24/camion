@@ -16,7 +16,10 @@ class CoreRepository {
     governorates = [];
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
-
+      print("المحافظات");
+      print("المحافظات");
+      print("المحافظات");
+      print(myDataString);
       var result = jsonDecode(myDataString);
       for (var element in result) {
         governorates.add(Governorate.fromJson(element));

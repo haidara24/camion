@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
+import 'package:camion/business_logic/bloc/core/governorates_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
@@ -127,6 +129,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     _listenLocation();
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
+    BlocProvider.of<GovernoratesListBloc>(context)
+        .add(GovernoratesListLoadEvent());
+    BlocProvider.of<TruckPricesListBloc>(context)
+        .add(TruckPricesListLoadEvent());
     BlocProvider.of<DriverRequestsListBloc>(context)
         .add(const DriverRequestsListLoadEvent(null));
     BlocProvider.of<TruckActiveStatusBloc>(context).add(
@@ -514,7 +520,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                     builder: (context, state) {
                       if (state is BottomNavBarShown) {
                         return Container(
-                          height: 64.h,
+                          height: 75.h,
                           color: AppColor.deepBlack,
                           child: TabBar(
                             labelPadding: EdgeInsets.zero,
@@ -532,7 +538,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             },
                             tabs: [
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: navigationValue == 0
                                     ? Column(
                                         mainAxisAlignment:
@@ -540,14 +546,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/home.svg",
-                                            width: 34.w,
-                                            height: 34.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('home'),
@@ -563,14 +567,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/home.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('home'),
@@ -582,7 +584,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                       ),
                               ),
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: Consumer<RequestNumProvider>(
                                     builder: (context, value, child) {
                                   return BlocListener<DriverRequestsListBloc,
@@ -607,16 +609,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                 children: [
                                                   SvgPicture.asset(
                                                     "assets/icons/orange/my_shipments.svg",
-                                                    width: 34.w,
-                                                    height: 34.w,
+                                                    width: 28.w,
+                                                    height: 28.w,
                                                   ),
-                                                  localeState.value
-                                                              .languageCode ==
-                                                          'en'
-                                                      ? const SizedBox(
-                                                          height: 4,
-                                                        )
-                                                      : const SizedBox.shrink(),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
                                                   FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Padding(
@@ -646,16 +644,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                                 children: [
                                                   SvgPicture.asset(
                                                     "assets/icons/white/my_shipments.svg",
-                                                    width: 30.w,
-                                                    height: 30.w,
+                                                    width: 28.w,
+                                                    height: 28.w,
                                                   ),
-                                                  localeState.value
-                                                              .languageCode ==
-                                                          'en'
-                                                      ? const SizedBox(
-                                                          height: 4,
-                                                        )
-                                                      : const SizedBox.shrink(),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
                                                   FittedBox(
                                                     fit: BoxFit.scaleDown,
                                                     child: Padding(
@@ -678,7 +672,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                               ),
                                         value.requestNum > 0
                                             ? Positioned(
-                                                left: 15,
+                                                right: -2.w,
+                                                top: -5.h,
                                                 child: Container(
                                                   height: 22.w,
                                                   width: 22.w,
@@ -705,7 +700,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                 }),
                               ),
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: navigationValue == 2
                                     ? Column(
                                         mainAxisAlignment:
@@ -713,14 +708,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/search_for_truck.svg",
-                                            width: 34.w,
-                                            height: 34.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Padding(
@@ -745,14 +738,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/search_for_truck.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           FittedBox(
                                             fit: BoxFit.scaleDown,
                                             child: Padding(
@@ -773,7 +764,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                       ),
                               ),
                               Tab(
-                                height: 64.h,
+                                height: 62.h,
                                 icon: navigationValue == 3
                                     ? Column(
                                         mainAxisAlignment:
@@ -781,14 +772,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/orange/location.svg",
-                                            width: 34.w,
-                                            height: 34.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('my_path'),
@@ -804,14 +793,12 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                         children: [
                                           SvgPicture.asset(
                                             "assets/icons/white/location.svg",
-                                            width: 30.w,
-                                            height: 30.w,
+                                            width: 28.w,
+                                            height: 28.w,
                                           ),
-                                          localeState.value.languageCode == 'en'
-                                              ? const SizedBox(
-                                                  height: 4,
-                                                )
-                                              : const SizedBox.shrink(),
+                                          const SizedBox(
+                                            height: 4,
+                                          ),
                                           Text(
                                             AppLocalizations.of(context)!
                                                 .translate('my_path'),

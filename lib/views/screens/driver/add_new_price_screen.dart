@@ -69,8 +69,8 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                               height: 8,
                             ),
                             SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate('select_spending')),
+                                text:
+                                    "${AppLocalizations.of(context)!.translate('select_governorate')} 1"),
                             BlocBuilder<GovernoratesListBloc,
                                 GovernoratesListState>(
                               builder: (context, state) {
@@ -80,7 +80,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                       isExpanded: true,
                                       hint: Text(
                                         AppLocalizations.of(context)!
-                                            .translate('select_spending'),
+                                            .translate('select_governorate'),
                                         style: TextStyle(
                                           fontSize: 18,
                                           color: Theme.of(context).hintColor,
@@ -163,8 +163,8 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                               height: 8,
                             ),
                             SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate('select_spending')),
+                                text:
+                                    "${AppLocalizations.of(context)!.translate('select_governorate')} 2"),
                             BlocBuilder<GovernoratesListBloc,
                                 GovernoratesListState>(
                               builder: (context, state) {
@@ -174,7 +174,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                       isExpanded: true,
                                       hint: Text(
                                         AppLocalizations.of(context)!
-                                            .translate('select_spending'),
+                                            .translate('select_governorate'),
                                         style: TextStyle(
                                           fontSize: 18,
                                           color: Theme.of(context).hintColor,
@@ -258,7 +258,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                             ),
                             SectionTitle(
                                 text: AppLocalizations.of(context)!
-                                    .translate('costs')),
+                                    .translate('price')),
                             SizedBox(
                               // width: 350.w,
                               child: TextFormField(
@@ -292,7 +292,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                     fontSize: 18,
                                   ),
                                   hintText: AppLocalizations.of(context)!
-                                      .translate('enter_spending'),
+                                      .translate('enter_price'),
                                   // filled: true,
                                   // fillColor: Colors.white,
                                 ),
@@ -322,7 +322,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                       context: context,
                                       backgroundColor: AppColor.deepGreen,
                                       message: AppLocalizations.of(context)!
-                                          .translate('new_spending_created'),
+                                          .translate('new_price_created'),
                                     );
 
                                     BlocProvider.of<TruckPricesListBloc>(
@@ -345,7 +345,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                     return CustomButton(
                                       title: Text(
                                         AppLocalizations.of(context)!
-                                            .translate('create_new_spending'),
+                                            .translate('create_new_price'),
                                         style: TextStyle(
                                           fontSize: 20.sp,
                                         ),
@@ -361,8 +361,9 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                             'point1': point1!.id!,
                                             'point2': point2!.id!,
                                             'value': double.parse(
-                                                    _priceController.text)
-                                                .toInt()
+                                              _priceController.text
+                                                  .replaceAll(",", ""),
+                                            ).toInt()
                                           };
 
                                           BlocProvider.of<CreateTruckPriceBloc>(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/activate_shipment_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
+import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
@@ -156,52 +158,46 @@ class _InprogressShipmentDetailsScreenState
     );
   }
 
-  late BitmapDescriptor pickupicon;
-  late BitmapDescriptor deliveryicon;
-  late BitmapDescriptor parkicon;
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
   Set<Marker> markers = {};
 
   createMarkerIcons(SubShipment shipment) async {
-    pickupicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location1.png");
-    deliveryicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location2.png");
-    parkicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/locationP.png");
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
     markers = {};
-    var pickupMarker = Marker(
-      markerId: const MarkerId("pickup"),
-      position: LatLng(
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "P")
-              .location!
-              .split(",")[0]),
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "P")
-              .location!
-              .split(",")[1])),
-      icon: pickupicon,
-    );
-    markers.add(pickupMarker);
-    var deliveryMarker = Marker(
-      markerId: const MarkerId("delivery"),
-      position: LatLng(
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "D")
-              .location!
-              .split(",")[0]),
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "D")
-              .location!
-              .split(",")[1])),
-      icon: deliveryicon,
-    );
-    markers.add(deliveryMarker);
+
+    for (var i = 0; i < shipment.pathpoints!.length; i++) {
+      if (i == 0) {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          "A",
+        );
+
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
+      } else {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          i == shipment.pathpoints!.length - 1 ? "B" : "$i",
+        );
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
+      }
+    }
 
     setState(() {});
   }

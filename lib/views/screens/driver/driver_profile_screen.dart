@@ -441,10 +441,12 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                             return Column(
                               children: [
                                 const Divider(),
-                                const Row(
+                                Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    SectionTitle(text: "أسعاري"),
+                                    SectionTitle(
+                                        text: AppLocalizations.of(context)!
+                                            .translate("my_prices")),
                                   ],
                                 ),
                                 pricestate.prices.isNotEmpty
@@ -458,27 +460,32 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                             TableCell(
                                               child: Container(
                                                 color: AppColor.lightYellow,
-                                                child: const Padding(
+                                                child: Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: Text("المحافظة 1"),
+                                                  child: Text(
+                                                      "${AppLocalizations.of(context)!.translate("governorate")} 1"),
                                                 ),
                                               ),
                                             ),
                                             TableCell(
                                               child: Container(
                                                 color: AppColor.lightYellow,
-                                                child: const Padding(
+                                                child: Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: Text("المحافظة 2"),
+                                                  child: Text(
+                                                      "${AppLocalizations.of(context)!.translate("governorate")} 2"),
                                                 ),
                                               ),
                                             ),
                                             TableCell(
                                               child: Container(
                                                 color: AppColor.lightYellow,
-                                                child: const Padding(
+                                                child: Padding(
                                                   padding: EdgeInsets.all(8.0),
-                                                  child: Text("السعر"),
+                                                  child: Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate("price")),
                                                 ),
                                               ),
                                             ),
@@ -497,6 +504,19 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                                           .point1En!
                                                       : pricestate.prices[index]
                                                           .point1!),
+                                                ),
+                                              ),
+                                              TableCell(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(localeState.value
+                                                              .languageCode ==
+                                                          "en"
+                                                      ? pricestate.prices[index]
+                                                          .point2En!
+                                                      : pricestate.prices[index]
+                                                          .point2!),
                                                 ),
                                               ),
                                               TableCell(
@@ -534,7 +554,8 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                         );
                                       },
                                       child: Text(
-                                        "إضافة سعر جديد  ",
+                                        AppLocalizations.of(context)!
+                                            .translate("add_price"),
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -542,31 +563,6 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                                         ),
                                       ),
                                     ),
-                                    // InkWell(
-                                    //   onTap: () =>
-                                    //       shipmentProvider
-                                    //           .additem(selectedIndex),
-                                    //   child:
-                                    //       AbsorbPointer(
-                                    //     absorbing:
-                                    //         true,
-                                    //     child:
-                                    //         Padding(
-                                    //       padding: const EdgeInsets
-                                    //           .all(
-                                    //           8.0),
-                                    //       child:
-                                    //           SizedBox(
-                                    //         height:
-                                    //             32.h,
-                                    //         width:
-                                    //             32.w,
-                                    //         child:
-                                    //             SvgPicture.asset("assets/icons/add.svg"),
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
                                   ],
                                 ),
                               ],

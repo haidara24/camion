@@ -134,8 +134,8 @@ class _MultiShippmentPickUpMapScreenState
                     });
                   },
                   markers: myMarker,
-                  myLocationEnabled: true,
                   onMapCreated: _onMapCreated,
+                  myLocationEnabled: true,
                   compassEnabled: true,
                   rotateGesturesEnabled: false,
                   // mapType: controller.currentMapType,
@@ -162,21 +162,21 @@ class _MultiShippmentPickUpMapScreenState
                               setState(() {
                                 pickupLoading = true;
                               });
-                              if (widget.type == 0) {
-                                addShippmentProvider!
-                                    .getAddressForPickupFromMapPicker(
-                                      LatLng(selectedPosition!.latitude,
-                                          selectedPosition!.longitude),
-                                    )
-                                    .then((value) => Navigator.pop(context));
-                              } else if (widget.type == 1) {
-                                addShippmentProvider!
-                                    .getAddressForDeliveryFromMapPicker(
-                                      LatLng(selectedPosition!.latitude,
-                                          selectedPosition!.longitude),
-                                    )
-                                    .then((value) => Navigator.pop(context));
-                              }
+                              // if (widget.type == 0) {
+                              //   addShippmentProvider!
+                              //       .getAddressForPickupFromMapPicker(
+                              //         LatLng(selectedPosition!.latitude,
+                              //             selectedPosition!.longitude),
+                              //       )
+                              //       .then((value) => Navigator.pop(context));
+                              // } else if (widget.type == 1) {
+                              //   addShippmentProvider!
+                              //       .getAddressForDeliveryFromMapPicker(
+                              //         LatLng(selectedPosition!.latitude,
+                              //             selectedPosition!.longitude),
+                              //       )
+                              //       .then((value) => Navigator.pop(context));
+                              // }
                             },
                             title: SizedBox(
                               height: 50.h,

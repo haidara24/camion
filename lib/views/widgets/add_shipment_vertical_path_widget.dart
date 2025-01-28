@@ -2,17 +2,14 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class AddShipmentPathVerticalWidget extends StatelessWidget {
   final List<TextEditingController> stations;
-  final TextEditingController pickup;
-  final TextEditingController delivery;
   const AddShipmentPathVerticalWidget({
     Key? key,
     required this.stations,
-    required this.pickup,
-    required this.delivery,
   }) : super(key: key);
 
   List<Widget> stoppoints(BuildContext context) {
@@ -21,99 +18,154 @@ class AddShipmentPathVerticalWidget extends StatelessWidget {
     pathpoints.addAll(stations);
     List<Widget> list = [];
 
-    list.add(
-      SizedBox(
-        height: 64,
-        child: TimelineTile(
-          isLast: false,
-          isFirst: true,
-          // alignment: TimelineAlign.center,
-          beforeLineStyle: LineStyle(
-            color: AppColor.deepYellow,
-          ),
-          indicatorStyle: IndicatorStyle(
-            width: 20,
-            color: AppColor.deepYellow,
-            // iconStyle: IconStyle(
-            //     iconData: Icons.done, color: Colors.white, fontSize: 20),
-          ),
-          alignment: TimelineAlign.manual,
-          lineXY: .3,
-          startChild: SectionBody(
-            text: AppLocalizations.of(context)!.translate('pickup_address'),
-          ),
-          endChild: SectionBody(
-            text: "  ${pickup.text}",
-          ),
-        ),
-      ),
-    );
-
     for (var i = 0; i < stations.length; i++) {
-      list.add(
-        SizedBox(
-          height: 64,
-          child: TimelineTile(
-            isLast: false,
-            isFirst: false,
-            beforeLineStyle: LineStyle(
-              color: AppColor.deepYellow,
-            ),
-            indicatorStyle: IndicatorStyle(
-              width: 20,
-              color: AppColor.deepYellow,
-              iconStyle: IconStyle(
-                iconData: Icons.circle,
-                color: Colors.white,
-                fontSize: 17,
-              ),
-            ),
-            alignment: TimelineAlign.manual,
-            lineXY: .3,
-            startChild: SectionBody(
-              text:
-                  "${AppLocalizations.of(context)!.translate('station_no')} ${i + 1}",
-            ),
-            endChild: SectionBody(
-              text: "  ${stations[i].text}",
-            ),
-          ),
-        ),
-      );
-    }
-
-    list.add(
-      SizedBox(
-        height: 64,
-        child: TimelineTile(
-          isLast: true,
-          isFirst: false,
-          // alignment: TimelineAlign.center,
-          beforeLineStyle: LineStyle(
-            color: AppColor.deepYellow,
-          ),
-          indicatorStyle: IndicatorStyle(
-            width: 20,
-            color: AppColor.deepYellow,
-            indicator: Center(
-              child: Icon(
-                Icons.square,
+      if (i == 0) {
+        list.add(
+          SizedBox(
+            height: 64,
+            child: TimelineTile(
+              isLast: false,
+              isFirst: true,
+              // alignment: TimelineAlign.center,
+              beforeLineStyle: LineStyle(
                 color: AppColor.deepYellow,
-                size: 20,
+              ),
+              indicatorStyle: IndicatorStyle(
+                width: 28.h, // Match the size of your custom container
+                height: 28.h, // Ensure height matches as well
+                indicator: Container(
+                  height: 28.h,
+                  width: 28.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColor.deepYellow,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(45),
+                    color: AppColor.deepBlack,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "A",
+                      style: TextStyle(
+                        fontSize: 16, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              alignment: TimelineAlign.manual,
+              lineXY: .3,
+              startChild: SectionBody(
+                text: AppLocalizations.of(context)!.translate('pickup_address'),
+              ),
+              endChild: SectionBody(
+                text: "  ${stations[i].text}",
               ),
             ),
           ),
-          alignment: TimelineAlign.manual,
-          lineXY: .3,
-          startChild: SectionBody(
-            text: AppLocalizations.of(context)!.translate('delivery_address'),
+        );
+      } else if (i == stations.length - 1) {
+        list.add(
+          SizedBox(
+            height: 64,
+            child: TimelineTile(
+              isLast: true,
+              isFirst: false,
+              // alignment: TimelineAlign.center,
+              beforeLineStyle: LineStyle(
+                color: AppColor.deepYellow,
+              ),
+              indicatorStyle: IndicatorStyle(
+                width: 28.h, // Match the size of your custom container
+                height: 28.h, // Ensure height matches as well
+                indicator: Container(
+                  height: 28.h,
+                  width: 28.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColor.deepYellow,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(45),
+                    color: AppColor.deepBlack,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "B",
+                      style: TextStyle(
+                        fontSize: 16, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              alignment: TimelineAlign.manual,
+              lineXY: .3,
+              startChild: SectionBody(
+                text:
+                    AppLocalizations.of(context)!.translate('delivery_address'),
+              ),
+              endChild: SectionBody(
+                text: "  ${stations[i].text}",
+              ),
+            ),
           ),
-          endChild: SectionBody(
-            text: "  ${delivery.text}",
+        );
+      } else {
+        list.add(
+          SizedBox(
+            height: 64,
+            child: TimelineTile(
+              isLast: false,
+              isFirst: false,
+              beforeLineStyle: LineStyle(
+                color: AppColor.deepYellow,
+              ),
+              indicatorStyle: IndicatorStyle(
+                width: 28.h, // Match the size of your custom container
+                height: 28.h, // Ensure height matches as well
+                indicator: Container(
+                  height: 28.h,
+                  width: 28.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColor.deepYellow,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(45),
+                    color: AppColor.deepBlack,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "$i",
+                      style: const TextStyle(
+                        fontSize: 16, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              alignment: TimelineAlign.manual,
+              lineXY: .3,
+              startChild: SectionBody(
+                text:
+                    "${AppLocalizations.of(context)!.translate('station_no')} $i",
+              ),
+              endChild: SectionBody(
+                text: "  ${stations[i].text}",
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        );
+      }
+    }
 
     return list;
   }

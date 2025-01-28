@@ -37,8 +37,9 @@ class StoreRepository {
   Future<List<Stores>> getStoress() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-
-    var rs = await HttpHelper.get(STORES_ENDPOINT, apiToken: jwt);
+    var merchant = prefs.getInt("merchant") ?? 0;
+    var rs = await HttpHelper.get("$STORES_ENDPOINT?merchant=$merchant",
+        apiToken: jwt);
     stores = [];
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);

@@ -27,6 +27,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart' as intel;
 import 'package:shimmer/shimmer.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class OwnerDashboardScreen extends StatefulWidget {
   const OwnerDashboardScreen({super.key});
@@ -157,7 +158,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
 
                         final formattedStartTime = dateFormat.format(startTime);
                         final formattedEndTime = dateFormat.format(now);
-                        if (!(trucks[selectedTruck].gpsId==null|| trucks[selectedTruck].gpsId!.isEmpty ||
+                        if (!(trucks[selectedTruck].gpsId == null ||
+                            trucks[selectedTruck].gpsId!.isEmpty ||
                             trucks[selectedTruck].gpsId!.length < 8)) {
                           BlocProvider.of<TotalStatisticsBloc>(context).add(
                               TotalStatisticsLoadEvent(formattedStartTime,
@@ -266,7 +268,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
           visible: selectedIndex != -1,
           replacement: const SizedBox.shrink(),
           child: Positioned(
-            top: -20,
+            top: -30,
             left: 15,
             child: IconButton(
               onPressed: () {
@@ -323,6 +325,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
               return LoadingIndicator();
             } else if (state is TotalStatisticsLoadedSuccess) {
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   selectedTruck >= 0
                       ? Row(
@@ -343,12 +346,16 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                         )
                       : const SizedBox.shrink(),
                   selectedTruck >= 0
-                      ? (trucks[selectedTruck].gpsId==null||trucks[selectedTruck].gpsId!.isEmpty ||
+                      ? (trucks[selectedTruck].gpsId == null ||
+                              trucks[selectedTruck].gpsId!.isEmpty ||
                               trucks[selectedTruck].gpsId!.length < 8)
-                          ? Center(
-                              child: SectionBody(
-                                  text:
-                                      "this truck has no GPS device to show statistics.\n please contact us to get one."),
+                          ? Expanded(
+                              child: Center(
+                                child: SectionBody(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("no_gps_device"),
+                                ),
+                              ),
                             )
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -559,6 +566,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
     );
   }
 
+  String _mapStyle = "";
+
   @override
   void initState() {
     super.initState();
@@ -567,6 +576,9 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
       if (startTracking) {
         mymap();
       }
+    });
+    rootBundle.loadString('assets/style/map_style.json').then((string) {
+      _mapStyle = string;
     });
     animcontroller = BottomSheet.createAnimationController(this);
     animcontroller.duration = const Duration(milliseconds: 1000);
@@ -611,7 +623,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                           onMapCreated: (GoogleMapController controller) async {
                             setState(() {
                               _controller = controller;
-                              // _controller.setMapStyle(_mapStyle);
+                              _controller.setMapStyle(_mapStyle);
                             });
                             initMapbounds(state.trucks);
 
@@ -677,7 +689,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                           // mapType: shipmentProvider.mapType,
                         ),
                         Positioned(
-                          top: -5,
+                          top: 0,
                           right: 5,
                           child: IconButton(
                             onPressed: () {

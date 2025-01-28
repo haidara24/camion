@@ -11,6 +11,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc
 import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
+import 'package:camion/business_logic/bloc/store_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -53,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget currentScreen = MainScreen();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController _tabController;
-  AddShippmentProvider? addShippmentProvider;
+  // AddShippmentProvider? addShippmentProvider;
   late SharedPreferences prefs;
 
   @override
@@ -72,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen>
         .add(MerchantRequestsListLoadEvent());
     BlocProvider.of<ShipmentTaskListBloc>(context)
         .add(ShipmentTaskListLoadEvent());
+    BlocProvider.of<StoreListBloc>(context).add(
+      StoreListLoadEvent(),
+    );
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
     BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
@@ -83,8 +87,8 @@ class _HomeScreenState extends State<HomeScreen>
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      addShippmentProvider =
-          Provider.of<AddShippmentProvider>(context, listen: false);
+      // addShippmentProvider =
+      //     Provider.of<AddShippmentProvider>(context, listen: false);
       setState(() {
         title = AppLocalizations.of(context)!.translate('home');
       });
@@ -125,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen>
         }
       case 2:
         {
-          addShippmentProvider!.initShipment();
+          // addShippmentProvider!.initShipment();
           setState(() {
             title = AppLocalizations.of(context)!.translate('search_truck');
             currentScreen = AddMultiShipmentScreen();

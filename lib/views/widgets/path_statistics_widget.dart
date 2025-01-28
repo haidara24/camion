@@ -107,7 +107,7 @@ class PathStatisticsWidget extends StatelessWidget {
                       builder: (context, localeState) {
                         return SectionBody(
                           text:
-                              "$distance ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
+                              "${distance.toStringAsFixed(2)} ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
                         );
                       },
                     ),
@@ -161,7 +161,7 @@ class PathStatisticsWidget extends StatelessWidget {
                             fit: BoxFit.scaleDown,
                             child: SectionBody(
                               text:
-                                  " ${localeState.value.languageCode == "en" ? period.replaceAll("hours", "h").replaceAll("hour", "h") : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
+                                  " ${localeState.value.languageCode == "en" ? period.replaceAll("hours", "h").replaceAll("hour", "h") : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("minutes", "دقيقة").replaceAll("minute", "دقيقة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
                             ),
                           ),
                         );

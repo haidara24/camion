@@ -138,7 +138,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
               : TextDirection.rtl,
           child: SafeArea(
             child: Scaffold(
-              resizeToAvoidBottomInset: false,
+              resizeToAvoidBottomInset: true,
               backgroundColor: AppColor.lightGrey200,
               appBar: CustomAppBar(
                 title: "إضافة مركبة جديدة",

@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_final_fields, non_constant_identifier_names
 
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/place_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
+import 'package:camion/data/services/map_service.dart';
 import 'package:camion/data/services/places_service.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
@@ -29,7 +31,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   LatLng _center = const LatLng(35.363149, 35.932120);
   LatLng get center => _center;
 
-  double _zoom = 13.0;
+  double _zoom = 11.0;
   double get zoom => _zoom;
 
 /*----------------------------------*/
@@ -63,63 +65,33 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<LatLng> _pathes = [];
   List<LatLng> get pathes => _pathes;
 
-  TextEditingController _pickup_controller = TextEditingController();
-  TextEditingController get pickup_controller => _pickup_controller;
+  List<List<LatLng>> _subPathes = [[]];
+  List<List<LatLng>> get subPathes => _subPathes;
 
-  String _pickup_statename = "";
-  String get pickup_statename => _pickup_statename;
+  List<String> _stoppoints_statename = ["", ""];
+  List<String> get stoppoints_statename => _stoppoints_statename;
 
-  String _pickup_placeId = "";
-  String get pickup_placeId => _pickup_placeId;
+  List<String> _stoppoints_placeId = ["", ""];
+  List<String> get stoppoints_placeId => _stoppoints_placeId;
 
-  String _pickup_location = "";
-  String get pickup_location => _pickup_location;
-
-  LatLng? _pickup_latlng;
-  LatLng? get pickup_latlng => _pickup_latlng;
-
-  Marker? _pickup_marker = const Marker(markerId: MarkerId("pickup"));
-  Marker? get pickup_marker => _pickup_marker;
-
-  Position? _pickup_position;
-  Position? get pickup_position => _pickup_position;
-
-  Place? _pickup_place;
-  Place? get pickup_place => _pickup_place;
-
-  TextEditingController _delivery_controller = TextEditingController();
-  TextEditingController get delivery_controller => _delivery_controller;
-
-  String _delivery_statename = "";
-  String get delivery_statename => _delivery_statename;
-
-  String _delivery_placeId = "";
-  String get delivery_placeId => _delivery_placeId;
-
-  String _delivery_location = "";
-  String get delivery_location => _delivery_location;
-
-  Marker? _delivery_marker = const Marker(markerId: MarkerId("delivery"));
-  Marker? get delivery_marker => _delivery_marker;
-
-  LatLng? _delivery_latlng;
-  LatLng? get delivery_latlng => _delivery_latlng;
-
-  Place? _delivery_place;
-  Place? get delivery_place => _delivery_place;
-
-  List<TextEditingController> _stoppoints_controller = [];
+  List<TextEditingController> _stoppoints_controller = [
+    TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ"),
+    TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ")
+  ];
   List<TextEditingController> get stoppoints_controller =>
       _stoppoints_controller;
 
-  List<String> _stoppoints_location = [];
+  List<String> _stoppoints_location = ["", ""];
   List<String> get stoppoints_location => _stoppoints_location;
 
-  List<LatLng?> _stoppoints_latlng = [];
+  List<LatLng?> _stoppoints_latlng = [null, null];
   List<LatLng?> get stoppoints_latlng => _stoppoints_latlng;
 
-  List<Marker?> _stop_marker = [];
-  List<Marker?> get stop_marker => _stop_marker;
+  List<Marker> _stop_marker = [
+    Marker(markerId: MarkerId("0")),
+    Marker(markerId: MarkerId("1"))
+  ];
+  List<Marker> get stop_marker => _stop_marker;
 
   double _distance = 0;
   double get distance => _distance;
@@ -127,43 +99,28 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   String _period = "";
   String get period => _period;
 
+  List<double> _subDistance = [0];
+  List<double> get subDistance => _subDistance;
+
+  List<int> _subPeriod = [0];
+  List<int> get subPeriod => _subPeriod;
+
   TruckType? _truckType;
   TruckType? get truckType => _truckType;
 
-  List<Position?> _stoppoints_position = [];
+  List<Position?> _stoppoints_position = [null, null];
   List<Position?> get stoppoints_position => _stoppoints_position;
 
-  Position? _delivery_position;
-  Position? get delivery_position => _delivery_position;
-
-  List<Place?> _stoppoints_place = [];
+  List<Place?> _stoppoints_place = [null, null];
   List<Place?> get stoppoints_place => _stoppoints_place;
 
-  bool _pickupLoading = false;
-  bool get pickupLoading => _pickupLoading;
-
-  bool _deliveryLoading = false;
-  bool get deliveryLoading => _deliveryLoading;
-
-  List<bool> _stoppointsLoading = [];
+  List<bool> _stoppointsLoading = [false, false];
   List<bool> get stoppointsLoading => _stoppointsLoading;
 
-  bool _pickuptextLoading = false;
-  bool get pickuptextLoading => _pickuptextLoading;
-
-  bool _deliverytextLoading = false;
-  bool get deliverytextLoading => _deliverytextLoading;
-
-  List<bool> _stoppointstextLoading = [];
+  List<bool> _stoppointstextLoading = [false, false];
   List<bool> get stoppointstextLoading => _stoppointstextLoading;
 
-  bool _pickupPosition = false;
-  bool get pickupPosition => _pickupPosition;
-
-  bool _deliveryPosition = false;
-  bool get deliveryPosition => _deliveryPosition;
-
-  List<bool> _stoppointsPosition = [];
+  List<bool> _stoppointsPosition = [false, false];
   List<bool> get stoppointsPosition => _stoppointsPosition;
 
   int _countpath = 1;
@@ -228,6 +185,24 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<TextEditingController> _date_controller = [TextEditingController()];
   List<TextEditingController> get date_controller => _date_controller;
 
+  double _topPosition = 15.0;
+  double get topPosition => _topPosition;
+
+  double _bottomPathStatisticPosition = 0.0;
+  double get bottomPathStatisticPosition => _bottomPathStatisticPosition;
+
+  double _bottomPosition = -900.0;
+  double get bottomPosition => _bottomPosition;
+
+  double _toptextfeildPosition = -250;
+  double get toptextfeildPosition => _toptextfeildPosition;
+
+  bool _pickMapMode = false;
+  bool get pickMapMode => _pickMapMode;
+
+  bool _showStores = false;
+  bool get showStores => _showStores;
+
   void initForm() {
     // Reset Google Map-related fields
     _center = const LatLng(35.363149, 35.932120);
@@ -246,30 +221,22 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     // Reset path-related fields
     _pathes = [];
-    _pickup_controller.clear();
-    _pickup_statename = "";
-    _pickup_placeId = "";
-    _pickup_location = "";
-    _pickup_latlng = null;
-    _pickup_marker = const Marker(markerId: MarkerId("pickup"));
-    _pickup_position = null;
-    _pickup_place = null;
+    _subPathes = [[]];
 
-    _delivery_controller.clear();
-    _delivery_statename = "";
-    _delivery_placeId = "";
-    _delivery_location = "";
-    _delivery_latlng = null;
-    _delivery_marker = const Marker(markerId: MarkerId("delivery"));
-    _delivery_position = null;
-    _delivery_place = null;
-
-    _stoppoints_controller = [];
-    _stoppoints_location = [];
-    _stoppoints_latlng = [];
-    _stop_marker = [];
-    _stoppoints_position = [];
-    _stoppoints_place = [];
+    _stoppoints_controller = [
+      TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ"),
+      TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ")
+    ];
+    _stoppoints_statename = ["", ""];
+    _stoppoints_placeId = ["", ""];
+    _stoppoints_location = ["", ""];
+    _stoppoints_latlng = [null, null];
+    _stop_marker = [
+      Marker(markerId: MarkerId("0")),
+      Marker(markerId: MarkerId("1"))
+    ];
+    _stoppoints_position = [null, null];
+    _stoppoints_place = [null, null];
 
     _countpath = 1;
 
@@ -301,22 +268,61 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _dateError = [false];
 
     // Reset loading indicators
-    _pickupLoading = false;
-    _deliveryLoading = false;
-    _stoppointsLoading = [];
-    _pickuptextLoading = false;
-    _deliverytextLoading = false;
-    _stoppointstextLoading = [];
+    _stoppointsLoading = [false, false];
+    _stoppointstextLoading = [false, false];
 
     // Reset boolean flags
-    _pickupPosition = false;
-    _deliveryPosition = false;
-    _stoppointsPosition = [];
+    _stoppointsPosition = [false, false];
     _pathConfirm = false;
 
     // Reset other fields
     _distance = 0;
+    _subDistance = [0];
+
     _period = "";
+    _subPeriod = [0];
+
+    _topPosition = 15.0;
+    _bottomPathStatisticPosition = 0.0;
+    _bottomPosition = -900.0;
+    _toptextfeildPosition = -250;
+    _pickMapMode = false;
+    _showStores = false;
+  }
+
+  void setShowStores() {
+    _showStores = !_showStores;
+    notifyListeners();
+  }
+
+  void toggleMapMode() {
+    _pickMapMode = !_pickMapMode;
+
+    // If pickMapMode is true, ensure _topPosition stays -300
+    if (_pickMapMode) {
+      _topPosition = -300;
+      _bottomPathStatisticPosition = -300;
+    } else {
+      _topPosition = 15.0; // Reset when map mode is turned off
+      _bottomPathStatisticPosition = 0;
+    }
+    notifyListeners();
+  }
+
+  void togglePosition(double height) {
+    _topPosition = _pickMapMode ? -300 : (_topPosition == 15.0 ? -300 : 15.0);
+    _bottomPathStatisticPosition =
+        _pickMapMode ? -300 : (_bottomPathStatisticPosition == 0 ? -300 : 0);
+
+    _toptextfeildPosition = _toptextfeildPosition == 0 ? -250 : 0;
+
+    _bottomPosition = _bottomPosition == 0 ? -height : 0;
+    notifyListeners();
+  }
+
+  void setbottomPosition(double height) {
+    _bottomPosition = height;
+    notifyListeners();
   }
 
   calculateTotalWeight(int index) {
@@ -356,131 +362,239 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void getPolyPoints() async {
-    PolylinePoints polylinePoints = PolylinePoints();
-    List<PolylineWayPoint> waypoints = [];
-    for (var element in _stoppoints_location) {
-      waypoints.add(PolylineWayPoint(location: element, stopOver: true));
-    }
+  Future<void> getPolyPoints(
+    double screenHeight,
+    int index,
+    bool add,
+  ) async {
+    _pathConfirm = true;
+    try {
+      if (_stoppoints_location.isEmpty) {
+        return;
+      }
 
-    await polylinePoints
-        .getRouteBetweenCoordinates(
-      googleApiKey: "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
-      request: PolylineRequest(
-        origin:
-            PointLatLng(_pickup_latlng!.latitude, _pickup_latlng!.longitude),
-        destination: PointLatLng(
-            _delivery_latlng!.latitude, _delivery_latlng!.longitude),
-        mode: TravelMode.driving,
-        wayPoints: waypoints,
-      ),
-    )
-        .then(
-      (result) {
-        _pathes = [];
-        // _isThereARoute[index] = true;
-        if (result.points.isNotEmpty) {
-          // _isThereARoute = true;
-          // _isThereARouteError = false;
-          // _thereARoute = true;
-          result.points.forEach((element) {
-            _pathes.add(
-              LatLng(
-                element.latitude,
-                element.longitude,
-              ),
-            );
-          });
+      final polylinePoints = PolylinePoints();
+      _pathes = [];
+      double totalDistance = 0.0;
+      int totalMinutes = 0;
+      if (!add) {
+        if (index == _stoppoints_latlng.length) {
+          _subPathes[index - 2] = [];
+          final origin2 = _stoppoints_latlng[index - 2];
+          final destination2 = _stoppoints_latlng[index - 1];
+
+          var result2 = await polylinePoints.getRouteBetweenCoordinates(
+            googleApiKey: "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+            request: PolylineRequest(
+              origin: PointLatLng(origin2!.latitude, origin2.longitude),
+              destination:
+                  PointLatLng(destination2!.latitude, destination2.longitude),
+              mode: TravelMode.driving,
+            ),
+          );
+
+          if (result2.points.isNotEmpty) {
+            _subPathes[index - 2].addAll(result2.points
+                .map((point) => LatLng(point.latitude, point.longitude)));
+          }
+
+          // Fetch distance and duration for this segment
+          final distanceData2 = await MapService.fetchDistanceMatrix(
+            pickup: origin2,
+            delivery: destination2,
+          );
+
+          if (distanceData2 != null) {
+            _subDistance[index - 2] = distanceData2["distance"] ?? 0.0;
+            _subPeriod[index - 2] = MapService.parseDurationToMinutes(
+                distanceData2["duration"] ?? "");
+          }
+          _stoppointstextLoading[index - 1] = false;
+          _stoppointsLoading[index - 1] = false;
+          notifyListeners();
+        } else {
+          _subPathes[index - 1] = [];
+          final origin = _stoppoints_latlng[index - 1];
+          final destination = _stoppoints_latlng[index];
+
+          var result = await polylinePoints.getRouteBetweenCoordinates(
+            googleApiKey: "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+            request: PolylineRequest(
+              origin: PointLatLng(origin!.latitude, origin.longitude),
+              destination:
+                  PointLatLng(destination!.latitude, destination.longitude),
+              mode: TravelMode.driving,
+            ),
+          );
+
+          if (result.points.isNotEmpty) {
+            _subPathes[index - 1].addAll(result.points
+                .map((point) => LatLng(point.latitude, point.longitude)));
+          }
+
+          // Fetch distance and duration for this segment
+          final distanceData = await MapService.fetchDistanceMatrix(
+            pickup: origin,
+            delivery: destination,
+          );
+
+          if (distanceData != null) {
+            _subDistance[index - 1] = distanceData["distance"] ?? 0.0;
+            _subPeriod[index - 1] = MapService.parseDurationToMinutes(
+                distanceData["duration"] ?? "");
+          }
+          _stoppointstextLoading[index] = false;
+          _stoppointsLoading[index] = false;
+          notifyListeners();
         }
-        initMapbounds();
-      },
-    ).onError(
-      (error, stackTrace) {
-        // _isThereARoute = false;
-        // _thereARoute = false;
-        print(error);
+      } else {
+        print("last point");
+        if (index == 0) {
+          _subPathes[index] = [];
+          final origin = _stoppoints_latlng[index];
+          final destination = _stoppoints_latlng[index + 1];
 
+          var result = await polylinePoints.getRouteBetweenCoordinates(
+            googleApiKey: "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+            request: PolylineRequest(
+              origin: PointLatLng(origin!.latitude, origin.longitude),
+              destination:
+                  PointLatLng(destination!.latitude, destination.longitude),
+              mode: TravelMode.driving,
+            ),
+          );
+          print("result.points.isNotEmpty ${result.points.isNotEmpty}");
+          if (result.points.isNotEmpty) {
+            _subPathes[index].addAll(result.points
+                .map((point) => LatLng(point.latitude, point.longitude)));
+          }
+
+          // Fetch distance and duration for this segment
+          final distanceData = await MapService.fetchDistanceMatrix(
+            pickup: origin,
+            delivery: destination,
+          );
+
+          if (distanceData != null) {
+            print("distanceData ${distanceData["distance"]}");
+            _subDistance[index] = distanceData["distance"] ?? 0.0;
+            _subPeriod[index] = MapService.parseDurationToMinutes(
+                distanceData["duration"] ?? "");
+            print("_subDistance ${_subDistance[index]}");
+          }
+        } else {
+          _subPathes[index - 1] = [];
+          final origin = _stoppoints_latlng[index - 1];
+          final destination = _stoppoints_latlng[index];
+
+          var result = await polylinePoints.getRouteBetweenCoordinates(
+            googleApiKey: "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+            request: PolylineRequest(
+              origin: PointLatLng(origin!.latitude, origin.longitude),
+              destination:
+                  PointLatLng(destination!.latitude, destination.longitude),
+              mode: TravelMode.driving,
+            ),
+          );
+          print("result.points.isNotEmpty ${result.points.isNotEmpty}");
+          if (result.points.isNotEmpty) {
+            _subPathes[index - 1].addAll(result.points
+                .map((point) => LatLng(point.latitude, point.longitude)));
+          }
+
+          // Fetch distance and duration for this segment
+          final distanceData = await MapService.fetchDistanceMatrix(
+            pickup: origin,
+            delivery: destination,
+          );
+
+          if (distanceData != null) {
+            print("distanceData ${distanceData["distance"]}");
+            _subDistance[index - 1] = distanceData["distance"] ?? 0.0;
+            _subPeriod[index - 1] = MapService.parseDurationToMinutes(
+                distanceData["duration"] ?? "");
+            print("_subDistance ${_subDistance[index - 1]}");
+          }
+        }
+        _stoppointstextLoading[index] = false;
+        _stoppointsLoading[index] = false;
         notifyListeners();
-      },
-    );
+      }
 
-    var response = await HttpHelper.get(
-        'https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${_delivery_latlng!.latitude},${_delivery_latlng!.longitude}&origins=${_pickup_latlng!.latitude},${_pickup_latlng!.longitude}&key=AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c&mode=DRIVING');
-
-    if (response.statusCode == 200) {
-      var result = jsonDecode(response.body);
-      _distance = double.parse(result["rows"][0]['elements'][0]['distance']
-              ['text']
-          .replaceAll(" km", ""));
-      _period = result["rows"][0]['elements'][0]['duration']['text'];
+      _pathes = [];
+      for (var element in _subPathes) {
+        _pathes.addAll(element);
+      }
+      for (var i = 0; i < _subDistance.length; i++) {
+        totalDistance += _subDistance[i];
+        totalMinutes += _subPeriod[i];
+      }
+      // Store total distance and period
+      _distance = totalDistance;
+      _period = MapService.formatMinutesToDuration(
+          totalMinutes); // Convert back to readable format
+    } catch (error) {
+      print("Error fetching route: $error");
     }
-    notifyListeners();
   }
 
-  initMapbounds() {
-    if (_pickup_controller.text.isNotEmpty &&
-        _delivery_controller.text.isNotEmpty) {
-      setPathError(false);
-      List<Marker> markers = [];
-      var pickuplocation = _pickup_location.split(",");
-      markers.add(
-        Marker(
-          markerId: const MarkerId("pickup"),
-          position: LatLng(
-              double.parse(pickuplocation[0]), double.parse(pickuplocation[1])),
-        ),
-      );
-      for (var i = 0; i < _stoppoints_location.length; i++) {
-        var stopLocation = _stoppoints_location[i].split(',');
-        markers.add(
-          Marker(
-            markerId: MarkerId("stop$i"),
-            position: LatLng(
-                double.parse(stopLocation[0]), double.parse(stopLocation[1])),
-          ),
-        );
-      }
+  void initMapBounds(double screenHeight) {
+    setPathError(false);
 
-      var deliverylocation = _delivery_location.split(",");
+    if (_stoppoints_location.first.isEmpty || _stoppoints_location.last.isEmpty)
+      return; // Ensure there are stop points
+    print("initMap bound");
 
-      markers.add(
-        Marker(
-          markerId: const MarkerId("delivery"),
-          position: LatLng(double.parse(deliverylocation[0]),
-              double.parse(deliverylocation[1])),
-        ),
-      );
+    List<Marker> markers = [
+      MapService.createMarker(
+          "pickup", _stoppoints_location.first), // First stop is Pickup
+      MapService.createMarker(
+          "delivery", _stoppoints_location.last), // Last stop is Delivery
+      ..._stoppoints_location
+          .sublist(1, _stoppoints_location.length - 1) // Exclude first & last
+          .asMap()
+          .entries
+          .map((entry) => MapService.createMarker(
+              "stop${entry.key + 1}", entry.value)), // Adjust index
+    ];
 
-      double minLat = markers[0].position.latitude;
-      double maxLat = markers[0].position.latitude;
-      double minLng = markers[0].position.longitude;
-      double maxLng = markers[0].position.longitude;
+    if (markers.isEmpty) return;
 
-      for (Marker marker in markers) {
-        if (marker.position.latitude < minLat) {
-          minLat = marker.position.latitude;
-        }
-        if (marker.position.latitude > maxLat) {
-          maxLat = marker.position.latitude;
-        }
-        if (marker.position.longitude < minLng) {
-          minLng = marker.position.longitude;
-        }
-        if (marker.position.longitude > maxLng) {
-          maxLng = marker.position.longitude;
-        }
-      }
+    // Get min/max latitude & longitude using `reduce()`
+    double minLat =
+        markers.map((m) => m.position.latitude).reduce((a, b) => a < b ? a : b);
+    double maxLat =
+        markers.map((m) => m.position.latitude).reduce((a, b) => a > b ? a : b);
+    double minLng = markers
+        .map((m) => m.position.longitude)
+        .reduce((a, b) => a < b ? a : b);
+    double maxLng = markers
+        .map((m) => m.position.longitude)
+        .reduce((a, b) => a > b ? a : b);
 
-      LatLngBounds bounds = LatLngBounds(
-        southwest: LatLng(minLat, minLng),
-        northeast: LatLng(maxLat, maxLng),
-      );
+    LatLngBounds bounds = LatLngBounds(
+      southwest: LatLng(minLat, minLng),
+      northeast: LatLng(maxLat, maxLng),
+    );
 
-      var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
-      _mapController.animateCamera(cameraUpdate);
-      _mapController2!.animateCamera(cameraUpdate);
-      // notifyListeners();
-    } else {}
+    // Calculate padding based on the screen height
+    double topPadding = screenHeight * 0.33; // Hide top third
+
+    // Apply camera update with calculated padding
+    _mapController.animateCamera(
+      CameraUpdate.newLatLngBounds(
+          bounds, 50), // Adjust zoom level with 50 padding
+    );
+
+    // Future.delayed(Duration(milliseconds: 500), () {
+    //   _mapController.animateCamera(
+    //     CameraUpdate.scrollBy(0,
+    //         -topPadding / 2), // Shift camera to center markers in middle third
+    //   );
+    // });
+
+    _mapController2?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+    print("initMap bound end");
   }
 
   setLoadTime(DateTime time, int index) {
@@ -638,38 +752,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  setPickupLoading(bool value) {
-    _pickupLoading = value;
-    notifyListeners();
-  }
-
-  setPickupTextLoading(bool value) {
-    _pickuptextLoading = value;
-    notifyListeners();
-  }
-
-  setPickupPositionClick(bool value) {
-    _pickupPosition = value;
-    notifyListeners();
-  }
-
-  setDeliveryLoading(bool value) {
-    _deliveryLoading = value;
-    notifyListeners();
-  }
-
-  setDeliveryTextLoading(bool value) {
-    _deliverytextLoading = value;
-    notifyListeners();
-  }
-
-  setDeliveryPositionClick(bool value) {
-    _deliveryPosition = value;
-    notifyListeners();
-  }
-
   setStopPointLoading(bool value, int index) {
     _stoppointsLoading[index] = value;
+    _stoppointstextLoading[index] = value;
     notifyListeners();
   }
 
@@ -688,7 +773,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     List<String> typesToCheck = [
       'route',
       'locality',
-      'administrative_area_level_2',
+      // 'administrative_area_level_2',
       'administrative_area_level_1'
     ];
     for (var element in result["results"]) {
@@ -757,88 +842,13 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     return str;
   }
 
-  setPickupInfo(dynamic suggestion) async {
-    var sLocation = await PlaceService.getPlace(suggestion.placeId);
-    _pickup_place = sLocation;
-    _pickup_latlng = LatLng(
-        sLocation.geometry.location.lat, sLocation.geometry.location.lng);
-
-    var response = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (response.statusCode == 200) {
-      var result = jsonDecode(response.body);
-
-      _pickup_controller.text = getAddressName(result);
-      _pickup_statename = getAdministrativeAreaName(result);
-      _pickup_placeId = getAdministrativeAreaPlaceId(result);
-    }
-    // var responseEng = await http.get(
-    //   Uri.parse(
-    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    // );
-    // if (responseEng.statusCode == 200) {
-    //   var result = jsonDecode(responseEng.body);
-
-    //   _pickup_eng_string =
-    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    // }
-
-    _pickup_location =
-        "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
-
-    if (_mapController2 != null) {
-      if (_delivery_controller.text.isNotEmpty &&
-          _pickup_controller.text.isNotEmpty) {
-        getPolyPoints();
-      } else {
-        animateCameraToLatLng();
-      }
-    }
-
-    _pickuptextLoading = false;
-
-    notifyListeners();
-    if (_mapController2 == null) {
-      if (_delivery_controller.text.isNotEmpty &&
-          _pickup_controller.text.isNotEmpty) {
-        getPolyPoints();
-      } else {
-        animateCameraToLatLng();
-      }
-    }
-  }
-
-  Future<void> getAddressForPickupFromMapPicker(
-    LatLng position,
-  ) async {
-    var response = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (response.statusCode == 200) {
-      var result = jsonDecode(response.body);
-      _pickup_latlng = position;
-      _pickup_controller.text = getAddressName(result);
-      _pickup_statename = getAdministrativeAreaName(result);
-      _pickup_placeId = getAdministrativeAreaPlaceId(result);
-      _pickup_location = "${position.latitude},${position.longitude}";
-    }
-
-    if (_delivery_controller.text.isNotEmpty &&
-        _pickup_controller.text.isNotEmpty) {
-      getPolyPoints();
-    } else {
-      animateCameraToLatLng();
-    }
-    _pickupLoading = false;
-    notifyListeners();
-  }
-
   animateCameraToLatLng() {
-    var pickuplocation = _pickup_location.split(",");
-
+    var pickuplocation;
+    if (_stoppoints_location.first.isNotEmpty) {
+      pickuplocation = _stoppoints_location.first.split(",");
+    } else if (_stoppoints_location.last.isNotEmpty) {
+      pickuplocation = _stoppoints_location.last.split(",");
+    }
     _mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
@@ -863,102 +873,324 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getAddressForDeliveryFromMapPicker(LatLng position) async {
+  void updateLocationData({
+    required LatLng position,
+    required TextEditingController controller,
+    required Function(String) setStateName,
+    required Function(LatLng) setLatLng,
+    required Function(String) setPlaceId,
+    required Function(String) setLocation,
+  }) async {
+    // final result = await MapService.fetchGeocodeData(position);
+
     var response = await http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
+
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-      _delivery_latlng = position;
-      _delivery_controller.text = getAddressName(result);
-      _delivery_statename = getAdministrativeAreaName(result);
-      _delivery_placeId = getAdministrativeAreaPlaceId(result);
-      _delivery_location = "${position.latitude},${position.longitude}";
-    }
+      if (result != null) {
+        setLocation("${position.latitude},${position.longitude}");
+        setLatLng(LatLng(position.latitude, position.longitude));
+        controller.text = getAddressName(result);
 
-    // var responseEng = await http.get(
-    //   Uri.parse(
-    //       "https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    // );
-    // if (responseEng.statusCode == 200) {
-    //   var result = jsonDecode(responseEng.body);
-
-    //   _delivery_eng_string =
-    //       '${(result["results"][0]["address_components"][3]["long_name"]) ?? ""},${(result["results"][0]["address_components"][1]["long_name"]) ?? ""}';
-    // }
-    if (_delivery_controller.text.isNotEmpty &&
-        _pickup_controller.text.isNotEmpty) {
-      getPolyPoints();
-    } else {
-      animateCameraToLatLng();
+        setStateName(getAdministrativeAreaName(result));
+        setPlaceId(getAdministrativeAreaPlaceId(result));
+      }
     }
-    _deliveryLoading = false;
     notifyListeners();
   }
 
-  setDeliveryInfo(dynamic suggestion) async {
-    // _deliverytextLoading[index] = true;
-    // notifyListeners();
-    var sLocation = await PlaceService.getPlace(suggestion.placeId);
-    _delivery_place = sLocation;
-    _delivery_latlng = LatLng(
-        sLocation.geometry.location.lat, sLocation.geometry.location.lng);
+  Future<void> getCurrentPosition(
+      Function(LatLng) onSuccess, int index, BuildContext context) async {
+    final hasPermission = await _handleLocationPermission(
+      context,
+      index,
+    );
+    if (!hasPermission) {
+      print("Location permission denied.");
+      return;
+    }
+
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      print("Raw Position Data: $position");
+
+      // Directly assign to double variables
+      double? lat = position.latitude;
+      double? lng = position.longitude;
+
+      // Ensure they are not NaN
+      if (lat.isNaN || lng.isNaN) {
+        throw Exception("Invalid latitude or longitude received.");
+      }
+
+      print("Latitude: $lat, Longitude: $lng");
+
+      // Ensure `onSuccess` receives a valid `LatLng`
+      onSuccess(LatLng(lat, lng));
+    } catch (e, stacktrace) {
+      print("Error getting location: ${e.toString()}");
+      print("Stacktrace: $stacktrace");
+    }
+  }
+
+  void _handleMapUpdate(double screenHeight, int index, bool add) {
+    if (_stoppoints_location.first.isNotEmpty &&
+        _stoppoints_location.last.isNotEmpty) {
+      getPolyPoints(
+        screenHeight,
+        index,
+        add,
+      ).then(
+        (value) {
+          initMapBounds(screenHeight);
+        },
+      );
+    } else {
+      animateCameraToLatLng();
+      _stoppointstextLoading[index] = false;
+      _stoppointsLoading[index] = false;
+      notifyListeners();
+    }
+    notifyListeners();
+  }
+
+  void setStopPointInfo(
+    dynamic suggestion,
+    int index,
+    double screenHeight,
+  ) async {
+    _stoppointstextLoading[index] = true;
+    _stoppointsLoading[index] = true;
+    notifyListeners();
+    var value = await PlaceService.getPlace(suggestion.placeId);
+    _stoppoints_place[index] = value;
+    LatLng position =
+        LatLng(value.geometry.location.lat, value.geometry.location.lng);
+
     var response = await http.get(
       Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
+
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-
-      _delivery_controller.text = getAddressName(result);
-      _delivery_statename = getAdministrativeAreaName(result);
-      _delivery_placeId = getAdministrativeAreaPlaceId(result);
+      if (result != null) {
+        _stoppoints_controller[index].text = getAddressName(result);
+        _stoppoints_statename[index] = getAdministrativeAreaName(result);
+        _stoppoints_location[index] =
+            "${position.latitude},${position.longitude}";
+        stoppoints_placeId[index] = getAdministrativeAreaPlaceId(result);
+        _stoppoints_latlng[index] =
+            LatLng(position.latitude, position.longitude);
+      }
     }
-    _delivery_location =
-        "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
-    if (_delivery_controller.text.isNotEmpty &&
-        _pickup_controller.text.isNotEmpty) {
-      getPolyPoints();
-    } else {
-      animateCameraToLatLng();
-    }
-    _deliverytextLoading = false;
 
-    notifyListeners();
+    for (var i = 0; i < _stop_marker.length; i++) {
+      if (i == 0) {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          "A",
+        );
+
+        if (_stoppoints_latlng[i] != null) {
+          _stop_marker[i] = Marker(
+            markerId: MarkerId("stop$i"),
+            position: LatLng(
+              _stoppoints_latlng[i]!.latitude,
+              _stoppoints_latlng[i]!.longitude,
+            ),
+            onTap: () {
+              toggleMapMode();
+            },
+            icon: BitmapDescriptor.bytes(markerIcon),
+          );
+        }
+      } else {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          i == _stop_marker.length - 1 ? "B" : "$i",
+        );
+        if (_stoppoints_latlng[i] != null) {
+          _stop_marker[i] = Marker(
+            markerId: MarkerId("stop$i"),
+            position: LatLng(
+              _stoppoints_latlng[i]!.latitude,
+              _stoppoints_latlng[i]!.longitude,
+            ),
+            onTap: () {
+              toggleMapMode();
+            },
+            icon: BitmapDescriptor.bytes(markerIcon),
+          );
+        }
+      }
+    }
+
+    _handleMapUpdate(screenHeight, index, true);
+    // _stoppointstextLoading[index] = false;
+    // _stoppointsLoading[index] = false;
+    // notifyListeners();
   }
 
-  setStopPointInfo(dynamic suggestion, int index) async {
-    // _stoppointstextLoading[index][index2] = true;
-    // notifyListeners();
-    var sLocation = await PlaceService.getPlace(suggestion.placeId);
-    _stoppoints_place[index] = sLocation;
-    _stoppoints_latlng[index] = LatLng(
-        sLocation.geometry.location.lat, sLocation.geometry.location.lng);
+  void setStopPointStore(
+    String location,
+    int index,
+    double screenHeight,
+  ) async {
+    _stoppointstextLoading[index] = true;
+    _stoppointsLoading[index] = true;
+    notifyListeners();
+    LatLng position = LatLng(
+      double.parse(location.split(",")[0]),
+      double.parse(location.split(",")[1]),
+    );
+
     var response = await http.get(
       Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
     );
+
     if (response.statusCode == 200) {
       var result = jsonDecode(response.body);
-
-      _stoppoints_controller[index].text = getAddressName(result);
+      if (result != null) {
+        _stoppoints_controller[index].text = getAddressName(result);
+        _stoppoints_statename[index] = getAdministrativeAreaName(result);
+        _stoppoints_location[index] =
+            "${position.latitude},${position.longitude}";
+        stoppoints_placeId[index] = getAdministrativeAreaPlaceId(result);
+        _stoppoints_latlng[index] =
+            LatLng(position.latitude, position.longitude);
+      }
     }
 
-    _stoppoints_location[index] =
-        "${sLocation.geometry.location.lat},${sLocation.geometry.location.lng}";
-    if (_delivery_controller.text.isNotEmpty &&
-        _pickup_controller.text.isNotEmpty) {
-      getPolyPoints();
-    } else {
-      animateCameraToLatLng();
-    }
-    _stoppointstextLoading[index] = false;
+    for (var i = 0; i < _stop_marker.length; i++) {
+      if (i == 0) {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          "A",
+        );
 
-    notifyListeners();
+        if (_stoppoints_latlng[i] != null) {
+          _stop_marker[i] = Marker(
+            markerId: MarkerId("stop$i"),
+            position: LatLng(
+              _stoppoints_latlng[i]!.latitude,
+              _stoppoints_latlng[i]!.longitude,
+            ),
+            onTap: () {
+              toggleMapMode();
+            },
+            icon: BitmapDescriptor.bytes(markerIcon),
+          );
+        }
+      } else {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          i == _stop_marker.length - 1 ? "B" : "$i",
+        );
+        if (_stoppoints_latlng[i] != null) {
+          _stop_marker[i] = Marker(
+            markerId: MarkerId("stop$i"),
+            position: LatLng(
+              _stoppoints_latlng[i]!.latitude,
+              _stoppoints_latlng[i]!.longitude,
+            ),
+            onTap: () {
+              toggleMapMode();
+            },
+            icon: BitmapDescriptor.bytes(markerIcon),
+          );
+        }
+      }
+    }
+
+    _handleMapUpdate(screenHeight, index, true);
+    // _stoppointstextLoading[index] = false;
+    // _stoppointsLoading[index] = false;
+    // notifyListeners();
   }
 
-  Future<bool> _handleLocationPermission(BuildContext context) async {
+  Future<void> getAddressForStopPointFromMapPicker(
+    LatLng position,
+    int index,
+    double screenHeight,
+  ) async {
+    _stoppointstextLoading[index] = true;
+    _stoppointsLoading[index] = true;
+    notifyListeners();
+    var response = await http.get(
+      Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
+    );
+
+    if (response.statusCode == 200) {
+      var result = jsonDecode(response.body);
+      if (result != null) {
+        _stoppoints_controller[index].text = getAddressName(result);
+        _stoppoints_statename[index] = getAdministrativeAreaName(result);
+        _stoppoints_location[index] =
+            "${position.latitude},${position.longitude}";
+        stoppoints_placeId[index] = getAdministrativeAreaPlaceId(result);
+        _stoppoints_latlng[index] =
+            LatLng(position.latitude, position.longitude);
+      }
+    }
+
+    for (var i = 0; i < _stop_marker.length; i++) {
+      if (i == 0) {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          "A",
+        );
+
+        if (_stoppoints_latlng[i] != null) {
+          _stop_marker[i] = Marker(
+            markerId: MarkerId("stop$i"),
+            position: LatLng(
+              _stoppoints_latlng[i]!.latitude,
+              _stoppoints_latlng[i]!.longitude,
+            ),
+            onTap: () {
+              toggleMapMode();
+            },
+            icon: BitmapDescriptor.bytes(markerIcon),
+          );
+        }
+      } else {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          i == _stop_marker.length - 1 ? "B" : "$i",
+        );
+        if (_stoppoints_latlng[i] != null) {
+          _stop_marker[i] = Marker(
+            markerId: MarkerId("stop$i"),
+            position: LatLng(
+              _stoppoints_latlng[i]!.latitude,
+              _stoppoints_latlng[i]!.longitude,
+            ),
+            onTap: () {
+              toggleMapMode();
+            },
+            icon: BitmapDescriptor.bytes(markerIcon),
+          );
+        }
+      }
+    }
+
+    _handleMapUpdate(
+      screenHeight,
+      index,
+      true,
+    );
+    // _stoppointstextLoading[index] = false;
+    // _stoppointsLoading[index] = false;
+    // notifyListeners();
+  }
+
+  Future<bool> _handleLocationPermission(
+    BuildContext context,
+    int index,
+  ) async {
     bool serviceEnabled;
     LocationPermission permission;
 
@@ -984,7 +1216,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           backgroundColor: Colors.orange,
           message: 'Location permissions are denied',
         );
-        _pickupLoading = false;
+        _stoppointsLoading[index] = false;
 
         return false;
       }
@@ -996,80 +1228,52 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         message:
             'Location permissions are permanently denied, we cannot request permissions.',
       );
-      _pickupLoading = false;
+      _stoppointsLoading[index] = false;
 
       return false;
     }
     return true;
   }
 
-  Future<void> getCurrentPositionForPickup(BuildContext context) async {
-    final hasPermission = await _handleLocationPermission(context);
-
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      _pickup_latlng = LatLng(position.latitude, position.longitude);
-      _pickup_position = position;
-      _pickup_location = "${position.latitude},${position.longitude}";
-      getAddressForPickupFromLatLng(
-        position,
-      );
-    }).catchError((e) {
-      _pickupLoading = false;
-    });
-    // _pickupLoading[index] = false;
-
-    notifyListeners();
-  }
-
-  Future<void> getAddressForPickupFromLatLng(
-    Position position,
-  ) async {
-    var response = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (response.statusCode == 200) {
-      var result = jsonDecode(response.body);
-
-      _pickup_controller.text = getAddressName(result);
-      _pickup_statename = getAdministrativeAreaName(result);
-      _pickup_placeId = getAdministrativeAreaPlaceId(result);
-    }
-    _pickupLoading = false;
-    if (_delivery_controller.text.isNotEmpty &&
-        _pickup_controller.text.isNotEmpty) {
-      getPolyPoints();
-    } else {
-      animateCameraToLatLng();
-    }
-    notifyListeners();
-  }
-
   Future<void> getCurrentPositionForStop(
-      BuildContext context, int index) async {
-    final hasPermission = await _handleLocationPermission(context);
+    BuildContext context,
+    int index,
+    double screenHeight,
+  ) async {
+    _stoppointstextLoading[index] = true;
+    _stoppointsLoading[index] = true;
+    notifyListeners();
+    final hasPermission = await _handleLocationPermission(
+      context,
+      index,
+    );
 
-    if (!hasPermission) return;
+    if (!hasPermission) {
+      _stoppointstextLoading[index] = false;
+      _stoppointsLoading[index] = false;
+      notifyListeners();
+      return;
+    }
+
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       _stoppoints_latlng[index] = LatLng(position.latitude, position.longitude);
       _stoppoints_position[index] = position;
       _stoppoints_location[index] =
           "${position.latitude},${position.longitude}";
-      getAddressForStopPointFromLatLng(
-        position,
-        index,
-      );
+      getAddressForStopFromLatLng(position, index, screenHeight);
     }).catchError((e) {
-      _pickupLoading = false;
+      _stoppointstextLoading[index] = false;
+      _stoppointsLoading[index] = false;
+      notifyListeners();
     });
-    notifyListeners();
   }
 
-  Future<void> getAddressForStopPointFromLatLng(
-      Position position, int index) async {
+  Future<void> getAddressForStopFromLatLng(
+    Position position,
+    int index,
+    double screenHeight,
+  ) async {
     var response = await http.get(
       Uri.parse(
           "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
@@ -1078,103 +1282,163 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       var result = jsonDecode(response.body);
 
       _stoppoints_controller[index].text = getAddressName(result);
-    }
-    _pickupLoading = false;
+      _stoppoints_statename[index] = getAdministrativeAreaName(result);
+      _stoppoints_placeId[index] = getAdministrativeAreaPlaceId(result);
 
-    if (_delivery_controller.text.isNotEmpty &&
-        _pickup_controller.text.isNotEmpty) {
-      getPolyPoints();
-    } else {
-      animateCameraToLatLng();
-    }
-    notifyListeners();
-  }
+      for (var i = 0; i < _stop_marker.length; i++) {
+        if (i == 0) {
+          Uint8List markerIcon = await MapService.createCustomMarker(
+            "A",
+          );
 
-  Future<void> getCurrentPositionForDelivery(BuildContext context) async {
-    final hasPermission = await _handleLocationPermission(context);
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      _delivery_latlng = LatLng(position.latitude, position.longitude);
-      _delivery_position = position;
-      _delivery_location = "${position.latitude},${position.longitude}";
-      getAddressForDeliveryFromLatLng(
-        position,
+          if (_stoppoints_latlng[i] != null) {
+            _stop_marker[i] = Marker(
+              markerId: MarkerId("stop$i"),
+              position: LatLng(
+                _stoppoints_latlng[i]!.latitude,
+                _stoppoints_latlng[i]!.longitude,
+              ),
+              onTap: () {
+                toggleMapMode();
+              },
+              icon: BitmapDescriptor.bytes(markerIcon),
+            );
+          }
+        } else {
+          Uint8List markerIcon = await MapService.createCustomMarker(
+            i == _stop_marker.length - 1 ? "B" : "$i",
+          );
+          if (_stoppoints_latlng[i] != null) {
+            _stop_marker[i] = Marker(
+              markerId: MarkerId("stop$i"),
+              position: LatLng(
+                _stoppoints_latlng[i]!.latitude,
+                _stoppoints_latlng[i]!.longitude,
+              ),
+              onTap: () {
+                toggleMapMode();
+              },
+              icon: BitmapDescriptor.bytes(markerIcon),
+            );
+          }
+        }
+      }
+    }
+
+    if (_stoppoints_location.first.isNotEmpty &&
+        _stoppoints_location.last.isNotEmpty) {
+      getPolyPoints(
+        screenHeight,
+        index,
+        true,
+      ).then(
+        (value) {
+          initMapBounds(screenHeight);
+        },
       );
-    }).catchError((e) {
-      _deliveryLoading = false;
-    });
-    // _deliveryLoading[index] = false;
-
-    notifyListeners();
-  }
-
-  Future<void> getAddressForDeliveryFromLatLng(
-    Position position,
-  ) async {
-    var response = await http.get(
-      Uri.parse(
-          "https://maps.googleapis.com/maps/api/geocode/json?language=ar&latlng=${position.latitude},${position.longitude}&key=AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w"),
-    );
-    if (response.statusCode == 200) {
-      var result = jsonDecode(response.body);
-      _delivery_controller.text = getAddressName(result);
-      _delivery_statename = getAdministrativeAreaName(result);
-      _delivery_placeId = getAdministrativeAreaPlaceId(result);
-    }
-    _deliveryLoading = false;
-    if (_delivery_controller.text.isNotEmpty &&
-        _pickup_controller.text.isNotEmpty) {
-      getPolyPoints();
     } else {
       animateCameraToLatLng();
+      _stoppointstextLoading[index] = false;
+      _stoppointsLoading[index] = false;
+      notifyListeners();
     }
-    notifyListeners();
+    // notifyListeners();
   }
 
-  void addstoppoint() {
-    if (_stoppoints_controller.length > 0) {
-      if (_stoppoints_controller[_stoppoints_controller.length - 1]
-          .text
-          .isNotEmpty) {
-        TextEditingController stoppoint_controller = TextEditingController();
+  Map<String, dynamic> addstoppoint() {
+    Map<String, dynamic> data = {"added": false, "point": "B"};
+    if (_stoppoints_controller.isNotEmpty) {
+      if (_stoppoints_location.last.isNotEmpty &&
+          _stoppoints_location.first.isNotEmpty) {
+        TextEditingController stoppoint_controller =
+            TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ");
         _stoppoints_controller.add(stoppoint_controller);
         _stoppoints_location.add("");
         _stoppoints_latlng.add(null);
         _stoppoints_position.add(null);
         _stoppoints_place.add(null);
+        _stoppoints_placeId.add("");
+        _stoppoints_statename.add("");
         _stoppointsLoading.add(false);
         _stoppointstextLoading.add(false);
         _stoppointsPosition.add(false);
-        _stop_marker
-            .add(Marker(markerId: MarkerId("stop${_stop_marker.length}")));
+        _stop_marker.add(
+          Marker(
+            markerId: MarkerId("stop${_stop_marker.length}"),
+          ),
+        );
+        _subPathes.add([]);
+        _subDistance.add(0);
+        _subPeriod.add(0);
+        notifyListeners();
+        data["added"] = true;
+        return data;
+      } else {
+        notifyListeners();
+        data["added"] = false;
+        if (_stoppoints_location.last.isEmpty) {
+          data["point"] = "B";
+        } else if (_stoppoints_location.first.isEmpty) {
+          data["point"] = "A";
+        }
+        return data;
       }
     } else {
-      TextEditingController stoppoint_controller = TextEditingController();
+      TextEditingController stoppoint_controller =
+          TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ");
       _stoppoints_controller.add(stoppoint_controller);
       _stoppoints_location.add("");
       _stoppoints_latlng.add(null);
       _stoppoints_position.add(null);
       _stoppoints_place.add(null);
+      _stoppoints_placeId.add("");
+      _stoppoints_statename.add("");
       _stoppointsLoading.add(false);
       _stoppointstextLoading.add(false);
       _stoppointsPosition.add(false);
-      _stop_marker
-          .add(Marker(markerId: MarkerId("stop${_stop_marker.length}")));
+      _stop_marker.add(
+        Marker(
+          markerId: MarkerId("stop${_stop_marker.length}"),
+        ),
+      );
+      notifyListeners();
+
+      data["added"] = true;
+      return data;
     }
-    notifyListeners();
   }
 
-  void removestoppoint(int index2) {
+  void removestoppoint(int index2) async {
     _stoppoints_controller.removeAt(index2);
     _stoppoints_location.removeAt(index2);
     _stoppoints_latlng.removeAt(index2);
     _stoppoints_position.removeAt(index2);
     _stoppoints_place.removeAt(index2);
+    _stoppoints_placeId.removeAt(index2);
+    _stoppoints_statename.removeAt(index2);
     _stoppointsLoading.removeAt(index2);
     _stoppointstextLoading.removeAt(index2);
     _stoppointsPosition.removeAt(index2);
     _stop_marker.removeAt(index2);
+    _subPathes.removeAt(index2 - 1);
+    _subDistance.removeAt(index2 - 1);
+    _subPeriod.removeAt(index2 - 1);
+    for (var i = 0; i < _stop_marker.length; i++) {
+      if (i == 0) continue;
+
+      Uint8List markerIcon = await MapService.createCustomMarker(
+        i == _stop_marker.length - 1 ? "B" : "$i",
+      );
+
+      _stop_marker[i] = Marker(
+        markerId: MarkerId("stop$i"),
+        position: LatLng(
+          _stoppoints_latlng[i]!.latitude,
+          _stoppoints_latlng[i]!.longitude,
+        ),
+        icon: BitmapDescriptor.bytes(markerIcon),
+      );
+    }
     notifyListeners();
   }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
@@ -9,6 +10,7 @@ import 'package:camion/business_logic/bloc/instructions/read_payment_instruction
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
+import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
@@ -267,20 +269,6 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
     }
   }
 
-  // widgetList(bool preview, Shipmentv2 shipment) {
-  //   if (shipment.shipmentStatus == "C") {
-  //     return truckList(shipment);
-  //   }
-  //   if (widget.preview) {
-  //     return pathList(shipment);
-  //   } else {
-  //     return truckList(shipment);
-  //   }
-  // }
-
-  late BitmapDescriptor pickupicon;
-  late BitmapDescriptor deliveryicon;
-  late BitmapDescriptor stopicon;
   late BitmapDescriptor truckicon;
   late LatLng truckLocation;
   late bool truckLocationassign;
@@ -288,51 +276,38 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
   bool instructionSelect = true;
 
   createMarkerIcons(SubShipment shipment) async {
-    pickupicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location1.png");
-    deliveryicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location2.png");
-    stopicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/locationP.png");
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
     markers = {};
-    var pickupMarker = Marker(
-      markerId: const MarkerId("pickup"),
-      position: LatLng(
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "P")
-              .location!
-              .split(",")[0]),
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "P")
-              .location!
-              .split(",")[1])),
-      icon: pickupicon,
-    );
-    markers.add(pickupMarker);
-    var deliveryMarker = Marker(
-      markerId: const MarkerId("delivery"),
-      position: LatLng(
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "D")
-              .location!
-              .split(",")[0]),
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "D")
-              .location!
-              .split(",")[1])),
-      icon: deliveryicon,
-    );
-    markers.add(deliveryMarker);
-    for (var element in shipment.pathpoints!) {
-      if (element.pointType! == "S") {
-        markers.add(Marker(
-          markerId: const MarkerId("stoppoint"),
-          position: LatLng(double.parse(element.location!.split(",")[0]),
-              double.parse(element.location!.split(",")[1])),
-          icon: deliveryicon,
-        ));
+
+    for (var i = 0; i < shipment.pathpoints!.length; i++) {
+      if (i == 0) {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          "A",
+        );
+
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
+      } else {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          i == shipment.pathpoints!.length - 1 ? "B" : "$i",
+        );
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
       }
     }
 
@@ -429,7 +404,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                     (GoogleMapController controller) async {
                                   setState(() {
                                     _controller = controller;
-                                    // _controller.setMapStyle(_mapStyle);
+                                    _controller.setMapStyle(_mapStyle);
                                   });
                                   initMapbounds(shipmentstate.shipment);
                                 },

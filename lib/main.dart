@@ -4,6 +4,7 @@ import 'package:camion/Localization/app_localizations_setup.dart';
 import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
+import 'package:camion/business_logic/bloc/core/create_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/core/governorates_list_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/owner_notifications_bloc.dart';
@@ -160,7 +161,6 @@ class MyApp extends StatelessWidget {
                 ChangeNotifierProvider(
                     create: (_) => ShipmentInstructionsProvider()),
                 ChangeNotifierProvider(create: (_) => NotificationProvider()),
-                ChangeNotifierProvider(create: (_) => AddShippmentProvider()),
                 ChangeNotifierProvider(
                     create: (_) => AddMultiShipmentProvider()),
                 ChangeNotifierProvider(
@@ -224,6 +224,13 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => TruckPricesListBloc(
+                        truckPriceRepository:
+                            RepositoryProvider.of<TruckPriceRepository>(
+                                context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => CreateTruckPriceBloc(
                         truckPriceRepository:
                             RepositoryProvider.of<TruckPriceRepository>(
                                 context),

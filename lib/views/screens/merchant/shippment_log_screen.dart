@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
+import 'dart:typed_data';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/approval_request.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/request_num_provider.dart';
+import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
@@ -27,6 +29,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
+import 'package:flutter/services.dart' show rootBundle;
 
 class ShippmentLogScreen extends StatefulWidget {
   const ShippmentLogScreen({Key? key}) : super(key: key);
@@ -40,7 +43,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   late TabController _tabController;
   int tabIndex = 0;
 
-  // String _mapStyle = "";
+  String _mapStyle = "";
 
   var f = intel.NumberFormat("#,###", "en_US");
   BitmapDescriptor? pickupicon;
@@ -58,12 +61,14 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   ];
 
   createMarkerIcons() async {
-    pickupicon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      "assets/icons/location1.png",
+    Uint8List markerIcon = await MapService.createCustomMarker(
+      "A",
     );
-    deliveryicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location2.png");
+    pickupicon = BitmapDescriptor.bytes(markerIcon);
+    Uint8List markerIcon1 = await MapService.createCustomMarker(
+      "B",
+    );
+    deliveryicon = BitmapDescriptor.bytes(markerIcon1);
     setState(() {});
   }
 
@@ -72,6 +77,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
     _tabController = TabController(length: 2, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       createMarkerIcons();
+    });
+    rootBundle.loadString('assets/style/map_style.json').then((string) {
+      _mapStyle = string;
     });
 
     super.initState();
@@ -594,9 +602,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 _maps.add(null);
                                                                 _maps[index] =
                                                                     controller;
-                                                                // _maps[index]!
-                                                                //     .setMapStyle(
-                                                                //         _mapStyle);
+                                                                _maps[index]!
+                                                                    .setMapStyle(
+                                                                        _mapStyle);
                                                               });
                                                               initMapbounds(
                                                                   state.shipments[

@@ -235,12 +235,33 @@ class SearchForTrucksScreen extends StatelessWidget {
                                       color: AppColor.deepYellow,
                                     ),
                                     indicatorStyle: IndicatorStyle(
-                                      width: 17,
-                                      color: AppColor.deepYellow,
-                                      iconStyle: IconStyle(
-                                        iconData: Icons.circle_sharp,
-                                        color: AppColor.deepYellow,
-                                        fontSize: 15,
+                                      width: 28
+                                          .h, // Match the size of your custom container
+                                      height:
+                                          28.h, // Ensure height matches as well
+                                      indicator: Container(
+                                        height: 28.h,
+                                        width: 28.h,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColor.deepYellow,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(45),
+                                          color: AppColor.deepBlack,
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            "B",
+                                            style: TextStyle(
+                                              fontSize:
+                                                  15, // Adjust font size as needed
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     // afterLineStyle: LineStyle(),
@@ -252,7 +273,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                     ),
                                     startChild: SectionBody(
                                       text:
-                                          "  ${shipmentProvider.delivery_statename}",
+                                          "  ${shipmentProvider.stoppoints_statename.last}",
                                     ),
                                   ),
                                 ),
@@ -288,27 +309,42 @@ class SearchForTrucksScreen extends StatelessWidget {
                                       color: AppColor.deepYellow,
                                     ),
                                     indicatorStyle: IndicatorStyle(
-                                      width: 17,
-                                      color: AppColor.deepYellow,
-                                      iconStyle: IconStyle(
-                                        iconData: Icons.circle_sharp,
-                                        color: AppColor.deepYellow,
-                                        fontSize: 15,
+                                      width: 28
+                                          .h, // Match the size of your custom container
+                                      height:
+                                          28.h, // Ensure height matches as well
+                                      indicator: Container(
+                                        height: 28.h,
+                                        width: 28.h,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: AppColor.deepYellow,
+                                            width: 2,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(45),
+                                          color: AppColor.deepBlack,
+                                        ),
+                                        child: const Center(
+                                          child: Text(
+                                            "A",
+                                            style: TextStyle(
+                                              fontSize:
+                                                  15, // Adjust font size as needed
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     // afterLineStyle: LineStyle(),
                                     alignment: TimelineAlign.manual,
                                     lineXY: .5,
-                                    // startChild: FittedBox(
-                                    //   fit: BoxFit.scaleDown,
-                                    //   child: SectionBody(
-                                    //     text:
-                                    //         '${AppLocalizations.of(context)!.translate('pickup_address')} ',
-                                    //   ),
-                                    // ),
+
                                     startChild: SectionBody(
                                       text:
-                                          "  ${shipmentProvider.pickup_statename}",
+                                          "  ${shipmentProvider.stoppoints_statename.first}",
                                     ),
                                     endChild: SectionBody(
                                       text: AppLocalizations.of(context)!
@@ -414,13 +450,13 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                             child: (isSelected)
                                                                 ? Icon(
                                                                     Icons
-                                                                        .radio_button_checked,
+                                                                        .check_box_outlined,
                                                                     color: AppColor
                                                                         .deepYellow,
                                                                   )
                                                                 : const Icon(
                                                                     Icons
-                                                                        .radio_button_off,
+                                                                        .check_box_outline_blank,
                                                                   ),
                                                           ),
                                                           Padding(
@@ -465,7 +501,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                           //   height:
                                                                           //       20.h,
                                                                           //   width:
-                                                                          //       25.h,
+                                                                          //       28.h,
                                                                           //   child: SvgPicture
                                                                           //       .asset(
                                                                           //           "assets/icons/grey/location.svg"),
@@ -715,50 +751,63 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                   subshipmentsitems = [];
 
                                               List<PathPoint> points = [];
-                                              points.add(
-                                                PathPoint(
-                                                  pointType: "P",
-                                                  location:
-                                                      "${shipmentProvider.pickup_latlng!.latitude},${shipmentProvider.pickup_latlng!.longitude}",
-                                                  name: shipmentProvider
-                                                      .pickup_controller.text,
-                                                  nameEn: "",
-                                                  number: 0,
-                                                  city: 1,
-                                                ),
-                                              );
-                                              points.add(
-                                                PathPoint(
-                                                  pointType: "D",
-                                                  location:
-                                                      "${shipmentProvider.delivery_latlng!.latitude},${shipmentProvider.delivery_latlng!.longitude}",
-                                                  name: shipmentProvider
-                                                      .delivery_controller.text,
-                                                  nameEn: "",
-                                                  number: 0,
-                                                  city: 1,
-                                                ),
-                                              );
+
                                               for (var s = 0;
                                                   s <
                                                       shipmentProvider
                                                           .stoppoints_controller
                                                           .length;
                                                   s++) {
-                                                points.add(
-                                                  PathPoint(
-                                                    pointType: "S",
-                                                    location:
-                                                        "${shipmentProvider.stoppoints_latlng[s]!.latitude},${shipmentProvider.stoppoints_latlng[s]!.longitude}",
-                                                    name: shipmentProvider
-                                                        .stoppoints_controller[
-                                                            s]
-                                                        .text,
-                                                    nameEn: "",
-                                                    number: s,
-                                                    city: 1,
-                                                  ),
-                                                );
+                                                if (s == 0) {
+                                                  points.add(
+                                                    PathPoint(
+                                                      pointType: "P",
+                                                      location:
+                                                          "${shipmentProvider.stoppoints_latlng[s]!.latitude},${shipmentProvider.stoppoints_latlng[s]!.longitude}",
+                                                      name: shipmentProvider
+                                                          .stoppoints_controller[
+                                                              s]
+                                                          .text,
+                                                      nameEn: "",
+                                                      number: 0,
+                                                      city: 1,
+                                                    ),
+                                                  );
+                                                } else if (s ==
+                                                    shipmentProvider
+                                                            .stoppoints_controller
+                                                            .length -
+                                                        1) {
+                                                  points.add(
+                                                    PathPoint(
+                                                      pointType: "D",
+                                                      location:
+                                                          "${shipmentProvider.stoppoints_latlng[s]!.latitude},${shipmentProvider.stoppoints_latlng[s]!.longitude}",
+                                                      name: shipmentProvider
+                                                          .stoppoints_controller[
+                                                              s]
+                                                          .text,
+                                                      nameEn: "",
+                                                      number: 0,
+                                                      city: 1,
+                                                    ),
+                                                  );
+                                                } else {
+                                                  points.add(
+                                                    PathPoint(
+                                                      pointType: "S",
+                                                      location:
+                                                          "${shipmentProvider.stoppoints_latlng[s]!.latitude},${shipmentProvider.stoppoints_latlng[s]!.longitude}",
+                                                      name: shipmentProvider
+                                                          .stoppoints_controller[
+                                                              s]
+                                                          .text,
+                                                      nameEn: "",
+                                                      number: s,
+                                                      city: 1,
+                                                    ),
+                                                  );
+                                                }
                                               }
                                               int commodityIndex = 0;
                                               for (var i = 0;

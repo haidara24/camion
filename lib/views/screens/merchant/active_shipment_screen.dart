@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
@@ -11,6 +12,7 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
+import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
@@ -102,7 +104,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
       northeast: LatLng(rightMost, topMost),
       southwest: LatLng(leftMost, bottomMost),
     );
-    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 130.0);
+    var cameraUpdate = CameraUpdate.newLatLngBounds(bounds, 50.0);
     _controller.animateCamera(cameraUpdate);
 
     var response = await HttpHelper.get(
@@ -370,51 +372,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                       });
                       initMapbounds(subshipments[index]);
                       markers = {};
-                      var pickupMarker = Marker(
-                        markerId: const MarkerId("pickup"),
-                        position: LatLng(
-                            double.parse(subshipments[selectedIndex]
-                                .pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "P")
-                                .location!
-                                .split(",")[0]),
-                            double.parse(subshipments[selectedIndex]
-                                .pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "P")
-                                .location!
-                                .split(",")[1])),
-                        icon: pickupicon,
-                      );
-                      markers.add(pickupMarker);
-                      var deliveryMarker = Marker(
-                        markerId: const MarkerId("delivery"),
-                        position: LatLng(
-                            double.parse(subshipments[selectedIndex]
-                                .pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "D")
-                                .location!
-                                .split(",")[0]),
-                            double.parse(subshipments[selectedIndex]
-                                .pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "D")
-                                .location!
-                                .split(",")[1])),
-                        icon: deliveryicon,
-                      );
-                      markers.add(deliveryMarker);
-                      var truckMarker = Marker(
-                        markerId: const MarkerId("truck"),
-                        position: LatLng(
-                            double.parse(truckLocation!.split(",")[0]),
-                            double.parse(truckLocation!.split(",")[1])),
-                        icon: truckicon,
-                      );
-                      markers.add(truckMarker);
-                      print(index);
+                      createMarkerIcons(subshipments[index]);
 
                       setState(() {});
                     },
@@ -521,9 +479,6 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     );
   }
 
-  late BitmapDescriptor pickupicon;
-  late BitmapDescriptor deliveryicon;
-  late BitmapDescriptor parkicon;
   late BitmapDescriptor truckicon;
   // late LatLng truckLocation;
   late bool truckLocationassign;
@@ -531,15 +486,49 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   final TruckRepository _truckRepository = TruckRepository();
   dynamic truckData;
 
-  createMarkerIcons() async {
-    pickupicon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(),
-      "assets/icons/location1.png",
-    );
-    deliveryicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location2.png");
+  createMarkerIcons(SubShipment shipment) async {
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
+    markers = {};
+
+    for (var i = 0; i < shipment.pathpoints!.length; i++) {
+      if (i == 0) {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          "A",
+        );
+
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
+      } else {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          i == shipment.pathpoints!.length - 1 ? "B" : "$i",
+        );
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
+      }
+    }
+
+    var truckMarker = Marker(
+      markerId: const MarkerId("truck"),
+      position: LatLng(double.parse(truckLocation!.split(",")[0]),
+          double.parse(truckLocation!.split(",")[1])),
+      icon: truckicon,
+    );
+    markers.add(truckMarker);
     setState(() {});
   }
 
@@ -563,9 +552,9 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     });
     animcontroller = BottomSheet.createAnimationController(this);
     animcontroller.duration = const Duration(milliseconds: 1000);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      createMarkerIcons();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   createMarkerIcons();
+    // });
     rootBundle.loadString('assets/style/map_style.json').then((string) {
       _mapStyle = string;
     });
@@ -575,7 +564,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   void dispose() {
     animcontroller.dispose();
     _controller.dispose();
-      timer.cancel();
+    timer.cancel();
     super.dispose();
   }
 
@@ -643,46 +632,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                       });
                       initMapbounds(state.shipments[0]);
                       markers = {};
-                      var pickupMarker = Marker(
-                        markerId: const MarkerId("pickup"),
-                        position: LatLng(
-                            double.parse(state.shipments[0].pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "P")
-                                .location!
-                                .split(",")[0]),
-                            double.parse(state.shipments[0].pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "P")
-                                .location!
-                                .split(",")[1])),
-                        icon: pickupicon,
-                      );
-                      markers.add(pickupMarker);
-                      var deliveryMarker = Marker(
-                        markerId: const MarkerId("delivery"),
-                        position: LatLng(
-                            double.parse(state.shipments[0].pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "D")
-                                .location!
-                                .split(",")[0]),
-                            double.parse(state.shipments[0].pathpoints!
-                                .singleWhere(
-                                    (element) => element.pointType == "D")
-                                .location!
-                                .split(",")[1])),
-                        icon: deliveryicon,
-                      );
-                      markers.add(deliveryMarker);
-                      var truckMarker = Marker(
-                        markerId: const MarkerId("truck"),
-                        position: LatLng(
-                            double.parse(truckLocation!.split(",")[0]),
-                            double.parse(truckLocation!.split(",")[1])),
-                        icon: truckicon,
-                      );
-                      markers.add(truckMarker);
+                      createMarkerIcons(state.shipments[0]);
 
                       setState(() {});
                     }
@@ -712,53 +662,10 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                 selectedTruck = 0;
                               });
                               initMapbounds(subshipment!);
-
                               markers = {};
-                              var pickupMarker = Marker(
-                                markerId: const MarkerId("pickup"),
-                                position: LatLng(
-                                    double.parse(state
-                                        .shipments[selectedIndex].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "P")
-                                        .location!
-                                        .split(",")[0]),
-                                    double.parse(state
-                                        .shipments[selectedIndex].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "P")
-                                        .location!
-                                        .split(",")[1])),
-                                icon: pickupicon,
-                              );
-                              markers.add(pickupMarker);
-                              var deliveryMarker = Marker(
-                                markerId: const MarkerId("delivery"),
-                                position: LatLng(
-                                    double.parse(state
-                                        .shipments[selectedIndex].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "D")
-                                        .location!
-                                        .split(",")[0]),
-                                    double.parse(state
-                                        .shipments[selectedIndex].pathpoints!
-                                        .singleWhere((element) =>
-                                            element.pointType == "D")
-                                        .location!
-                                        .split(",")[1])),
-                                icon: deliveryicon,
-                              );
-                              markers.add(deliveryMarker);
 
-                              var truckMarker = Marker(
-                                markerId: const MarkerId("truck"),
-                                position: LatLng(
-                                    double.parse(truckLocation!.split(",")[0]),
-                                    double.parse(truckLocation!.split(",")[1])),
-                                icon: truckicon,
-                              );
-                              markers.add(truckMarker);
+                              createMarkerIcons(state.shipments[0]);
+
                               setState(() {});
                             },
                             zoomControlsEnabled: true,
@@ -839,48 +746,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                               onTap: () {
                                 initMapbounds(subshipment!);
                                 markers = {};
-                                var pickupMarker = Marker(
-                                  markerId: const MarkerId("pickup"),
-                                  position: LatLng(
-                                      double.parse(subshipment!.pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "P")
-                                          .location!
-                                          .split(",")[0]),
-                                      double.parse(subshipment!.pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "P")
-                                          .location!
-                                          .split(",")[1])),
-                                  icon: pickupicon,
-                                );
-                                markers.add(pickupMarker);
-                                var deliveryMarker = Marker(
-                                  markerId: const MarkerId("delivery"),
-                                  position: LatLng(
-                                      double.parse(subshipment!.pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "D")
-                                          .location!
-                                          .split(",")[0]),
-                                      double.parse(subshipment!.pathpoints!
-                                          .singleWhere((element) =>
-                                              element.pointType == "D")
-                                          .location!
-                                          .split(",")[1])),
-                                  icon: deliveryicon,
-                                );
-                                markers.add(deliveryMarker);
-                                var truckMarker = Marker(
-                                  markerId: const MarkerId("truck"),
-                                  position: LatLng(
-                                    double.parse(truckLocation!.split(",")[0]),
-                                    double.parse(truckLocation!.split(",")[1]),
-                                  ),
-                                  infoWindow: const InfoWindow(),
-                                  icon: truckicon,
-                                );
-                                markers.add(truckMarker);
+                                createMarkerIcons(subshipment!);
 
                                 setState(() {});
                               },
@@ -933,12 +799,12 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
 
     polylinePoints
         .getRouteBetweenCoordinates(
-          googleApiKey:"AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
+      googleApiKey: "AIzaSyADOoc8dgS4K4_qk9Hyp441jWtDSumfU7w",
       request: PolylineRequest(
         origin: PointLatLng(d, e),
         destination: PointLatLng(f, g),
         mode: TravelMode.driving,
-        ),
+      ),
     )
         .then((result) {
       if (result.points.isNotEmpty) {

@@ -3,6 +3,7 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class ShipmentPathVerticalWidget extends StatelessWidget {
@@ -53,12 +54,29 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 17,
-                color: AppColor.deepYellow,
-                iconStyle: IconStyle(
-                  iconData: Icons.circle_sharp,
-                  color: AppColor.deepYellow,
-                  fontSize: 15,
+                width: 28.h, // Match the size of your custom container
+                height: 28.h, // Ensure height matches as well
+                indicator: Container(
+                  height: 28.h,
+                  width: 28.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColor.deepYellow,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(45),
+                    color: AppColor.deepBlack,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "A",
+                      style: TextStyle(
+                        fontSize: 16, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               // afterLineStyle: LineStyle(),
@@ -81,22 +99,15 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              // startChild:  SectionBody(
-              //   setLoadDate(pickupDate),
-              //   style: const TextStyle(
-              //     fontSize: 18,
-              //     fontWeight: FontWeight.bold,
-              //     color: Colors.black,
-              //   ),
-              // ),
             ),
           ),
         );
       }
     }
 
-    for (var element in pathpoints) {
-      if (element.pointType == "S" && !mini) {
+    for (var i = 0; i < pathpoints.length; i++) {
+      if (i == 0 || i == pathpoints.length - 1) continue;
+      if (pathpoints[i].pointType == "S" && !mini) {
         list.add(
           SizedBox(
             height: 70,
@@ -107,12 +118,29 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 17,
-                color: AppColor.deepYellow,
-                iconStyle: IconStyle(
-                  iconData: Icons.circle_sharp,
-                  color: AppColor.deepYellow,
-                  fontSize: 15,
+                width: 28.h, // Match the size of your custom container
+                height: 28.h, // Ensure height matches as well
+                indicator: Container(
+                  height: 28.h,
+                  width: 28.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColor.deepYellow,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(45),
+                    color: AppColor.deepBlack,
+                  ),
+                  child: Center(
+                    child: Text(
+                      "$i",
+                      style: const TextStyle(
+                        fontSize: 16, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               alignment: TimelineAlign.start,
@@ -126,7 +154,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: SectionBody(
-                        text: "  ${element.name!}",
+                        text: "  ${pathpoints[i].name!}",
                       ),
                     ),
                   ),
@@ -151,12 +179,29 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 17,
-                color: AppColor.deepYellow,
-                iconStyle: IconStyle(
-                  iconData: Icons.circle_sharp,
-                  color: AppColor.deepYellow,
-                  fontSize: 15,
+                width: 28.h, // Match the size of your custom container
+                height: 28.h, // Ensure height matches as well
+                indicator: Container(
+                  height: 28.h,
+                  width: 28.h,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColor.deepYellow,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(45),
+                    color: AppColor.deepBlack,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      "B",
+                      style: TextStyle(
+                        fontSize: 16, // Adjust font size as needed
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               alignment: TimelineAlign.start,
