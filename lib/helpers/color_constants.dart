@@ -11,4 +11,5 @@ class AppColor {
   static final lightYellow = HexColor("#FAECC0");
   static final lightGrey = HexColor("#BDBDBD");
   static final lightGrey200 = HexColor("#EAEAEA");
+  static final landscapeNatural = HexColor("#023E58");
 }

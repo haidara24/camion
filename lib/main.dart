@@ -735,10 +735,22 @@ class MyApp extends StatelessWidget {
                         ),
                         home: const SplashScreen(),
                         builder: (context, child) {
-                          return MediaQuery(
-                            data: MediaQuery.of(context)
-                                .copyWith(textScaleFactor: 1.0),
-                            child: child!,
+                          return AnnotatedRegion<SystemUiOverlayStyle>(
+                            value: SystemUiOverlayStyle(
+                              statusBarColor: AppColor
+                                  .deepBlack, // Make status bar transparent
+                              statusBarIconBrightness: Brightness
+                                  .light, // Light icons for dark backgrounds
+                              systemNavigationBarColor:
+                                  AppColor.deepBlack, // Works on Android
+                              systemNavigationBarIconBrightness:
+                                  Brightness.light,
+                            ),
+                            child: MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(textScaleFactor: 1.0),
+                              child: child ?? Container(),
+                            ),
                           );
                         },
                       );

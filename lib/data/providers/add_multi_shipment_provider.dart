@@ -185,7 +185,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<TextEditingController> _date_controller = [TextEditingController()];
   List<TextEditingController> get date_controller => _date_controller;
 
-  double _topPosition = 15.0;
+  double _topPosition = 0.0;
   double get topPosition => _topPosition;
 
   double _bottomPathStatisticPosition = 0.0;
@@ -282,7 +282,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _period = "";
     _subPeriod = [0];
 
-    _topPosition = 15.0;
+    _topPosition = 0.0;
     _bottomPathStatisticPosition = 0.0;
     _bottomPosition = -900.0;
     _toptextfeildPosition = -250;
@@ -303,14 +303,14 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       _topPosition = -300;
       _bottomPathStatisticPosition = -300;
     } else {
-      _topPosition = 15.0; // Reset when map mode is turned off
+      _topPosition = 0.0; // Reset when map mode is turned off
       _bottomPathStatisticPosition = 0;
     }
     notifyListeners();
   }
 
   void togglePosition(double height) {
-    _topPosition = _pickMapMode ? -300 : (_topPosition == 15.0 ? -300 : 15.0);
+    _topPosition = _pickMapMode ? -300 : (_topPosition == 0.0 ? -300 : 0.0);
     _bottomPathStatisticPosition =
         _pickMapMode ? -300 : (_bottomPathStatisticPosition == 0 ? -300 : 0);
 
