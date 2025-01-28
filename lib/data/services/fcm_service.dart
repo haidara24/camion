@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
@@ -66,6 +67,8 @@ class NotificationServices {
 
       // Handle foreground notifications
       forgroundMessage(context, notificationProvider!);
+      loadAppAesstes(context, message);
+
     });
 
     setupInteractMessage(context);
@@ -128,6 +131,7 @@ class NotificationServices {
 
   //handle tap on notification when app is in background or terminated
   Future<void> setupInteractMessage(BuildContext context) async {
+    
     // when app is terminated
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
@@ -135,7 +139,6 @@ class NotificationServices {
     if (initialMessage != null) {
       // ignore: use_build_context_synchronously
       handleMessage(context, initialMessage);
-      loadAppAesstes(context, initialMessage);
     }
 
     //when app ins background
@@ -145,6 +148,8 @@ class NotificationServices {
   }
 
   void loadAppAesstes(BuildContext context, RemoteMessage message) async {
+    BlocProvider.of<NotificationBloc>(context)
+                                .add(NotificationLoadEvent());
     if (message.data['notefication_type'] == "A" ||
         message.data['notefication_type'] == "J") {
       var prefs = await SharedPreferences.getInstance();
@@ -161,6 +166,15 @@ class NotificationServices {
             .add(ShipmentTaskListLoadEvent());
       }
     } else if (message.data['notefication_type'] == "O") {
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        BlocProvider.of<DriverRequestsListBloc>(context)
+            .add(const DriverRequestsListLoadEvent(null));
+      } else if (userType == "Merchant") {
+        BlocProvider.of<MerchantRequestsListBloc>(context)
+            .add(MerchantRequestsListLoadEvent());
+      }
     } else if (message.data['notefication_type'] == "T" ||
         message.data['notefication_type'] == "C") {
       BlocProvider.of<ShipmentRunningBloc>(context)
