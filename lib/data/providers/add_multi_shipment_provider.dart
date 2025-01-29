@@ -970,10 +970,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _stoppointstextLoading[index] = true;
     _stoppointsLoading[index] = true;
     notifyListeners();
-    var value = await PlaceService.getPlace(suggestion.placeId);
-    _stoppoints_place[index] = value;
-    LatLng position =
-        LatLng(value.geometry.location.lat, value.geometry.location.lng);
+    print(suggestion.description);
+    late LatLng position;
+    if (suggestion.description == "اللاذقية، Syria") {
+      position = LatLng(double.parse("35.525131"), double.parse("35.791570"));
+    } else {
+      var value = await PlaceService.getPlace(suggestion.placeId);
+      _stoppoints_place[index] = value;
+      position =
+          LatLng(value.geometry.location.lat, value.geometry.location.lng);
+    }
 
     var response = await http.get(
       Uri.parse(
