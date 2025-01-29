@@ -3,6 +3,7 @@ import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/services/fcm_service.dart';
+import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/driver_home_screen.dart';
 import 'package:camion/views/screens/merchant/home_screen.dart';
 import 'package:camion/views/screens/owner/owner_home_screen.dart';
@@ -75,6 +76,7 @@ class _ControlViewState extends State<ControlView> {
         return true; // Exit the app on the second press within 2 seconds
       },
       child: Scaffold(
+        backgroundColor: AppColor.deepBlack,
         body: BlocBuilder<InternetCubit, InternetState>(
           builder: (context, state) {
             if (state is InternetLoading) {

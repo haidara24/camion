@@ -740,11 +740,11 @@ class MyApp extends StatelessWidget {
                               statusBarColor: AppColor
                                   .deepBlack, // Make status bar transparent
                               statusBarIconBrightness: Brightness
-                                  .light, // Light icons for dark backgrounds
+                                  .dark, // Light icons for dark backgrounds
                               systemNavigationBarColor:
                                   AppColor.deepBlack, // Works on Android
                               systemNavigationBarIconBrightness:
-                                  Brightness.light,
+                                  Brightness.dark,
                             ),
                             child: MediaQuery(
                               data: MediaQuery.of(context)
