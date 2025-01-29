@@ -132,764 +132,734 @@ class _AddPathScreenState extends State<AddPathScreen>
                 AppColor.landscapeNatural, // Works on Android
             systemNavigationBarIconBrightness: Brightness.light,
           ),
-          child: SafeArea(
-            child: Scaffold(
-              // appBar: AppBar(
-              //   title: Text(
-              //     AppLocalizations.of(context)!.translate("choose_shippment_path"),
-              //     style: TextStyle(
-              //       // color: AppColor.lightBlue,
-              //       fontSize: 19.sp,
-              //       fontWeight: FontWeight.bold,
-              //     ),
-              //   ),
-              // ),
-              body: SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: Consumer<AddMultiShipmentProvider>(
-                    builder: (context, shipmentProvider, child) {
-                  return Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox(
-                        height: MediaQuery.sizeOf(context).height - 20,
-                        child: GoogleMap(
-                          initialCameraPosition: _initialCameraPosition,
-                          zoomControlsEnabled: false,
+          child: Scaffold(
+            body: SafeArea(
+              child: Consumer<AddMultiShipmentProvider>(
+                  builder: (context, shipmentProvider, child) {
+                return Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      child: GoogleMap(
+                        initialCameraPosition: _initialCameraPosition,
+                        zoomControlsEnabled: false,
 
-                          onCameraMove: (position) {
-                            if (shipmentProvider.pickMapMode) {
-                              setState(() {
-                                selectedPosition = LatLng(
-                                    position.target.latitude,
-                                    position.target.longitude);
+                        onCameraMove: (position) {
+                          if (shipmentProvider.pickMapMode) {
+                            setState(() {
+                              selectedPosition = LatLng(
+                                  position.target.latitude,
+                                  position.target.longitude);
 
-                                newposition = LatLng(position.target.latitude,
-                                    position.target.longitude);
-                              });
-                            }
-                          },
-                          markers: !shipmentProvider.pickMapMode
-                              ? (shipmentProvider
-                                      .stoppoints_controller.isNotEmpty)
-                                  ? shipmentProvider.stop_marker.toSet()
-                                  : {}
-                              : {
-                                  Marker(
-                                    markerId: MarkerId(newposition.toString()),
-                                    position: newposition,
-                                    // icon: widget.type == 0 ? pickupicon : deliveryicon,
-                                  )
-                                },
-                          onMapCreated: (controller) {
-                            shipmentProvider.onMap2Created(
-                                controller, _mapStyle);
-                            shipmentProvider.initMapBounds(
-                                MediaQuery.sizeOf(context).height);
-                          },
-                          // myLocationEnabled: true,
-                          compassEnabled: true,
-                          rotateGesturesEnabled: false,
-                          // mapType: controller.currentMapType,
-                          mapToolbarEnabled: true,
-                          polylines: shipmentProvider.pickMapMode
-                              ? {}
-                              : {
-                                  Polyline(
-                                    polylineId: const PolylineId("route"),
-                                    points: deserializeLatLng(
-                                        jsonEncode(shipmentProvider.pathes)),
-                                    color: AppColor.deepYellow,
-                                    width: 7,
+                              newposition = LatLng(position.target.latitude,
+                                  position.target.longitude);
+                            });
+                          }
+                        },
+                        markers: !shipmentProvider.pickMapMode
+                            ? (shipmentProvider
+                                    .stoppoints_controller.isNotEmpty)
+                                ? shipmentProvider.stop_marker.toSet()
+                                : {}
+                            : {
+                                Marker(
+                                  markerId: MarkerId(newposition.toString()),
+                                  position: newposition,
+                                  // icon: widget.type == 0 ? pickupicon : deliveryicon,
+                                )
+                              },
+                        onMapCreated: (controller) {
+                          shipmentProvider.onMap2Created(controller, _mapStyle);
+                          shipmentProvider
+                              .initMapBounds(MediaQuery.sizeOf(context).height);
+                        },
+                        // myLocationEnabled: true,
+                        compassEnabled: true,
+                        rotateGesturesEnabled: false,
+                        // mapType: controller.currentMapType,
+                        mapToolbarEnabled: true,
+                        polylines: shipmentProvider.pickMapMode
+                            ? {}
+                            : {
+                                Polyline(
+                                  polylineId: const PolylineId("route"),
+                                  points: deserializeLatLng(
+                                      jsonEncode(shipmentProvider.pathes)),
+                                  color: AppColor.deepYellow,
+                                  width: 7,
+                                ),
+                              },
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(
+                          milliseconds: 300), // Animation duration
+                      curve: Curves.easeInOut,
+                      top: shipmentProvider.topPosition,
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width,
+                        // margin: const EdgeInsets.all(8.0),
+                        constraints: BoxConstraints(
+                          maxHeight: 300.h,
+                        ),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          // borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  icon: const Icon(Icons.arrow_back),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * .84,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 12.0,
+                                    ),
+                                    child: Container(
+                                      constraints: BoxConstraints(
+                                        maxHeight: 230.h,
+                                      ),
+                                      child: ListView.builder(
+                                        controller: _scrollController,
+                                        shrinkWrap:
+                                            true, // Shrinks when items are fewer
+                                        physics:
+                                            const AlwaysScrollableScrollPhysics(),
+                                        itemCount: shipmentProvider
+                                            .stoppoints_controller.length,
+                                        itemBuilder: (context, index) {
+                                          return Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    height: 30.h,
+                                                    width: 30.h,
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                        width: 2,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              45),
+                                                      color: AppColor.deepBlack,
+                                                    ),
+                                                    child: Center(
+                                                      child: Text(
+                                                        index == 0
+                                                            ? "A"
+                                                            : (index ==
+                                                                    shipmentProvider
+                                                                            .stoppoints_controller
+                                                                            .length -
+                                                                        1
+                                                                ? "B"
+                                                                : "$index"),
+                                                        style: const TextStyle(
+                                                          fontSize:
+                                                              18, // Adjust font size as needed
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      shipmentProvider
+                                                          .togglePosition(
+                                                              MediaQuery.sizeOf(
+                                                                      context)
+                                                                  .height);
+                                                      selectedPointIndex =
+                                                          index;
+                                                    },
+                                                    child: Container(
+                                                      margin: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 4,
+                                                        vertical: 4,
+                                                      ),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .6,
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 9.0,
+                                                        vertical: 11.0,
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          shipmentProvider
+                                                                      .stoppointstextLoading[
+                                                                  index]
+                                                              ? Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                  child:
+                                                                      SizedBox(
+                                                                    height: 25,
+                                                                    width: 25,
+                                                                    child:
+                                                                        LoadingIndicator(),
+                                                                  ),
+                                                                )
+                                                              : const SizedBox
+                                                                  .shrink(),
+                                                          SizedBox(
+                                                            width: shipmentProvider
+                                                                        .stoppointstextLoading[
+                                                                    index]
+                                                                ? MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    .45
+                                                                : MediaQuery.of(
+                                                                            context)
+                                                                        .size
+                                                                        .width *
+                                                                    .5,
+                                                            child: Text(
+                                                              shipmentProvider
+                                                                  .stoppoints_controller[
+                                                                      index]
+                                                                  .text,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                color: Colors
+                                                                    .black87,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Visibility(
+                                                    visible: (index > 1),
+                                                    replacement: Icon(
+                                                      Icons.linear_scale,
+                                                      color: AppColor.lightGrey,
+                                                    ),
+                                                    child: InkWell(
+                                                      onTap: () {
+                                                        shipmentProvider
+                                                            .removestoppoint(
+                                                                index);
+                                                        shipmentProvider
+                                                            .getPolyPoints(
+                                                          MediaQuery.sizeOf(
+                                                                  context)
+                                                              .height,
+                                                          index,
+                                                          false,
+                                                        )
+                                                            .then(
+                                                          (value) {
+                                                            shipmentProvider
+                                                                .initMapBounds(
+                                                                    MediaQuery.sizeOf(
+                                                                            context)
+                                                                        .height);
+                                                          },
+                                                        );
+
+                                                        // _showAlertDialog(index);
+                                                      },
+                                                      child: Container(
+                                                        height: 25,
+                                                        width: 25,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color:
+                                                              Colors.grey[400],
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(45),
+                                                        ),
+                                                        child: const Center(
+                                                          child: Icon(
+                                                            Icons.close,
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const Divider(
+                                                height: 4,
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              width: MediaQuery.sizeOf(context).width,
+                              child: IconButton(
+                                onPressed: () {
+                                  var data = shipmentProvider.addstoppoint();
+                                  if (!data["added"]) {
+                                    showCustomSnackBar(
+                                      context: context,
+                                      backgroundColor: AppColor.deepYellow,
+                                      message:
+                                          "أضف عنوان للنقطة ${data["point"]}.",
+                                    );
+                                  } else {
+                                    _scrollToBottom();
+                                  }
+                                  setState(() {});
                                 },
+                                icon: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: SizedBox(
+                                        height: 25.h,
+                                        width: 25.w,
+                                        child: SvgPicture.asset(
+                                          "assets/icons/orange/add.svg",
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 3,
+                                    ),
+                                    Text(AppLocalizations.of(context)!
+                                        .translate('add_station')),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      AnimatedPositioned(
+                    ),
+                    Visibility(
+                      visible: shipmentProvider.distance != 0,
+                      replacement: const SizedBox.shrink(),
+                      child: AnimatedPositioned(
                         duration: const Duration(
                             milliseconds: 300), // Animation duration
                         curve: Curves.easeInOut,
-                        top: shipmentProvider.topPosition,
+                        bottom: shipmentProvider.bottomPathStatisticPosition,
                         child: Container(
                           width: MediaQuery.sizeOf(context).width,
-                          // margin: const EdgeInsets.all(8.0),
-                          constraints: BoxConstraints(
-                            maxHeight: 300.h,
-                          ),
-                          decoration: const BoxDecoration(
+                          margin: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
                             color: Colors.white,
-                            // borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: PathStatisticsWidget(
+                              distance: shipmentProvider.distance,
+                              period: shipmentProvider.period,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(
+                          milliseconds: 300), // Animation duration
+                      curve: Curves.easeInOut,
+                      top: shipmentProvider.toptextfeildPosition,
+                      child: Container(
+                        height: 120,
+                        width: MediaQuery.sizeOf(context).width,
+                        color: Colors.white,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   IconButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      shipmentProvider.togglePosition(
+                                          MediaQuery.sizeOf(context).height);
                                     },
                                     icon: const Icon(Icons.arrow_back),
                                   ),
                                   SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * .84,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0,
-                                      ),
-                                      child: Container(
-                                        constraints: BoxConstraints(
-                                          maxHeight: 230.h,
-                                        ),
-                                        child: ListView.builder(
-                                          controller: _scrollController,
-                                          shrinkWrap:
-                                              true, // Shrinks when items are fewer
-                                          physics:
-                                              const AlwaysScrollableScrollPhysics(),
-                                          itemCount: shipmentProvider
-                                              .stoppoints_controller.length,
-                                          itemBuilder: (context, index) {
-                                            return Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Container(
-                                                      height: 30.h,
-                                                      width: 30.h,
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                          color: AppColor
-                                                              .deepYellow,
-                                                          width: 2,
-                                                        ),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(45),
-                                                        color:
-                                                            AppColor.deepBlack,
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          index == 0
-                                                              ? "A"
-                                                              : (index ==
-                                                                      shipmentProvider
-                                                                              .stoppoints_controller
-                                                                              .length -
-                                                                          1
-                                                                  ? "B"
-                                                                  : "$index"),
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize:
-                                                                18, // Adjust font size as needed
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    GestureDetector(
-                                                      onTap: () {
-                                                        shipmentProvider
-                                                            .togglePosition(
-                                                                MediaQuery.sizeOf(
-                                                                        context)
-                                                                    .height);
-                                                        selectedPointIndex =
-                                                            index;
-                                                      },
-                                                      child: Container(
-                                                        margin: const EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: 4,
-                                                          vertical: 4,
-                                                        ),
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            .6,
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 9.0,
-                                                          vertical: 11.0,
-                                                        ),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            shipmentProvider
-                                                                        .stoppointstextLoading[
-                                                                    index]
-                                                                ? Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                    child:
-                                                                        SizedBox(
-                                                                      height:
-                                                                          25,
-                                                                      width: 25,
-                                                                      child:
-                                                                          LoadingIndicator(),
-                                                                    ),
-                                                                  )
-                                                                : const SizedBox
-                                                                    .shrink(),
-                                                            SizedBox(
-                                                              width: shipmentProvider
-                                                                          .stoppointstextLoading[
-                                                                      index]
-                                                                  ? MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      .45
-                                                                  : MediaQuery.of(
-                                                                              context)
-                                                                          .size
-                                                                          .width *
-                                                                      .5,
-                                                              child: Text(
-                                                                shipmentProvider
-                                                                    .stoppoints_controller[
-                                                                        index]
-                                                                    .text,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style:
-                                                                    const TextStyle(
-                                                                  fontSize: 16,
-                                                                  color: Colors
-                                                                      .black87,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Visibility(
-                                                      visible: (index > 1),
-                                                      replacement: Icon(
-                                                        Icons.linear_scale,
-                                                        color:
-                                                            AppColor.lightGrey,
-                                                      ),
-                                                      child: InkWell(
-                                                        onTap: () {
-                                                          shipmentProvider
-                                                              .removestoppoint(
-                                                                  index);
-                                                          shipmentProvider
-                                                              .getPolyPoints(
-                                                            MediaQuery.sizeOf(
-                                                                    context)
-                                                                .height,
-                                                            index,
-                                                            false,
-                                                          )
-                                                              .then(
-                                                            (value) {
-                                                              shipmentProvider
-                                                                  .initMapBounds(
-                                                                      MediaQuery.sizeOf(
-                                                                              context)
-                                                                          .height);
-                                                            },
-                                                          );
+                                    child: Form(
+                                      child: TextFormField(
+                                        controller: _searchController,
+                                        onChanged: (value) async {
+                                          print(value);
+                                          if (value.isNotEmpty) {
+                                            final results = await PlaceService
+                                                .getAutocomplete(value);
 
-                                                          // _showAlertDialog(index);
-                                                        },
-                                                        child: Container(
-                                                          height: 25,
-                                                          width: 25,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors
-                                                                .grey[400],
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        45),
-                                                          ),
-                                                          child: const Center(
-                                                            child: Icon(
-                                                              Icons.close,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const Divider(
-                                                  height: 4,
-                                                ),
-                                              ],
-                                            );
-                                          },
+                                            setState(() {
+                                              placesResult = List.from(
+                                                  results); // Assign a new list reference
+                                            });
+                                          }
+                                        },
+                                        onTap: () {
+                                          if (shipmentProvider.showStores) {
+                                            shipmentProvider.setShowStores();
+                                          }
+                                        },
+                                        onTapOutside: (event) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                        },
+                                        textInputAction: TextInputAction.search,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .translate("search_location"),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                width: MediaQuery.sizeOf(context).width,
-                                child: IconButton(
-                                  onPressed: () {
-                                    var data = shipmentProvider.addstoppoint();
-                                    if (!data["added"]) {
-                                      showCustomSnackBar(
-                                        context: context,
-                                        backgroundColor: AppColor.deepYellow,
-                                        message:
-                                            "أضف عنوان للنقطة ${data["point"]}.",
-                                      );
-                                    } else {
-                                      _scrollToBottom();
-                                    }
-                                    setState(() {});
-                                  },
-                                  icon: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: SizedBox(
-                                          height: 25.h,
-                                          width: 25.w,
-                                          child: SvgPicture.asset(
-                                            "assets/icons/orange/add.svg",
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: 3,
-                                      ),
-                                      Text(AppLocalizations.of(context)!
-                                          .translate('add_station')),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Visibility(
-                        visible: shipmentProvider.distance != 0,
-                        replacement: const SizedBox.shrink(),
-                        child: AnimatedPositioned(
-                          duration: const Duration(
-                              milliseconds: 300), // Animation duration
-                          curve: Curves.easeInOut,
-                          bottom: shipmentProvider.bottomPathStatisticPosition,
-                          child: Container(
-                            width: MediaQuery.sizeOf(context).width - 16,
-                            margin: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: PathStatisticsWidget(
-                                distance: shipmentProvider.distance,
-                                period: shipmentProvider.period,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      AnimatedPositioned(
-                        duration: const Duration(
-                            milliseconds: 300), // Animation duration
-                        curve: Curves.easeInOut,
-                        top: shipmentProvider.toptextfeildPosition,
-                        child: Container(
-                          height: 120,
-                          width: MediaQuery.sizeOf(context).width,
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    IconButton(
-                                      onPressed: () {
-                                        shipmentProvider.togglePosition(
-                                            MediaQuery.sizeOf(context).height);
-                                      },
-                                      icon: const Icon(Icons.arrow_back),
-                                    ),
-                                    SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          .84,
-                                      child: Form(
-                                        child: TextFormField(
-                                          controller: _searchController,
-                                          onChanged: (value) async {
-                                            print(value);
-                                            if (value.isNotEmpty) {
-                                              final results = await PlaceService
-                                                  .getAutocomplete(value);
-
-                                              setState(() {
-                                                placesResult = List.from(
-                                                    results); // Assign a new list reference
-                                              });
-                                            }
-                                          },
-                                          onTap: () {
-                                            if (shipmentProvider.showStores) {
-                                              shipmentProvider.setShowStores();
-                                            }
-                                          },
-                                          onTapOutside: (event) {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          textInputAction:
-                                              TextInputAction.search,
-                                          decoration: InputDecoration(
-                                            hintText: AppLocalizations.of(
-                                                    context)!
-                                                .translate("search_location"),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () {
-                                          shipmentProvider.setStopPointLoading(
-                                            true,
-                                            selectedPointIndex,
-                                          );
-                                          shipmentProvider
-                                              .getCurrentPositionForStop(
-                                            context,
-                                            selectedPointIndex,
-                                            MediaQuery.sizeOf(context).height,
-                                          )
-                                              .then(
-                                            (value) {
-                                              shipmentProvider.togglePosition(
-                                                  MediaQuery.sizeOf(context)
-                                                      .height);
-                                              placesResult = [];
-                                              _searchController.text = "";
-                                              setState(() {});
-                                              // valueProvider.setPickupPositionClick(false, selectedIndex);
-                                            },
-                                          );
-                                          if (shipmentProvider.showStores) {
-                                            shipmentProvider.setShowStores();
-                                          }
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'pick_my_location'),
-                                            ),
-                                            Icon(
-                                              Icons.location_on,
-                                              color: AppColor.deepYellow,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 40.h,
-                                      width: 3,
-                                      child: const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () {
-                                          shipmentProvider.toggleMapMode();
-                                          shipmentProvider.togglePosition(
-                                              MediaQuery.sizeOf(context)
-                                                  .height);
-                                          if (shipmentProvider.showStores) {
-                                            shipmentProvider.setShowStores();
-                                          }
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('pick_from_map'),
-                                            ),
-                                            Icon(
-                                              Icons.map,
-                                              color: AppColor.deepYellow,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 40.h,
-                                      width: 3,
-                                      child: const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: InkWell(
-                                        onTap: () {
-                                          shipmentProvider.setShowStores();
-                                        },
-                                        child: Container(
-                                          height: 40.h,
-                                          color: shipmentProvider.showStores
-                                              ? AppColor.lightYellow
-                                              : Colors.white,
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            children: [
-                                              Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('pick_store'),
-                                              ),
-                                              Icon(
-                                                Icons.warehouse,
-                                                color: AppColor.deepYellow,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      AnimatedPositioned(
-                        duration: const Duration(
-                            milliseconds: 300), // Animation duration
-                        curve: Curves.easeInOut,
-                        bottom: shipmentProvider.bottomPosition,
-                        child: Container(
-                          height: MediaQuery.sizeOf(context).height - 140,
-                          width: MediaQuery.sizeOf(context).width,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.6),
-                            border: Border(
-                              top: BorderSide(
-                                color: AppColor.darkGrey,
-                              ),
-                            ),
-                          ),
-                          child: shipmentProvider.showStores
-                              ? BlocBuilder<StoreListBloc, StoreListState>(
-                                  builder: (context, storestate) {
-                                    if (storestate is StoreListLoadedSuccess) {
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: storestate.stores.length,
-                                        itemBuilder: (context, index) =>
-                                            Container(
-                                          color: Colors.white,
-                                          child: StoreListTile(
-                                            store: storestate
-                                                .stores[index].address!,
-                                            onTap: () {
-                                              shipmentProvider
-                                                  .setStopPointLoading(
-                                                true,
-                                                selectedPointIndex,
-                                              );
-                                              shipmentProvider
-                                                  .setStopPointStore(
-                                                storestate
-                                                    .stores[index].location!,
-                                                selectedPointIndex,
-                                                MediaQuery.sizeOf(context)
-                                                    .height,
-                                              );
-                                              shipmentProvider.togglePosition(
-                                                  MediaQuery.sizeOf(context)
-                                                      .height);
-
-                                              placesResult = [];
-                                              _searchController.text = "";
-                                              shipmentProvider.setShowStores();
-                                              setState(() {});
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                    } else {
-                                      return LoadingIndicator();
-                                    }
-                                  },
-                                )
-                              : placesResult.isEmpty
-                                  ? Center(
-                                      child: SectionBody(
-                                        text:
-                                            "ابحث في مربع البحث عن موقع للتحميل /التفريغ..",
-                                        color: Colors.grey[900],
-                                      ),
-                                    )
-                                  : ListView.builder(
-                                      itemCount: placesResult.length,
-                                      itemBuilder: (context, index) =>
-                                          Container(
-                                        color: Colors.white,
-                                        child: LocationListTile(
-                                          location:
-                                              placesResult[index].description,
-                                          onTap: () {
-                                            print("asd");
-                                            shipmentProvider
-                                                .setStopPointLoading(
-                                              true,
-                                              selectedPointIndex,
-                                            );
-                                            shipmentProvider.setStopPointInfo(
-                                              placesResult[index],
-                                              selectedPointIndex,
-                                              MediaQuery.sizeOf(context).height,
-                                            );
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        shipmentProvider.setStopPointLoading(
+                                          true,
+                                          selectedPointIndex,
+                                        );
+                                        shipmentProvider
+                                            .getCurrentPositionForStop(
+                                          context,
+                                          selectedPointIndex,
+                                          MediaQuery.sizeOf(context).height,
+                                        )
+                                            .then(
+                                          (value) {
                                             shipmentProvider.togglePosition(
                                                 MediaQuery.sizeOf(context)
                                                     .height);
                                             placesResult = [];
                                             _searchController.text = "";
                                             setState(() {});
+                                            // valueProvider.setPickupPositionClick(false, selectedIndex);
                                           },
+                                        );
+                                        if (shipmentProvider.showStores) {
+                                          shipmentProvider.setShowStores();
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('pick_my_location'),
+                                          ),
+                                          Icon(
+                                            Icons.location_on,
+                                            color: AppColor.deepYellow,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 40.h,
+                                    width: 3,
+                                    child: const VerticalDivider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        shipmentProvider.toggleMapMode();
+                                        shipmentProvider.togglePosition(
+                                            MediaQuery.sizeOf(context).height);
+                                        if (shipmentProvider.showStores) {
+                                          shipmentProvider.setShowStores();
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('pick_from_map'),
+                                          ),
+                                          Icon(
+                                            Icons.map,
+                                            color: AppColor.deepYellow,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 40.h,
+                                    width: 3,
+                                    child: const VerticalDivider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: () {
+                                        shipmentProvider.setShowStores();
+                                      },
+                                      child: Container(
+                                        height: 40.h,
+                                        color: shipmentProvider.showStores
+                                            ? AppColor.lightYellow
+                                            : Colors.white,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('pick_store'),
+                                            ),
+                                            Icon(
+                                              Icons.warehouse,
+                                              color: AppColor.deepYellow,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                        ),
-                      ),
-                      AnimatedPositioned(
-                        duration: const Duration(
-                            milliseconds: 300), // Animation duration
-                        curve: Curves.easeInOut,
-                        bottom: shipmentProvider.pickMapMode ? 20.h : -60,
-                        child: CustomButton(
-                          onTap: () {
-                            setState(() {
-                              pickLocationLoading = true;
-                            });
-                            shipmentProvider.setStopPointLoading(
-                              true,
-                              selectedPointIndex,
-                            );
-                            shipmentProvider
-                                .getAddressForStopPointFromMapPicker(
-                              selectedPosition!,
-                              selectedPointIndex,
-                              MediaQuery.sizeOf(context).height,
-                            )
-                                .then(
-                              (value) {
-                                shipmentProvider.toggleMapMode();
-                                setState(() {
-                                  pickLocationLoading = false;
-                                });
-                              },
-                            );
-                          },
-                          title: SizedBox(
-                            height: 50.h,
-                            width: 150.w,
-                            child: Center(
-                              child: pickLocationLoading
-                                  ? LoadingIndicator()
-                                  : SectionBody(
-                                      text: AppLocalizations.of(context)!
-                                          .translate("confirm"),
-                                    ),
-                            ),
-                          ),
-                          isEnabled: selectedPosition != null,
-                        ),
-                      ),
-                      AnimatedPositioned(
-                        duration: const Duration(
-                            milliseconds: 300), // Animation duration
-                        curve: Curves.easeInOut,
-                        top: shipmentProvider.pickMapMode ? 20.h : -160,
-                        right:
-                            localeState.value.languageCode == "en" ? null : 20,
-                        left:
-                            localeState.value.languageCode == "en" ? 20 : null,
-                        child: CustomButton(
-                          onTap: () {
-                            shipmentProvider.toggleMapMode();
-                          },
-                          title: SizedBox(
-                            height: 40.w,
-                            width: 40.w,
-                            child: const Center(
-                              child: Icon(
-                                Icons.arrow_back,
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
-                          hieght: 40,
-                          color: Colors.grey[200],
+                          ],
                         ),
                       ),
-                    ],
-                  );
-                }),
-              ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(
+                          milliseconds: 300), // Animation duration
+                      curve: Curves.easeInOut,
+                      top: shipmentProvider.bottomPosition,
+                      child: Container(
+                        height: MediaQuery.sizeOf(context).height - 150,
+                        width: MediaQuery.sizeOf(context).width,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.6),
+                          border: Border(
+                            top: BorderSide(
+                              color: AppColor.darkGrey,
+                            ),
+                          ),
+                        ),
+                        child: shipmentProvider.showStores
+                            ? BlocBuilder<StoreListBloc, StoreListState>(
+                                builder: (context, storestate) {
+                                  if (storestate is StoreListLoadedSuccess) {
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: storestate.stores.length,
+                                      itemBuilder: (context, index) =>
+                                          Container(
+                                        color: Colors.white,
+                                        child: StoreListTile(
+                                          store:
+                                              storestate.stores[index].address!,
+                                          onTap: () {
+                                            shipmentProvider
+                                                .setStopPointLoading(
+                                              true,
+                                              selectedPointIndex,
+                                            );
+                                            shipmentProvider.setStopPointStore(
+                                              storestate
+                                                  .stores[index].location!,
+                                              selectedPointIndex,
+                                              MediaQuery.sizeOf(context).height,
+                                            );
+                                            shipmentProvider.togglePosition(
+                                                MediaQuery.sizeOf(context)
+                                                    .height);
+
+                                            placesResult = [];
+                                            _searchController.text = "";
+                                            shipmentProvider.setShowStores();
+                                            setState(() {});
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  } else {
+                                    return LoadingIndicator();
+                                  }
+                                },
+                              )
+                            : placesResult.isEmpty
+                                ? Center(
+                                    child: SectionBody(
+                                      text:
+                                          "ابحث في مربع البحث عن موقع للتحميل /التفريغ..",
+                                      color: Colors.grey[900],
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: placesResult.length,
+                                    itemBuilder: (context, index) => Container(
+                                      color: Colors.white,
+                                      child: LocationListTile(
+                                        location:
+                                            placesResult[index].description,
+                                        onTap: () {
+                                          print("asd");
+                                          shipmentProvider.setStopPointLoading(
+                                            true,
+                                            selectedPointIndex,
+                                          );
+                                          shipmentProvider.setStopPointInfo(
+                                            placesResult[index],
+                                            selectedPointIndex,
+                                            MediaQuery.sizeOf(context).height,
+                                          );
+                                          shipmentProvider.togglePosition(
+                                              MediaQuery.sizeOf(context)
+                                                  .height);
+                                          placesResult = [];
+                                          _searchController.text = "";
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(
+                          milliseconds: 300), // Animation duration
+                      curve: Curves.easeInOut,
+                      bottom: shipmentProvider.pickMapMode ? 20.h : -60,
+                      child: CustomButton(
+                        onTap: () {
+                          setState(() {
+                            pickLocationLoading = true;
+                          });
+                          shipmentProvider.setStopPointLoading(
+                            true,
+                            selectedPointIndex,
+                          );
+                          shipmentProvider
+                              .getAddressForStopPointFromMapPicker(
+                            selectedPosition!,
+                            selectedPointIndex,
+                            MediaQuery.sizeOf(context).height,
+                          )
+                              .then(
+                            (value) {
+                              shipmentProvider.toggleMapMode();
+                              setState(() {
+                                pickLocationLoading = false;
+                              });
+                            },
+                          );
+                        },
+                        title: SizedBox(
+                          height: 50.h,
+                          width: 150.w,
+                          child: Center(
+                            child: pickLocationLoading
+                                ? LoadingIndicator()
+                                : SectionBody(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("confirm"),
+                                  ),
+                          ),
+                        ),
+                        isEnabled: selectedPosition != null,
+                      ),
+                    ),
+                    AnimatedPositioned(
+                      duration: const Duration(
+                          milliseconds: 300), // Animation duration
+                      curve: Curves.easeInOut,
+                      top: shipmentProvider.pickMapMode ? 20.h : -160,
+                      right: localeState.value.languageCode == "en" ? null : 20,
+                      left: localeState.value.languageCode == "en" ? 20 : null,
+                      child: CustomButton(
+                        onTap: () {
+                          shipmentProvider.toggleMapMode();
+                        },
+                        title: SizedBox(
+                          height: 40.w,
+                          width: 40.w,
+                          child: const Center(
+                            child: Icon(
+                              Icons.arrow_back,
+                            ),
+                          ),
+                        ),
+                        hieght: 40,
+                        color: Colors.grey[200],
+                      ),
+                    ),
+                  ],
+                );
+              }),
             ),
           ),
         );

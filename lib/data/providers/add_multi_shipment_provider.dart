@@ -316,12 +316,12 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _toptextfeildPosition = _toptextfeildPosition == 0 ? -250 : 0;
 
-    _bottomPosition = _bottomPosition == 0 ? -height : 0;
+    _bottomPosition = _bottomPosition == 130 ? -height : 130;
     notifyListeners();
   }
 
   void setbottomPosition(double height) {
-    _bottomPosition = height;
+    _bottomPosition = -height;
     notifyListeners();
   }
 
@@ -578,22 +578,24 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     );
 
     // Calculate padding based on the screen height
-    double topPadding = screenHeight * 0.33; // Hide top third
+    double topPadding = screenHeight * 0.25; // Hide top third
 
     // Apply camera update with calculated padding
-    _mapController.animateCamera(
+    _mapController2?.animateCamera(
       CameraUpdate.newLatLngBounds(
-          bounds, 50), // Adjust zoom level with 50 padding
+        bounds,
+        topPadding, // Use topPadding for vertical padding
+      ),
     );
 
-    // Future.delayed(Duration(milliseconds: 500), () {
-    //   _mapController.animateCamera(
-    //     CameraUpdate.scrollBy(0,
-    //         -topPadding / 2), // Shift camera to center markers in middle third
-    //   );
-    // });
+    // Optionally, you can add a delay to ensure the camera update is applied
+    Future.delayed(Duration(milliseconds: 500), () {
+      _mapController2?.animateCamera(
+        CameraUpdate.scrollBy(0, -topPadding / 2), // Adjust the camera position
+      );
+    });
 
-    _mapController2?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
+    _mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
     print("initMap bound end");
   }
 
