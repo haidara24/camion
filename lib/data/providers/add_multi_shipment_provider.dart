@@ -584,7 +584,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _mapController2?.animateCamera(
       CameraUpdate.newLatLngBounds(
         bounds,
-        topPadding, // Use topPadding for vertical padding
+        150, // Use topPadding for vertical padding
       ),
     );
 
