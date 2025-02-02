@@ -110,6 +110,19 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
           }
         }
       });
+    } else {
+      if (_timer == null || !_timer!.isActive) {
+        if (truckId != 0) {
+          var data = await GpsRepository.getCarInfo(gpsId);
+          String location =
+              '${data["carStatus"]["lat"]},${data["carStatus"]["lon"]}';
+          var jwt = prefs.getString("token");
+          var rs = await HttpHelper.patch(
+              '$TRUCKS_ENDPOINT$truckId/', {'location_lat': location},
+              apiToken: jwt);
+          _timer = Timer(const Duration(minutes: 1), () {});
+        }
+      }
     }
   }
 

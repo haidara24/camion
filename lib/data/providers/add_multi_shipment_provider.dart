@@ -858,7 +858,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               double.parse(pickuplocation[0]),
               double.parse(pickuplocation[1]),
             ),
-            zoom: 14.47),
+            zoom: 11),
       ),
     );
     if (_mapController2 != null) {
@@ -869,7 +869,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
                 double.parse(pickuplocation[0]),
                 double.parse(pickuplocation[1]),
               ),
-              zoom: 14.47),
+              zoom: 11),
         ),
       );
     }

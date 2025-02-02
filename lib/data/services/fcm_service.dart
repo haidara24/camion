@@ -68,7 +68,6 @@ class NotificationServices {
       // Handle foreground notifications
       forgroundMessage(context, notificationProvider!);
       loadAppAesstes(context, message);
-
     });
 
     setupInteractMessage(context);
@@ -129,27 +128,26 @@ class NotificationServices {
     });
   }
 
-  //handle tap on notification when app is in background or terminated
   Future<void> setupInteractMessage(BuildContext context) async {
-    
-    // when app is terminated
+    // Handle notification click when the app is terminated
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
-
     if (initialMessage != null) {
-      // ignore: use_build_context_synchronously
-      handleMessage(context, initialMessage);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        handleMessage(context, initialMessage);
+      });
     }
 
-    //when app ins background
-    FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      handleMessage(context, event);
+    // Handle notification click when the app is in the background
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        handleMessage(context, message);
+      });
     });
   }
 
   void loadAppAesstes(BuildContext context, RemoteMessage message) async {
-    BlocProvider.of<NotificationBloc>(context)
-                                .add(NotificationLoadEvent());
+    BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
     if (message.data['notefication_type'] == "A" ||
         message.data['notefication_type'] == "J") {
       var prefs = await SharedPreferences.getInstance();
