@@ -737,14 +737,14 @@ class MyApp extends StatelessWidget {
                         builder: (context, child) {
                           return AnnotatedRegion<SystemUiOverlayStyle>(
                             value: SystemUiOverlayStyle(
-                              statusBarColor: AppColor
-                                  .deepBlack, // Make status bar transparent
+                              statusBarColor:
+                                  Colors.white, // Make status bar transparent
                               statusBarIconBrightness: Brightness
-                                  .dark, // Light icons for dark backgrounds
+                                  .light, // Light icons for dark backgrounds
                               systemNavigationBarColor:
-                                  AppColor.deepBlack, // Works on Android
+                                  AppColor.landscapeNatural, // Works on Android
                               systemNavigationBarIconBrightness:
-                                  Brightness.dark,
+                                  Brightness.light,
                             ),
                             child: MediaQuery(
                               data: MediaQuery.of(context)

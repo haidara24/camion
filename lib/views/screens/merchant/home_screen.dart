@@ -33,6 +33,7 @@ import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -166,15 +167,25 @@ class _HomeScreenState extends State<HomeScreen>
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: SafeArea(
-            child: InkWell(
-              onTap: () {
-                FocusManager.instance.primaryFocus?.unfocus();
-                BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-              },
+          child: InkWell(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+              BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+            },
+            child: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarColor:
+                    AppColor.deepBlack, // Make status bar transparent
+                statusBarIconBrightness:
+                    Brightness.dark, // Light icons for dark backgrounds
+                systemNavigationBarColor:
+                    AppColor.deepBlack, // Works on Android
+                systemNavigationBarIconBrightness: Brightness.dark,
+              ),
               child: Scaffold(
                 key: _scaffoldKey,
                 resizeToAvoidBottomInset: false,
+                backgroundColor: AppColor.deepBlack,
                 appBar: CustomAppBar(
                   title: title,
                   scaffoldKey: _scaffoldKey,

@@ -11,6 +11,7 @@ import 'package:camion/views/screens/select_user_type.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
@@ -51,6 +52,18 @@ class _ControlViewState extends State<ControlView> {
   DateTime? lastBackPressTime;
 
   @override
+  void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Reset to default
+        statusBarColor: AppColor.deepBlack,
+        systemNavigationBarColor: AppColor.deepBlack,
+      ),
+    );
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
@@ -76,34 +89,55 @@ class _ControlViewState extends State<ControlView> {
         return true; // Exit the app on the second press within 2 seconds
       },
       child: Scaffold(
-        backgroundColor: AppColor.deepBlack,
         body: BlocBuilder<InternetCubit, InternetState>(
           builder: (context, state) {
             if (state is InternetLoading) {
-              return Center(
-                child: LoadingIndicator(),
+              return AnnotatedRegion<SystemUiOverlayStyle>(
+                value: const SystemUiOverlayStyle(
+                  statusBarColor: Colors.white, // Make status bar transparent
+                  statusBarIconBrightness:
+                      Brightness.light, // Light icons for dark backgrounds
+                  systemNavigationBarColor: Colors.white, // Works on Android
+                  systemNavigationBarIconBrightness: Brightness.light,
+                ),
+                child: Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
               );
             } else if (state is InternetDisConnected) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Lottie.asset(
-                    'assets/images/no_internet.json',
-                    width: 210.w,
-                    height: 150.h,
-                    fit: BoxFit.fill,
+              return AnnotatedRegion<SystemUiOverlayStyle>(
+                value: const SystemUiOverlayStyle(
+                  statusBarColor: Colors.white, // Make status bar transparent
+                  statusBarIconBrightness:
+                      Brightness.light, // Light icons for dark backgrounds
+                  systemNavigationBarColor: Colors.white, // Works on Android
+                  systemNavigationBarIconBrightness: Brightness.light,
+                ),
+                child: Scaffold(
+                  backgroundColor: Colors.white,
+                  body: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset(
+                        'assets/images/no_internet.json',
+                        width: 210.w,
+                        height: 150.h,
+                        fit: BoxFit.fill,
+                      ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      const Center(
+                        child: SectionTitle(text: "no internet connection"),
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  const Center(
-                    child: SectionTitle(text: "no internet connection"),
-                  ),
-                ],
+                ),
               );
             } else if (state is InternetConnected) {
-              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-
               return BlocConsumer<AuthBloc, AuthState>(
                 listener: (context, state) {
                   print(state);

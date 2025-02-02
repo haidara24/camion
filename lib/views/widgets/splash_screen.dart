@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     // TODO: implement initState
-    Future.delayed(const Duration(seconds: 3))
+    Future.delayed(const Duration(seconds: 4))
         .then((value) => Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
@@ -25,17 +25,17 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarIconBrightness: Brightness.dark, // Reset to default
-        statusBarColor: AppColor.deepBlack,
-        systemNavigationBarColor: AppColor.deepBlack,
-      ),
-    );
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   SystemChrome.setSystemUIOverlayStyle(
+  //     SystemUiOverlayStyle(
+  //       statusBarIconBrightness: Brightness.dark, // Reset to default
+  //       statusBarColor: AppColor.deepBlack,
+  //       systemNavigationBarColor: AppColor.deepBlack,
+  //     ),
+  //   );
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
