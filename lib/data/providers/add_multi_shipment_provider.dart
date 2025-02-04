@@ -18,6 +18,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddMultiShipmentProvider extends ChangeNotifier {
 /*----------------------------------*/
@@ -88,8 +89,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<LatLng?> get stoppoints_latlng => _stoppoints_latlng;
 
   List<Marker> _stop_marker = [
-    Marker(markerId: MarkerId("0")),
-    Marker(markerId: MarkerId("1"))
+    const Marker(markerId: MarkerId("0")),
+    const Marker(markerId: MarkerId("1"))
   ];
   List<Marker> get stop_marker => _stop_marker;
 
@@ -203,6 +204,30 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   bool _showStores = false;
   bool get showStores => _showStores;
 
+  List<Map<String, dynamic>> _cachedSearchResults = [];
+  List<Map<String, dynamic>> get cachedSearchResults => _cachedSearchResults;
+
+  Future<void> _saveCachedResults() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = jsonEncode(_cachedSearchResults);
+    await prefs.setString('cached_search_results', jsonString);
+  }
+
+  Future<void> _loadCachedResults() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('cached_search_results');
+    if (jsonString != null) {
+      _cachedSearchResults = List<Map<String, dynamic>>.from(
+        jsonDecode(jsonString),
+      );
+      notifyListeners();
+    }
+  }
+
+  void initProvider() async {
+    await _loadCachedResults();
+  }
+
   void initForm() {
     // Reset Google Map-related fields
     _center = const LatLng(35.363149, 35.932120);
@@ -232,8 +257,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     _stoppoints_location = ["", ""];
     _stoppoints_latlng = [null, null];
     _stop_marker = [
-      Marker(markerId: MarkerId("0")),
-      Marker(markerId: MarkerId("1"))
+      const Marker(markerId: MarkerId("0")),
+      const Marker(markerId: MarkerId("1"))
     ];
     _stoppoints_position = [null, null];
     _stoppoints_place = [null, null];
@@ -295,13 +320,42 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void toggleMapMode() {
+  void toggleMapMode(int? selectedPointIndex) {
     _pickMapMode = !_pickMapMode;
 
     // If pickMapMode is true, ensure _topPosition stays -300
     if (_pickMapMode) {
       _topPosition = -300;
       _bottomPathStatisticPosition = -300;
+      if (selectedPointIndex != null) {
+        if (_stoppoints_location[selectedPointIndex].isNotEmpty) {
+          if (_mapController2 != null) {
+            _mapController2!.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                    target: LatLng(
+                      double.parse(_stoppoints_location[selectedPointIndex]
+                          .split(",")[0]),
+                      double.parse(_stoppoints_location[selectedPointIndex]
+                          .split(",")[1]),
+                    ),
+                    zoom: 11),
+              ),
+            );
+          }
+        } else {
+          if (_mapController2 != null) {
+            _mapController2!.animateCamera(
+              CameraUpdate.newCameraPosition(
+                const CameraPosition(
+                  target: LatLng(34.723142, 36.730519),
+                  zoom: 9,
+                ),
+              ),
+            );
+          }
+        }
+      }
     } else {
       _topPosition = 0.0; // Reset when map mode is turned off
       _bottomPathStatisticPosition = 0;
@@ -316,7 +370,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _toptextfeildPosition = _toptextfeildPosition == 0 ? -250 : 0;
 
-    _bottomPosition = _bottomPosition == 130 ? -height : 130;
+    _bottomPosition = _bottomPosition == 112 ? -height : 112;
     notifyListeners();
   }
 
@@ -367,7 +421,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     int index,
     bool add,
   ) async {
-    _pathConfirm = true;
+    // _pathConfirm = true;
     try {
       if (_stoppoints_location.isEmpty) {
         return;
@@ -572,24 +626,33 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         .map((m) => m.position.longitude)
         .reduce((a, b) => a > b ? a : b);
 
+// Calculate latitude and longitude ranges
+    double latRange = maxLat - minLat;
+    double lngRange = maxLng - minLng;
+
+    // Determine if the bounds are horizontal or vertical
+    bool isHorizontal = lngRange > latRange;
+
     LatLngBounds bounds = LatLngBounds(
       southwest: LatLng(minLat, minLng),
       northeast: LatLng(maxLat, maxLng),
     );
 
     // Calculate padding based on the screen height
-    double topPadding = screenHeight * 0.25; // Hide top third
+    double topPadding = _stoppoints_location.length > 2
+        ? screenHeight * 0.24
+        : screenHeight * 0.2; // Hide top third
 
     // Apply camera update with calculated padding
     _mapController2?.animateCamera(
       CameraUpdate.newLatLngBounds(
         bounds,
-        150, // Use topPadding for vertical padding
+        isHorizontal ? 50 : 170, // Adjust padding
       ),
     );
 
     // Optionally, you can add a delay to ensure the camera update is applied
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       _mapController2?.animateCamera(
         CameraUpdate.scrollBy(0, -topPadding / 2), // Adjust the camera position
       );
@@ -965,20 +1028,50 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   void setStopPointInfo(
     dynamic suggestion,
     int index,
+    bool cached,
     double screenHeight,
   ) async {
     _stoppointstextLoading[index] = true;
     _stoppointsLoading[index] = true;
     notifyListeners();
-    print(suggestion.description);
     late LatLng position;
-    if (suggestion.description == "اللاذقية، Syria") {
-      position = LatLng(double.parse("35.525131"), double.parse("35.791570"));
+    if (cached) {
+      if (suggestion.description == "اللاذقية، Syria") {
+        position = LatLng(double.parse("35.525131"), double.parse("35.791570"));
+      } else {
+        var value = await PlaceService.getPlace(suggestion.placeId);
+        _stoppoints_place[index] = value;
+        position =
+            LatLng(value.geometry.location.lat, value.geometry.location.lng);
+      }
+
+      final newResult = {
+        'description': suggestion.description,
+        'location': "${position.latitude},${position.longitude}",
+      };
+
+      // Check if the result already exists in the cache
+      final isAlreadyCached = _cachedSearchResults.any(
+        (result) =>
+            result['description'] == newResult['description'] &&
+            result['location'] == newResult['location'],
+      );
+
+      if (!isAlreadyCached) {
+        // Add the new result to the cache
+        _cachedSearchResults.insert(0, newResult);
+
+        // Limit the cache to the last 5 results
+        if (_cachedSearchResults.length > 5) {
+          _cachedSearchResults.removeLast();
+        }
+
+        // Save the updated cache to local storage
+        await _saveCachedResults();
+      }
     } else {
-      var value = await PlaceService.getPlace(suggestion.placeId);
-      _stoppoints_place[index] = value;
-      position =
-          LatLng(value.geometry.location.lat, value.geometry.location.lng);
+      position = LatLng(double.parse(suggestion["location"].split(",")[0]),
+          double.parse(suggestion["location"].split(",")[1]));
     }
 
     var response = await http.get(
@@ -1013,7 +1106,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               _stoppoints_latlng[i]!.longitude,
             ),
             onTap: () {
-              toggleMapMode();
+              toggleMapMode(i);
             },
             icon: BitmapDescriptor.bytes(markerIcon),
           );
@@ -1030,7 +1123,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               _stoppoints_latlng[i]!.longitude,
             ),
             onTap: () {
-              toggleMapMode();
+              toggleMapMode(i);
             },
             icon: BitmapDescriptor.bytes(markerIcon),
           );
@@ -1089,7 +1182,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               _stoppoints_latlng[i]!.longitude,
             ),
             onTap: () {
-              toggleMapMode();
+              toggleMapMode(i);
             },
             icon: BitmapDescriptor.bytes(markerIcon),
           );
@@ -1106,7 +1199,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               _stoppoints_latlng[i]!.longitude,
             ),
             onTap: () {
-              toggleMapMode();
+              toggleMapMode(i);
             },
             icon: BitmapDescriptor.bytes(markerIcon),
           );
@@ -1160,7 +1253,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               _stoppoints_latlng[i]!.longitude,
             ),
             onTap: () {
-              toggleMapMode();
+              toggleMapMode(i);
             },
             icon: BitmapDescriptor.bytes(markerIcon),
           );
@@ -1177,7 +1270,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               _stoppoints_latlng[i]!.longitude,
             ),
             onTap: () {
-              toggleMapMode();
+              toggleMapMode(i);
             },
             icon: BitmapDescriptor.bytes(markerIcon),
           );
@@ -1307,7 +1400,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
                 _stoppoints_latlng[i]!.longitude,
               ),
               onTap: () {
-                toggleMapMode();
+                toggleMapMode(i);
               },
               icon: BitmapDescriptor.bytes(markerIcon),
             );
@@ -1324,7 +1417,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
                 _stoppoints_latlng[i]!.longitude,
               ),
               onTap: () {
-                toggleMapMode();
+                toggleMapMode(i);
               },
               icon: BitmapDescriptor.bytes(markerIcon),
             );

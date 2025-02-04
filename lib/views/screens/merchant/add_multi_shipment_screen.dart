@@ -476,809 +476,6 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
 
   AddMultiShipmentProvider? addShippmentProvider;
 
-  // showShipmentPathModalSheet(BuildContext context, String lang) {
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     useSafeArea: true,
-  //     shape: const RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(
-  //         top: Radius.circular(0),
-  //       ),
-  //     ),
-  //     builder: (context) => Consumer<AddMultiShipmentProvider>(
-  //       builder: (context, valueProvider, child) {
-  //         return Container(
-  //           color: Colors.grey[200],
-  //           padding: const EdgeInsets.all(16.0),
-  //           constraints:
-  //               BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-  //           width: double.infinity,
-  //           child: ListView(
-  //             // shrinkWrap: true,
-  //             // physics: NeverScrollableScrollPhysics(),
-  //             children: [
-  //               Row(
-  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                 children: [
-  //                   IconButton(
-  //                     onPressed: () {
-  //                       Navigator.pop(context);
-  //                     },
-  //                     icon: const Icon(Icons.arrow_back),
-  //                   ),
-  //                   const Spacer(),
-  //                   SectionTitle(
-  //                     text: AppLocalizations.of(context)!
-  //                         .translate('choose_shippment_path'),
-  //                     size: 20,
-  //                   ),
-  //                   const Spacer(),
-  //                   const SizedBox(
-  //                     width: 25,
-  //                   ),
-  //                 ],
-  //               ),
-  //               SizedBox(
-  //                 height: 8.h,
-  //               ),
-  //               SectionTitle(
-  //                 text:
-  //                     AppLocalizations.of(context)!.translate('pickup_address'),
-  //               ),
-  //               SizedBox(
-  //                 height: 8.h,
-  //               ),
-  //               TypeAheadField(
-  //                 textFieldConfiguration: TextFieldConfiguration(
-  //                   // autofocus: true,
-  //                   keyboardType: TextInputType.multiline,
-  //                   maxLines: null,
-  //                   controller: valueProvider.pickup_controller,
-  //                   scrollPadding: EdgeInsets.only(
-  //                       bottom: MediaQuery.of(context).viewInsets.bottom + 150),
-  //                   onTap: () {
-  //                     valueProvider.pickup_controller.selection = TextSelection(
-  //                         baseOffset: 0,
-  //                         extentOffset: valueProvider
-  //                             .pickup_controller.value.text.length);
-  //                   },
-  //                   style: const TextStyle(fontSize: 18),
-  //                   decoration: InputDecoration(
-  //                     hintText: AppLocalizations.of(context)!
-  //                         .translate('enter_pickup_address'),
-  //                     // labelText:
-  //                     //     AppLocalizations.of(context)!.translate('pickup_address'),
-  //                     contentPadding: const EdgeInsets.symmetric(
-  //                       horizontal: 9.0,
-  //                       vertical: 11.0,
-  //                     ),
-  //                     prefixIcon: valueProvider.pickuptextLoading
-  //                         ? SizedBox(
-  //                             height: 25,
-  //                             width: 25,
-  //                             child: LoadingIndicator(),
-  //                           )
-  //                         : null,
-  //                     suffixIcon: InkWell(
-  //                       onTap: () {
-  //                         Navigator.push(
-  //                           context,
-  //                           MaterialPageRoute(
-  //                             builder: (context) =>
-  //                                 MultiShippmentPickUpMapScreen(
-  //                               type: 0,
-  //                               location: valueProvider.pickup_latlng,
-  //                             ),
-  //                           ),
-  //                         ).then((value) =>
-  //                             FocusManager.instance.primaryFocus?.unfocus());
-  //                         Future.delayed(const Duration(milliseconds: 1500))
-  //                             .then((value) {
-  //                           // if (evaluateCo2()) {
-  //                           //   calculateCo2Report();
-  //                           // }
-  //                         });
-  //                       },
-  //                       child: Container(
-  //                         margin: const EdgeInsets.all(7),
-  //                         width: 55.0,
-  //                         height: 15.0,
-  //                         child: Icon(
-  //                           Icons.map,
-  //                           color: AppColor.deepYellow,
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   onSubmitted: (value) {
-  //                     // BlocProvider.of<StopScrollCubit>(context)
-  //                     //     .emitEnable();
-  //                     FocusManager.instance.primaryFocus?.unfocus();
-  //                   },
-  //                 ),
-  //                 loadingBuilder: (context) {
-  //                   return Container(
-  //                     color: Colors.white,
-  //                     child: Center(
-  //                       child: LoadingIndicator(),
-  //                     ),
-  //                   );
-  //                 },
-  //                 errorBuilder: (context, error) {
-  //                   return Container(
-  //                     color: Colors.white,
-  //                   );
-  //                 },
-  //                 noItemsFoundBuilder: (value) {
-  //                   var localizedMessage = AppLocalizations.of(context)!
-  //                       .translate('no_result_found');
-  //                   return Container(
-  //                     width: double.infinity,
-  //                     color: Colors.white,
-  //                     child: Center(
-  //                       child: Text(
-  //                         localizedMessage,
-  //                         style: TextStyle(fontSize: 18.sp),
-  //                       ),
-  //                     ),
-  //                   );
-  //                 },
-  //                 suggestionsCallback: (pattern) async {
-  //                   // if (pattern.isNotEmpty) {
-  //                   //   BlocProvider.of<StopScrollCubit>(context)
-  //                   //       .emitDisable();
-  //                   // }
-  //                   return pattern.isEmpty
-  //                       ? []
-  //                       : await PlaceService.getAutocomplete(pattern);
-  //                 },
-  //                 itemBuilder: (context, suggestion) {
-  //                   return Container(
-  //                     color: Colors.white,
-  //                     child: Column(
-  //                       children: [
-  //                         ListTile(
-  //                           // leading: Icon(Icons.shopping_cart),
-  //                           tileColor: Colors.white,
-  //                           title: Text(suggestion.description!),
-  //                           // subtitle: Text('\$${suggestion['price']}'),
-  //                         ),
-  //                         Divider(
-  //                           color: Colors.grey[300],
-  //                           height: 3,
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   );
-  //                 },
-  //                 onSuggestionSelected: (suggestion) async {
-  //                   valueProvider.setPickupTextLoading(
-  //                     true,
-  //                   );
-  //                   valueProvider.setPickupInfo(
-  //                     suggestion,
-  //                   );
-
-  //                   FocusManager.instance.primaryFocus?.unfocus();
-  //                   // if (evaluateCo2()) {
-  //                   //   calculateCo2Report();
-  //                   // }
-  //                 },
-  //               ),
-  //               const SizedBox(
-  //                 height: 5,
-  //               ),
-  //               Visibility(
-  //                 visible: !valueProvider.deliveryPosition,
-  //                 child: !valueProvider.pickupLoading
-  //                     ? InkWell(
-  //                         onTap: () {
-  //                           valueProvider.setPickupLoading(
-  //                             true,
-  //                           );
-  //                           valueProvider.setPickupPositionClick(
-  //                             true,
-  //                           );
-
-  //                           valueProvider
-  //                               .getCurrentPositionForPickup(
-  //                             context,
-  //                           )
-  //                               .then(
-  //                             (value) {
-  //                               valueProvider.setPickupLoading(
-  //                                 false,
-  //                               );
-  //                               // valueProvider.setPickupPositionClick(false, selectedIndex);
-  //                             },
-  //                           );
-  //                         },
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Icon(
-  //                               Icons.location_on,
-  //                               color: AppColor.deepYellow,
-  //                             ),
-  //                             SizedBox(
-  //                               width: 5.w,
-  //                             ),
-  //                             Text(
-  //                               AppLocalizations.of(context)!
-  //                                   .translate('pick_my_location'),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       )
-  //                     : Row(
-  //                         mainAxisAlignment: MainAxisAlignment.start,
-  //                         children: [
-  //                           SizedBox(
-  //                             height: 25,
-  //                             width: 25,
-  //                             child: LoadingIndicator(),
-  //                           ),
-  //                         ],
-  //                       ),
-  //               ),
-  //               const SizedBox(
-  //                 height: 4,
-  //               ),
-  //               Visibility(
-  //                 visible: valueProvider.pickup_location.isNotEmpty,
-  //                 child: Column(
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: [
-  //                     ListView.builder(
-  //                       shrinkWrap: true,
-  //                       physics: const NeverScrollableScrollPhysics(),
-  //                       itemCount: valueProvider.stoppoints_controller.length,
-  //                       itemBuilder: (context, index2) {
-  //                         return Column(
-  //                           crossAxisAlignment: CrossAxisAlignment.start,
-  //                           children: [
-  //                             const SizedBox(
-  //                               height: 5,
-  //                             ),
-  //                             Row(
-  //                               mainAxisAlignment:
-  //                                   MainAxisAlignment.spaceBetween,
-  //                               children: [
-  //                                 SizedBox(
-  //                                   width:
-  //                                       MediaQuery.of(context).size.width * .85,
-  //                                   child: TypeAheadField(
-  //                                     textFieldConfiguration:
-  //                                         TextFieldConfiguration(
-  //                                       // autofocus: true,
-  //                                       keyboardType: TextInputType.multiline,
-  //                                       maxLines: null,
-  //                                       controller: valueProvider
-  //                                           .stoppoints_controller[index2],
-  //                                       scrollPadding: EdgeInsets.only(
-  //                                           bottom: MediaQuery.of(context)
-  //                                                   .viewInsets
-  //                                                   .bottom +
-  //                                               150),
-  //                                       onTap: () {
-  //                                         valueProvider
-  //                                             .stoppoints_controller[index2]
-  //                                             .selection = TextSelection(
-  //                                           baseOffset: 0,
-  //                                           extentOffset: valueProvider
-  //                                               .stoppoints_controller[index2]
-  //                                               .value
-  //                                               .text
-  //                                               .length,
-  //                                         );
-  //                                       },
-
-  //                                       style: const TextStyle(fontSize: 18),
-  //                                       decoration: InputDecoration(
-  //                                         hintText: AppLocalizations.of(
-  //                                                 context)!
-  //                                             .translate(
-  //                                                 'enter_load\\unload_address'),
-  //                                         contentPadding:
-  //                                             const EdgeInsets.symmetric(
-  //                                           horizontal: 9.0,
-  //                                           vertical: 11.0,
-  //                                         ),
-  //                                         prefixIcon: valueProvider
-  //                                                 .stoppointstextLoading[index2]
-  //                                             ? SizedBox(
-  //                                                 height: 25,
-  //                                                 width: 25,
-  //                                                 child: LoadingIndicator(),
-  //                                               )
-  //                                             : null,
-  //                                         // suffixIcon: InkWell(
-  //                                         //   onTap: () {
-  //                                         //     // Navigator.push(
-  //                                         //     //   context,
-  //                                         //     //   MaterialPageRoute(
-  //                                         //     //     builder: (context) => MultiShippmentPickUpMapScreen(
-  //                                         //     //       type: 1,
-  //                                         //     //       index: index,
-  //                                         //     //       location: valueProvider.delivery_latlng[index],
-  //                                         //     //     ),
-  //                                         //     //   ),
-  //                                         //     // ).then((value) => FocusManager.instance.primaryFocus?.unfocus());
-
-  //                                         //     // Get.to(SearchFilterView());
-  //                                         //     Future.delayed(const Duration(
-  //                                         //             milliseconds: 1500))
-  //                                         //         .then((value) {
-  //                                         //       // if (evaluateCo2()) {
-  //                                         //       //   calculateCo2Report();
-  //                                         //       // }
-  //                                         //     });
-  //                                         //   },
-  //                                         //   child: Container(
-  //                                         //     margin: const EdgeInsets.all(7),
-  //                                         //     width: 55.0,
-  //                                         //     height: 15.0,
-  //                                         //     child: Icon(
-  //                                         //       Icons.map,
-  //                                         //       color: AppColor.deepYellow,
-  //                                         //     ),
-  //                                         //   ),
-  //                                         // ),
-  //                                       ),
-  //                                       onSubmitted: (value) {
-  //                                         // BlocProvider.of<StopScrollCubit>(context)
-  //                                         //     .emitEnable();
-  //                                         FocusManager.instance.primaryFocus
-  //                                             ?.unfocus();
-  //                                       },
-  //                                     ),
-  //                                     loadingBuilder: (context) {
-  //                                       return Container(
-  //                                         color: Colors.white,
-  //                                         child: Center(
-  //                                           child: LoadingIndicator(),
-  //                                         ),
-  //                                       );
-  //                                     },
-  //                                     errorBuilder: (context, error) {
-  //                                       return Container(
-  //                                         color: Colors.white,
-  //                                       );
-  //                                     },
-  //                                     noItemsFoundBuilder: (value) {
-  //                                       var localizedMessage =
-  //                                           AppLocalizations.of(context)!
-  //                                               .translate('no_result_found');
-  //                                       return Container(
-  //                                         width: double.infinity,
-  //                                         color: Colors.white,
-  //                                         child: Center(
-  //                                           child: Text(
-  //                                             localizedMessage,
-  //                                             style: TextStyle(fontSize: 18.sp),
-  //                                           ),
-  //                                         ),
-  //                                       );
-  //                                     },
-  //                                     suggestionsCallback: (pattern) async {
-  //                                       // if (pattern.isNotEmpty) {
-  //                                       //   BlocProvider.of<StopScrollCubit>(context)
-  //                                       //       .emitDisable();
-  //                                       // }
-  //                                       return pattern.isEmpty
-  //                                           ? []
-  //                                           : await PlaceService
-  //                                               .getAutocomplete(pattern);
-  //                                     },
-  //                                     itemBuilder: (context, suggestion) {
-  //                                       return Container(
-  //                                         color: Colors.white,
-  //                                         child: Column(
-  //                                           children: [
-  //                                             ListTile(
-  //                                               // leading: Icon(Icons.shopping_cart),
-  //                                               tileColor: Colors.white,
-  //                                               title: Text(
-  //                                                   suggestion.description!),
-  //                                               // subtitle: Text('\$${suggestion['price']}'),
-  //                                             ),
-  //                                             Divider(
-  //                                               color: Colors.grey[300],
-  //                                               height: 3,
-  //                                             ),
-  //                                           ],
-  //                                         ),
-  //                                       );
-  //                                     },
-  //                                     onSuggestionSelected: (suggestion) async {
-  //                                       valueProvider.setStopPointTextLoading(
-  //                                           true, index2);
-  //                                       valueProvider.setStopPointInfo(
-  //                                         suggestion,
-  //                                         index2,
-  //                                         MediaQuery.sizeOf(context).height,
-  //                                       );
-
-  //                                       FocusManager.instance.primaryFocus
-  //                                           ?.unfocus();
-  //                                       // if (evaluateCo2()) {
-  //                                       //   calculateCo2Report();
-  //                                       // }
-  //                                     },
-  //                                   ),
-  //                                 ),
-  //                                 InkWell(
-  //                                   onTap: () {
-  //                                     valueProvider.removestoppoint(index2);
-  //                                     // _showAlertDialog(index);
-  //                                   },
-  //                                   child: Container(
-  //                                     height: 25,
-  //                                     width: 25,
-  //                                     decoration: BoxDecoration(
-  //                                       color: Colors.grey[400],
-  //                                       borderRadius: BorderRadius.circular(45),
-  //                                     ),
-  //                                     child: const Center(
-  //                                       child: Icon(
-  //                                         Icons.close,
-  //                                         color: Colors.white,
-  //                                       ),
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                             const SizedBox(
-  //                               height: 5,
-  //                             ),
-  //                           ],
-  //                         );
-  //                       },
-  //                     ),
-  //                     InkWell(
-  //                       onTap: () {
-  //                         valueProvider.addstoppoint();
-  //                       },
-  //                       child: AbsorbPointer(
-  //                         absorbing: true,
-  //                         child: Row(
-  //                           mainAxisAlignment: MainAxisAlignment.start,
-  //                           children: [
-  //                             Padding(
-  //                               padding: const EdgeInsets.all(8.0),
-  //                               child: SizedBox(
-  //                                 height: 32.h,
-  //                                 width: 32.w,
-  //                                 child: SvgPicture.asset(
-  //                                   "assets/icons/orange/add.svg",
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                             const SizedBox(
-  //                               width: 3,
-  //                             ),
-  //                             Text(AppLocalizations.of(context)!
-  //                                 .translate('add_station')),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //               Visibility(
-  //                 visible: valueProvider.pickup_location.isNotEmpty,
-  //                 child: Column(
-  //                   crossAxisAlignment: CrossAxisAlignment.start,
-  //                   children: [
-  //                     const SizedBox(
-  //                       height: 5,
-  //                     ),
-  //                     SectionTitle(
-  //                       text: AppLocalizations.of(context)!
-  //                           .translate('delivery_address'),
-  //                     ),
-  //                     SizedBox(
-  //                       height: 8.h,
-  //                     ),
-  //                     TypeAheadField(
-  //                       textFieldConfiguration: TextFieldConfiguration(
-  //                         // autofocus: true,
-  //                         keyboardType: TextInputType.multiline,
-  //                         maxLines: null,
-  //                         controller: valueProvider.delivery_controller,
-  //                         scrollPadding: EdgeInsets.only(
-  //                             bottom: MediaQuery.of(context).viewInsets.bottom +
-  //                                 150),
-  //                         onTap: () {
-  //                           valueProvider.delivery_controller.selection =
-  //                               TextSelection(
-  //                             baseOffset: 0,
-  //                             extentOffset: valueProvider
-  //                                 .delivery_controller.value.text.length,
-  //                           );
-  //                         },
-
-  //                         style: const TextStyle(fontSize: 18),
-  //                         decoration: InputDecoration(
-  //                           hintText: AppLocalizations.of(context)!
-  //                               .translate('enter_delivery_address'),
-  //                           // labelText: AppLocalizations.of(context)!.translate('delivery_address'),
-  //                           contentPadding: const EdgeInsets.symmetric(
-  //                             horizontal: 9.0,
-  //                             vertical: 11.0,
-  //                           ),
-
-  //                           prefixIcon: valueProvider.deliverytextLoading
-  //                               ? SizedBox(
-  //                                   height: 25,
-  //                                   width: 25,
-  //                                   child: LoadingIndicator(),
-  //                                 )
-  //                               : null,
-  //                           suffixIcon: InkWell(
-  //                             onTap: () {
-  //                               Navigator.push(
-  //                                 context,
-  //                                 MaterialPageRoute(
-  //                                   builder: (context) =>
-  //                                       MultiShippmentPickUpMapScreen(
-  //                                     type: 1,
-  //                                     location: valueProvider.delivery_latlng,
-  //                                   ),
-  //                                 ),
-  //                               ).then((value) => FocusManager
-  //                                   .instance.primaryFocus
-  //                                   ?.unfocus());
-
-  //                               Future.delayed(
-  //                                       const Duration(milliseconds: 1500))
-  //                                   .then((value) {
-  //                                 // if (evaluateCo2()) {
-  //                                 //   calculateCo2Report();
-  //                                 // }
-  //                               });
-  //                             },
-  //                             child: Container(
-  //                               margin: const EdgeInsets.all(7),
-  //                               width: 55.0,
-  //                               height: 15.0,
-  //                               child: Icon(
-  //                                 Icons.map,
-  //                                 color: AppColor.deepYellow,
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                         onSubmitted: (value) {
-  //                           // BlocProvider.of<StopScrollCubit>(context)
-  //                           //     .emitEnable();
-  //                           FocusManager.instance.primaryFocus?.unfocus();
-  //                         },
-  //                       ),
-  //                       loadingBuilder: (context) {
-  //                         return Container(
-  //                           color: Colors.white,
-  //                           child: Center(
-  //                             child: LoadingIndicator(),
-  //                           ),
-  //                         );
-  //                       },
-  //                       errorBuilder: (context, error) {
-  //                         return Container(
-  //                           color: Colors.white,
-  //                         );
-  //                       },
-  //                       noItemsFoundBuilder: (value) {
-  //                         var localizedMessage = AppLocalizations.of(context)!
-  //                             .translate('no_result_found');
-  //                         return Container(
-  //                           width: double.infinity,
-  //                           color: Colors.white,
-  //                           child: Center(
-  //                             child: Text(
-  //                               localizedMessage,
-  //                               style: TextStyle(fontSize: 18.sp),
-  //                             ),
-  //                           ),
-  //                         );
-  //                       },
-  //                       suggestionsCallback: (pattern) async {
-  //                         // if (pattern.isNotEmpty) {
-  //                         //   BlocProvider.of<StopScrollCubit>(context)
-  //                         //       .emitDisable();
-  //                         // }
-  //                         return pattern.isEmpty
-  //                             ? []
-  //                             : await PlaceService.getAutocomplete(pattern);
-  //                       },
-  //                       itemBuilder: (context, suggestion) {
-  //                         return Container(
-  //                           color: Colors.white,
-  //                           child: Column(
-  //                             children: [
-  //                               ListTile(
-  //                                 // leading: Icon(Icons.shopping_cart),
-  //                                 tileColor: Colors.white,
-  //                                 title: Text(suggestion.description!),
-  //                                 // subtitle: Text('\$${suggestion['price']}'),
-  //                               ),
-  //                               Divider(
-  //                                 color: Colors.grey[300],
-  //                                 height: 3,
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         );
-  //                       },
-  //                       onSuggestionSelected: (suggestion) async {
-  //                         valueProvider.setDeliveryTextLoading(
-  //                           true,
-  //                         );
-  //                         valueProvider.setDeliveryInfo(
-  //                           suggestion,
-  //                         );
-
-  //                         FocusManager.instance.primaryFocus?.unfocus();
-  //                         // if (evaluateCo2()) {
-  //                         //   calculateCo2Report();
-  //                         // }
-  //                       },
-  //                     ),
-  //                     const SizedBox(
-  //                       height: 5,
-  //                     ),
-  //                     Visibility(
-  //                       visible: !valueProvider.pickupPosition,
-  //                       child: !valueProvider.deliveryLoading
-  //                           ? InkWell(
-  //                               onTap: () {
-  //                                 valueProvider.setDeliveryLoading(
-  //                                   true,
-  //                                 );
-  //                                 valueProvider.setDeliveryPositionClick(
-  //                                   true,
-  //                                 );
-
-  //                                 valueProvider
-  //                                     .getCurrentPositionForDelivery(
-  //                                   context,
-  //                                 )
-  //                                     .then(
-  //                                   (value) {
-  //                                     valueProvider.setDeliveryLoading(
-  //                                       false,
-  //                                     );
-  //                                     // valueProvider.setPickupPositionClick(false, selectedIndex);
-  //                                   },
-  //                                 );
-
-  //                                 // _getCurrentPositionForDelivery();
-  //                               },
-  //                               child: Row(
-  //                                 mainAxisAlignment: MainAxisAlignment.start,
-  //                                 children: [
-  //                                   Icon(
-  //                                     Icons.location_on,
-  //                                     color: AppColor.deepYellow,
-  //                                   ),
-  //                                   SizedBox(
-  //                                     width: 5.w,
-  //                                   ),
-  //                                   Text(
-  //                                     AppLocalizations.of(context)!
-  //                                         .translate('pick_my_location'),
-  //                                   ),
-  //                                 ],
-  //                               ),
-  //                             )
-  //                           : Row(
-  //                               mainAxisAlignment: MainAxisAlignment.start,
-  //                               children: [
-  //                                 SizedBox(
-  //                                   height: 25,
-  //                                   width: 25,
-  //                                   child: LoadingIndicator(),
-  //                                 ),
-  //                               ],
-  //                             ),
-  //                     ),
-  //                     // const SizedBox(
-  //                     //   height: 12,
-  //                     // ),
-  //                   ],
-  //                 ),
-  //               ),
-  //               const SizedBox(
-  //                 height: 20,
-  //               ),
-  //               Visibility(
-  //                 visible: valueProvider.stoppoints_location.isNotEmpty,
-  //                 child: BlocListener<DrawRouteBloc, DrawRouteState>(
-  //                   listener: (context, state) {
-  //                     if (state is DrawRouteSuccess) {
-  //                       Future.delayed(const Duration(milliseconds: 400))
-  //                           .then((value) {
-  //                         valueProvider
-  //                             .initMapBounds(MediaQuery.sizeOf(context).height);
-  //                       });
-  //                     }
-  //                   },
-  //                   child: SizedBox(
-  //                     height: 400.h,
-  //                     child: AbsorbPointer(
-  //                       absorbing: false,
-  //                       child: GoogleMap(
-  //                         onMapCreated: (controller) {
-  //                           valueProvider.onMap2Created(controller, _mapStyle);
-  //                           valueProvider.initMapBounds(
-  //                               MediaQuery.sizeOf(context).height);
-  //                         },
-  //                         myLocationButtonEnabled: false,
-  //                         zoomGesturesEnabled: false,
-  //                         scrollGesturesEnabled: false,
-  //                         tiltGesturesEnabled: false,
-  //                         rotateGesturesEnabled: false,
-  //                         zoomControlsEnabled: false,
-  //                         myLocationEnabled: false,
-  //                         initialCameraPosition: CameraPosition(
-  //                           target: valueProvider.center,
-  //                           zoom: valueProvider.zoom,
-  //                         ),
-  //                         gestureRecognizers: const {},
-  //                         markers:
-  //                             (valueProvider.stoppoints_controller.isNotEmpty)
-  //                                 ? valueProvider.stop_marker.toSet()
-  //                                 : {},
-  //                         polylines: {
-  //                           Polyline(
-  //                             polylineId: const PolylineId("route"),
-  //                             points: deserializeLatLng(
-  //                                 jsonEncode(valueProvider.pathes)),
-  //                             color: AppColor.deepYellow,
-  //                             width: 5,
-  //                           ),
-  //                         },
-  //                         // mapType: shipmentProvider.mapType,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 8),
-  //               Visibility(
-  //                 visible: valueProvider.pickup_location.isNotEmpty &&
-  //                     valueProvider.delivery_location.isNotEmpty,
-  //                 child: CustomButton(
-  //                   onTap: () {
-  //                     valueProvider.setPathConfirm(
-  //                       true,
-  //                     );
-  //                     Navigator.pop(context);
-  //                   },
-  //                   title: SizedBox(
-  //                     height: 50.h,
-  //                     width: 150.w,
-  //                     child: Center(
-  //                       child: SectionTitle(
-  //                         text: AppLocalizations.of(context)!
-  //                             .translate("confirm"),
-  //                         // color: Colors.white,
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-
   int calculatePrice(
     double distance,
     double weight,
@@ -1327,14 +524,18 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                 child: Column(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0, vertical: 10),
+                                      padding: const EdgeInsets.only(
+                                        left: 16.0,
+                                        right: 16.0,
+                                        top: 10,
+                                      ),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           InkWell(
                                             onTap: () {
+                                              shipmentProvider.initProvider();
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -1374,6 +575,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                     //     context,
                                                     //     localeState.value
                                                     //         .languageCode);
+                                                    shipmentProvider
+                                                        .initProvider();
                                                     Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -1475,6 +678,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                   //     context,
                                                   //     localeState
                                                   //         .value.languageCode);
+                                                  shipmentProvider
+                                                      .initProvider();
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -1495,6 +700,8 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                               ),
                                               InkWell(
                                                 onTap: () {
+                                                  shipmentProvider
+                                                      .initProvider();
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -1555,46 +762,76 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                 ),
                                 child: Column(
                                   children: [
-                                    SizedBox(
-                                      height: 275.h,
-                                      child: AbsorbPointer(
-                                        absorbing: false,
-                                        child: GoogleMap(
-                                          onMapCreated: (controller) {
-                                            shipmentProvider.onMapCreated(
-                                                controller, _mapStyle);
-                                          },
-                                          myLocationButtonEnabled: false,
-                                          zoomGesturesEnabled: false,
-                                          scrollGesturesEnabled: false,
-                                          tiltGesturesEnabled: false,
-                                          rotateGesturesEnabled: false,
-                                          zoomControlsEnabled: false,
-                                          myLocationEnabled: false,
-                                          initialCameraPosition: CameraPosition(
-                                            target: shipmentProvider.center,
-                                            zoom: shipmentProvider.zoom,
-                                          ),
-                                          gestureRecognizers: const {},
-                                          markers: (shipmentProvider
-                                                  .stoppoints_controller
-                                                  .isNotEmpty)
-                                              ? shipmentProvider.stop_marker
-                                                  .toSet()
-                                              : {},
-                                          polylines: {
-                                            Polyline(
-                                              polylineId:
-                                                  const PolylineId("route"),
-                                              points: deserializeLatLng(
-                                                  jsonEncode(
-                                                      shipmentProvider.pathes)),
-                                              color: AppColor.deepYellow,
-                                              width: 7,
+                                    Stack(
+                                      children: [
+                                        SizedBox(
+                                          height: 275.h,
+                                          child: AbsorbPointer(
+                                            absorbing: false,
+                                            child: GoogleMap(
+                                              onMapCreated: (controller) {
+                                                shipmentProvider.onMapCreated(
+                                                    controller, _mapStyle);
+                                              },
+                                              myLocationButtonEnabled: false,
+                                              zoomGesturesEnabled: false,
+                                              scrollGesturesEnabled: false,
+                                              tiltGesturesEnabled: false,
+                                              rotateGesturesEnabled: false,
+                                              zoomControlsEnabled: false,
+                                              myLocationEnabled: false,
+                                              initialCameraPosition:
+                                                  CameraPosition(
+                                                target: shipmentProvider.center,
+                                                zoom: shipmentProvider.zoom,
+                                              ),
+                                              gestureRecognizers: const {},
+                                              markers: (shipmentProvider
+                                                      .stoppoints_controller
+                                                      .isNotEmpty)
+                                                  ? shipmentProvider.stop_marker
+                                                      .toSet()
+                                                  : {},
+                                              polylines: {
+                                                Polyline(
+                                                  polylineId:
+                                                      const PolylineId("route"),
+                                                  points: deserializeLatLng(
+                                                      jsonEncode(
+                                                          shipmentProvider
+                                                              .pathes)),
+                                                  color: AppColor.deepYellow,
+                                                  width: 7,
+                                                ),
+                                              },
                                             ),
-                                          },
+                                          ),
                                         ),
-                                      ),
+                                        Visibility(
+                                          visible: shipmentProvider.pathConfirm,
+                                          child: Positioned(
+                                              bottom: 0,
+                                              right: 4,
+                                              child: IconButton(
+                                                onPressed: () {
+                                                  shipmentProvider
+                                                      .initProvider();
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          AddPathScreen(),
+                                                    ),
+                                                  );
+                                                },
+                                                icon: const Icon(
+                                                  Icons.zoom_out_map,
+                                                  color: Colors.white,
+                                                  size: 27,
+                                                ),
+                                              )),
+                                        ),
+                                      ],
                                     ),
                                     shipmentProvider.distance != 0
                                         ? Padding(

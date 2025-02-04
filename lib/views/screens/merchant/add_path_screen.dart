@@ -11,6 +11,7 @@ import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/location_list_tile.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
+import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:camion/views/widgets/store_list_tile.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,7 @@ class _AddPathScreenState extends State<AddPathScreen>
   late BitmapDescriptor pickupicon;
   late BitmapDescriptor deliveryicon;
 
+  final FocusNode _searchFocusNode = FocusNode();
   TextEditingController _searchController = TextEditingController();
 
   int selectedPointIndex = 0;
@@ -108,6 +110,8 @@ class _AddPathScreenState extends State<AddPathScreen>
 
   @override
   void dispose() {
+    _searchFocusNode.dispose();
+    _searchController.dispose();
     _scrollController.dispose();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
@@ -488,16 +492,48 @@ class _AddPathScreenState extends State<AddPathScreen>
                         bottom: shipmentProvider.bottomPathStatisticPosition,
                         child: Container(
                           width: MediaQuery.sizeOf(context).width,
-                          margin: const EdgeInsets.all(8.0),
+                          // margin: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: PathStatisticsWidget(
-                              distance: shipmentProvider.distance,
-                              period: shipmentProvider.period,
+                            child: Column(
+                              children: [
+                                PathStatisticsWidget(
+                                  distance: shipmentProvider.distance,
+                                  period: shipmentProvider.period,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomButton(
+                                    isEnabled: (shipmentProvider
+                                            .stoppoints_location
+                                            .first
+                                            .isNotEmpty &&
+                                        shipmentProvider.stoppoints_location
+                                            .last.isNotEmpty),
+                                    onTap: () {
+                                      shipmentProvider.setPathConfirm(
+                                        true,
+                                      );
+                                      Navigator.pop(context);
+                                    },
+                                    title: SizedBox(
+                                      height: 30.h,
+                                      width: 150.w,
+                                      child: Center(
+                                        child: SectionTitle(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("confirm"),
+                                          // color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -508,8 +544,16 @@ class _AddPathScreenState extends State<AddPathScreen>
                           milliseconds: 300), // Animation duration
                       curve: Curves.easeInOut,
                       top: shipmentProvider.toptextfeildPosition,
+                      onEnd: () {
+                        // Trigger focus after the animation completes
+                        if (shipmentProvider.toptextfeildPosition == 0) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _searchFocusNode.requestFocus();
+                          });
+                        }
+                      },
                       child: Container(
-                        height: 120,
+                        height: 110,
                         width: MediaQuery.sizeOf(context).width,
                         color: Colors.white,
                         child: Column(
@@ -532,6 +576,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                                     child: Form(
                                       child: TextFormField(
                                         controller: _searchController,
+                                        focusNode: _searchFocusNode,
                                         onChanged: (value) async {
                                           print(value);
                                           if (value.isNotEmpty) {
@@ -566,7 +611,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -601,7 +647,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                                       },
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             AppLocalizations.of(context)!
@@ -616,8 +662,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 40.h,
-                                    width: 3,
+                                    height: 30.h,
+                                    width: 16,
                                     child: const VerticalDivider(
                                       color: Colors.grey,
                                       thickness: 1,
@@ -627,7 +673,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                                   Expanded(
                                     child: InkWell(
                                       onTap: () {
-                                        shipmentProvider.toggleMapMode();
+                                        shipmentProvider
+                                            .toggleMapMode(selectedPointIndex);
                                         shipmentProvider.togglePosition(
                                             MediaQuery.sizeOf(context).height);
                                         if (shipmentProvider.showStores) {
@@ -636,7 +683,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                                       },
                                       child: Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                             AppLocalizations.of(context)!
@@ -651,8 +698,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 40.h,
-                                    width: 3,
+                                    height: 30.h,
+                                    width: 16,
                                     child: const VerticalDivider(
                                       color: Colors.grey,
                                       thickness: 1,
@@ -665,13 +712,13 @@ class _AddPathScreenState extends State<AddPathScreen>
                                         shipmentProvider.setShowStores();
                                       },
                                       child: Container(
-                                        height: 40.h,
+                                        height: 30.h,
                                         color: shipmentProvider.showStores
                                             ? AppColor.lightYellow
                                             : Colors.white,
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               AppLocalizations.of(context)!
@@ -699,7 +746,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                       curve: Curves.easeInOut,
                       top: shipmentProvider.bottomPosition,
                       child: Container(
-                        height: MediaQuery.sizeOf(context).height - 150,
+                        height: MediaQuery.sizeOf(context).height - 130,
                         width: MediaQuery.sizeOf(context).width,
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.6),
@@ -752,12 +799,82 @@ class _AddPathScreenState extends State<AddPathScreen>
                                 },
                               )
                             : placesResult.isEmpty
-                                ? Center(
-                                    child: SectionBody(
-                                      text:
-                                          "ابحث في مربع البحث عن موقع للتحميل /التفريغ..",
-                                      color: Colors.grey[900],
-                                    ),
+                                ? Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        color: Colors.white,
+                                        child: ListTile(
+                                          horizontalTitleGap: 0,
+                                          leading: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(45),
+                                              color: AppColor.darkGrey,
+                                            ),
+                                            padding: const EdgeInsets.all(4),
+                                            child: const Icon(
+                                              Icons.history,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          title: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0,
+                                            ),
+                                            child: SectionBody(
+                                              text:
+                                                  AppLocalizations.of(context)!
+                                                      .translate("last_search"),
+                                              color: AppColor.darkGrey,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        color: Colors.white,
+                                        child: const Divider(
+                                          height: 8,
+                                          thickness: 2,
+                                        ),
+                                      ),
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: shipmentProvider
+                                            .cachedSearchResults.length,
+                                        itemBuilder: (context, index) =>
+                                            Container(
+                                          color: Colors.white,
+                                          child: LocationListTile(
+                                            location: shipmentProvider
+                                                    .cachedSearchResults[index]
+                                                ["description"],
+                                            onTap: () {
+                                              print("asd");
+                                              shipmentProvider
+                                                  .setStopPointLoading(
+                                                true,
+                                                selectedPointIndex,
+                                              );
+                                              shipmentProvider.setStopPointInfo(
+                                                shipmentProvider
+                                                    .cachedSearchResults[index],
+                                                selectedPointIndex,
+                                                false,
+                                                MediaQuery.sizeOf(context)
+                                                    .height,
+                                              );
+                                              shipmentProvider.togglePosition(
+                                                  MediaQuery.sizeOf(context)
+                                                      .height);
+                                              placesResult = [];
+                                              _searchController.text = "";
+                                              setState(() {});
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   )
                                 : ListView.builder(
                                     itemCount: placesResult.length,
@@ -775,6 +892,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                                           shipmentProvider.setStopPointInfo(
                                             placesResult[index],
                                             selectedPointIndex,
+                                            true,
                                             MediaQuery.sizeOf(context).height,
                                           );
                                           shipmentProvider.togglePosition(
@@ -811,7 +929,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                           )
                               .then(
                             (value) {
-                              shipmentProvider.toggleMapMode();
+                              shipmentProvider
+                                  .toggleMapMode(selectedPointIndex);
                               setState(() {
                                 pickLocationLoading = false;
                               });
@@ -842,7 +961,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                       left: localeState.value.languageCode == "en" ? 20 : null,
                       child: CustomButton(
                         onTap: () {
-                          shipmentProvider.toggleMapMode();
+                          shipmentProvider.toggleMapMode(selectedPointIndex);
                         },
                         title: SizedBox(
                           height: 40.w,

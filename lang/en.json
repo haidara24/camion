@@ -120,6 +120,7 @@
     "day":"Day",
     "source":"Author",
     "search":"Search",
+    "last_search":"Last Search",
 
     "list_error":"An error occurred during loading list...",
     "approval_request_note":"Add any extra costs\n note: you can accept without filling the form.",
