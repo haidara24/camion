@@ -88,91 +88,100 @@ class _ControlViewState extends State<ControlView> {
         }
         return true; // Exit the app on the second press within 2 seconds
       },
-      child: Scaffold(
-        body: BlocBuilder<InternetCubit, InternetState>(
-          builder: (context, state) {
-            if (state is InternetLoading) {
-              return AnnotatedRegion<SystemUiOverlayStyle>(
-                value: const SystemUiOverlayStyle(
-                  statusBarColor: Colors.white, // Make status bar transparent
-                  statusBarIconBrightness:
-                      Brightness.light, // Light icons for dark backgrounds
-                  systemNavigationBarColor: Colors.white, // Works on Android
-                  systemNavigationBarIconBrightness: Brightness.light,
-                ),
-                child: Scaffold(
-                  backgroundColor: Colors.white,
-                  body: Center(
-                    child: LoadingIndicator(),
+      child: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle(
+          statusBarColor: AppColor.deepBlack, // Make status bar transparent
+          statusBarIconBrightness:
+              Brightness.dark, // Light icons for dark backgrounds
+          systemNavigationBarColor: AppColor.deepBlack, // Works on Android
+          systemNavigationBarIconBrightness: Brightness.dark,
+        ),
+        child: Scaffold(
+          body: BlocBuilder<InternetCubit, InternetState>(
+            builder: (context, state) {
+              if (state is InternetLoading) {
+                return AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: const SystemUiOverlayStyle(
+                    statusBarColor: Colors.white, // Make status bar transparent
+                    statusBarIconBrightness:
+                        Brightness.light, // Light icons for dark backgrounds
+                    systemNavigationBarColor: Colors.white, // Works on Android
+                    systemNavigationBarIconBrightness: Brightness.light,
                   ),
-                ),
-              );
-            } else if (state is InternetDisConnected) {
-              return AnnotatedRegion<SystemUiOverlayStyle>(
-                value: const SystemUiOverlayStyle(
-                  statusBarColor: Colors.white, // Make status bar transparent
-                  statusBarIconBrightness:
-                      Brightness.light, // Light icons for dark backgrounds
-                  systemNavigationBarColor: Colors.white, // Works on Android
-                  systemNavigationBarIconBrightness: Brightness.light,
-                ),
-                child: Scaffold(
-                  backgroundColor: Colors.white,
-                  body: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset(
-                        'assets/images/no_internet.json',
-                        width: 210.w,
-                        height: 150.h,
-                        fit: BoxFit.fill,
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      const Center(
-                        child: SectionTitle(text: "no internet connection"),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            } else if (state is InternetConnected) {
-              return BlocConsumer<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  print(state);
-                  if (state is AuthFailureState) {
-                    print(state.errorMessage);
-                  }
-                },
-                builder: (context, state) {
-                  if (state is AuthDriverSuccessState) {
-                    //driver
-
-                    return const DriverHomeScreen();
-                  } else if (state is AuthOwnerSuccessState) {
-                    //owner
-                    BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
-
-                    return const OwnerHomeScreen();
-                  } else if (state is AuthMerchantSuccessState) {
-                    //merchant
-                    return const HomeScreen();
-                  } else if (state is AuthInitial) {
-                    BlocProvider.of<AuthBloc>(context)
-                        .add(AuthCheckRequested());
-                    return Center(
+                  child: Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Center(
                       child: LoadingIndicator(),
-                    );
-                  } else {
-                    return const SelectUserType();
-                  }
-                },
-              );
-            } else {
-              return const Center();
-            }
-          },
+                    ),
+                  ),
+                );
+              } else if (state is InternetDisConnected) {
+                return AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: const SystemUiOverlayStyle(
+                    statusBarColor: Colors.white, // Make status bar transparent
+                    statusBarIconBrightness:
+                        Brightness.light, // Light icons for dark backgrounds
+                    systemNavigationBarColor: Colors.white, // Works on Android
+                    systemNavigationBarIconBrightness: Brightness.light,
+                  ),
+                  child: Scaffold(
+                    backgroundColor: Colors.white,
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Lottie.asset(
+                          'assets/images/no_internet.json',
+                          width: 210.w,
+                          height: 150.h,
+                          fit: BoxFit.fill,
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        const Center(
+                          child: SectionTitle(text: "no internet connection"),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              } else if (state is InternetConnected) {
+                return BlocConsumer<AuthBloc, AuthState>(
+                  listener: (context, state) {
+                    print(state);
+                    if (state is AuthFailureState) {
+                      print(state.errorMessage);
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is AuthDriverSuccessState) {
+                      //driver
+
+                      return const DriverHomeScreen();
+                    } else if (state is AuthOwnerSuccessState) {
+                      //owner
+                      BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+
+                      return const OwnerHomeScreen();
+                    } else if (state is AuthMerchantSuccessState) {
+                      //merchant
+                      return const HomeScreen();
+                    } else if (state is AuthInitial) {
+                      BlocProvider.of<AuthBloc>(context)
+                          .add(AuthCheckRequested());
+                      return Center(
+                        child: LoadingIndicator(),
+                      );
+                    } else {
+                      return const SelectUserType();
+                    }
+                  },
+                );
+              } else {
+                return const Center();
+              }
+            },
+          ),
         ),
       ),
     );
