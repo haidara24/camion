@@ -15,7 +15,6 @@ import 'package:camion/business_logic/bloc/store_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';

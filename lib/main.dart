@@ -81,7 +81,6 @@ import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/data/providers/truck_active_status_provider.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
-import 'package:camion/data/providers/add_shippment_provider.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/providers/shipment_instructions_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';

@@ -82,40 +82,42 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 child: cupertino.CupertinoDatePicker(
-                  backgroundColor: Colors.white10,
-                  initialDateTime: startOrEnd ? startTime : endTime,
-                  maximumDate: startOrEnd ? null : startTime.add(const Duration(days: 30)),
-                  minimumDate: startOrEnd ? null : startTime,
-                  mode: cupertino.CupertinoDatePickerMode.date,
-                  onDateTimeChanged: (value) {
-                    setState(() {
-                    if (startOrEnd) {
-                      // Update startTime
-                      startTime = value;
-                      startdate_controller.text =
-                          "${startTime.year}-${startTime.month}-${startTime.day}";
-                      startdate =
-                          "${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}:${startTime.second}";
+                    backgroundColor: Colors.white10,
+                    initialDateTime: startOrEnd ? startTime : endTime,
+                    maximumDate: startOrEnd
+                        ? null
+                        : startTime.add(const Duration(days: 30)),
+                    minimumDate: startOrEnd ? null : startTime,
+                    mode: cupertino.CupertinoDatePickerMode.date,
+                    onDateTimeChanged: (value) {
+                      setState(() {
+                        if (startOrEnd) {
+                          // Update startTime
+                          startTime = value;
+                          startdate_controller.text =
+                              "${startTime.year}-${startTime.month}-${startTime.day}";
+                          startdate =
+                              "${startTime.year}-${startTime.month}-${startTime.day} ${startTime.hour}:${startTime.minute}:${startTime.second}";
 
-                      // Adjust endTime if it exceeds startTime + 30 days
-                      if (endTime.isAfter(startTime.add(const Duration(days: 30)))) {
-                        endTime = startTime.add(const Duration(days: 30));
-                        enddate_controller.text =
-                            "${endTime.year}-${endTime.month}-${endTime.day}";
-                        enddate =
-                            "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
-                      }
-                    } else {
-                      // Update endTime
-                      endTime = value;
-                      enddate_controller.text =
-                          "${endTime.year}-${endTime.month}-${endTime.day}";
-                      enddate =
-                          "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
-                    }
-                  });
-                  }
-                ),
+                          // Adjust endTime if it exceeds startTime + 30 days
+                          if (endTime.isAfter(
+                              startTime.add(const Duration(days: 30)))) {
+                            endTime = startTime.add(const Duration(days: 30));
+                            enddate_controller.text =
+                                "${endTime.year}-${endTime.month}-${endTime.day}";
+                            enddate =
+                                "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
+                          }
+                        } else {
+                          // Update endTime
+                          endTime = value;
+                          enddate_controller.text =
+                              "${endTime.year}-${endTime.month}-${endTime.day}";
+                          enddate =
+                              "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
+                        }
+                      });
+                    }),
               ),
             ),
           ],
@@ -198,7 +200,7 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
         width: double.infinity,
         child: ListView(
           // shrinkWrap: true,
-          // physics: NeverScrollableScrollPhysics(),
+          physics: NeverScrollableScrollPhysics(),
           children: [
             AbsorbPointer(
               absorbing: false,

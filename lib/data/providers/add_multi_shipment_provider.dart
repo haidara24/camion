@@ -207,6 +207,10 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<Map<String, dynamic>> _cachedSearchResults = [];
   List<Map<String, dynamic>> get cachedSearchResults => _cachedSearchResults;
 
+  List<Map<String, dynamic>> _pickupCachedSearchResults = [];
+  List<Map<String, dynamic>> get pickupCachedSearchResults =>
+      _pickupCachedSearchResults;
+
   Future<void> _saveCachedResults() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = jsonEncode(_cachedSearchResults);
@@ -224,8 +228,26 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _savePickUpCachedResults() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = jsonEncode(_pickupCachedSearchResults);
+    await prefs.setString('pickup_cached_search_results', jsonString);
+  }
+
+  Future<void> _loadPickUpCachedResults() async {
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = prefs.getString('pickup_cached_search_results');
+    if (jsonString != null) {
+      _pickupCachedSearchResults = List<Map<String, dynamic>>.from(
+        jsonDecode(jsonString),
+      );
+      notifyListeners();
+    }
+  }
+
   void initProvider() async {
     await _loadCachedResults();
+    await _loadPickUpCachedResults();
   }
 
   void initForm() {
@@ -1051,23 +1073,42 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       };
 
       // Check if the result already exists in the cache
-      final isAlreadyCached = _cachedSearchResults.any(
-        (result) =>
-            result['description'] == newResult['description'] &&
-            result['location'] == newResult['location'],
-      );
+      final isAlreadyCached = index == 0
+          ? _pickupCachedSearchResults.any(
+              (result) =>
+                  result['description'] == newResult['description'] &&
+                  result['location'] == newResult['location'],
+            )
+          : _cachedSearchResults.any(
+              (result) =>
+                  result['description'] == newResult['description'] &&
+                  result['location'] == newResult['location'],
+            );
 
       if (!isAlreadyCached) {
-        // Add the new result to the cache
-        _cachedSearchResults.insert(0, newResult);
+        if (index == 0) {
+          // Add the new result to the cache
+          _pickupCachedSearchResults.insert(0, newResult);
 
-        // Limit the cache to the last 5 results
-        if (_cachedSearchResults.length > 5) {
-          _cachedSearchResults.removeLast();
+          // Limit the cache to the last 5 results
+          if (_pickupCachedSearchResults.length > 5) {
+            _pickupCachedSearchResults.removeLast();
+          }
+
+          // Save the updated cache to local storage
+          await _savePickUpCachedResults();
+        } else {
+          // Add the new result to the cache
+          _cachedSearchResults.insert(0, newResult);
+
+          // Limit the cache to the last 5 results
+          if (_cachedSearchResults.length > 5) {
+            _cachedSearchResults.removeLast();
+          }
+
+          // Save the updated cache to local storage
+          await _saveCachedResults();
         }
-
-        // Save the updated cache to local storage
-        await _saveCachedResults();
       }
     } else {
       position = LatLng(double.parse(suggestion["location"].split(",")[0]),

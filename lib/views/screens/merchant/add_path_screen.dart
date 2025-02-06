@@ -279,7 +279,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                                                                 : "$index"),
                                                         style: const TextStyle(
                                                           fontSize:
-                                                              18, // Adjust font size as needed
+                                                              16, // Adjust font size as needed
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Colors.white,
@@ -840,15 +840,23 @@ class _AddPathScreenState extends State<AddPathScreen>
                                       ),
                                       ListView.builder(
                                         shrinkWrap: true,
-                                        itemCount: shipmentProvider
-                                            .cachedSearchResults.length,
+                                        itemCount: selectedPointIndex == 0
+                                            ? shipmentProvider
+                                                .pickupCachedSearchResults
+                                                .length
+                                            : shipmentProvider
+                                                .cachedSearchResults.length,
                                         itemBuilder: (context, index) =>
                                             Container(
                                           color: Colors.white,
                                           child: LocationListTile(
-                                            location: shipmentProvider
-                                                    .cachedSearchResults[index]
-                                                ["description"],
+                                            location: selectedPointIndex == 0
+                                                ? shipmentProvider
+                                                        .pickupCachedSearchResults[
+                                                    index]["description"]
+                                                : shipmentProvider
+                                                        .cachedSearchResults[
+                                                    index]["description"],
                                             onTap: () {
                                               print("asd");
                                               shipmentProvider
@@ -856,9 +864,15 @@ class _AddPathScreenState extends State<AddPathScreen>
                                                 true,
                                                 selectedPointIndex,
                                               );
+
                                               shipmentProvider.setStopPointInfo(
-                                                shipmentProvider
-                                                    .cachedSearchResults[index],
+                                                selectedPointIndex == 0
+                                                    ? shipmentProvider
+                                                            .pickupCachedSearchResults[
+                                                        index]
+                                                    : shipmentProvider
+                                                            .cachedSearchResults[
+                                                        index],
                                                 selectedPointIndex,
                                                 false,
                                                 MediaQuery.sizeOf(context)

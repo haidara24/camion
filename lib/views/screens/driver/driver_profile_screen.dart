@@ -432,145 +432,160 @@ class _DriverProfileScreenState extends State<DriverProfileScreen> {
                           ],
                         ),
                       ),
-                      BlocConsumer<TruckPricesListBloc, TruckPricesListState>(
-                        listener: (context, state) {
-                          // TODO: implement listener
-                        },
-                        builder: (context, pricestate) {
-                          if (pricestate is TruckPricesListLoadedSuccess) {
-                            return Column(
-                              children: [
-                                const Divider(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SectionTitle(
-                                        text: AppLocalizations.of(context)!
-                                            .translate("my_prices")),
-                                  ],
-                                ),
-                                pricestate.prices.isNotEmpty
-                                    ? Table(
-                                        border: TableBorder.all(
-                                          color: Colors.grey[400]!,
-                                          width: 1,
-                                        ),
-                                        children: [
-                                          TableRow(children: [
-                                            TableCell(
-                                              child: Container(
-                                                color: AppColor.lightYellow,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                      "${AppLocalizations.of(context)!.translate("governorate")} 1"),
-                                                ),
-                                              ),
-                                            ),
-                                            TableCell(
-                                              child: Container(
-                                                color: AppColor.lightYellow,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                      "${AppLocalizations.of(context)!.translate("governorate")} 2"),
-                                                ),
-                                              ),
-                                            ),
-                                            TableCell(
-                                              child: Container(
-                                                color: AppColor.lightYellow,
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate("price")),
-                                                ),
-                                              ),
-                                            ),
-                                          ]),
-                                          ...List.generate(
-                                            pricestate.prices.length,
-                                            (index) => TableRow(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: BlocConsumer<TruckPricesListBloc,
+                            TruckPricesListState>(
+                          listener: (context, state) {
+                            // TODO: implement listener
+                          },
+                          builder: (context, pricestate) {
+                            if (pricestate is TruckPricesListLoadedSuccess) {
+                              return Column(
+                                children: [
+                                  const Divider(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SectionTitle(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("my_prices")),
+                                    ],
+                                  ),
+                                  pricestate.prices.isNotEmpty
+                                      ? Table(
+                                          border: TableBorder.all(
+                                            color: Colors.grey[400]!,
+                                            width: 1,
+                                          ),
+                                          children: [
+                                            TableRow(children: [
                                               TableCell(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(localeState.value
-                                                              .languageCode ==
-                                                          "en"
-                                                      ? pricestate.prices[index]
-                                                          .point1En!
-                                                      : pricestate.prices[index]
-                                                          .point1!),
+                                                child: Container(
+                                                  color: AppColor.lightYellow,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                        "${AppLocalizations.of(context)!.translate("governorate")} 1"),
+                                                  ),
                                                 ),
                                               ),
                                               TableCell(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(localeState.value
-                                                              .languageCode ==
-                                                          "en"
-                                                      ? pricestate.prices[index]
-                                                          .point2En!
-                                                      : pricestate.prices[index]
-                                                          .point2!),
+                                                child: Container(
+                                                  color: AppColor.lightYellow,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                        "${AppLocalizations.of(context)!.translate("governorate")} 2"),
+                                                  ),
                                                 ),
                                               ),
                                               TableCell(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                      "${pricestate.prices[index].value!.toString()} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}"),
+                                                child: Container(
+                                                  color: AppColor.lightYellow,
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text(AppLocalizations
+                                                            .of(context)!
+                                                        .translate("price")),
+                                                  ),
                                                 ),
                                               ),
                                             ]),
+                                            ...List.generate(
+                                              pricestate.prices.length,
+                                              (index) => TableRow(children: [
+                                                TableCell(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(localeState
+                                                                .value
+                                                                .languageCode ==
+                                                            "en"
+                                                        ? pricestate
+                                                            .prices[index]
+                                                            .point1En!
+                                                        : pricestate
+                                                            .prices[index]
+                                                            .point1!),
+                                                  ),
+                                                ),
+                                                TableCell(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(localeState
+                                                                .value
+                                                                .languageCode ==
+                                                            "en"
+                                                        ? pricestate
+                                                            .prices[index]
+                                                            .point2En!
+                                                        : pricestate
+                                                            .prices[index]
+                                                            .point2!),
+                                                  ),
+                                                ),
+                                                TableCell(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                        "${pricestate.prices[index].value!.toString()} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}"),
+                                                  ),
+                                                ),
+                                              ]),
+                                            ),
+                                          ],
+                                        )
+                                      : const Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text("لم يتم إضافة أية أسعار"),
+                                        ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          // shipmentProvider
+                                          //     .additem(
+                                          //         selectedIndex);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AddNewPriceScreen(
+                                                      truckId:
+                                                          state.driver.truck!),
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .translate("add_price"),
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.deepYellow,
                                           ),
-                                        ],
-                                      )
-                                    : const Padding(
-                                        padding: EdgeInsets.all(8.0),
-                                        child: Text("لم يتم إضافة أية أسعار"),
-                                      ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        // shipmentProvider
-                                        //     .additem(
-                                        //         selectedIndex);
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddNewPriceScreen(
-                                                    truckId:
-                                                        state.driver.truck!),
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate("add_price"),
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColor.deepYellow,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          } else {
-                            return LoadingIndicator();
-                          }
-                        },
+                                    ],
+                                  ),
+                                ],
+                              );
+                            } else {
+                              return LoadingIndicator();
+                            }
+                          },
+                        ),
                       ),
                       const Spacer(),
                       editMode

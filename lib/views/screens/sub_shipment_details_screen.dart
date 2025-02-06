@@ -6,6 +6,7 @@ import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
+import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
@@ -17,7 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show SystemUiOverlayStyle, Uint8List, rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class SubShipmentDetailsScreen extends StatefulWidget {
@@ -168,45 +170,41 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
   late LatLng truckLocation;
   late bool truckLocationassign;
   Set<Marker> markers = {};
-
   createMarkerIcons(SubShipment shipment) async {
-    pickupicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location1.png");
-    deliveryicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/location2.png");
-    parkicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(), "assets/icons/locationP.png");
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
     markers = {};
-    var pickupMarker = Marker(
-      markerId: const MarkerId("pickup"),
-      position: LatLng(
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "P")
-              .location!
-              .split(",")[0]),
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "P")
-              .location!
-              .split(",")[1])),
-      icon: pickupicon,
-    );
-    markers.add(pickupMarker);
-    var deliveryMarker = Marker(
-      markerId: const MarkerId("delivery"),
-      position: LatLng(
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "D")
-              .location!
-              .split(",")[0]),
-          double.parse(shipment.pathpoints!
-              .singleWhere((element) => element.pointType == "D")
-              .location!
-              .split(",")[1])),
-      icon: deliveryicon,
-    );
-    markers.add(deliveryMarker);
+
+    for (var i = 0; i < shipment.pathpoints!.length; i++) {
+      if (i == 0) {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          "A",
+        );
+
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
+      } else {
+        Uint8List markerIcon = await MapService.createCustomMarker(
+          i == shipment.pathpoints!.length - 1 ? "B" : "$i",
+        );
+        var marker = Marker(
+          markerId: MarkerId("stop$i"),
+          position: LatLng(
+            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
+            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+          ),
+          icon: BitmapDescriptor.bytes(markerIcon),
+        );
+        markers.add(marker);
+      }
+    }
 
     setState(() {});
   }
@@ -275,133 +273,143 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
             textDirection: localeState.value.languageCode == 'en'
                 ? TextDirection.ltr
                 : TextDirection.rtl,
-            child: Scaffold(
-              appBar: DriverAppBar(
-                title:
-                    AppLocalizations.of(context)!.translate('shipment_details'),
+            child: AnnotatedRegion<SystemUiOverlayStyle>(
+              value: SystemUiOverlayStyle(
+                statusBarColor:
+                    AppColor.deepBlack, // Make status bar transparent
+                statusBarIconBrightness:
+                    Brightness.light, // Light icons for dark backgrounds
+                systemNavigationBarColor: Colors.white, // Works on Android
+                systemNavigationBarIconBrightness: Brightness.dark,
               ),
-              body:
-                  BlocConsumer<SubShipmentDetailsBloc, SubShipmentDetailsState>(
-                listener: (context, state) {
-                  if (state is SubShipmentDetailsLoadedSuccess) {
-                    createMarkerIcons(state.shipment);
-                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      setLoadDate(state.shipment.pickupDate!);
-                      setLoadTime(state.shipment.pickupDate!);
-                    });
-                  }
-                },
-                builder: (context, shipmentstate) {
-                  if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 300.h,
-                            child: Stack(
-                              children: [
-                                GoogleMap(
-                                  onMapCreated:
-                                      (GoogleMapController controller) async {
-                                    setState(() {
-                                      _controller = controller;
-                                      _controller.setMapStyle(_mapStyle);
-                                    });
-                                    initMapbounds(shipmentstate.shipment);
-                                  },
-                                  myLocationButtonEnabled: false,
-                                  zoomGesturesEnabled: false,
-                                  scrollGesturesEnabled: false,
-                                  tiltGesturesEnabled: false,
-                                  rotateGesturesEnabled: false,
-                                  zoomControlsEnabled: false,
-                                  initialCameraPosition: CameraPosition(
-                                      target: LatLng(
-                                          double.parse(shipmentstate
-                                              .shipment.pathpoints!
-                                              .singleWhere((element) =>
-                                                  element.pointType == "P")
-                                              .location!
-                                              .split(",")[0]),
-                                          double.parse(shipmentstate
-                                              .shipment.pathpoints!
-                                              .singleWhere((element) =>
-                                                  element.pointType == "P")
-                                              .location!
-                                              .split(",")[1])),
-                                      zoom: 14.47),
-                                  gestureRecognizers: const {},
-                                  markers: markers,
-                                  polylines: {
-                                    Polyline(
-                                      polylineId: const PolylineId("route"),
-                                      points: deserializeLatLng(
-                                          shipmentstate.shipment.paths!),
-                                      color: AppColor.deepYellow,
-                                      width: 4,
-                                    ),
-                                  },
-                                  // mapType: shipmentProvider.mapType,
-                                ),
-                              ],
+              child: Scaffold(
+                appBar: DriverAppBar(
+                  title: AppLocalizations.of(context)!
+                      .translate('shipment_details'),
+                ),
+                body: BlocConsumer<SubShipmentDetailsBloc,
+                    SubShipmentDetailsState>(
+                  listener: (context, state) {
+                    if (state is SubShipmentDetailsLoadedSuccess) {
+                      createMarkerIcons(state.shipment);
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        setLoadDate(state.shipment.pickupDate!);
+                        setLoadTime(state.shipment.pickupDate!);
+                      });
+                    }
+                  },
+                  builder: (context, shipmentstate) {
+                    if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 300.h,
+                              child: Stack(
+                                children: [
+                                  GoogleMap(
+                                    onMapCreated:
+                                        (GoogleMapController controller) async {
+                                      setState(() {
+                                        _controller = controller;
+                                        _controller.setMapStyle(_mapStyle);
+                                      });
+                                      initMapbounds(shipmentstate.shipment);
+                                    },
+                                    myLocationButtonEnabled: false,
+                                    zoomGesturesEnabled: false,
+                                    scrollGesturesEnabled: false,
+                                    tiltGesturesEnabled: false,
+                                    rotateGesturesEnabled: false,
+                                    zoomControlsEnabled: false,
+                                    initialCameraPosition: CameraPosition(
+                                        target: LatLng(
+                                            double.parse(shipmentstate
+                                                .shipment.pathpoints!
+                                                .singleWhere((element) =>
+                                                    element.pointType == "P")
+                                                .location!
+                                                .split(",")[0]),
+                                            double.parse(shipmentstate
+                                                .shipment.pathpoints!
+                                                .singleWhere((element) =>
+                                                    element.pointType == "P")
+                                                .location!
+                                                .split(",")[1])),
+                                        zoom: 14.47),
+                                    gestureRecognizers: const {},
+                                    markers: markers,
+                                    polylines: {
+                                      Polyline(
+                                        polylineId: const PolylineId("route"),
+                                        points: deserializeLatLng(
+                                            shipmentstate.shipment.paths!),
+                                        color: AppColor.deepYellow,
+                                        width: 4,
+                                      ),
+                                    },
+                                    // mapType: shipmentProvider.mapType,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("shipment_route"),
-                                ),
-                                ShipmentPathVerticalWidget(
-                                  pathpoints:
-                                      shipmentstate.shipment.pathpoints!,
-                                  pickupDate:
-                                      shipmentstate.shipment.pickupDate!,
-                                  deliveryDate:
-                                      shipmentstate.shipment.deliveryDate!,
-                                  langCode: localeState.value.languageCode,
-                                  mini: false,
-                                ),
-                                const Divider(
-                                  height: 32,
-                                ),
-                                SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("commodity_info"),
-                                ),
-                                const SizedBox(height: 4),
-                                Commodity_info_widget(
-                                    shipmentItems:
-                                        shipmentstate.shipment.shipmentItems!),
-                                const Divider(
-                                  height: 32,
-                                ),
-                                SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("shipment_route_statistics"),
-                                ),
-                                const SizedBox(height: 4),
-                                PathStatisticsWidget(
-                                  distance: shipmentstate.shipment.distance!,
-                                  period: shipmentstate.shipment.period!,
-                                ),
-                              ],
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("shipment_route"),
+                                  ),
+                                  ShipmentPathVerticalWidget(
+                                    pathpoints:
+                                        shipmentstate.shipment.pathpoints!,
+                                    pickupDate:
+                                        shipmentstate.shipment.pickupDate!,
+                                    deliveryDate:
+                                        shipmentstate.shipment.deliveryDate!,
+                                    langCode: localeState.value.languageCode,
+                                    mini: false,
+                                  ),
+                                  const Divider(
+                                    height: 32,
+                                  ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("commodity_info"),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Commodity_info_widget(
+                                      shipmentItems: shipmentstate
+                                          .shipment.shipmentItems!),
+                                  const Divider(
+                                    height: 32,
+                                  ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("shipment_route_statistics"),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  PathStatisticsWidget(
+                                    distance: shipmentstate.shipment.distance!,
+                                    period: shipmentstate.shipment.period!,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Center(child: LoadingIndicator());
-                  }
-                },
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Center(child: LoadingIndicator());
+                    }
+                  },
+                ),
               ),
             ),
           );

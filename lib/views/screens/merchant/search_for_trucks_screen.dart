@@ -253,7 +253,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                         ),
                                         child: const Center(
                                           child: Text(
-                                            "B",
+                                            "A",
                                             style: TextStyle(
                                               fontSize:
                                                   15, // Adjust font size as needed
@@ -267,13 +267,13 @@ class SearchForTrucksScreen extends StatelessWidget {
                                     // afterLineStyle: LineStyle(),
                                     alignment: TimelineAlign.manual,
                                     lineXY: .5,
-                                    endChild: SectionBody(
-                                      text: AppLocalizations.of(context)!
-                                          .translate("delivery_address"),
-                                    ),
                                     startChild: SectionBody(
+                                      text: AppLocalizations.of(context)!
+                                          .translate("pickup_address"),
+                                    ),
+                                    endChild: SectionBody(
                                       text:
-                                          "  ${shipmentProvider.stoppoints_statename.last}",
+                                          "  ${shipmentProvider.stoppoints_statename.first}",
                                     ),
                                   ),
                                 ),
@@ -327,7 +327,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                         ),
                                         child: const Center(
                                           child: Text(
-                                            "A",
+                                            "B",
                                             style: TextStyle(
                                               fontSize:
                                                   15, // Adjust font size as needed
@@ -342,13 +342,13 @@ class SearchForTrucksScreen extends StatelessWidget {
                                     alignment: TimelineAlign.manual,
                                     lineXY: .5,
 
-                                    startChild: SectionBody(
-                                      text:
-                                          "  ${shipmentProvider.stoppoints_statename.first}",
-                                    ),
                                     endChild: SectionBody(
+                                      text:
+                                          "  ${shipmentProvider.stoppoints_statename.last}",
+                                    ),
+                                    startChild: SectionBody(
                                       text: AppLocalizations.of(context)!
-                                          .translate("pickup_address"),
+                                          .translate("delivery_address"),
                                     ),
                                   ),
                                 ),
