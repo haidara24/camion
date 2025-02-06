@@ -710,6 +710,16 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             _truckTypeGroupId.indexOf(_selectedTruckTypeId[pathIndex]);
         if (oldTypeIndex != -1) {
           _selectedTruckTypeNum[oldTypeIndex]--;
+          // Remove the truck associated with the previous truck type for this path
+          var truckToRemove = _selectedTruck.firstWhere(
+            (truck) => truck.truckType?.id == _selectedTruckTypeId[pathIndex],
+            orElse: () => KTruck(
+              id: 0,
+            ),
+          );
+          if (truckToRemove.id != 0) {
+            removeSelectedTruck(truckToRemove, _selectedTruckTypeId[pathIndex]);
+          }
           // If the count becomes zero, remove the truck type from the group
           if (_selectedTruckTypeNum[oldTypeIndex] == 0) {
             _truckTypeGroup.removeAt(oldTypeIndex);
@@ -737,6 +747,30 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     }
     // Notify listeners for state update
     notifyListeners();
+  }
+
+  void addSingleSelectedTruck(KTruck truck, int truckTypeId) {
+    var index = _truckTypeGroupId.indexOf(truckTypeId);
+
+    // Check if another truck of the same type is already selected
+    var existingTruckIndex =
+        _selectedTruck.indexWhere((t) => t.truckType!.id == truckTypeId);
+
+    // If another truck of the same type is selected, remove it first
+    if (existingTruckIndex != -1) {
+      var existingTruck = _selectedTruck[existingTruckIndex];
+      _selectedTruckId.remove(existingTruck.id); // Remove the existing truck ID
+      _selectedTruck
+          .removeAt(existingTruckIndex); // Remove the existing truck itself
+      _selectedTruckTypeNum[index]++; // Increase the truck type count back
+    }
+
+    // Add the new truck
+    _selectedTruckId.add(truck.id!); // Add the new truck ID
+    _selectedTruck.add(truck); // Add the new truck itself
+    _selectedTruckTypeNum[index]--; // Decrease the truck type count
+
+    notifyListeners(); // Notify listeners to update the UI
   }
 
   void addSelectedTruck(KTruck truck, int truckTypeId) {

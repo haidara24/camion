@@ -1,4 +1,5 @@
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
+import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -97,7 +98,12 @@ class _ControlViewState extends State<ControlView> {
           systemNavigationBarIconBrightness: Brightness.dark,
         ),
         child: Scaffold(
-          body: BlocBuilder<InternetCubit, InternetState>(
+          body: BlocConsumer<InternetCubit, InternetState>(
+            listener: (context, state) {
+              if (state is InternetConnected) {
+                BlocProvider.of<AuthBloc>(context).add(AuthCheckRequested());
+              }
+            },
             builder: (context, state) {
               if (state is InternetLoading) {
                 return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -154,13 +160,15 @@ class _ControlViewState extends State<ControlView> {
                     }
                   },
                   builder: (context, state) {
+                    BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
+                    BlocProvider.of<NotificationBloc>(context)
+                        .add(NotificationLoadEvent());
                     if (state is AuthDriverSuccessState) {
                       //driver
 
                       return const DriverHomeScreen();
                     } else if (state is AuthOwnerSuccessState) {
                       //owner
-                      BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
 
                       return const OwnerHomeScreen();
                     } else if (state is AuthMerchantSuccessState) {

@@ -76,7 +76,6 @@ class _HomeScreenState extends State<HomeScreen>
     BlocProvider.of<StoreListBloc>(context).add(
       StoreListLoadEvent(),
     );
-    BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
     BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
 

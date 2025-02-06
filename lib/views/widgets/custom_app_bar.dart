@@ -90,58 +90,67 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ? const SizedBox.shrink()
                   : Consumer<NotificationProvider>(
                       builder: (context, notificationProvider, child) {
-                        return IconButton(
-                          onPressed: () {
-                            BlocProvider.of<NotificationBloc>(context)
-                                .add(NotificationLoadEvent());
-                            // notificationProvider.clearNotReadedNotification();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NotificationScreen(),
-                                ));
+                        return BlocListener<NotificationBloc,
+                            NotificationState>(
+                          listener: (context, state) {
+                            if (state is NotificationLoadedSuccess) {
+                              notificationProvider
+                                  .initNotifications(state.notifications);
+                            }
                           },
-                          icon: Stack(
-                            clipBehavior: Clip.none,
-                            children: [
-                              SizedBox(
-                                height: 30.h,
-                                width: 30.h,
-                                child: Center(
-                                  child: SvgPicture.asset(
-                                    "assets/icons/notification.svg",
-                                    height: 30.h,
-                                    width: 30.h,
+                          child: IconButton(
+                            onPressed: () {
+                              BlocProvider.of<NotificationBloc>(context)
+                                  .add(NotificationLoadEvent());
+                              // notificationProvider.clearNotReadedNotification();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NotificationScreen(),
+                                  ));
+                            },
+                            icon: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                SizedBox(
+                                  height: 30.h,
+                                  width: 30.h,
+                                  child: Center(
+                                    child: SvgPicture.asset(
+                                      "assets/icons/notification.svg",
+                                      height: 30.h,
+                                      width: 30.h,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              notificationProvider.notreadednotifications != 0
-                                  ? Positioned(
-                                      right: -7.w,
-                                      top: -10.h,
-                                      child: Container(
-                                        height: 20.h,
-                                        width: 20.h,
-                                        decoration: BoxDecoration(
-                                          color: AppColor.deepYellow,
-                                          borderRadius:
-                                              BorderRadius.circular(45),
-                                        ),
-                                        child: Center(
-                                          child: Text(
-                                            notificationProvider
-                                                .notreadednotifications
-                                                .toString(),
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
+                                notificationProvider.notreadednotifications != 0
+                                    ? Positioned(
+                                        right: -7.w,
+                                        top: -10.h,
+                                        child: Container(
+                                          height: 20.h,
+                                          width: 20.h,
+                                          decoration: BoxDecoration(
+                                            color: AppColor.deepYellow,
+                                            borderRadius:
+                                                BorderRadius.circular(45),
+                                          ),
+                                          child: Center(
+                                            child: Text(
+                                              notificationProvider
+                                                  .notreadednotifications
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink()
-                            ],
+                                      )
+                                    : const SizedBox.shrink()
+                              ],
+                            ),
                           ),
                         );
                       },
