@@ -407,8 +407,6 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                 children: [
                                                   InkWell(
                                                     onTap: () {
-                                                      print(
-                                                          "condition is  ${shipmentProvider.selectedTruckType.length == 1}");
                                                       if (!(shipmentProvider
                                                               .selectedTruckType
                                                               .length ==
@@ -435,12 +433,27 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                                     .id!,
                                                               );
                                                       } else {
-                                                        shipmentProvider
-                                                            .addSingleSelectedTruck(
-                                                          state.trucks[index],
-                                                          state.trucks[index]
-                                                              .truckType!.id!,
-                                                        );
+                                                        isSelected
+                                                            ? shipmentProvider
+                                                                .removeSingleSelectedTruck(
+                                                                state.trucks[
+                                                                    index],
+                                                                state
+                                                                    .trucks[
+                                                                        index]
+                                                                    .truckType!
+                                                                    .id!,
+                                                              )
+                                                            : shipmentProvider
+                                                                .addSingleSelectedTruck(
+                                                                state.trucks[
+                                                                    index],
+                                                                state
+                                                                    .trucks[
+                                                                        index]
+                                                                    .truckType!
+                                                                    .id!,
+                                                              );
                                                       }
 
                                                       menuSetState(() {});

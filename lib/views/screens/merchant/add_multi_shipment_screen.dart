@@ -826,7 +826,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                 },
                                                 icon: const Icon(
                                                   Icons.zoom_out_map,
-                                                  color: Colors.white,
+                                                  color: Colors.grey,
                                                   size: 27,
                                                 ),
                                               )),

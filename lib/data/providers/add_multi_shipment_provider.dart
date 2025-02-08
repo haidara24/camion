@@ -773,6 +773,25 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     notifyListeners(); // Notify listeners to update the UI
   }
 
+  void removeSingleSelectedTruck(KTruck truck, int truckTypeId) {
+    var index = _truckTypeGroupId.indexOf(truckTypeId);
+
+    // Check if another truck of the same type is already selected
+    var existingTruckIndex =
+        _selectedTruck.indexWhere((t) => t.truckType!.id == truckTypeId);
+
+    // If another truck of the same type is selected, remove it first
+    if (existingTruckIndex != -1) {
+      var existingTruck = _selectedTruck[existingTruckIndex];
+      _selectedTruckId.remove(existingTruck.id); // Remove the existing truck ID
+      _selectedTruck
+          .removeAt(existingTruckIndex); // Remove the existing truck itself
+      _selectedTruckTypeNum[index]++; // Increase the truck type count back
+    }
+
+    notifyListeners(); // Notify listeners to update the UI
+  }
+
   void addSelectedTruck(KTruck truck, int truckTypeId) {
     var index = _truckTypeGroupId.indexOf(truckTypeId);
 
