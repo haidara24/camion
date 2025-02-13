@@ -22,6 +22,7 @@ import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
+import 'package:camion/views/screens/contact_us_screen.dart';
 import 'package:camion/views/screens/driver/driver_profile_screen.dart';
 import 'package:camion/views/screens/driver/fixes_list_screen.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_screen.dart';
@@ -433,7 +434,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                           },
                           child: ListTile(
                             leading: SvgPicture.asset(
-                              "assets/icons/orange/help_info.svg",
+                              "assets/icons/fixes.svg",
                               height: 25.h,
                               width: 25.h,
                             ),
@@ -450,33 +451,28 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                         const Divider(
                           color: Colors.white,
                         ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            "assets/icons/orange/help_info.svg",
-                            height: 25.h,
-                            width: 25.h,
-                          ),
-                          title: Text(
-                            AppLocalizations.of(context)!.translate('help'),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Container(
-                            width: 36.w,
-                            height: 20.h,
-                            decoration: BoxDecoration(
-                                color: AppColor.deepYellow,
-                                borderRadius: BorderRadius.circular(2)),
-                            child: Center(
-                              child: Text(
-                                "soon",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.sp,
-                                ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactUsScreen(),
                               ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/orange/help_info.svg",
+                              height: 25.h,
+                              width: 25.h,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('contact_us'),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),

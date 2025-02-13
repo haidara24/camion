@@ -356,10 +356,14 @@ class SearchForTrucksScreen extends StatelessWidget {
                             ),
                           ),
                           const Divider(),
-                          truckTypeList(shipmentProvider, context,
-                              localeState.value.languageCode),
-                          // selectedTrucksList(shipmentProvider, context,
-                          //     localeState.value.languageCode),
+                          Visibility(
+                            visible:
+                                !(shipmentProvider.selectedTruckType.length ==
+                                    1),
+                            replacement: const SizedBox.shrink(),
+                            child: truckTypeList(shipmentProvider, context,
+                                localeState.value.languageCode),
+                          ),
                           BlocBuilder<TrucksListBloc, TrucksListState>(
                             builder: (context, state) {
                               if (state is TrucksListLoadedSuccess) {

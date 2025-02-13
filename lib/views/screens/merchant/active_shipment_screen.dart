@@ -119,9 +119,11 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     }
   }
 
+  bool showDetails = false;
+
   void _onVerticalGesture(DragUpdateDetails? details,
       List<SubShipment> subshipments, String language) {
-    if (details == null || details.primaryDelta! < -7) {
+    if (details == null || details.primaryDelta! < -7 || showDetails) {
       panelState = PanelState.open;
       showModalBottomSheet(
         context: context,
@@ -138,10 +140,14 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
         builder: (context) => GestureDetector(
           onVerticalDragUpdate: (details) {
             if (details.primaryDelta! > 7) {
+              setState(() {
+                showDetails = false;
+              });
               Navigator.pop(context);
             }
           },
           child: Container(
+            color: Colors.white,
             padding: const EdgeInsets.symmetric(
               horizontal: 8.0,
             ),
@@ -157,6 +163,9 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                   children: [
                     IconButton(
                       onPressed: () {
+                        setState(() {
+                          showDetails = false;
+                        });
                         Navigator.pop(context);
                       },
                       icon: SizedBox(
@@ -372,7 +381,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                       });
                       initMapbounds(subshipments[index]);
                       markers = {};
-                      createMarkerIcons(subshipments[index]);
+                      createMarkerIcons(subshipments, language);
 
                       setState(() {});
                     },
@@ -406,7 +415,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  height: 25.h,
+                                  height: 23.5.h,
                                   width: selectedTruck == index ? 122.w : 118.w,
                                   child: CachedNetworkImage(
                                     imageUrl: subshipments[index]
@@ -419,13 +428,13 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                       highlightColor: (Colors.grey[100])!,
                                       enabled: true,
                                       child: Container(
-                                        height: 25.h,
+                                        height: 23.5.h,
                                         color: Colors.white,
                                       ),
                                     ),
                                     errorWidget: (context, url, error) =>
                                         Container(
-                                      height: 25.h,
+                                      height: 23.5.h,
                                       width: selectedTruck == index
                                           ? 122.w
                                           : 118.w,
@@ -486,12 +495,12 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   final TruckRepository _truckRepository = TruckRepository();
   dynamic truckData;
 
-  createMarkerIcons(SubShipment shipment) async {
+  createMarkerIcons(List<SubShipment> shipment, String lang) async {
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
     markers = {};
 
-    for (var i = 0; i < shipment.pathpoints!.length; i++) {
+    for (var i = 0; i < shipment[selectedIndex].pathpoints!.length; i++) {
       if (i == 0) {
         Uint8List markerIcon = await MapService.createCustomMarker(
           "A",
@@ -500,21 +509,25 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
         var marker = Marker(
           markerId: MarkerId("stop$i"),
           position: LatLng(
-            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
-            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+            double.parse(
+                shipment[selectedIndex].pathpoints![i].location!.split(",")[0]),
+            double.parse(
+                shipment[selectedIndex].pathpoints![i].location!.split(",")[1]),
           ),
           icon: BitmapDescriptor.bytes(markerIcon),
         );
         markers.add(marker);
       } else {
         Uint8List markerIcon = await MapService.createCustomMarker(
-          i == shipment.pathpoints!.length - 1 ? "B" : "$i",
+          i == shipment[selectedIndex].pathpoints!.length - 1 ? "B" : "$i",
         );
         var marker = Marker(
           markerId: MarkerId("stop$i"),
           position: LatLng(
-            double.parse(shipment.pathpoints![i].location!.split(",")[0]),
-            double.parse(shipment.pathpoints![i].location!.split(",")[1]),
+            double.parse(
+                shipment[selectedIndex].pathpoints![i].location!.split(",")[0]),
+            double.parse(
+                shipment[selectedIndex].pathpoints![i].location!.split(",")[1]),
           ),
           icon: BitmapDescriptor.bytes(markerIcon),
         );
@@ -523,11 +536,16 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     }
 
     var truckMarker = Marker(
-      markerId: const MarkerId("truck"),
-      position: LatLng(double.parse(truckLocation!.split(",")[0]),
-          double.parse(truckLocation!.split(",")[1])),
-      icon: truckicon,
-    );
+        markerId: const MarkerId("truck"),
+        position: LatLng(double.parse(truckLocation!.split(",")[0]),
+            double.parse(truckLocation!.split(",")[1])),
+        icon: truckicon,
+        onTap: () {
+          setState(() {
+            showDetails = true;
+          });
+          _onVerticalGesture(null, shipment, lang);
+        });
     markers.add(truckMarker);
     setState(() {});
   }
@@ -632,7 +650,10 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                       });
                       initMapbounds(state.shipments[0]);
                       markers = {};
-                      createMarkerIcons(state.shipments[0]);
+                      createMarkerIcons(
+                        state.shipments,
+                        localeState.value.languageCode,
+                      );
 
                       setState(() {});
                     }
@@ -664,7 +685,10 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                               initMapbounds(subshipment!);
                               markers = {};
 
-                              createMarkerIcons(state.shipments[0]);
+                              createMarkerIcons(
+                                state.shipments,
+                                localeState.value.languageCode,
+                              );
 
                               setState(() {});
                             },
@@ -746,7 +770,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                               onTap: () {
                                 initMapbounds(subshipment!);
                                 markers = {};
-                                createMarkerIcons(subshipment!);
+                                createMarkerIcons(state.shipments,
+                                    localeState.value.languageCode);
 
                                 setState(() {});
                               },

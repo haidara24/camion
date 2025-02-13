@@ -22,6 +22,7 @@ import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/contact_us_screen.dart';
 import 'package:camion/views/screens/merchant/active_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/add_multi_shipment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
@@ -390,33 +391,28 @@ class _HomeScreenState extends State<HomeScreen>
                         const Divider(
                           color: Colors.white,
                         ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            "assets/icons/orange/help_info.svg",
-                            height: 27.h,
-                            width: 27.h,
-                          ),
-                          title: Text(
-                            AppLocalizations.of(context)!.translate('help'),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactUsScreen(),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/orange/help_info.svg",
+                              height: 27.h,
+                              width: 27.h,
                             ),
-                          ),
-                          trailing: Container(
-                            width: 36.w,
-                            height: 20.h,
-                            decoration: BoxDecoration(
-                                color: AppColor.deepYellow,
-                                borderRadius: BorderRadius.circular(2)),
-                            child: Center(
-                              child: Text(
-                                "soon",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.sp,
-                                ),
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('contact_us'),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),

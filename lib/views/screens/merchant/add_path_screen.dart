@@ -303,11 +303,17 @@ class _AddPathScreenState extends State<AddPathScreen>
                                                         horizontal: 4,
                                                         vertical: 4,
                                                       ),
-                                                      width:
-                                                          MediaQuery.of(context)
+                                                      width: index > 1
+                                                          ? MediaQuery.of(
+                                                                      context)
                                                                   .size
                                                                   .width *
-                                                              .6,
+                                                              .6
+                                                          : MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .65,
                                                       padding: const EdgeInsets
                                                           .symmetric(
                                                         horizontal: 9.0,
@@ -372,10 +378,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                                                   ),
                                                   Visibility(
                                                     visible: (index > 1),
-                                                    replacement: Icon(
-                                                      Icons.linear_scale,
-                                                      color: AppColor.lightGrey,
-                                                    ),
+                                                    replacement:
+                                                        const SizedBox.shrink(),
                                                     child: InkWell(
                                                       onTap: () {
                                                         shipmentProvider

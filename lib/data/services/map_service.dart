@@ -18,7 +18,7 @@ class MapService {
     // Define marker size
     const double markerSize = 30.0; // Adjust size as needed
 
-    // Draw white border
+    // Draw yellow border
     paint.color = AppColor.deepYellow;
     canvas.drawCircle(
       const Offset(markerSize / 2, markerSize / 2),
@@ -26,7 +26,7 @@ class MapService {
       paint,
     );
 
-    // Draw blue inner circle
+    // Draw black inner circle
     paint.color = AppColor.deepBlack;
     canvas.drawCircle(
       const Offset(markerSize / 2, markerSize / 2),

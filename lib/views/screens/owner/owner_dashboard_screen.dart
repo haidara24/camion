@@ -10,6 +10,7 @@ import 'package:camion/business_logic/bloc/gps_reports/total_statistics_bloc.dar
 import 'package:camion/business_logic/bloc/gps_reports/trip_report_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/owner/reports/milage_per_day_report_screen.dart';
@@ -66,12 +67,13 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
       .width;
 
   double _bottomPosition = 0;
+  PanelState panelState = PanelState.hidden;
 
   void _togglePosition() {
     setState(() {
       _rightPosition =
           _rightPosition == 0 ? -MediaQuery.of(context).size.width : 0;
-      _bottomPosition = _bottomPosition == 145.h ? 0 : 145.h;
+      _bottomPosition = _bottomPosition == 150.h ? 0 : 150.h;
     });
   }
 
@@ -107,200 +109,152 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
   }
 
   Widget pathList(List<KTruck> trucks, String language) {
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            border: Border(
-              top: BorderSide(
-                color: AppColor.lightGrey,
-              ),
-            ),
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        border: Border(
+          top: BorderSide(
+            color: AppColor.lightGrey,
           ),
-          height: 105.h,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: SectionTitle(
-              //       text: AppLocalizations.of(context)!.translate("drivers")),
-              // ),
-              SizedBox(
-                height: 88.h,
-                child: ListView.builder(
-                  itemCount: trucks.length,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        setState(() {
-                          selectedIndex = index;
-                          selectedTruck = index;
-                          // subshipment = trucks[index];
-                          truckLocation = trucks[index].locationLat!;
-                        });
-                        mymap();
+        ),
+      ),
+      height: 105.h,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: SectionTitle(
+          //       text: AppLocalizations.of(context)!.translate("drivers")),
+          // ),
+          SizedBox(
+            height: 88.h,
+            child: ListView.builder(
+              itemCount: trucks.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    setState(() {
+                      selectedIndex = index;
+                      selectedTruck = index;
+                      // subshipment = trucks[index];
+                      truckLocation = trucks[index].locationLat!;
+                      panelState = PanelState.open;
+                    });
+                    mymap();
 
-                        // _togglePosition();
-                        _rightPosition = 0;
-                        _bottomPosition = 140.h;
-                        final now = DateTime.now();
-                        final startTime =
-                            now.subtract(const Duration(days: 29));
-                        final dateFormat =
-                            intel.DateFormat('yyyy-MM-dd HH:mm:ss');
+                    _updateMarkers(trucks);
+                    _rightPosition = 0;
+                    _bottomPosition = 150.h;
+                    final now = DateTime.now();
+                    final startTime = now.subtract(const Duration(days: 29));
+                    final dateFormat = intel.DateFormat('yyyy-MM-dd HH:mm:ss');
 
-                        final formattedStartTime = dateFormat.format(startTime);
-                        final formattedEndTime = dateFormat.format(now);
-                        if (!(trucks[selectedTruck].gpsId == null ||
-                            trucks[selectedTruck].gpsId!.isEmpty ||
-                            trucks[selectedTruck].gpsId!.length < 8)) {
-                          BlocProvider.of<TotalStatisticsBloc>(context).add(
-                              TotalStatisticsLoadEvent(formattedStartTime,
-                                  formattedEndTime, trucks[index].carId!));
-                        }
-                      },
-                      child: Padding(
-                        padding:
-                            EdgeInsets.all(selectedTruck == index ? 0 : 3.0),
-                        child: Container(
-                          // height: selectedTruck == index ? 88.h : 80.h,
-                          width: selectedTruck == index ? 180.w : 175.w,
-                          margin: const EdgeInsets.all(5),
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(11),
-                            border: Border.all(
-                              color: selectedTruck == index
-                                  ? AppColor.deepYellow
-                                  : Colors.grey[400]!,
-                              width: selectedTruck == index ? 2 : 1,
-                            ),
-                            boxShadow: selectedTruck == index
-                                ? [
-                                    BoxShadow(
-                                        offset: const Offset(1, 2),
-                                        color: Colors.grey[400]!)
-                                  ]
-                                : null,
-                          ),
-                          child: Column(
+                    final formattedStartTime = dateFormat.format(startTime);
+                    final formattedEndTime = dateFormat.format(now);
+                    if (!(trucks[selectedTruck].gpsId == null ||
+                        trucks[selectedTruck].gpsId!.isEmpty ||
+                        trucks[selectedTruck].gpsId!.length < 8)) {
+                      BlocProvider.of<TotalStatisticsBloc>(context).add(
+                          TotalStatisticsLoadEvent(formattedStartTime,
+                              formattedEndTime, trucks[index].carId!));
+                    }
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(selectedTruck == index ? 0 : 3.0),
+                    child: Container(
+                      // height: selectedTruck == index ? 88.h : 80.h,
+                      width: selectedTruck == index ? 180.w : 175.w,
+                      margin: const EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(11),
+                        border: Border.all(
+                          color: selectedTruck == index
+                              ? AppColor.deepYellow
+                              : Colors.grey[400]!,
+                          width: selectedTruck == index ? 2 : 1,
+                        ),
+                        boxShadow: selectedTruck == index
+                            ? [
+                                BoxShadow(
+                                    offset: const Offset(1, 2),
+                                    color: Colors.grey[400]!)
+                              ]
+                            : null,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
+                              SizedBox(
+                                height: 25.h,
+                                width: selectedTruck == index ? 122.w : 118.w,
+                                child: CachedNetworkImage(
+                                  imageUrl: trucks[index].truckType!.image!,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Shimmer.fromColors(
+                                    baseColor: (Colors.grey[300])!,
+                                    highlightColor: (Colors.grey[100])!,
+                                    enabled: true,
+                                    child: Container(
+                                      height: 25.h,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
                                     height: 25.h,
                                     width:
                                         selectedTruck == index ? 122.w : 118.w,
-                                    child: CachedNetworkImage(
-                                      imageUrl: trucks[index].truckType!.image!,
-                                      progressIndicatorBuilder:
-                                          (context, url, downloadProgress) =>
-                                              Shimmer.fromColors(
-                                        baseColor: (Colors.grey[300])!,
-                                        highlightColor: (Colors.grey[100])!,
-                                        enabled: true,
-                                        child: Container(
-                                          height: 25.h,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      errorWidget: (context, url, error) =>
-                                          Container(
-                                        height: 25.h,
-                                        width: selectedTruck == index
-                                            ? 122.w
-                                            : 118.w,
-                                        color: Colors.grey[300],
-                                        child: Center(
-                                          child: Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('image_load_error'),
-                                          ),
-                                        ),
+                                    color: Colors.grey[300],
+                                    child: Center(
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('image_load_error'),
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 6.h,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "${trucks[index].driver_firstname!} ${trucks[index].driver_lastname!}",
-                                    style: TextStyle(
-                                      fontSize: selectedTruck == index
-                                          ? 17.sp
-                                          : 15.sp,
-                                      color: AppColor.deepBlack,
-                                    ),
-                                  ),
-                                  Text(
-                                    'No: ${trucks[index].truckNumber!}',
-                                  ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
+                          SizedBox(
+                            height: 6.h,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                "${trucks[index].driver_firstname!} ${trucks[index].driver_lastname!}",
+                                style: TextStyle(
+                                  fontSize:
+                                      selectedTruck == index ? 17.sp : 15.sp,
+                                  color: AppColor.deepBlack,
+                                ),
+                              ),
+                              Text(
+                                'No: ${trucks[index].truckNumber!}',
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-        Visibility(
-          visible: selectedIndex != -1,
-          replacement: const SizedBox.shrink(),
-          child: Positioned(
-            top: -30,
-            left: 15,
-            child: IconButton(
-              onPressed: () {
-                initMapbounds(trucks);
-                // _togglePosition();
-                _rightPosition = -MediaQuery.of(context).size.width;
-                _bottomPosition = 0;
-
-                Future.delayed(const Duration(milliseconds: 300), () {
-                  setState(() {
-                    selectedIndex = -1;
-                    selectedTruck = -1;
-                  });
-                });
-              },
-              icon: Container(
-                decoration: BoxDecoration(
-                  color: AppColor.lightGrey200,
-                  borderRadius: BorderRadius.circular(45),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.cancel_outlined,
-                    size: 36,
-                    color: AppColor.deepYellow,
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -314,7 +268,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
             ),
           ),
         ),
-        height: 145.h,
+        height: 150.h,
         width: MediaQuery.of(context).size.width,
         child: BlocConsumer<TotalStatisticsBloc, TotalStatisticsState>(
           listener: (context, state) {
@@ -360,8 +314,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                           : Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                IconButton(
-                                  onPressed: () {
+                                GestureDetector(
+                                  onTap: () {
                                     final now = DateTime.now();
                                     final startTime =
                                         now.subtract(const Duration(days: 29));
@@ -389,20 +343,31 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                                                       .carId!),
                                         ));
                                   },
-                                  icon: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/overspeed.svg",
-                                        height: 50.h,
-                                        width: 50.h,
+                                  child: Container(
+                                    padding: EdgeInsets.all(4.h),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      border: Border.all(
+                                        color: AppColor.lightGrey,
+                                        width: 2.w,
                                       ),
-                                      SectionBody(
-                                          text: AppLocalizations.of(context)!
-                                              .translate("total_overspeed")),
-                                      Text(state.result["overSpeeds"]
-                                          .toString()),
-                                    ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/overspeed.svg",
+                                          height: 50.h,
+                                          width: 50.h,
+                                        ),
+                                        SectionBody(
+                                            text: AppLocalizations.of(context)!
+                                                .translate("total_overspeed")),
+                                        Text(state.result["overSpeeds"]
+                                            .toString()),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 GestureDetector(
@@ -435,19 +400,30 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                                                       .carId!),
                                         ));
                                   },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/total_stops.svg",
-                                        height: 50.h,
-                                        width: 50.h,
+                                  child: Container(
+                                    padding: EdgeInsets.all(4.h),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      border: Border.all(
+                                        color: AppColor.lightGrey,
+                                        width: 2.w,
                                       ),
-                                      SectionBody(
-                                          text: AppLocalizations.of(context)!
-                                              .translate("total_parking")),
-                                      Text(state.result["stops"].toString()),
-                                    ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/total_stops.svg",
+                                          height: 50.h,
+                                          width: 50.h,
+                                        ),
+                                        SectionBody(
+                                            text: AppLocalizations.of(context)!
+                                                .translate("total_parking")),
+                                        Text(state.result["stops"].toString()),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 GestureDetector(
@@ -480,20 +456,35 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                                                       .carId!),
                                         ));
                                   },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/orange/shipment_path.svg",
-                                        height: 50.h,
-                                        width: 50.h,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      border: Border.all(
+                                        color: AppColor.lightGrey,
+                                        width: 2.w,
                                       ),
-                                      SectionBody(
-                                          text: AppLocalizations.of(context)!
-                                              .translate("total_mileage")),
-                                      Text(state.result["totalMileage"]
-                                          .toString()),
-                                    ],
+                                    ),
+                                    padding: EdgeInsets.all(4.h),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SizedBox(
+                                          height: 50.h,
+                                          width: 50.h,
+                                          child: SvgPicture.asset(
+                                            "assets/icons/orange/shipment_path.svg",
+                                            height: 50.h,
+                                            width: 50.h,
+                                          ),
+                                        ),
+                                        SectionBody(
+                                            text: AppLocalizations.of(context)!
+                                                .translate("total_mileage")),
+                                        Text(state.result["totalMileage"]
+                                            .toString()),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 GestureDetector(
@@ -525,19 +516,30 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                                                       .carId!),
                                         ));
                                   },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SvgPicture.asset(
-                                        "assets/icons/total_trips.svg",
-                                        height: 50.h,
-                                        width: 50.h,
+                                  child: Container(
+                                    padding: EdgeInsets.all(4.h),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7),
+                                      border: Border.all(
+                                        color: AppColor.lightGrey,
+                                        width: 2.w,
                                       ),
-                                      SectionBody(
-                                          text: AppLocalizations.of(context)!
-                                              .translate("total_trips")),
-                                      const Text(""),
-                                    ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icons/total_trips.svg",
+                                          height: 50.h,
+                                          width: 50.h,
+                                        ),
+                                        SectionBody(
+                                            text: AppLocalizations.of(context)!
+                                                .translate("total_trips")),
+                                        const Text(""),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
@@ -592,6 +594,69 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
     super.dispose();
   }
 
+// Helper method to update markers
+  void _updateMarkers(List<KTruck> trucks) {
+    markers = {};
+    for (var i = 0; i < trucks.length; i++) {
+      markers.add(
+        Marker(
+          markerId: MarkerId("truck${trucks[i].id}"),
+          position: LatLng(
+            double.parse(trucks[i].locationLat!.split(",")[0]),
+            double.parse(trucks[i].locationLat!.split(",")[1]),
+          ),
+          icon: selectedIndex == i
+              ? BitmapDescriptor.defaultMarkerWithHue(
+                  BitmapDescriptor.hueYellow)
+              : BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          onTap: () {
+            setState(() {
+              selectedIndex = i; // Update selected index
+              selectedTruck = i;
+              truckLocation = trucks[i].locationLat!;
+            });
+            _updateMarkers(trucks); // Rebuild markers with updated colors
+
+            // Additional logic for handling marker tap
+            mymap();
+            _rightPosition = 0;
+            _bottomPosition = 150.h;
+            final now = DateTime.now();
+            final startTime = now.subtract(const Duration(days: 29));
+            final dateFormat = intel.DateFormat('yyyy-MM-dd HH:mm:ss');
+            final formattedStartTime = dateFormat.format(startTime);
+            final formattedEndTime = dateFormat.format(now);
+
+            BlocProvider.of<TotalStatisticsBloc>(context).add(
+              TotalStatisticsLoadEvent(
+                formattedStartTime,
+                formattedEndTime,
+                trucks[i].carId!,
+              ),
+            );
+          },
+        ),
+      );
+    }
+  }
+
+  void _onVerticalGesture(
+    DragUpdateDetails? details,
+    List<KTruck> trucks,
+  ) {
+    if (details!.primaryDelta! > 7 && panelState == PanelState.open) {
+      initMapbounds(trucks);
+      setState(() {
+        _rightPosition = -MediaQuery.of(context).size.width;
+        _bottomPosition = 0;
+        selectedIndex = -1;
+        selectedTruck = -1;
+        panelState = PanelState.hidden;
+      });
+      _updateMarkers(trucks);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -627,53 +692,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                             });
                             initMapbounds(state.trucks);
 
-                            markers = {};
-
-                            for (var i = 0; i < state.trucks.length; i++) {
-                              markers.add(
-                                Marker(
-                                  markerId:
-                                      MarkerId("truck${state.trucks[i].id}"),
-                                  position: LatLng(
-                                      double.parse(state.trucks[i].locationLat!
-                                          .split(",")[0]),
-                                      double.parse(state.trucks[i].locationLat!
-                                          .split(",")[1])),
-                                  onTap: () {
-                                    setState(() {
-                                      selectedIndex = i;
-                                      selectedTruck = i;
-                                      // subshipment = trucks[i];
-                                      truckLocation =
-                                          state.trucks[i].locationLat!;
-                                    });
-                                    mymap();
-
-                                    // _togglePosition();
-                                    _rightPosition = 0;
-                                    _bottomPosition = 140.h;
-                                    final now = DateTime.now();
-                                    final startTime =
-                                        now.subtract(const Duration(days: 29));
-                                    final dateFormat =
-                                        intel.DateFormat('yyyy-MM-dd HH:mm:ss');
-
-                                    final formattedStartTime =
-                                        dateFormat.format(startTime);
-                                    final formattedEndTime =
-                                        dateFormat.format(now);
-
-                                    BlocProvider.of<TotalStatisticsBloc>(
-                                            context)
-                                        .add(TotalStatisticsLoadEvent(
-                                            formattedStartTime,
-                                            formattedEndTime,
-                                            state.trucks[i].carId!));
-                                  },
-                                ),
-                              );
-                            }
-                            setState(() {});
+                            _updateMarkers(state.trucks);
                           },
                           zoomControlsEnabled: true,
                           mapToolbarEnabled: true,
@@ -696,13 +715,15 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                               // _togglePosition();
                               _rightPosition =
                                   -MediaQuery.of(context).size.width;
-                              _bottomPosition = 0;
 
                               initMapbounds(state.trucks);
                               setState(() {
+                                _bottomPosition = 0;
                                 selectedIndex = -1;
                                 selectedTruck = -1;
+                                panelState = PanelState.hidden;
                               });
+                              _updateMarkers(state.trucks);
                             },
                             icon: const SizedBox(
                               height: 40,
@@ -722,11 +743,65 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                               milliseconds: 300), // Animation duration
                           curve: Curves.easeInOut,
                           bottom: _bottomPosition,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: pathList(
-                              state.trucks,
-                              localeState.value.languageCode,
+                          child: GestureDetector(
+                            onVerticalDragUpdate: (details) {
+                              _onVerticalGesture(details, state.trucks);
+                            },
+                            child: Column(
+                              children: [
+                                Visibility(
+                                  visible: panelState == PanelState.open,
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      border: Border(
+                                        top: BorderSide(
+                                          color: AppColor.lightGrey,
+                                        ),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {
+                                            initMapbounds(state.trucks);
+                                            setState(() {
+                                              _rightPosition =
+                                                  -MediaQuery.of(context)
+                                                      .size
+                                                      .width;
+                                              _bottomPosition = 0;
+                                              selectedIndex = -1;
+                                              selectedTruck = -1;
+                                              panelState = PanelState.hidden;
+                                            });
+                                            _updateMarkers(state.trucks);
+                                          },
+                                          icon: SizedBox(
+                                            width: 32.w,
+                                            child: SvgPicture.asset(
+                                              "assets/icons/arrow_down.svg",
+                                              fit: BoxFit.contain,
+                                              height: 8.h,
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: pathList(
+                                    state.trucks,
+                                    localeState.value.languageCode,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),

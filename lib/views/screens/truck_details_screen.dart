@@ -12,6 +12,7 @@ import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,6 +48,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
 
   final String _mapStyle = "";
   String position_name = "";
+  int homeCarouselIndicator = 0;
 
   String getTruckType(int type) {
     switch (type) {
@@ -121,7 +123,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
     List<String> typesToCheck = [
       'route',
       'locality',
-      'administrative_area_level_2',
+      // 'administrative_area_level_2',
       'administrative_area_level_1'
     ];
     for (var element in result["results"]) {
@@ -189,13 +191,6 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            SectionTitle(
-                              text: AppLocalizations.of(context)!
-                                  .translate('driver_name'),
-                            ),
-                            SizedBox(
-                              height: 8.h,
-                            ),
                             Row(
                               children: [
                                 Container(
@@ -326,34 +321,25 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           children: [
-                            Image.network(
-                              widget.truck.images!.isNotEmpty
-                                  ? widget.truck.images![0].image!
-                                  : "",
-                              height: 250.h,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Container(
-                                  height: 250.h,
-                                  width: double.infinity,
-                                  color: Colors.grey[300],
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(60.0),
-                                    child: SvgPicture.asset(
-                                        "assets/images/camion_loading.svg"),
-                                  ),
-                                );
-                              },
-                              loadingBuilder:
-                                  (context, child, loadingProgress) {
-                                if (loadingProgress == null) {
-                                  return child;
-                                }
+                            CarouselSlider.builder(
+                              itemCount: widget.truck.images!.length,
+                              itemBuilder: (BuildContext context, int itemIndex,
+                                      int pageViewIndex) =>
+                                  Image.network(
+                                widget.truck.images![itemIndex].image!,
+                                fit: BoxFit.fill,
+                                height: 250.h,
+                                width: double.infinity,
+                                loadingBuilder:
+                                    (context, child, loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    // setState(() {
+                                    //   homeCarouselIndicator = itemIndex;
+                                    // });
+                                    return child;
+                                  }
 
-                                return SizedBox(
-                                  height: 250.h,
-                                  child: Center(
+                                  return Center(
                                     child: CircularProgressIndicator(
                                       value:
                                           loadingProgress.expectedTotalBytes !=
@@ -364,9 +350,17 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                                       .expectedTotalBytes!
                                               : null,
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
+                              options: CarouselOptions(
+                                height: 250.h,
+                                viewportFraction: 1,
+                                initialPage: 0,
+                                enableInfiniteScroll: false,
+                                enlargeCenterPage: true,
+                                scrollDirection: Axis.horizontal,
+                              ),
                             ),
                             SizedBox(
                               height: 8.h,

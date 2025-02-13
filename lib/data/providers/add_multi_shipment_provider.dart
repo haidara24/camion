@@ -392,7 +392,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _toptextfeildPosition = _toptextfeildPosition == 0 ? -250 : 0;
 
-    _bottomPosition = _bottomPosition == 112 ? -height : 112;
+    _bottomPosition = _bottomPosition == 111 ? -height : 111;
     notifyListeners();
   }
 

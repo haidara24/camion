@@ -1526,634 +1526,646 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                       )
                                     : const SizedBox.shrink(),
                                 widget.shipment.shipmentinstructionv2 == null
-                                    ? Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3),
-                                        child: Card(
-                                          key: key1,
-                                          color: Colors.white,
-                                          elevation: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Form(
-                                              key: _shipperDetailsformKey,
-                                              child: Column(
-                                                children: [
-                                                  Visibility(
-                                                    visible: (selectedRadioTile
-                                                            .isEmpty ||
-                                                        selectedRadioTile ==
-                                                            "M" ||
-                                                        selectedRadioTile ==
-                                                            "R"),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'charger_info'),
-                                                              style: TextStyle(
-                                                                fontSize: 17,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                color: AppColor
-                                                                    .darkGrey,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 16,
-                                                        ),
-                                                        TextFormField(
-                                                          controller:
-                                                              charger_name_controller,
-                                                          onTap: () {
-                                                            charger_name_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        charger_name_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
-                                                          },
-                                                          // scrollPadding:
-                                                          //     EdgeInsets.only(
-                                                          //   bottom: MediaQuery.of(
-                                                          //           context)
-                                                          //       .viewInsets
-                                                          //       .bottom,
-                                                          // ),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 20),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'charger_name'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
-                                                          ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {},
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            charger_name_controller
-                                                                    .text =
-                                                                newValue!;
-                                                          },
-                                                          onFieldSubmitted:
-                                                              (value) {},
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 16,
-                                                        ),
-                                                        TextFormField(
-                                                          controller:
-                                                              charger_address_controller,
-                                                          onTap: () {
-                                                            charger_address_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        charger_address_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
-                                                          },
-                                                          // enabled: instructionProvider.subShipment!
-                                                          //         .shipmentinstructionv2 ==
-                                                          //     null,
-                                                          // scrollPadding: EdgeInsets.only(
-                                                          //     bottom: MediaQuery.of(
-                                                          //                 context)
-                                                          //             .viewInsets
-                                                          //             .bottom +
-                                                          //         20),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 18),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'charger_address'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
-                                                          ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                            // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {},
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            // commodityWeight_controller.text = newValue!;
-                                                          },
-                                                          onFieldSubmitted:
-                                                              (value) {
-                                                            // FocusManager.instance.primaryFocus?.unfocus();
-                                                            // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          },
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 16,
-                                                        ),
-                                                        TextFormField(
-                                                          controller:
-                                                              charger_phone_controller,
-                                                          onTap: () {
-                                                            charger_phone_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        charger_phone_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
-                                                          },
-                                                          // enabled: instructionProvider.subShipment!
-                                                          //         .shipmentinstructionv2 ==
-                                                          //     null,
-                                                          // scrollPadding: EdgeInsets.only(
-                                                          //     bottom: MediaQuery.of(
-                                                          //                 context)
-                                                          //             .viewInsets
-                                                          //             .bottom +
-                                                          //         20),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .phone,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 18),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'charger_phone'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
-                                                          ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                            // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {},
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            // commodityWeight_controller.text = newValue!;
-                                                          },
-                                                          onFieldSubmitted:
-                                                              (value) {
-                                                            // FocusManager.instance.primaryFocus?.unfocus();
-                                                            // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          },
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        const Divider(),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: (selectedRadioTile
-                                                            .isEmpty ||
-                                                        selectedRadioTile ==
-                                                            "M" ||
-                                                        selectedRadioTile ==
-                                                            "C"),
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
+                                    ? Visibility(
+                                        visible: selectedRadioTile.isNotEmpty,
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3),
+                                          child: Card(
+                                            key: key1,
+                                            color: Colors.white,
+                                            elevation: 2,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(16.0),
+                                              child: Form(
+                                                key: _shipperDetailsformKey,
+                                                child: Column(
+                                                  children: [
+                                                    Visibility(
+                                                      visible: (selectedRadioTile
+                                                              .isEmpty ||
+                                                          selectedRadioTile ==
+                                                              "M" ||
+                                                          selectedRadioTile ==
+                                                              "R"),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
                                                                 AppLocalizations.of(
                                                                         context)!
                                                                     .translate(
-                                                                        'reciever_info'),
+                                                                        'charger_info'),
                                                                 style:
                                                                     TextStyle(
-                                                                  fontSize: 18,
+                                                                  fontSize: 17,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                   color: AppColor
                                                                       .darkGrey,
-                                                                )),
-                                                          ],
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 16,
-                                                        ),
-                                                        TextFormField(
-                                                          controller:
-                                                              reciever_name_controller,
-                                                          onTap: () {
-                                                            reciever_name_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        reciever_name_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
-                                                          },
-                                                          // enabled: instructionProvider.subShipment!
-                                                          //         .shipmentinstructionv2 ==
-                                                          //     null,
-                                                          // scrollPadding: EdgeInsets.only(
-                                                          //     bottom: MediaQuery.of(
-                                                          //                 context)
-                                                          //             .viewInsets
-                                                          //             .bottom +
-                                                          //         20),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 18),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'reciever_name'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
+                                                                ),
+                                                              ),
+                                                            ],
                                                           ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {},
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
+                                                          const SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                          TextFormField(
+                                                            controller:
+                                                                charger_name_controller,
+                                                            onTap: () {
+                                                              charger_name_controller
+                                                                      .selection =
+                                                                  TextSelection(
+                                                                      baseOffset:
+                                                                          0,
+                                                                      extentOffset: charger_name_controller
+                                                                          .value
+                                                                          .text
+                                                                          .length);
+                                                            },
+                                                            // scrollPadding:
+                                                            //     EdgeInsets.only(
+                                                            //   bottom: MediaQuery.of(
+                                                            //           context)
+                                                            //       .viewInsets
+                                                            //       .bottom,
+                                                            // ),
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        20),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText: AppLocalizations
                                                                       .of(
                                                                           context)!
                                                                   .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            reciever_name_controller
-                                                                    .text =
-                                                                newValue!;
-                                                          },
-                                                          // onFieldSubmitted: (value) {},
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 16,
-                                                        ),
-                                                        TextFormField(
-                                                          controller:
-                                                              reciever_address_controller,
-                                                          onTap: () {
-                                                            reciever_address_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        reciever_address_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
-                                                          },
-                                                          // enabled: instructionProvider.subShipment!
-                                                          //         .shipmentinstructionv2 ==
-                                                          //     null,
-                                                          // scrollPadding: EdgeInsets.only(
-                                                          //     bottom: MediaQuery.of(
-                                                          //                 context)
-                                                          //             .viewInsets
-                                                          //             .bottom +
-                                                          //         20),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 18),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'reciever_address'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
-                                                          ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                            // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
+                                                                      'charger_name'),
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          11.0,
+                                                                      horizontal:
+                                                                          9.0),
+                                                            ),
+                                                            onTapOutside:
+                                                                (event) {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+                                                            },
+                                                            onEditingComplete:
+                                                                () {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
 
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {},
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
+                                                              // evaluatePrice();
+                                                            },
+                                                            onChanged:
+                                                                (value) {},
+                                                            autovalidateMode:
+                                                                AutovalidateMode
+                                                                    .onUserInteraction,
+                                                            validator: (value) {
+                                                              if (value!
+                                                                  .isEmpty) {
+                                                                return AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'insert_value_validate');
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved:
+                                                                (newValue) {
+                                                              charger_name_controller
+                                                                      .text =
+                                                                  newValue!;
+                                                            },
+                                                            onFieldSubmitted:
+                                                                (value) {},
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                          TextFormField(
+                                                            controller:
+                                                                charger_address_controller,
+                                                            onTap: () {
+                                                              charger_address_controller
+                                                                      .selection =
+                                                                  TextSelection(
+                                                                      baseOffset:
+                                                                          0,
+                                                                      extentOffset: charger_address_controller
+                                                                          .value
+                                                                          .text
+                                                                          .length);
+                                                            },
+                                                            // enabled: instructionProvider.subShipment!
+                                                            //         .shipmentinstructionv2 ==
+                                                            //     null,
+                                                            // scrollPadding: EdgeInsets.only(
+                                                            //     bottom: MediaQuery.of(
+                                                            //                 context)
+                                                            //             .viewInsets
+                                                            //             .bottom +
+                                                            //         20),
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText: AppLocalizations
                                                                       .of(
                                                                           context)!
                                                                   .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            reciever_address_controller
-                                                                    .text =
-                                                                newValue!;
-                                                          },
-                                                          // onFieldSubmitted: (value) {
-                                                          //   // FocusManager.instance.primaryFocus?.unfocus();
-                                                          //   // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          // },
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 16,
-                                                        ),
-                                                        TextFormField(
-                                                          controller:
-                                                              reciever_phone_controller,
-                                                          onTap: () {
-                                                            reciever_phone_controller
-                                                                    .selection =
-                                                                TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        reciever_phone_controller
-                                                                            .value
-                                                                            .text
-                                                                            .length);
-                                                          },
-                                                          // enabled: instructionProvider.subShipment!
-                                                          //         .shipmentinstructionv2 ==
-                                                          //     null,
-                                                          // scrollPadding: EdgeInsets.only(
-                                                          //     bottom: MediaQuery.of(
-                                                          //                 context)
-                                                          //             .viewInsets
-                                                          //             .bottom +
-                                                          //         20),
-                                                          textInputAction:
-                                                              TextInputAction
-                                                                  .done,
-                                                          keyboardType:
-                                                              TextInputType
-                                                                  .phone,
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize: 18),
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    'reciever_phone'),
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    vertical:
-                                                                        11.0,
-                                                                    horizontal:
-                                                                        9.0),
-                                                          ),
-                                                          onTapOutside:
-                                                              (event) {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
-                                                            // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          },
-                                                          onEditingComplete:
-                                                              () {
-                                                            FocusManager
-                                                                .instance
-                                                                .primaryFocus
-                                                                ?.unfocus();
+                                                                      'charger_address'),
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          11.0,
+                                                                      horizontal:
+                                                                          9.0),
+                                                            ),
+                                                            onTapOutside:
+                                                                (event) {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+                                                              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            },
+                                                            onEditingComplete:
+                                                                () {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
 
-                                                            // evaluatePrice();
-                                                          },
-                                                          onChanged: (value) {},
-                                                          autovalidateMode:
-                                                              AutovalidateMode
-                                                                  .onUserInteraction,
-                                                          validator: (value) {
-                                                            if (value!
-                                                                .isEmpty) {
-                                                              return AppLocalizations
+                                                              // evaluatePrice();
+                                                            },
+                                                            onChanged:
+                                                                (value) {},
+                                                            autovalidateMode:
+                                                                AutovalidateMode
+                                                                    .onUserInteraction,
+                                                            validator: (value) {
+                                                              if (value!
+                                                                  .isEmpty) {
+                                                                return AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'insert_value_validate');
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved:
+                                                                (newValue) {
+                                                              // commodityWeight_controller.text = newValue!;
+                                                            },
+                                                            onFieldSubmitted:
+                                                                (value) {
+                                                              // FocusManager.instance.primaryFocus?.unfocus();
+                                                              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            },
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                          TextFormField(
+                                                            controller:
+                                                                charger_phone_controller,
+                                                            onTap: () {
+                                                              charger_phone_controller
+                                                                      .selection =
+                                                                  TextSelection(
+                                                                      baseOffset:
+                                                                          0,
+                                                                      extentOffset: charger_phone_controller
+                                                                          .value
+                                                                          .text
+                                                                          .length);
+                                                            },
+                                                            // enabled: instructionProvider.subShipment!
+                                                            //         .shipmentinstructionv2 ==
+                                                            //     null,
+                                                            // scrollPadding: EdgeInsets.only(
+                                                            //     bottom: MediaQuery.of(
+                                                            //                 context)
+                                                            //             .viewInsets
+                                                            //             .bottom +
+                                                            //         20),
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .phone,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText: AppLocalizations
                                                                       .of(
                                                                           context)!
                                                                   .translate(
-                                                                      'insert_value_validate');
-                                                            }
-                                                            return null;
-                                                          },
-                                                          onSaved: (newValue) {
-                                                            reciever_phone_controller
-                                                                    .text =
-                                                                newValue!;
-                                                          },
-                                                          // onFieldSubmitted: (value) {
-                                                          //   // FocusManager.instance.primaryFocus?.unfocus();
-                                                          //   // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                          // },
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                      ],
+                                                                      'charger_phone'),
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          11.0,
+                                                                      horizontal:
+                                                                          9.0),
+                                                            ),
+                                                            onTapOutside:
+                                                                (event) {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+                                                              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            },
+                                                            onEditingComplete:
+                                                                () {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+
+                                                              // evaluatePrice();
+                                                            },
+                                                            onChanged:
+                                                                (value) {},
+                                                            autovalidateMode:
+                                                                AutovalidateMode
+                                                                    .onUserInteraction,
+                                                            validator: (value) {
+                                                              if (value!
+                                                                  .isEmpty) {
+                                                                return AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'insert_value_validate');
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved:
+                                                                (newValue) {
+                                                              // commodityWeight_controller.text = newValue!;
+                                                            },
+                                                            onFieldSubmitted:
+                                                                (value) {
+                                                              // FocusManager.instance.primaryFocus?.unfocus();
+                                                              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            },
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                          const Divider(),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
+                                                    Visibility(
+                                                      visible: (selectedRadioTile
+                                                              .isEmpty ||
+                                                          selectedRadioTile ==
+                                                              "M" ||
+                                                          selectedRadioTile ==
+                                                              "C"),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          'reciever_info'),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: AppColor
+                                                                        .darkGrey,
+                                                                  )),
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                          TextFormField(
+                                                            controller:
+                                                                reciever_name_controller,
+                                                            onTap: () {
+                                                              reciever_name_controller
+                                                                      .selection =
+                                                                  TextSelection(
+                                                                      baseOffset:
+                                                                          0,
+                                                                      extentOffset: reciever_name_controller
+                                                                          .value
+                                                                          .text
+                                                                          .length);
+                                                            },
+                                                            // enabled: instructionProvider.subShipment!
+                                                            //         .shipmentinstructionv2 ==
+                                                            //     null,
+                                                            // scrollPadding: EdgeInsets.only(
+                                                            //     bottom: MediaQuery.of(
+                                                            //                 context)
+                                                            //             .viewInsets
+                                                            //             .bottom +
+                                                            //         20),
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'reciever_name'),
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          11.0,
+                                                                      horizontal:
+                                                                          9.0),
+                                                            ),
+                                                            onTapOutside:
+                                                                (event) {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+                                                            },
+                                                            onEditingComplete:
+                                                                () {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+
+                                                              // evaluatePrice();
+                                                            },
+                                                            onChanged:
+                                                                (value) {},
+                                                            autovalidateMode:
+                                                                AutovalidateMode
+                                                                    .onUserInteraction,
+                                                            validator: (value) {
+                                                              if (value!
+                                                                  .isEmpty) {
+                                                                return AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'insert_value_validate');
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved:
+                                                                (newValue) {
+                                                              reciever_name_controller
+                                                                      .text =
+                                                                  newValue!;
+                                                            },
+                                                            // onFieldSubmitted: (value) {},
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                          TextFormField(
+                                                            controller:
+                                                                reciever_address_controller,
+                                                            onTap: () {
+                                                              reciever_address_controller
+                                                                      .selection =
+                                                                  TextSelection(
+                                                                      baseOffset:
+                                                                          0,
+                                                                      extentOffset: reciever_address_controller
+                                                                          .value
+                                                                          .text
+                                                                          .length);
+                                                            },
+                                                            // enabled: instructionProvider.subShipment!
+                                                            //         .shipmentinstructionv2 ==
+                                                            //     null,
+                                                            // scrollPadding: EdgeInsets.only(
+                                                            //     bottom: MediaQuery.of(
+                                                            //                 context)
+                                                            //             .viewInsets
+                                                            //             .bottom +
+                                                            //         20),
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'reciever_address'),
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          11.0,
+                                                                      horizontal:
+                                                                          9.0),
+                                                            ),
+                                                            onTapOutside:
+                                                                (event) {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+                                                              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            },
+                                                            onEditingComplete:
+                                                                () {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+
+                                                              // evaluatePrice();
+                                                            },
+                                                            onChanged:
+                                                                (value) {},
+                                                            autovalidateMode:
+                                                                AutovalidateMode
+                                                                    .onUserInteraction,
+                                                            validator: (value) {
+                                                              if (value!
+                                                                  .isEmpty) {
+                                                                return AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'insert_value_validate');
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved:
+                                                                (newValue) {
+                                                              reciever_address_controller
+                                                                      .text =
+                                                                  newValue!;
+                                                            },
+                                                            // onFieldSubmitted: (value) {
+                                                            //   // FocusManager.instance.primaryFocus?.unfocus();
+                                                            //   // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            // },
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 16,
+                                                          ),
+                                                          TextFormField(
+                                                            controller:
+                                                                reciever_phone_controller,
+                                                            onTap: () {
+                                                              reciever_phone_controller
+                                                                      .selection =
+                                                                  TextSelection(
+                                                                      baseOffset:
+                                                                          0,
+                                                                      extentOffset: reciever_phone_controller
+                                                                          .value
+                                                                          .text
+                                                                          .length);
+                                                            },
+                                                            // enabled: instructionProvider.subShipment!
+                                                            //         .shipmentinstructionv2 ==
+                                                            //     null,
+                                                            // scrollPadding: EdgeInsets.only(
+                                                            //     bottom: MediaQuery.of(
+                                                            //                 context)
+                                                            //             .viewInsets
+                                                            //             .bottom +
+                                                            //         20),
+                                                            textInputAction:
+                                                                TextInputAction
+                                                                    .done,
+                                                            keyboardType:
+                                                                TextInputType
+                                                                    .phone,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        18),
+                                                            decoration:
+                                                                InputDecoration(
+                                                              labelText: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'reciever_phone'),
+                                                              contentPadding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      vertical:
+                                                                          11.0,
+                                                                      horizontal:
+                                                                          9.0),
+                                                            ),
+                                                            onTapOutside:
+                                                                (event) {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+                                                              // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            },
+                                                            onEditingComplete:
+                                                                () {
+                                                              FocusManager
+                                                                  .instance
+                                                                  .primaryFocus
+                                                                  ?.unfocus();
+
+                                                              // evaluatePrice();
+                                                            },
+                                                            onChanged:
+                                                                (value) {},
+                                                            autovalidateMode:
+                                                                AutovalidateMode
+                                                                    .onUserInteraction,
+                                                            validator: (value) {
+                                                              if (value!
+                                                                  .isEmpty) {
+                                                                return AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'insert_value_validate');
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onSaved:
+                                                                (newValue) {
+                                                              reciever_phone_controller
+                                                                      .text =
+                                                                  newValue!;
+                                                            },
+                                                            // onFieldSubmitted: (value) {
+                                                            //   // FocusManager.instance.primaryFocus?.unfocus();
+                                                            //   // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
+                                                            // },
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 8,
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),

@@ -19,6 +19,7 @@ import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/contact_us_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/owner/all_incoming_shipment_screen.dart';
 import 'package:camion/views/screens/owner/owner_active_shipment_screen.dart';
@@ -364,33 +365,28 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                         const Divider(
                           color: Colors.white,
                         ),
-                        ListTile(
-                          leading: SvgPicture.asset(
-                            "assets/icons/orange/help_info.svg",
-                            height: 25.h,
-                            width: 25.h,
-                          ),
-                          title: Text(
-                            AppLocalizations.of(context)!.translate('help'),
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          trailing: Container(
-                            width: 36.w,
-                            height: 20.h,
-                            decoration: BoxDecoration(
-                                color: AppColor.deepYellow,
-                                borderRadius: BorderRadius.circular(2)),
-                            child: Center(
-                              child: Text(
-                                "soon",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12.sp,
-                                ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactUsScreen(),
                               ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/orange/help_info.svg",
+                              height: 25.h,
+                              width: 25.h,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('contact_us'),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -720,7 +716,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/orange/truck_order.svg",
+                                            "assets/icons/orange/truck.svg",
                                             width: 36.w,
                                             height: 28.w,
                                             fit: BoxFit.fill,
@@ -742,7 +738,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                                             MainAxisAlignment.end,
                                         children: [
                                           SvgPicture.asset(
-                                            "assets/icons/white/truck_order.svg",
+                                            "assets/icons/white/truck.svg",
                                             width: 31.w,
                                             height: 28.w,
                                             fit: BoxFit.fill,

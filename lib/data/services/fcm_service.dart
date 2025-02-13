@@ -75,12 +75,14 @@ class NotificationServices {
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
+    RemoteMessage message,
+  ) async {
     // you need to initialize firebase first
     await Firebase.initializeApp(
       name: "Camion",
       options: DefaultFirebaseOptions.currentPlatform,
     );
+
     print("Handling a background message: ${message.messageId}");
   }
 
