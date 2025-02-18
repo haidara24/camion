@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:camion/Localization/app_localizations_setup.dart';
+import 'package:camion/business_logic/bloc/bloc/delete_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
+import 'package:camion/business_logic/bloc/bloc/update_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/create_truck_price_bloc.dart';
@@ -230,6 +232,20 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => CreateTruckPriceBloc(
+                        truckPriceRepository:
+                            RepositoryProvider.of<TruckPriceRepository>(
+                                context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => UpdateTruckPriceBloc(
+                        truckPriceRepository:
+                            RepositoryProvider.of<TruckPriceRepository>(
+                                context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => DeleteTruckPriceBloc(
                         truckPriceRepository:
                             RepositoryProvider.of<TruckPriceRepository>(
                                 context),

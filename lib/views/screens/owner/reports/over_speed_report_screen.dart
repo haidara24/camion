@@ -182,86 +182,7 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
     return str.replaceRange(str.length - 1, null, ".");
   }
 
-  void showMapOverlay() {
-    overlayEntry = OverlayEntry(
-      builder: (context) => Positioned.fill(
-        child: GestureDetector(
-          onTap: () => overlayEntry?.remove(),
-          child: Material(
-            color: Colors.black54,
-            child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.arrow_back),
-                        ),
-                        const Spacer(),
-                        SectionTitle(
-                          text: AppLocalizations.of(context)!
-                              .translate('choose_shippment_path'),
-                          size: 20,
-                        ),
-                        const Spacer(),
-                        const SizedBox(
-                          width: 25,
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8.h,
-                  ),
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: GoogleMap(
-                        initialCameraPosition: CameraPosition(
-                          target: location,
-                          zoom: 15,
-                        ),
-                        markers: {
-                          Marker(
-                            markerId: const MarkerId('location'),
-                            position: location,
-                          ),
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      positionName,
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-
-    Overlay.of(context).insert(overlayEntry!);
-    getAddressForPickupFromLatLng(location);
-  }
-
-  showMapModalSheet(BuildContext context, String lang) {
+  void showMapModalSheet(BuildContext context, String lang) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -274,64 +195,55 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
       builder: (context) => Container(
         color: Colors.grey[200],
         padding: const EdgeInsets.all(16.0),
-        constraints:
-            BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height,
+        ),
         width: double.infinity,
-        child: ListView(
-          // shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
+        child: Stack(
           children: [
-            Container(
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back),
-                  ),
-                  const Spacer(),
-                  SectionTitle(
-                    text: AppLocalizations.of(context)!
-                        .translate('choose_shippment_path'),
-                    size: 20,
-                  ),
-                  const Spacer(),
-                  const SizedBox(
-                    width: 25,
-                  ),
-                ],
+            // GoogleMap
+            GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: location,
+                zoom: 15,
               ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 50,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: location,
-                  zoom: 15,
+              markers: {
+                Marker(
+                  markerId: const MarkerId('location'),
+                  position: location,
                 ),
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('location'),
-                    position: location,
-                  ),
-                },
+              },
+            ),
+            // Header Row
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.arrow_back),
+                    ),
+                    const Spacer(),
+                    SectionTitle(
+                      text: AppLocalizations.of(context)!
+                          .translate('choose_shippment_path'),
+                      size: 20,
+                    ),
+                    const Spacer(),
+                    const SizedBox(
+                      width: 25,
+                    ),
+                  ],
+                ),
               ),
             ),
-            // const SizedBox(height: 16),
-            // Container(
-            //   padding: const EdgeInsets.all(16),
-            //   decoration: BoxDecoration(
-            //     color: Colors.white,
-            //     borderRadius: BorderRadius.circular(15),
-            //   ),
-            //   child: Text(
-            //     positionName,
-            //     style: const TextStyle(fontSize: 16),
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -502,6 +414,11 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                                     ],
                                   )
                                 : Table(
+                                    columnWidths: {
+                                      0: const FlexColumnWidth(),
+                                      1: FixedColumnWidth(120.w),
+                                      2: FixedColumnWidth(80.w),
+                                    },
                                     border: TableBorder.all(
                                       borderRadius: BorderRadius.circular(8),
                                       color: AppColor.deepYellow,
@@ -510,6 +427,8 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                                     children: [
                                       TableRow(children: [
                                         TableCell(
+                                          verticalAlignment:
+                                              TableCellVerticalAlignment.fill,
                                           child: Container(
                                             decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
@@ -539,6 +458,8 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                                           ),
                                         ),
                                         TableCell(
+                                          verticalAlignment:
+                                              TableCellVerticalAlignment.fill,
                                           child: Container(
                                             decoration: BoxDecoration(
                                               color: AppColor.lightYellow,

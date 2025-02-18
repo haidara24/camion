@@ -562,10 +562,11 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   @override
   void initState() {
     super.initState();
-    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      print("timer");
       if (startTracking) {
         _fetchTruckLocation(subshipment!.truck!);
-        mymap();
+        // mymap();
       }
     });
     animcontroller = BottomSheet.createAnimationController(this);
@@ -600,7 +601,10 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     try {
       String? location;
       dynamic data;
-      if (truck.gpsId!.isEmpty || truck.gpsId!.length < 8) {
+      print("truck.gpsId ${truck.gpsId}");
+      if (truck.gpsId == null ||
+          truck.gpsId!.isEmpty ||
+          truck.gpsId!.length < 8) {
         location = await _truckRepository.getTruckLocation(truck.id!);
       } else {
         data = await GpsRepository.getCarInfo(truck.gpsId!);
@@ -611,6 +615,16 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
         truckData = data;
         truckLocation = location;
       });
+      await _controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(
+                double.parse(truckLocation!.split(",")[0]),
+                double.parse(truckLocation!.split(",")[1]),
+              ),
+              zoom: 14.47),
+        ),
+      );
     } catch (e) {
       print('Failed to fetch truck location: $e');
     }

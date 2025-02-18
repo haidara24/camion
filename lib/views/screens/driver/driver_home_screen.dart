@@ -23,6 +23,7 @@ import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/contact_us_screen.dart';
+import 'package:camion/views/screens/driver/driver_prices_screen.dart';
 import 'package:camion/views/screens/driver/driver_profile_screen.dart';
 import 'package:camion/views/screens/driver/fixes_list_screen.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_screen.dart';
@@ -89,6 +90,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     String gpsId = prefs.getString("gpsId") ?? "";
     _locationSubscription?.cancel();
     _timer?.cancel();
+    print("truckId $truckId");
+    print("gpsId $gpsId");
 
     if (gpsId.isEmpty || gpsId.length < 8) {
       _locationSubscription = location.onLocationChanged.handleError((onError) {
@@ -108,7 +111,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                       '${currentlocation.latitude},${currentlocation.longitude}'
                 },
                 apiToken: jwt);
-            _timer = Timer(const Duration(minutes: 1), () {});
+            _timer = Timer(const Duration(seconds: 10), () {});
           }
         }
       });
@@ -122,7 +125,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
           var rs = await HttpHelper.patch(
               '$TRUCKS_ENDPOINT$truckId/', {'location_lat': location},
               apiToken: jwt);
-          _timer = Timer(const Duration(minutes: 1), () {});
+          _timer = Timer(const Duration(seconds: 10), () {});
         }
       }
     }
@@ -156,7 +159,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
 
     _tabController = TabController(
       initialIndex: 0,
-      length: 4,
+      length: 5,
       vsync: this,
     );
 
@@ -220,6 +223,15 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
             title = AppLocalizations.of(context)!.translate('my_path');
 
             currentScreen = TrackingShipmentScreen();
+          });
+          break;
+        }
+      case 4:
+        {
+          setState(() {
+            title = AppLocalizations.of(context)!.translate('my_prices');
+
+            currentScreen = DriverPricesScreen();
           });
           break;
         }
@@ -395,6 +407,14 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                     setState(() {
                                       title = AppLocalizations.of(context)!
                                           .translate('my_path');
+                                    });
+                                    break;
+                                  }
+                                case 4:
+                                  {
+                                    setState(() {
+                                      title = AppLocalizations.of(context)!
+                                          .translate('my_prices');
                                     });
                                     break;
                                   }
@@ -833,6 +853,52 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                             Text(
                                               AppLocalizations.of(context)!
                                                   .translate('my_path'),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                                Tab(
+                                  height: 62.h,
+                                  icon: navigationValue == 4
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/orange/my_prices.svg",
+                                              width: 28.w,
+                                              height: 28.w,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('my_prices'),
+                                              style: TextStyle(
+                                                  color: AppColor.deepYellow,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/white/my_prices.svg",
+                                              width: 28.w,
+                                              height: 28.w,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('my_prices'),
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 12.sp),
