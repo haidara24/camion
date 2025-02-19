@@ -10,6 +10,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
+import 'package:camion/data/repositories/gps_repository.dart';
 import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
@@ -538,9 +539,8 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
   void initState() {
     super.initState();
     timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      // _fetchTruckLocation(subshipment!.truck!.id!);
       if (startTracking) {
-        mymap();
+      _fetchTruckLocation(subshipment!.truck!);
       }
     });
     animcontroller = BottomSheet.createAnimationController(this);
@@ -569,13 +569,30 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
             zoom: 14.47)));
   }
 
-  Future<void> _fetchTruckLocation(int truckId) async {
+  Future<void> _fetchTruckLocation(ShipmentTruck truck) async {
     try {
-      final location = await _truckRepository.getTruckLocation(truckId);
+      String? location;
+      dynamic data;
+
+      if (truck.gpsId == null ||
+          truck.gpsId!.isEmpty ||
+          truck.gpsId!.length < 8) {
+        location = await _truckRepository.getTruckLocation(truck.id!);
+      } else {
+        data = await GpsRepository.getCarInfo(truck.gpsId!);
+        location = '${data["carStatus"]["lat"]},${data["carStatus"]["lon"]}';
+      }
       print(location);
       setState(() {
         truckLocation = location;
       });
+      await _controller
+        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+            target: LatLng(
+              double.parse(truckLocation!.split(",")[0]),
+              double.parse(truckLocation!.split(",")[1]),
+            ),
+            zoom: 14.47),),);
     } catch (e) {
       print('Failed to fetch truck location: $e');
     }

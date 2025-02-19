@@ -30,6 +30,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ActiveShipmentScreen extends StatefulWidget {
@@ -494,6 +495,8 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
   Set<Marker> markers = {};
   final TruckRepository _truckRepository = TruckRepository();
   dynamic truckData;
+  List<SubShipment> shipmentList = [];
+  String lang = "ar";
 
   createMarkerIcons(List<SubShipment> shipment, String lang) async {
     truckicon = await BitmapDescriptor.fromAssetImage(
@@ -566,14 +569,20 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
       print("timer");
       if (startTracking) {
         _fetchTruckLocation(subshipment!.truck!);
-        // mymap();
+        print(shipmentList.isNotEmpty);
+        if (shipmentList.isNotEmpty) {
+          print("rty");
+          markers = {};
+          createMarkerIcons(
+            shipmentList,
+            lang,
+          );
+        }
       }
     });
+
     animcontroller = BottomSheet.createAnimationController(this);
     animcontroller.duration = const Duration(milliseconds: 1000);
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //   createMarkerIcons();
-    // });
     rootBundle.loadString('assets/style/map_style.json').then((string) {
       _mapStyle = string;
     });
@@ -587,20 +596,11 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
     super.dispose();
   }
 
-  Future<void> mymap() async {
-    await _controller
-        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(
-              double.parse(truckLocation!.split(",")[0]),
-              double.parse(truckLocation!.split(",")[1]),
-            ),
-            zoom: 14.47)));
-  }
-
   Future<void> _fetchTruckLocation(ShipmentTruck truck) async {
     try {
       String? location;
       dynamic data;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       print("truck.gpsId ${truck.gpsId}");
       if (truck.gpsId == null ||
           truck.gpsId!.isEmpty ||
@@ -609,6 +609,10 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
       } else {
         data = await GpsRepository.getCarInfo(truck.gpsId!);
         location = '${data["carStatus"]["lat"]},${data["carStatus"]["lon"]}';
+        var jwt = prefs.getString("token");
+        var rs = await HttpHelper.patch(
+            '$TRUCKS_ENDPOINT${truck.id!}/', {'location_lat': location},
+            apiToken: jwt);
       }
       print(location);
       setState(() {
@@ -618,11 +622,12 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
       await _controller.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
-              target: LatLng(
-                double.parse(truckLocation!.split(",")[0]),
-                double.parse(truckLocation!.split(",")[1]),
-              ),
-              zoom: 14.47),
+            target: LatLng(
+              double.parse(truckLocation!.split(",")[0]),
+              double.parse(truckLocation!.split(",")[1]),
+            ),
+            zoom: 17,
+          ),
         ),
       );
     } catch (e) {
@@ -656,11 +661,13 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                   if (state is ActiveShipmentListLoadedSuccess) {
                     if (state.shipments.isNotEmpty) {
                       setState(() {
+                        shipmentList = state.shipments;
                         selectedIndex = 0;
                         selectedTruck = 0;
                         subshipment = state.shipments[0];
                         truckLocation = state.shipments[0].truck!.location_lat!;
                         startTracking = false;
+                        lang = localeState.value.languageCode;
                       });
                       initMapbounds(state.shipments[0]);
                       markers = {};
