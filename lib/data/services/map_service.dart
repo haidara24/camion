@@ -77,9 +77,6 @@ class MapService {
         '&mode=DRIVING',
       );
 
-      print(response.statusCode);
-      print(response.body);
-
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
         final element = result["rows"][0]['elements'][0];
@@ -155,10 +152,6 @@ class MapService {
   }
 
   static String formatMinutesToDuration(int totalMinutes) {
-    print("totalMinutes");
-    print("totalMinutes");
-    print(totalMinutes);
-    print("totalMinutes");
     final days = totalMinutes ~/ (24 * 60);
     final hours = (totalMinutes % (24 * 60)) ~/ 60;
     final minutes = totalMinutes % 60;

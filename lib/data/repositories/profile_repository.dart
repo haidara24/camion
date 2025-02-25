@@ -110,7 +110,6 @@ class ProfileRepository {
     var rs = await HttpHelper.get('$MERCHANTS_ENDPOINT$id/', apiToken: jwt);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
-      print(myDataString);
       var result = jsonDecode(myDataString);
       return Merchant.fromJson(result);
     }

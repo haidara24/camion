@@ -11,7 +11,6 @@ class PlaceService {
     var response = await http.get(Uri.parse(url));
     var json = convert.jsonDecode(response.body);
     var jsonResults = json['predictions'] as List;
-    print(jsonResults.length);
     return jsonResults.map((place) => PlaceSearch.fromJson(place)).toList();
   }
 

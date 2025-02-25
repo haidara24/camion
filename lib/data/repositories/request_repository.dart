@@ -18,9 +18,6 @@ class RequestRepository {
         '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}/',
         apiToken: jwt);
     approvalRequests = [];
-    print(
-        '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}/');
-    print(rs.body);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
       var result = jsonDecode(myDataString);
@@ -57,10 +54,8 @@ class RequestRepository {
         '${APPROVAL_REQUESTS_ENDPOINT}merchant/$merchant/',
         apiToken: jwt);
     merchantapprovalRequests = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
-    print(myDataString);
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
@@ -100,8 +95,6 @@ class RequestRepository {
           "is_approved": true,
         },
         apiToken: jwt);
-    print(rs.statusCode);
-    print(rs.body);
     if (rs.statusCode == 200) {
       return true;
     } else {
@@ -134,8 +127,6 @@ class RequestRepository {
         '$APPROVAL_REQUESTS_ENDPOINT$id/accept_driver_request/',
         {"response_turn": "D", "is_approved": true},
         apiToken: jwt);
-    print(rs.statusCode);
-    print(rs.body);
     if (rs.statusCode == 200) {
       return true;
     } else {

@@ -10,7 +10,6 @@ class UserService {
     final url =
         Uri.parse('${OWNERS_ENDPOINT}search_by_phone/?q=${query.substring(1)}');
     final response = await http.get(url);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var myDataString = utf8.decode(response.bodyBytes);
 

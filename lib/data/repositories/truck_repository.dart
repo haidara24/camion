@@ -37,13 +37,10 @@ class TruckRepository {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     String truckTypeParams = types.map((type) => 'truck_types=$type').join('&');
-    print(
-        '${TRUCKS_ENDPOINT}nearest_trucks/?location=$location&$truckTypeParams&loading_place_id=$pol&discharge_place_id=$pod');
     var rs = await HttpHelper.get(
         '${TRUCKS_ENDPOINT}nearest_trucks/?location=$location&$truckTypeParams&loading_place_id=$pol&discharge_place_id=$pod',
         apiToken: jwt);
     ktrucks = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
@@ -311,7 +308,7 @@ class TruckRepository {
     }
 
     request.fields['truckuser'] = truck.truckuser!.toString();
-    request.fields['owner'] = truck.phoneowner??"0";
+    request.fields['owner'] = truck.phoneowner ?? "0";
     request.fields['truck_type'] = truck.truckType!.id!.toString();
     request.fields['location_lat'] = truck.locationLat!;
     request.fields['height'] = truck.height!.toString();
@@ -323,15 +320,12 @@ class TruckRepository {
     request.fields['empty_weight'] = truck.emptyWeight!.toString();
     request.fields['gross_weight'] = truck.grossWeight!.toString();
     request.fields['gpsId'] = "";
-print(request.fields);
     var response = await request.send();
-    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       return KTruck.fromJson(jsonDecode(respStr));
     } else {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       return null;
     }
   }
@@ -342,7 +336,8 @@ print(request.fields);
   ) async {
     prefs = await SharedPreferences.getInstance();
     var token = prefs.getString("token");
-    var request = http.MultipartRequest('POST', Uri.parse("${TRUCKS_ENDPOINT}create-with-driver/"));
+    var request = http.MultipartRequest(
+        'POST', Uri.parse("${TRUCKS_ENDPOINT}create-with-driver/"));
     request.headers.addAll({
       HttpHeaders.authorizationHeader: "JWT $token",
       HttpHeaders.contentTypeHeader: "multipart/form-data"
@@ -376,15 +371,12 @@ print(request.fields);
     request.fields['empty_weight'] = truck['emptyWeight'].toString();
     request.fields['gross_weight'] = truck['grossWeight'].toString();
     request.fields['gpsId'] = "";
-print(request.fields);
     var response = await request.send();
-    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
       return KTruck.fromJson(jsonDecode(respStr));
     } else {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       return null;
     }
   }

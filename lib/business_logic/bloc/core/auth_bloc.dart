@@ -47,7 +47,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
               Response userresponse =
                   await HttpHelper.get(PROFILE_ENDPOINT, apiToken: jwt);
-              print("userresponse ${userresponse.statusCode}");
               if (userresponse.statusCode == 200) {
                 var prefs = await SharedPreferences.getInstance();
 
@@ -72,7 +71,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                     if (driverResponse.statusCode == 200) {
                       var driverDataString =
                           utf8.decode(driverResponse.bodyBytes);
-                      print(driverDataString);
                       var res = jsonDecode(driverDataString);
                       userProvider.setDriver(Driver.fromJson(res));
 
@@ -104,8 +102,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         var userType = prefs.getString("userType") ?? "";
 
         var data = await authRepository.temploginWithPhone(phone: event.phone);
-
-        print("status ${data["status"]}");
 
         if (data["status"] == 200) {
           switch (userType) {
@@ -178,7 +174,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           first_name: event.first_name,
           last_name: event.last_name,
         );
-        print("status ${data["status"]}");
         if (data["status"] == 200) {
           switch (userType) {
             case "Driver":

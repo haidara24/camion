@@ -103,16 +103,40 @@ import 'package:camion/data/repositories/truck_price_repository.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
 import 'package:camion/firebase_options.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/notification_utils.dart';
 import 'package:camion/views/widgets/splash_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+// Top-level background message handler
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    name: "Camion",
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Initialize local notifications
+  await initializeLocalNotifications();
+
+  print("Handling a background message: ${message.messageId}");
+
+  // Display local notification for background/terminated messages
+  await showLocalNotification(message);
+}
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final globalKey = GlobalKey();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -126,6 +150,8 @@ void main() async {
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   HttpOverrides.global = MyHttpOverrides();
   SystemChrome.setSystemUIOverlayStyle(
@@ -665,6 +691,7 @@ class MyApp extends StatelessWidget {
                       return MaterialApp(
                         title: 'Camion',
                         debugShowCheckedModeBanner: false,
+                        navigatorKey: navigatorKey,
                         localizationsDelegates:
                             AppLocalizationsSetup.localizationsDelegates,
                         supportedLocales:

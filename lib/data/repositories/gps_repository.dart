@@ -16,7 +16,6 @@ class GpsRepository {
         HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
         HttpHeaders.acceptHeader: 'application/json'
       });
-print("gps response ${response.statusCode}");
       if (response.statusCode == 200) {
         var jsonObject = jsonDecode(response.body);
         var token = jsonObject['data']['token'];
@@ -86,7 +85,6 @@ print("gps response ${response.statusCode}");
 
       // Sending the request
       var streamedResponse = await request.send();
-      print(streamedResponse.statusCode);
       // Handling the response
       if (streamedResponse.statusCode == 200) {
         var response = await http.Response.fromStream(streamedResponse);

@@ -9,12 +9,12 @@ import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
-import 'package:camion/firebase_options.dart';
+import 'package:camion/helpers/notification_utils.dart';
+import 'package:camion/main.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/sub_shipment_details_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +24,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationServices {
-  //initialising firebase message plugin
   static final NotificationServices _instance =
       NotificationServices._internal();
 
@@ -42,28 +41,24 @@ class NotificationServices {
 
   bool _isInitialized = false;
 
-// Initialize Firebase messaging and avoid duplicate listeners
-  void firebaseInit(BuildContext context) async {
+  // Initialize Firebase messaging and avoid duplicate listeners
+  void firebaseInit() async {
     if (_isInitialized) return;
     _isInitialized = true;
 
+    final context = navigatorKey.currentContext!;
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
 
     requestNotificationPermission();
     getDeviceToken();
 
+    // Initialize local notifications
+    await initializeLocalNotifications();
+
     // Listen for foreground messages
     FirebaseMessaging.onMessage.listen((message) {
-      RemoteNotification? notification = message.notification;
-      AndroidNotification? android = message.notification?.android;
-
-      if (kDebugMode) {
-        print("notifications title: ${notification?.title}");
-        print("notifications body: ${notification?.body}");
-        print('count: ${android?.count}');
-        print('data: ${message.data.toString()}');
-      }
+      showLocalNotification(message);
 
       // Handle foreground notifications
       forgroundMessage(context, notificationProvider!);
@@ -71,22 +66,9 @@ class NotificationServices {
     });
 
     setupInteractMessage(context);
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
-  Future<void> _firebaseMessagingBackgroundHandler(
-    RemoteMessage message,
-  ) async {
-    // you need to initialize firebase first
-    await Firebase.initializeApp(
-      name: "Camion",
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-
-    print("Handling a background message: ${message.messageId}");
-  }
-
-  Future<void> requestNotificationPermission() async {
+  void requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       badge: true,
@@ -116,9 +98,8 @@ class NotificationServices {
 
   //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
-    String token = "";
-    token = await messaging.getToken() ?? "";
-    return token;
+    String? token = await messaging.getToken();
+    return token!;
   }
 
   void isTokenRefresh() async {
@@ -130,60 +111,22 @@ class NotificationServices {
     });
   }
 
+  //handle tap on notification when app is in background or terminated
   Future<void> setupInteractMessage(BuildContext context) async {
-    // Handle notification click when the app is terminated
+    // when app is terminated
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
+
     if (initialMessage != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        handleMessage(context, initialMessage);
-      });
+      showLocalNotification(initialMessage);
+      // handleMessage(context, initialMessage);
     }
 
-    // Handle notification click when the app is in the background
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        handleMessage(context, message);
-      });
+    //when app ins background
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      showLocalNotification(event);
+      // handleMessage(context, event);
     });
-  }
-
-  void loadAppAesstes(BuildContext context, RemoteMessage message) async {
-    BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    if (message.data['notefication_type'] == "A" ||
-        message.data['notefication_type'] == "J") {
-      var prefs = await SharedPreferences.getInstance();
-      var userType = prefs.getString("userType");
-      if (userType == "Driver") {
-        BlocProvider.of<DriverRequestsListBloc>(context)
-            .add(const DriverRequestsListLoadEvent(null));
-      } else if (userType == "Merchant") {
-        BlocProvider.of<ShipmentRunningBloc>(context)
-            .add(ShipmentRunningLoadEvent("R"));
-        BlocProvider.of<MerchantRequestsListBloc>(context)
-            .add(MerchantRequestsListLoadEvent());
-        BlocProvider.of<ShipmentTaskListBloc>(context)
-            .add(ShipmentTaskListLoadEvent());
-      }
-    } else if (message.data['notefication_type'] == "O") {
-      var prefs = await SharedPreferences.getInstance();
-      var userType = prefs.getString("userType");
-      if (userType == "Driver") {
-        BlocProvider.of<DriverRequestsListBloc>(context)
-            .add(const DriverRequestsListLoadEvent(null));
-      } else if (userType == "Merchant") {
-        BlocProvider.of<MerchantRequestsListBloc>(context)
-            .add(MerchantRequestsListLoadEvent());
-      }
-    } else if (message.data['notefication_type'] == "T" ||
-        message.data['notefication_type'] == "C") {
-      BlocProvider.of<ShipmentRunningBloc>(context)
-          .add(ShipmentRunningLoadEvent("R"));
-      BlocProvider.of<MerchantRequestsListBloc>(context)
-          .add(MerchantRequestsListLoadEvent());
-      BlocProvider.of<ShipmentTaskListBloc>(context)
-          .add(ShipmentTaskListLoadEvent());
-    }
   }
 
   void handleMessage(BuildContext context, RemoteMessage message) async {
@@ -235,6 +178,44 @@ class NotificationServices {
     }
   }
 
+  void loadAppAesstes(BuildContext context, RemoteMessage message) async {
+    BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
+    if (message.data['notefication_type'] == "A" ||
+        message.data['notefication_type'] == "J") {
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        BlocProvider.of<DriverRequestsListBloc>(context)
+            .add(const DriverRequestsListLoadEvent(null));
+      } else if (userType == "Merchant") {
+        BlocProvider.of<ShipmentRunningBloc>(context)
+            .add(ShipmentRunningLoadEvent("R"));
+        BlocProvider.of<MerchantRequestsListBloc>(context)
+            .add(MerchantRequestsListLoadEvent());
+        BlocProvider.of<ShipmentTaskListBloc>(context)
+            .add(ShipmentTaskListLoadEvent());
+      }
+    } else if (message.data['notefication_type'] == "O") {
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        BlocProvider.of<DriverRequestsListBloc>(context)
+            .add(const DriverRequestsListLoadEvent(null));
+      } else if (userType == "Merchant") {
+        BlocProvider.of<MerchantRequestsListBloc>(context)
+            .add(MerchantRequestsListLoadEvent());
+      }
+    } else if (message.data['notefication_type'] == "T" ||
+        message.data['notefication_type'] == "C") {
+      BlocProvider.of<ShipmentRunningBloc>(context)
+          .add(ShipmentRunningLoadEvent("R"));
+      BlocProvider.of<MerchantRequestsListBloc>(context)
+          .add(MerchantRequestsListLoadEvent());
+      BlocProvider.of<ShipmentTaskListBloc>(context)
+          .add(ShipmentTaskListLoadEvent());
+    }
+  }
+
   Future forgroundMessage(
       BuildContext context, NotificationProvider provider) async {
     if (notificationProvider != null) {
@@ -264,6 +245,5 @@ class NotificationServices {
         {"isread": true},
       ),
     );
-    print(response.statusCode);
   }
 }

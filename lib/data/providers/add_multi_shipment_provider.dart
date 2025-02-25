@@ -524,7 +524,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           notifyListeners();
         }
       } else {
-        print("last point");
         if (index == 0) {
           _subPathes[index] = [];
           final origin = _stoppoints_latlng[index];
@@ -539,7 +538,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               mode: TravelMode.driving,
             ),
           );
-          print("result.points.isNotEmpty ${result.points.isNotEmpty}");
           if (result.points.isNotEmpty) {
             _subPathes[index].addAll(result.points
                 .map((point) => LatLng(point.latitude, point.longitude)));
@@ -552,11 +550,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           );
 
           if (distanceData != null) {
-            print("distanceData ${distanceData["distance"]}");
             _subDistance[index] = distanceData["distance"] ?? 0.0;
             _subPeriod[index] = MapService.parseDurationToMinutes(
                 distanceData["duration"] ?? "");
-            print("_subDistance ${_subDistance[index]}");
           }
         } else {
           _subPathes[index - 1] = [];
@@ -572,7 +568,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               mode: TravelMode.driving,
             ),
           );
-          print("result.points.isNotEmpty ${result.points.isNotEmpty}");
           if (result.points.isNotEmpty) {
             _subPathes[index - 1].addAll(result.points
                 .map((point) => LatLng(point.latitude, point.longitude)));
@@ -585,11 +580,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           );
 
           if (distanceData != null) {
-            print("distanceData ${distanceData["distance"]}");
             _subDistance[index - 1] = distanceData["distance"] ?? 0.0;
             _subPeriod[index - 1] = MapService.parseDurationToMinutes(
                 distanceData["duration"] ?? "");
-            print("_subDistance ${_subDistance[index - 1]}");
           }
         }
         _stoppointstextLoading[index] = false;
@@ -619,7 +612,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     if (_stoppoints_location.first.isEmpty || _stoppoints_location.last.isEmpty)
       return; // Ensure there are stop points
-    print("initMap bound");
 
     List<Marker> markers = [
       MapService.createMarker(
@@ -681,13 +673,11 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     });
 
     _mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 50));
-    print("initMap bound end");
   }
 
   setLoadTime(DateTime time, int index) {
     _time_controller[index].text = '${intl.DateFormat.jm().format(time)} ';
     _loadTime[index] = time;
-    print(_loadTime[index]);
     notifyListeners();
   }
 
@@ -954,7 +944,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
             .replaceAll("محافظة", "")
             .replaceAll("مُحافظة", "")
             .replaceAll("، سوريا", "");
-        print('Place ID for administrative_area_level_1: $name');
         return name; // Stop after finding the first match
       }
     }
@@ -972,7 +961,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         List types = result['types'];
         if (types.contains('administrative_area_level_1')) {
           String placeId = result['place_id'];
-          print('Place ID for administrative_area_level_1: $placeId');
           return placeId; // Stop after finding the first match
         }
       }
@@ -1058,8 +1046,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         desiredAccuracy: LocationAccuracy.high,
       );
 
-      print("Raw Position Data: $position");
-
       // Directly assign to double variables
       double? lat = position.latitude;
       double? lng = position.longitude;
@@ -1068,8 +1054,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       if (lat.isNaN || lng.isNaN) {
         throw Exception("Invalid latitude or longitude received.");
       }
-
-      print("Latitude: $lat, Longitude: $lng");
 
       // Ensure `onSuccess` receives a valid `LatLng`
       onSuccess(LatLng(lat, lng));

@@ -16,7 +16,6 @@ class PostRepository {
 
     var rs = await HttpHelper.get(POSTS_ENDPOINT, apiToken: jwt);
     posts = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

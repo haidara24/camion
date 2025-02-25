@@ -5,6 +5,7 @@ import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/notification_utils.dart';
 import 'package:camion/views/screens/driver/driver_home_screen.dart';
 import 'package:camion/views/screens/merchant/home_screen.dart';
 import 'package:camion/views/screens/owner/owner_home_screen.dart';
@@ -27,12 +28,15 @@ class ControlView extends StatefulWidget {
 
 class _ControlViewState extends State<ControlView> {
   late SharedPreferences prefs;
-
+  NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
     super.initState();
-    NotificationServices().firebaseInit(context);
-    initPrefs();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Safe to access Provider or BlocProvider here
+      notificationServices.firebaseInit();
+      initPrefs();
+    });
   }
 
   initPrefs() async {
@@ -154,7 +158,6 @@ class _ControlViewState extends State<ControlView> {
               } else if (state is InternetConnected) {
                 return BlocConsumer<AuthBloc, AuthState>(
                   listener: (context, state) {
-                    print(state);
                     if (state is AuthFailureState) {
                       print(state.errorMessage);
                     }

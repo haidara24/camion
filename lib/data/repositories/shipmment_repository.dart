@@ -239,7 +239,6 @@ class ShipmentRepository {
       "$SHIPPMENTSV2_ENDPOINT?shipment_status=$status&merchant=$merchant",
       apiToken: jwt,
     );
-    print(response.statusCode);
     if (response.statusCode == 200) {
       var myDataString = utf8.decode(response.bodyBytes);
       var json = jsonDecode(myDataString);
@@ -345,7 +344,6 @@ class ShipmentRepository {
 
   Future<List<SubShipment>> getActiveTruckShipments() async {
     subshipmentsA = [];
-    print("response.statusCode");
 
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
@@ -356,7 +354,6 @@ class ShipmentRepository {
     );
     var myDataString = utf8.decode(response.bodyBytes);
     var json = jsonDecode(myDataString);
-    print(response.statusCode);
     if (response.statusCode == 200) {
       for (var element in json) {
         subshipmentsA.add(SubShipment.fromJson(element));
@@ -434,28 +431,20 @@ class ShipmentRepository {
       HttpHeaders.contentTypeHeader: "multipart/form-data"
     });
 
-    print("qwe11");
     List<Map<String, dynamic>> sub_shipments = [];
 
-    print("qwe11");
     for (var element in shipment.subshipments!) {
-      print(element.pickupDate);
       var item = element.toJson();
       sub_shipments.add(item);
     }
     var dataString = prefs.getString("userProfile");
     UserModel userModel = UserModel.fromJson(jsonDecode(dataString!));
-    print("qwe11");
 
     request.fields['merchant'] = userModel.merchant!.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);
-    // print(jsonEncode(sub_shipments));
-    // print(request.fields);
     var response = await request.send();
-    print(response.statusCode);
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
-      print(respStr);
       var resString = jsonDecode(respStr);
       var res = Shipmentv2.fromJson(resString);
       return res;
@@ -473,8 +462,6 @@ class ShipmentRepository {
       {"truck": driver},
       apiToken: token,
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -490,8 +477,6 @@ class ShipmentRepository {
       {"truck": truck},
       apiToken: token,
     );
-    print(response.statusCode);
-    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {

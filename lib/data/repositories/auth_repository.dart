@@ -34,7 +34,6 @@ class AuthRepository {
       firebaseToken = await messaging.getToken();
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
-      print(userType);
       var newPhone = "00963${phone.substring(1)}";
       Response response = await post(
         Uri.parse(PHONE_LOGIN_ENDPOINT),
@@ -48,9 +47,6 @@ class AuthRepository {
 
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
-
-      print(response.statusCode);
-      print(response.body);
 
       var jsonObject = jsonDecode(response.body);
 
@@ -83,16 +79,13 @@ class AuthRepository {
       // if (Platform.isIOS) {
       //   firebaseToken = await messaging.getAPNSToken();
       // }
-        // firebaseToken = await messaging.getAPNSToken();
+      // firebaseToken = await messaging.getAPNSToken();
       // print(firebaseToken);
       await Future.delayed(const Duration(seconds: 1));
       firebaseToken = await messaging.getToken();
-      if (Platform.isAndroid) {
-      }
+      if (Platform.isAndroid) {}
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
-      print(userType);
-      print(firebaseToken);
       var newPhone = "00963${phone.substring(1)}";
       Response response = await post(
         Uri.parse(PHONE_LOGIN_ENDPOINT),
@@ -107,9 +100,6 @@ class AuthRepository {
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
       var jsonObject = jsonDecode(response.body);
-
-      print(response.statusCode);
-      print(response.body);
 
       if (response.statusCode == 401 || response.statusCode == 400) {
         data["details"] = jsonObject["details"];
@@ -174,7 +164,6 @@ class AuthRepository {
       firebaseToken = await messaging.getToken();
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
-      print(userType);
       var newPhone = "00963${phone.substring(1)}";
       Response response = await post(
         Uri.parse(PHONE_REGISTER_ENDPOINT),
@@ -193,9 +182,6 @@ class AuthRepository {
 
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
-
-      print(response.statusCode);
-      print(response.body);
 
       var jsonObject = jsonDecode(response.body);
 
@@ -230,10 +216,9 @@ class AuthRepository {
       FirebaseMessaging messaging = FirebaseMessaging.instance;
       await Future.delayed(const Duration(seconds: 1));
       firebaseToken = await messaging.getToken();
-      
+
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
-      print(userType);
       var newPhone = "00963${phone.substring(1)}";
       Response response = await post(
         Uri.parse(PHONE_REGISTER_ENDPOINT),
@@ -253,9 +238,6 @@ class AuthRepository {
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
       var jsonObject = jsonDecode(response.body);
-
-      // print("verify otp status${response.statusCode}");
-      print("verify otp body${response.body}");
 
       if (response.statusCode == 401 || response.statusCode == 400) {
         data["details"] = jsonObject["details"];
@@ -299,7 +281,6 @@ class AuthRepository {
 
   Future<dynamic> verifyOtp({required String otp}) async {
     try {
-      print(otp);
       Response response = await post(Uri.parse(VERIFY_OTP_ENDPOINT),
           body: jsonEncode({"otp": otp}),
           headers: {
@@ -309,9 +290,6 @@ class AuthRepository {
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
       var jsonObject = jsonDecode(response.body);
-
-      // print("verify otp status${response.statusCode}");
-      print("verify otp body${response.body}");
 
       if (response.statusCode == 401 || response.statusCode == 400) {
         data["details"] = jsonObject["details"];
@@ -427,10 +405,6 @@ class AuthRepository {
     var token = await jwtOrEmpty;
 
     if (token != "") {
-      print("isExpired");
-      print(JwtDecoder.isExpired(token));
-      print(JwtDecoder.getExpirationDate(token));
-      print(JwtDecoder.getRemainingTime(token));
       if (JwtDecoder.isExpired(token)) {
         return false;
       } else {
@@ -460,9 +434,7 @@ class AuthRepository {
     );
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     await Future.delayed(const Duration(seconds: 1));
-      firebaseToken = await messaging.getToken();
-      
-
+    firebaseToken = await messaging.getToken();
 
     final response = await HttpHelper.post(
       LOGOUT_ENDPOINT,
@@ -470,7 +442,6 @@ class AuthRepository {
       apiToken: jwt,
     );
 
-    print(response.statusCode);
     if (response.statusCode == 204) {
       // Logout successful
     } else {

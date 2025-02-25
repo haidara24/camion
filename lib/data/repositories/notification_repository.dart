@@ -17,13 +17,11 @@ class NotificationRepository {
 
     var rs = await HttpHelper.get(NOTIFICATIONS_ENDPOINT, apiToken: jwt);
     notifications = [];
-    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
-        print(element["isread"]);
         notifications.add(NotificationModel.fromJson(element));
       }
     }

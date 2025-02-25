@@ -67,11 +67,11 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(45),
                     color: AppColor.deepBlack,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       "A",
                       style: TextStyle(
-                        fontSize: 16, // Adjust font size as needed
+                        fontSize: 16.sp, // Adjust font size as needed
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -134,8 +134,8 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                   child: Center(
                     child: Text(
                       "$i",
-                      style: const TextStyle(
-                        fontSize: 16, // Adjust font size as needed
+                      style: TextStyle(
+                        fontSize: 16.sp, // Adjust font size as needed
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -192,11 +192,11 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(45),
                     color: AppColor.deepBlack,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       "B",
                       style: TextStyle(
-                        fontSize: 16, // Adjust font size as needed
+                        fontSize: 16.sp, // Adjust font size as needed
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),

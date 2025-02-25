@@ -1,0 +1,6 @@
+<resources>
+    <!-- Other string resources -->
+
+    <!-- Default notification channel ID -->
+    <string name="default_notification_channel_id">my_app_channel</string>
+</resources>
