@@ -163,12 +163,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 .notifications[index]!
                                                 .noteficationType ==
                                             "J") {
-                                          BlocProvider.of<RequestDetailsBloc>(
-                                                  context)
-                                              .add(RequestDetailsLoadEvent(
-                                                  notificationProvider
-                                                      .notifications[index]!
-                                                      .objectId!));
+                                          // BlocProvider.of<RequestDetailsBloc>(
+                                          //         context)
+                                          //     .add(RequestDetailsLoadEvent(
+                                          //         notificationProvider
+                                          //             .notifications[index]!
+                                          //             .objectId!));
 
                                           Navigator.push(
                                             context,
@@ -178,6 +178,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 type: notificationProvider
                                                     .notifications[index]!
                                                     .noteficationType!,
+                                                objectId: notificationProvider
+                                                    .notifications[index]!
+                                                    .objectId!,
                                               ),
                                             ),
                                           );
@@ -190,20 +193,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           var userType =
                                               prefs.getString("userType");
                                           if (userType == "Driver") {
-                                            BlocProvider.of<
-                                                        SubShipmentDetailsBloc>(
-                                                    context)
-                                                .add(
-                                                    SubShipmentDetailsLoadEvent(
-                                                        notificationProvider
-                                                            .notifications[
-                                                                index]!
-                                                            .objectId!));
+                                            // BlocProvider.of<
+                                            //             SubShipmentDetailsBloc>(
+                                            //         context)
+                                            //     .add(
+                                            //         SubShipmentDetailsLoadEvent(
+                                            //             notificationProvider
+                                            //                 .notifications[
+                                            //                     index]!
+                                            //                 .objectId!));
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    IncomingShipmentDetailsScreen(),
+                                                    IncomingShipmentDetailsScreen(
+                                                  objectId: notificationProvider
+                                                      .ownernotifications[index]
+                                                      .objectId!,
+                                                ),
                                               ),
                                             );
                                           } else if (userType == "Merchant") {

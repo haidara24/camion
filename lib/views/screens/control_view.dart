@@ -28,15 +28,11 @@ class ControlView extends StatefulWidget {
 
 class _ControlViewState extends State<ControlView> {
   late SharedPreferences prefs;
-  NotificationServices notificationServices = NotificationServices();
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Safe to access Provider or BlocProvider here
-      notificationServices.firebaseInit();
-      initPrefs();
-    });
+
+    initPrefs();
   }
 
   initPrefs() async {

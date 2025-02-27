@@ -132,17 +132,22 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
                                     itemBuilder: (context, index) {
                                       return InkWell(
                                         onTap: () {
-                                          BlocProvider.of<
-                                                      SubShipmentDetailsBloc>(
-                                                  context)
-                                              .add(SubShipmentDetailsLoadEvent(
-                                                  state.requests[index]
-                                                      .subshipment!.id!));
+                                          // BlocProvider.of<
+                                          //             SubShipmentDetailsBloc>(
+                                          //         context)
+                                          //     .add(SubShipmentDetailsLoadEvent(
+                                          //         state.requests[index]
+                                          //             .subshipment!.id!));
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    IncomingShipmentDetailsScreen(),
+                                                    IncomingShipmentDetailsScreen(
+                                                  objectId: state
+                                                      .requests[index]
+                                                      .subshipment!
+                                                      .id!,
+                                                ),
                                               ));
                                         },
                                         child: AbsorbPointer(

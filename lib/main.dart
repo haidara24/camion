@@ -136,7 +136,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-final globalKey = GlobalKey();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

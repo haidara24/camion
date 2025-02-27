@@ -17,15 +17,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
-class ApprovalRequestDetailsScreen extends StatelessWidget {
+class ApprovalRequestDetailsScreen extends StatefulWidget {
   final String type;
   final ApprovalRequest? request;
+  final int objectId;
   const ApprovalRequestDetailsScreen({
     Key? key,
     required this.type,
+    required this.objectId,
     this.request,
   }) : super(key: key);
 
+  @override
+  State<ApprovalRequestDetailsScreen> createState() =>
+      _ApprovalRequestDetailsScreenState();
+}
+
+class _ApprovalRequestDetailsScreenState
+    extends State<ApprovalRequestDetailsScreen> {
   Widget getMainPhoto(ApprovalRequest request) {
     if (request.isApproved!) {
       return Lottie.asset(
@@ -109,6 +118,13 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<RequestDetailsBloc>(context)
+        .add(RequestDetailsLoadEvent(widget.objectId));
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
@@ -136,8 +152,8 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                       BlocBuilder<RequestDetailsBloc, RequestDetailsState>(
                         builder: (context, state) {
                           if (state is RequestDetailsLoadedSuccess) {
-                            return (request == null
-                                ? (type == "A"
+                            return (widget.request == null
+                                ? (widget.type == "A"
                                     ? Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
@@ -242,30 +258,28 @@ class ApprovalRequestDetailsScreen extends StatelessWidget {
                                         ),
                                       ))
                                 : Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            getMainPhoto(state.request),
-                                            const SizedBox(
-                                              height: 16,
-                                            ),
-                                            SectionTitle(
-                                              text:
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                getMainText(state.request),
-                                              ),
-                                            ),
-                                            getExtraAction(
-                                                state.request, context),
-                                          ],
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          height: 8,
                                         ),
-                                      ));
+                                        getMainPhoto(state.request),
+                                        const SizedBox(
+                                          height: 16,
+                                        ),
+                                        SectionTitle(
+                                          text: AppLocalizations.of(context)!
+                                              .translate(
+                                            getMainText(state.request),
+                                          ),
+                                        ),
+                                        getExtraAction(state.request, context),
+                                      ],
+                                    ),
+                                  ));
                           } else {
                             return Expanded(
                               child: Center(child: LoadingIndicator()),

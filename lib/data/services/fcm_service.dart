@@ -42,11 +42,11 @@ class NotificationServices {
   bool _isInitialized = false;
 
   // Initialize Firebase messaging and avoid duplicate listeners
-  void firebaseInit() async {
+  void firebaseInit(BuildContext context) async {
     if (_isInitialized) return;
     _isInitialized = true;
 
-    final context = navigatorKey.currentContext!;
+    // final context = navigatorKey.currentContext!;
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
 
@@ -58,14 +58,16 @@ class NotificationServices {
 
     // Listen for foreground messages
     FirebaseMessaging.onMessage.listen((message) {
+      if (Platform.isAndroid) {
+        // handleMessage(context, message);
+      }
       showLocalNotification(message);
 
-      // Handle foreground notifications
       forgroundMessage(context, notificationProvider!);
-      loadAppAesstes(context, message);
-    });
 
-    setupInteractMessage(context);
+      // Handle foreground notifications
+      loadAppAssets(message);
+    });
   }
 
   void requestNotificationPermission() async {
@@ -89,7 +91,7 @@ class NotificationServices {
         print('user granted provisional permission');
       }
     } else {
-      //appsetting.AppSettings.openNotificationSettings();
+      // AppSettings.openNotificationSettings();
       if (kDebugMode) {
         print('user denied permission');
       }
@@ -129,59 +131,20 @@ class NotificationServices {
     });
   }
 
-  void handleMessage(BuildContext context, RemoteMessage message) async {
-    if (message.data['notefication_type'] == "A" ||
-        message.data['notefication_type'] == "J") {
-      BlocProvider.of<RequestDetailsBloc>(context)
-          .add(RequestDetailsLoadEvent(message.data['objectId']));
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ApprovalRequestDetailsScreen(
-            type: message.data['notefication_type'].noteficationType!,
-          ),
-        ),
-      );
-    } else if (message.data['notefication_type'] == "O") {
-      var prefs = await SharedPreferences.getInstance();
-      var userType = prefs.getString("userType");
-      if (userType == "Driver") {
-        BlocProvider.of<SubShipmentDetailsBloc>(context)
-            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => IncomingShipmentDetailsScreen(),
-          ),
-        );
-      } else if (userType == "Merchant") {
-        BlocProvider.of<SubShipmentDetailsBloc>(context)
-            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => IncomingRequestForDriverScreen(),
-          ),
-        );
-      }
-    } else if (message.data['notefication_type'] == "T" ||
-        message.data['notefication_type'] == "C") {
-      BlocProvider.of<SubShipmentDetailsBloc>(context)
-          .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SubShipmentDetailsScreen(),
-        ),
-      );
+  void loadAppAssets(
+    RemoteMessage message,
+  ) async {
+    final context = navigatorKey.currentContext;
+    print("load App Assets");
+    print(
+        "message.data['notefication_type'] = ${message.data['notification_type']}");
+    if (!context!.mounted) {
+      print("Context is no longer valid. Skipping...");
+      return;
     }
-  }
-
-  void loadAppAesstes(BuildContext context, RemoteMessage message) async {
     BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    if (message.data['notefication_type'] == "A" ||
-        message.data['notefication_type'] == "J") {
+    if (message.data['notification_type'] == "A" ||
+        message.data['notification_type'] == "J") {
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType");
       if (userType == "Driver") {
@@ -195,7 +158,7 @@ class NotificationServices {
         BlocProvider.of<ShipmentTaskListBloc>(context)
             .add(ShipmentTaskListLoadEvent());
       }
-    } else if (message.data['notefication_type'] == "O") {
+    } else if (message.data['notification_type'] == "O") {
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType");
       if (userType == "Driver") {
@@ -205,8 +168,8 @@ class NotificationServices {
         BlocProvider.of<MerchantRequestsListBloc>(context)
             .add(MerchantRequestsListLoadEvent());
       }
-    } else if (message.data['notefication_type'] == "T" ||
-        message.data['notefication_type'] == "C") {
+    } else if (message.data['notification_type'] == "T" ||
+        message.data['notification_type'] == "C") {
       BlocProvider.of<ShipmentRunningBloc>(context)
           .add(ShipmentRunningLoadEvent("R"));
       BlocProvider.of<MerchantRequestsListBloc>(context)
@@ -219,8 +182,10 @@ class NotificationServices {
   Future forgroundMessage(
       BuildContext context, NotificationProvider provider) async {
     if (notificationProvider != null) {
+      print("Adding unread notification...");
       notificationProvider!.addNotReadedNotification();
-      // BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
+    } else {
+      print("NotificationProvider is null");
     }
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(

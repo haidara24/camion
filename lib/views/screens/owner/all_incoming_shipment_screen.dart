@@ -327,20 +327,26 @@ class _AllIncomingShippmentLogScreenState
                                                         "D"
                                                     ? InkWell(
                                                         onTap: () {
-                                                          BlocProvider.of<
-                                                                      SubShipmentDetailsBloc>(
-                                                                  context)
-                                                              .add(SubShipmentDetailsLoadEvent(
-                                                                  state
-                                                                      .requests[
-                                                                          index]
-                                                                      .subshipment!
-                                                                      .id!));
+                                                          // BlocProvider.of<
+                                                          //             SubShipmentDetailsBloc>(
+                                                          //         context)
+                                                          //     .add(SubShipmentDetailsLoadEvent(
+                                                          //         state
+                                                          //             .requests[
+                                                          //                 index]
+                                                          //             .subshipment!
+                                                          //             .id!));
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  IncomingShipmentDetailsScreen(),
+                                                                  IncomingShipmentDetailsScreen(
+                                                                objectId: state
+                                                                    .requests[
+                                                                        index]
+                                                                    .subshipment!
+                                                                    .id!,
+                                                              ),
                                                             ),
                                                           );
                                                         },
@@ -733,20 +739,26 @@ class _AllIncomingShippmentLogScreenState
                                                         "D"
                                                     ? InkWell(
                                                         onTap: () {
-                                                          BlocProvider.of<
-                                                                      SubShipmentDetailsBloc>(
-                                                                  context)
-                                                              .add(SubShipmentDetailsLoadEvent(
-                                                                  state
-                                                                      .requests[
-                                                                          index]
-                                                                      .subshipment!
-                                                                      .id!));
+                                                          // BlocProvider.of<
+                                                          //             SubShipmentDetailsBloc>(
+                                                          //         context)
+                                                          //     .add(SubShipmentDetailsLoadEvent(
+                                                          //         state
+                                                          //             .requests[
+                                                          //                 index]
+                                                          //             .subshipment!
+                                                          //             .id!));
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  IncomingShipmentDetailsScreen(),
+                                                                  IncomingShipmentDetailsScreen(
+                                                                objectId: state
+                                                                    .requests[
+                                                                        index]
+                                                                    .subshipment!
+                                                                    .id!,
+                                                              ),
                                                             ),
                                                           );
                                                         },

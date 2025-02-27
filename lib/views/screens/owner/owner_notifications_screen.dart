@@ -167,14 +167,14 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                                 index]!
                                                             .noteficationType ==
                                                         "J") {
-                                                  BlocProvider.of<
-                                                              RequestDetailsBloc>(
-                                                          context)
-                                                      .add(RequestDetailsLoadEvent(
-                                                          notificationProvider
-                                                              .notifications[
-                                                                  index]!
-                                                              .objectId!));
+                                                  // BlocProvider.of<
+                                                  //             RequestDetailsBloc>(
+                                                  //         context)
+                                                  //     .add(RequestDetailsLoadEvent(
+                                                  //         notificationProvider
+                                                  //             .notifications[
+                                                  //                 index]!
+                                                  //             .objectId!));
 
                                                   Navigator.push(
                                                     context,
@@ -185,6 +185,11 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                             .notifications[
                                                                 index]!
                                                             .noteficationType!,
+                                                        objectId:
+                                                            notificationProvider
+                                                                .notifications[
+                                                                    index]!
+                                                                .objectId!,
                                                       ),
                                                     ),
                                                   );
@@ -193,19 +198,25 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                         .notifications[index]!
                                                         .noteficationType ==
                                                     "O") {
-                                                  BlocProvider.of<
-                                                              SubShipmentDetailsBloc>(
-                                                          context)
-                                                      .add(SubShipmentDetailsLoadEvent(
-                                                          notificationProvider
-                                                              .notifications[
-                                                                  index]!
-                                                              .objectId!));
+                                                  // BlocProvider.of<
+                                                  //             SubShipmentDetailsBloc>(
+                                                  //         context)
+                                                  //     .add(SubShipmentDetailsLoadEvent(
+                                                  //         notificationProvider
+                                                  //             .notifications[
+                                                  //                 index]!
+                                                  //             .objectId!));
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          IncomingShipmentDetailsScreen(),
+                                                          IncomingShipmentDetailsScreen(
+                                                        objectId:
+                                                            notificationProvider
+                                                                .ownernotifications[
+                                                                    index]
+                                                                .objectId!,
+                                                      ),
                                                     ),
                                                   );
                                                 }
@@ -387,14 +398,14 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                                 index]
                                                             .noteficationType ==
                                                         "J") {
-                                                  BlocProvider.of<
-                                                              RequestDetailsBloc>(
-                                                          context)
-                                                      .add(RequestDetailsLoadEvent(
-                                                          notificationProvider
-                                                              .ownernotifications[
-                                                                  index]
-                                                              .objectId!));
+                                                  // BlocProvider.of<
+                                                  //             RequestDetailsBloc>(
+                                                  //         context)
+                                                  //     .add(RequestDetailsLoadEvent(
+                                                  //         notificationProvider
+                                                  //             .ownernotifications[
+                                                  //                 index]
+                                                  //             .objectId!));
 
                                                   Navigator.push(
                                                     context,
@@ -405,6 +416,11 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                             .ownernotifications[
                                                                 index]
                                                             .noteficationType!,
+                                                        objectId:
+                                                            notificationProvider
+                                                                .notifications[
+                                                                    index]!
+                                                                .objectId!,
                                                       ),
                                                     ),
                                                   );
@@ -414,19 +430,25 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                             index]
                                                         .noteficationType ==
                                                     "O") {
-                                                  BlocProvider.of<
-                                                              SubShipmentDetailsBloc>(
-                                                          context)
-                                                      .add(SubShipmentDetailsLoadEvent(
-                                                          notificationProvider
-                                                              .ownernotifications[
-                                                                  index]
-                                                              .objectId!));
+                                                  // BlocProvider.of<
+                                                  //             SubShipmentDetailsBloc>(
+                                                  //         context)
+                                                  //     .add(SubShipmentDetailsLoadEvent(
+                                                  //         notificationProvider
+                                                  //             .ownernotifications[
+                                                  //                 index]
+                                                  //             .objectId!));
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          IncomingShipmentDetailsScreen(),
+                                                          IncomingShipmentDetailsScreen(
+                                                        objectId:
+                                                            notificationProvider
+                                                                .ownernotifications[
+                                                                    index]
+                                                                .objectId!,
+                                                      ),
                                                     ),
                                                   );
                                                 }

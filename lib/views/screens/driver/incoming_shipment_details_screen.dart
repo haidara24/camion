@@ -31,8 +31,10 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class IncomingShipmentDetailsScreen extends StatefulWidget {
-  const IncomingShipmentDetailsScreen({
+  final int objectId;
+  IncomingShipmentDetailsScreen({
     Key? key,
+    required this.objectId,
   }) : super(key: key);
 
   @override
@@ -257,6 +259,9 @@ class _IncomingShipmentDetailsScreenState
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<SubShipmentDetailsBloc>(context)
+        .add(SubShipmentDetailsLoadEvent(widget.objectId));
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // createMarkerIcons();
       setState(() {});

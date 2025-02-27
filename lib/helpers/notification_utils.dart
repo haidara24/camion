@@ -44,19 +44,30 @@ Future<void> initializeLocalNotifications() async {
 Future<void> showLocalNotification(RemoteMessage? message) async {
   if (message == null) return;
 
-  const AndroidNotificationDetails androidPlatformChannelSpecifics =
+  AndroidNotificationChannel channel = const AndroidNotificationChannel(
+    "my_app_channel",
+    "default_notification_channel_id",
+    importance: Importance.high,
+    showBadge: true,
+    playSound: true,
+  );
+  AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
-    'my_app_channel', // Use the same channel ID as in strings.xml
-    'My App Channel', // Channel Name
+    channel.id, // Use the same channel ID as in strings.xml
+    channel.name, // Channel Name
     importance: Importance.max,
     priority: Priority.high,
     showWhen: false,
   );
 
   const DarwinNotificationDetails iOSPlatformChannelSpecifics =
-      DarwinNotificationDetails();
+      DarwinNotificationDetails(
+    presentBadge: true,
+    presentAlert: true,
+    presentSound: true,
+  );
 
-  const NotificationDetails platformChannelSpecifics = NotificationDetails(
+  NotificationDetails platformChannelSpecifics = NotificationDetails(
     android: androidPlatformChannelSpecifics,
     iOS: iOSPlatformChannelSpecifics,
   );
@@ -67,7 +78,7 @@ Future<void> showLocalNotification(RemoteMessage? message) async {
     message.data['body'],
     platformChannelSpecifics,
     payload: jsonEncode({
-      'notefication_type': message.data['notefication_type'],
+      'notification_type': message.data['notification_type'],
       'objectId': message.data['objectId'],
     }),
   );
@@ -82,8 +93,8 @@ void onDidReceiveNotificationResponse(NotificationResponse response) async {
   final Map<String, dynamic> payload = jsonDecode(response.payload ?? '{}');
 
   // Extract notification_type and objectId from the payload
-  final String? notificationType = payload['notefication_type'];
-  final int? objectId = payload['objectId'];
+  final String? notificationType = payload['notification_type'];
+  final int? objectId = int.parse(payload['objectId']);
 
   if (notificationType == null || objectId == null) {
     print("Invalid payload: Missing notification_type or objectId");
@@ -91,16 +102,17 @@ void onDidReceiveNotificationResponse(NotificationResponse response) async {
   }
 
   final navigator = navigatorKey.currentState;
-
+  if (navigator == null) {
+    print("Navigator is null. Cannot handle notification tap.");
+    return;
+  }
   // Use the same logic as handleMessage
   if (notificationType == "A" || notificationType == "J") {
-    BlocProvider.of<RequestDetailsBloc>(navigator!.context)
-        .add(RequestDetailsLoadEvent(objectId));
-
     navigator.push(
       MaterialPageRoute(
         builder: (context) => ApprovalRequestDetailsScreen(
           type: notificationType,
+          objectId: objectId,
         ),
       ),
     );
@@ -108,15 +120,15 @@ void onDidReceiveNotificationResponse(NotificationResponse response) async {
     var prefs = await SharedPreferences.getInstance();
     var userType = prefs.getString("userType");
     if (userType == "Driver") {
-      BlocProvider.of<SubShipmentDetailsBloc>(navigator!.context)
-          .add(SubShipmentDetailsLoadEvent(objectId));
       navigator.push(
         MaterialPageRoute(
-          builder: (context) => const IncomingShipmentDetailsScreen(),
+          builder: (context) => IncomingShipmentDetailsScreen(
+            objectId: objectId,
+          ),
         ),
       );
     } else if (userType == "Merchant") {
-      BlocProvider.of<SubShipmentDetailsBloc>(navigator!.context)
+      BlocProvider.of<SubShipmentDetailsBloc>(navigator.context)
           .add(SubShipmentDetailsLoadEvent(objectId));
       navigator.push(
         MaterialPageRoute(
@@ -125,7 +137,7 @@ void onDidReceiveNotificationResponse(NotificationResponse response) async {
       );
     }
   } else if (notificationType == "T" || notificationType == "C") {
-    BlocProvider.of<SubShipmentDetailsBloc>(navigator!.context)
+    BlocProvider.of<SubShipmentDetailsBloc>(navigator.context)
         .add(SubShipmentDetailsLoadEvent(objectId));
     navigator.push(
       MaterialPageRoute(

@@ -712,15 +712,15 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                 if (state.requests[index]
                                                         .requestOwner ==
                                                     "T") {
-                                                  BlocProvider.of<
-                                                              RequestDetailsBloc>(
-                                                          context)
-                                                      .add(
-                                                          RequestDetailsLoadEvent(
-                                                              state
-                                                                  .requests[
-                                                                      index]
-                                                                  .id!));
+                                                  // BlocProvider.of<
+                                                  //             RequestDetailsBloc>(
+                                                  //         context)
+                                                  //     .add(
+                                                  //         RequestDetailsLoadEvent(
+                                                  //             state
+                                                  //                 .requests[
+                                                  //                     index]
+                                                  //                 .id!));
 
                                                   Navigator.push(
                                                     context,
@@ -734,6 +734,9 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                             : "J",
                                                         request: state
                                                             .requests[index],
+                                                        objectId: state
+                                                            .requests[index]
+                                                            .id!,
                                                       ),
                                                     ),
                                                   );
