@@ -132,7 +132,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   print("Handling a background message: ${message.messageId}");
 
   // Display local notification for background/terminated messages
-  await showLocalNotification(message);
+  // await showLocalNotification(message);
 }
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

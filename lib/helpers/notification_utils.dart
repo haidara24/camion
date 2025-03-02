@@ -65,6 +65,7 @@ Future<void> showLocalNotification(RemoteMessage? message) async {
     presentBadge: true,
     presentAlert: true,
     presentSound: true,
+    presentBanner: true,
   );
 
   NotificationDetails platformChannelSpecifics = NotificationDetails(

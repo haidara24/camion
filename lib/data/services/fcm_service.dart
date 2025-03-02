@@ -20,6 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -93,6 +94,7 @@ class NotificationServices {
     } else {
       // AppSettings.openNotificationSettings();
       if (kDebugMode) {
+        await openAppSettings();
         print('user denied permission');
       }
     }
@@ -120,15 +122,77 @@ class NotificationServices {
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
-      showLocalNotification(initialMessage);
-      // handleMessage(context, initialMessage);
+      // showLocalNotification(initialMessage);
+      handleMessage(initialMessage);
     }
 
     //when app ins background
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      showLocalNotification(event);
-      // handleMessage(context, event);
+      // showLocalNotification(event);
+      handleMessage(event);
     });
+  }
+
+// Handle notification response
+  void handleMessage(RemoteMessage message) async {
+    final context = navigatorKey.currentContext;
+    print("load App Assets");
+    print(
+        "message.data['notification_type'] = ${message.data['notification_type']}");
+    if (!context!.mounted) {
+      print("Context is no longer valid. Skipping...");
+      return;
+    }
+
+    if (message.data['notification_type'] == "A" ||
+        message.data['notification_type'] == "J") {
+      BlocProvider.of<RequestDetailsBloc>(context)
+          .add(RequestDetailsLoadEvent(message.data['objectId']));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ApprovalRequestDetailsScreen(
+            type: message.data['notification_type'].noteficationType!,
+            objectId: message.data['objectId'],
+          ),
+        ),
+      );
+    } else if (message.data['notification_type'] == "O") {
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        BlocProvider.of<SubShipmentDetailsBloc>(context)
+            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IncomingShipmentDetailsScreen(
+              objectId: message.data['objectId'],
+            ),
+          ),
+        );
+      } else if (userType == "Merchant") {
+        BlocProvider.of<SubShipmentDetailsBloc>(context)
+            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => IncomingRequestForDriverScreen(),
+          ),
+        );
+      }
+    } else if (message.data['notification_type'] == "T" ||
+        message.data['notification_type'] == "C") {
+      BlocProvider.of<SubShipmentDetailsBloc>(context)
+          .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SubShipmentDetailsScreen(),
+        ),
+      );
+    }
   }
 
   void loadAppAssets(
@@ -137,7 +201,7 @@ class NotificationServices {
     final context = navigatorKey.currentContext;
     print("load App Assets");
     print(
-        "message.data['notefication_type'] = ${message.data['notification_type']}");
+        "message.data['notification_type'] = ${message.data['notification_type']}");
     if (!context!.mounted) {
       print("Context is no longer valid. Skipping...");
       return;
