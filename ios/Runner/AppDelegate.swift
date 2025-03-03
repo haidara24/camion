@@ -12,8 +12,7 @@ import flutter_local_notifications
   ) -> Bool {
     FirebaseApp.configure()
     if #available(iOS 10.0, *) {
-        // UNUserNotificationCenter.current().delegate = self
-        UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        UNUserNotificationCenter.current().delegate = self
     } else {
         // Fallback on earlier versions
     }

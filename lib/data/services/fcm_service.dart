@@ -52,7 +52,7 @@ class NotificationServices {
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
 
-    requestNotificationPermission();
+    // requestNotificationPermission();
     _requestPermissions();
     getDeviceToken();
 
@@ -61,6 +61,7 @@ class NotificationServices {
 
     // Listen for foreground messages
     FirebaseMessaging.onMessage.listen((message) {
+      print("get notification");
       if (Platform.isAndroid) {
         // handleMessage(context, message);
         showLocalNotification(message);
@@ -115,7 +116,7 @@ class NotificationServices {
     } else {
       // AppSettings.openNotificationSettings();
       if (kDebugMode) {
-        await openAppSettings();
+        // await openAppSettings();
         print('user denied permission');
       }
     }
