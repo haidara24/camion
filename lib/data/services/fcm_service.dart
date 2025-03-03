@@ -17,6 +17,7 @@ import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -52,6 +53,7 @@ class NotificationServices {
         Provider.of<NotificationProvider>(context, listen: false);
 
     requestNotificationPermission();
+    _requestPermissions();
     getDeviceToken();
 
     // Initialize local notifications
@@ -69,6 +71,25 @@ class NotificationServices {
       // Handle foreground notifications
       loadAppAssets(message);
     });
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    } else if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      await androidImplementation?.requestNotificationsPermission();
+    }
   }
 
   void requestNotificationPermission() async {

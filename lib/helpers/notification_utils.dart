@@ -37,6 +37,9 @@ Future<void> initializeLocalNotifications() async {
     onDidReceiveNotificationResponse: (response) {
       onDidReceiveNotificationResponse(response);
     },
+    onDidReceiveBackgroundNotificationResponse: (response) {
+      onDidReceiveNotificationResponse(response);
+    },
   );
 }
 
