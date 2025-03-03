@@ -63,10 +63,10 @@ class NotificationServices {
     FirebaseMessaging.onMessage.listen((message) {
       if (Platform.isAndroid) {
         // handleMessage(context, message);
+        showLocalNotification(message);
+      } else {
+        forgroundMessage(context, notificationProvider!);
       }
-      showLocalNotification(message);
-
-      forgroundMessage(context, notificationProvider!);
 
       // Handle foreground notifications
       loadAppAssets(message);
