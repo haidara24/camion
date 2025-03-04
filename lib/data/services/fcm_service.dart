@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
-import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
-import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
@@ -18,11 +16,9 @@ import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -55,6 +51,7 @@ class NotificationServices {
 
     requestNotificationPermission();
     getDeviceToken();
+    FirebaseMessaging.instance.setAutoInitEnabled(true);
 
     // Listen for foreground messages
     FirebaseMessaging.onMessage.listen((message) {
@@ -155,8 +152,7 @@ class NotificationServices {
         print("notifications title: ${notification?.title}");
         print("notifications body: ${notification?.body}");
       }
-      // showLocalNotification(initialMessage);
-      // handleMessage(initialMessage);
+      handleMessage(initialMessage);
       loadAppAssets(initialMessage);
     }
 
@@ -168,8 +164,7 @@ class NotificationServices {
         print("notifications title: ${notification?.title}");
         print("notifications body: ${notification?.body}");
       }
-
-      // handleMessage(event);
+      handleMessage(event);
       loadAppAssets(event);
     });
   }
