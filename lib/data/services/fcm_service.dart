@@ -9,12 +9,13 @@ import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
-import 'package:camion/helpers/notification_utils.dart';
+import 'package:camion/firebase_options.dart';
 import 'package:camion/main.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/sub_shipment_details_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -26,6 +27,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationServices {
+  //initialising firebase message plugin
   static final NotificationServices _instance =
       NotificationServices._internal();
 
@@ -43,56 +45,59 @@ class NotificationServices {
 
   bool _isInitialized = false;
 
-  // Initialize Firebase messaging and avoid duplicate listeners
+// Initialize Firebase messaging and avoid duplicate listeners
   void firebaseInit(BuildContext context) async {
     if (_isInitialized) return;
     _isInitialized = true;
 
-    // final context = navigatorKey.currentContext!;
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
 
     requestNotificationPermission();
-    _requestPermissions();
     getDeviceToken();
-
-    // Initialize local notifications
-    await initializeLocalNotifications();
 
     // Listen for foreground messages
     FirebaseMessaging.onMessage.listen((message) {
-      if (Platform.isAndroid) {
-        // handleMessage(context, message);
-        showLocalNotification(message);
-      } else {
-        forgroundMessage(context, notificationProvider!);
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      AppleNotification? ios = message.notification?.apple;
+
+      if (kDebugMode) {
+        print("notifications title: ${notification?.title}");
+        print("notifications body: ${notification?.body}");
+        print('count: ${android?.count}');
+        print('count: ${ios?.badge}');
+        print('data: ${message.data.toString()}');
       }
 
+      if (notificationProvider != null) {
+        print("Adding unread notification...");
+        notificationProvider!.addNotReadedNotification();
+      } else {
+        print("NotificationProvider is null");
+      }
       // Handle foreground notifications
+      forgroundMessage();
       loadAppAssets(message);
     });
+
+    // setupInteractMessage(context);
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
-  Future<void> _requestPermissions() async {
-    if (Platform.isIOS) {
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-    } else if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
+  Future<void> _firebaseMessagingBackgroundHandler(
+    RemoteMessage message,
+  ) async {
+    // you need to initialize firebase first
+    await Firebase.initializeApp(
+      name: "Camion",
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-      await androidImplementation?.requestNotificationsPermission();
-    }
+    print("Handling a background message: ${message.messageId}");
   }
 
-  void requestNotificationPermission() async {
+  Future<void> requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       badge: true,
@@ -113,9 +118,8 @@ class NotificationServices {
         print('user granted provisional permission');
       }
     } else {
-      // AppSettings.openNotificationSettings();
+      //appsetting.AppSettings.openNotificationSettings();
       if (kDebugMode) {
-        await openAppSettings();
         print('user denied permission');
       }
     }
@@ -123,8 +127,9 @@ class NotificationServices {
 
   //function to get device token on which we will send the notifications
   Future<String> getDeviceToken() async {
-    String? token = await messaging.getToken();
-    return token!;
+    String token = "";
+    token = await messaging.getToken() ?? "";
+    return token;
   }
 
   void isTokenRefresh() async {
@@ -142,22 +147,37 @@ class NotificationServices {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
 
+    print("initialMessage: $initialMessage");
     if (initialMessage != null) {
+      RemoteNotification? notification = initialMessage.notification;
+
+      if (kDebugMode) {
+        print("notifications title: ${notification?.title}");
+        print("notifications body: ${notification?.body}");
+      }
       // showLocalNotification(initialMessage);
-      handleMessage(initialMessage);
+      // handleMessage(initialMessage);
+      loadAppAssets(initialMessage);
     }
 
     //when app ins background
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      // showLocalNotification(event);
-      handleMessage(event);
+      RemoteNotification? notification = event.notification;
+
+      if (kDebugMode) {
+        print("notifications title: ${notification?.title}");
+        print("notifications body: ${notification?.body}");
+      }
+
+      // handleMessage(event);
+      loadAppAssets(event);
     });
   }
 
 // Handle notification response
   void handleMessage(RemoteMessage message) async {
     final context = navigatorKey.currentContext;
-    print("load App Assets");
+    print("open screen");
     print(
         "message.data['notification_type'] = ${message.data['notification_type']}");
     if (!context!.mounted) {
@@ -167,9 +187,6 @@ class NotificationServices {
 
     if (message.data['notification_type'] == "A" ||
         message.data['notification_type'] == "J") {
-      BlocProvider.of<RequestDetailsBloc>(context)
-          .add(RequestDetailsLoadEvent(message.data['objectId']));
-
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -183,8 +200,6 @@ class NotificationServices {
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType");
       if (userType == "Driver") {
-        BlocProvider.of<SubShipmentDetailsBloc>(context)
-            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -194,8 +209,6 @@ class NotificationServices {
           ),
         );
       } else if (userType == "Merchant") {
-        BlocProvider.of<SubShipmentDetailsBloc>(context)
-            .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -205,8 +218,6 @@ class NotificationServices {
       }
     } else if (message.data['notification_type'] == "T" ||
         message.data['notification_type'] == "C") {
-      BlocProvider.of<SubShipmentDetailsBloc>(context)
-          .add(SubShipmentDetailsLoadEvent(message.data['objectId']));
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -264,14 +275,7 @@ class NotificationServices {
     }
   }
 
-  Future forgroundMessage(
-      BuildContext context, NotificationProvider provider) async {
-    if (notificationProvider != null) {
-      print("Adding unread notification...");
-      notificationProvider!.addNotReadedNotification();
-    } else {
-      print("NotificationProvider is null");
-    }
+  Future forgroundMessage() async {
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
