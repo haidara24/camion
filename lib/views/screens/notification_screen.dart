@@ -163,13 +163,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 .notifications[index]!
                                                 .noteficationType ==
                                             "J") {
-                                          // BlocProvider.of<RequestDetailsBloc>(
-                                          //         context)
-                                          //     .add(RequestDetailsLoadEvent(
-                                          //         notificationProvider
-                                          //             .notifications[index]!
-                                          //             .objectId!));
-
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -193,15 +186,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           var userType =
                                               prefs.getString("userType");
                                           if (userType == "Driver") {
-                                            // BlocProvider.of<
-                                            //             SubShipmentDetailsBloc>(
-                                            //         context)
-                                            //     .add(
-                                            //         SubShipmentDetailsLoadEvent(
-                                            //             notificationProvider
-                                            //                 .notifications[
-                                            //                     index]!
-                                            //                 .objectId!));
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -214,20 +198,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               ),
                                             );
                                           } else if (userType == "Merchant") {
-                                            BlocProvider.of<
-                                                        SubShipmentDetailsBloc>(
-                                                    context)
-                                                .add(
-                                                    SubShipmentDetailsLoadEvent(
-                                                        notificationProvider
-                                                            .notifications[
-                                                                index]!
-                                                            .objectId!));
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    IncomingRequestForDriverScreen(),
+                                                    IncomingRequestForDriverScreen(
+                                                  objectId: notificationProvider
+                                                      .notifications[index]!
+                                                      .objectId!,
+                                                ),
                                               ),
                                             );
                                           }
@@ -243,23 +222,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                     .notifications[index]!
                                                     .noteficationType ==
                                                 "C") {
-                                          BlocProvider.of<
-                                                      SubShipmentDetailsBloc>(
-                                                  context)
-                                              .add(SubShipmentDetailsLoadEvent(
-                                                  notificationProvider
-                                                      .notifications[index]!
-                                                      .objectId!));
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
-                                                  SubShipmentDetailsScreen(),
+                                                  SubShipmentDetailsScreen(
+                                                objectId: notificationProvider
+                                                    .notifications[index]!
+                                                    .objectId!,
+                                              ),
                                             ),
                                           );
                                         }
-                                        print(notificationProvider
-                                            .notifications[index]!.isread!);
 
                                         if (!notificationProvider
                                             .notifications[index]!.isread!) {

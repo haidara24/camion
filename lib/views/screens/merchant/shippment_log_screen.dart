@@ -741,21 +741,16 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                     ),
                                                   );
                                                 } else {
-                                                  BlocProvider.of<
-                                                              SubShipmentDetailsBloc>(
-                                                          context)
-                                                      .add(
-                                                          SubShipmentDetailsLoadEvent(
-                                                              state
-                                                                  .requests[
-                                                                      index]
-                                                                  .subshipment!
-                                                                  .id!));
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            IncomingRequestForDriverScreen(),
+                                                            IncomingRequestForDriverScreen(
+                                                          objectId: state
+                                                              .requests[index]
+                                                              .subshipment!
+                                                              .id!,
+                                                        ),
                                                       ));
                                                 }
                                               },

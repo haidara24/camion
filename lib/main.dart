@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:camion/Localization/app_localizations_setup.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_truck_price_bloc.dart';
@@ -130,6 +131,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   // Display local notification for background/terminated messages
   // await showLocalNotification(message);
+  if (!isMainIsolate()) return; // Prevent unnecessary service initialization
+}
+
+bool isMainIsolate() {
+  return Isolate.current.debugName == 'main';
 }
 
 void main() async {
@@ -153,6 +159,7 @@ void main() async {
       systemNavigationBarColor: AppColor.deepBlack,
     ),
   );
+  print("Running on isolate: ${Isolate.current.debugName}");
   runApp(MyApp(
     lang: lang,
   ));

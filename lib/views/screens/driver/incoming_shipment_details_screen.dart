@@ -416,13 +416,7 @@ class _IncomingShipmentDetailsScreenState
                                         listener: (context, acceptstate) {
                                           if (acceptstate
                                               is AcceptRequestForMerchantSuccessState) {
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const ControlView(),
-                                                ),
-                                                (route) => false);
+                                            Navigator.pop(context);
                                           }
                                         },
                                         builder: (context, acceptstate) {
@@ -546,13 +540,7 @@ class _IncomingShipmentDetailsScreenState
                                         listener: (context, rejectstate) {
                                           if (rejectstate
                                               is RejectRequestForMerchantSuccessState) {
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const ControlView(),
-                                                ),
-                                                (route) => false);
+                                            Navigator.pop(context);
                                           }
                                         },
                                         builder: (context, rejectstate) {

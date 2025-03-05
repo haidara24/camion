@@ -82,17 +82,17 @@ class NotificationServices {
     // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
-  Future<void> _firebaseMessagingBackgroundHandler(
-    RemoteMessage message,
-  ) async {
-    // you need to initialize firebase first
-    await Firebase.initializeApp(
-      name: "Camion",
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+  // Future<void> _firebaseMessagingBackgroundHandler(
+  //   RemoteMessage message,
+  // ) async {
+  //   // you need to initialize firebase first
+  //   await Firebase.initializeApp(
+  //     name: "Camion",
+  //     options: DefaultFirebaseOptions.currentPlatform,
+  //   );
 
-    print("Handling a background message: ${message.messageId}");
-  }
+  //   print("Handling a background message: ${message.messageId}");
+  // }
 
   Future<void> requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
@@ -186,8 +186,8 @@ class NotificationServices {
         context,
         MaterialPageRoute(
           builder: (context) => ApprovalRequestDetailsScreen(
-            type: message.data['notification_type'].noteficationType!,
-            objectId: message.data['objectId'],
+            type: message.data['notification_type'],
+            objectId: int.parse(message.data['objectId']),
           ),
         ),
       );
@@ -199,7 +199,7 @@ class NotificationServices {
           context,
           MaterialPageRoute(
             builder: (context) => IncomingShipmentDetailsScreen(
-              objectId: message.data['objectId'],
+              objectId: int.parse(message.data['objectId']),
             ),
           ),
         );
@@ -207,7 +207,9 @@ class NotificationServices {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => IncomingRequestForDriverScreen(),
+            builder: (context) => IncomingRequestForDriverScreen(
+              objectId: int.parse(message.data['objectId']),
+            ),
           ),
         );
       }
@@ -216,7 +218,9 @@ class NotificationServices {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SubShipmentDetailsScreen(),
+          builder: (context) => SubShipmentDetailsScreen(
+            objectId: int.parse(message.data['objectId']),
+          ),
         ),
       );
     }

@@ -88,20 +88,32 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                 child: Form(
                   key: _addPriceformKey,
                   child: Padding(
-                    padding: const EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(16.0),
                     child: Card(
-                      color: Colors.white,
+                      color: AppColor.lightYellow,
+                      elevation: 1,
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        side: BorderSide(
+                          color: AppColor.deepYellow,
+                          width: 2,
+                        ),
+                      ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const SizedBox(height: 8),
                             SectionTitle(
-                                text:
-                                    "${AppLocalizations.of(context)!.translate('select_governorate')} 1"),
+                                text: AppLocalizations.of(context)!
+                                    .translate('pickup_address')),
                             BlocBuilder<GovernoratesListBloc,
                                 GovernoratesListState>(
                               builder: (context, state) {
@@ -149,6 +161,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                           horizontal: 9.0,
                                         ),
                                         decoration: BoxDecoration(
+                                          color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(12),
                                           border: Border.all(
@@ -190,8 +203,8 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                             ),
                             const SizedBox(height: 8),
                             SectionTitle(
-                                text:
-                                    "${AppLocalizations.of(context)!.translate('select_governorate')} 2"),
+                                text: AppLocalizations.of(context)!
+                                    .translate('delivery_address')),
                             BlocBuilder<GovernoratesListBloc,
                                 GovernoratesListState>(
                               builder: (context, state) {
@@ -239,6 +252,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                           horizontal: 9.0,
                                         ),
                                         decoration: BoxDecoration(
+                                          color: Colors.white,
                                           borderRadius:
                                               BorderRadius.circular(12),
                                           border: Border.all(
@@ -278,7 +292,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                 }
                               },
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 16),
                             SectionTitle(
                                 text: AppLocalizations.of(context)!
                                     .translate('price')),
@@ -307,12 +321,14 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                   fontSize: 18.sp,
                                 ),
                                 decoration: InputDecoration(
+                                  filled: true,
                                   contentPadding: const EdgeInsets.symmetric(
                                       vertical: 11.0, horizontal: 9.0),
                                   hintStyle: TextStyle(
                                     color: Colors.grey[900],
                                     fontSize: 18,
                                   ),
+                                  fillColor: Colors.white,
                                   hintText: AppLocalizations.of(context)!
                                       .translate('enter_price'),
                                 ),
@@ -328,7 +344,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                 },
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: 16),
                             Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 8.0, vertical: 2.5),
@@ -371,6 +387,7 @@ class _AddNewPriceScreenState extends State<AddNewPriceScreen> {
                                                       'create_new_price'),
                                               style: TextStyle(
                                                 fontSize: 20.sp,
+                                                color: Colors.white,
                                               ),
                                             ),
                                             onTap: () {

@@ -412,12 +412,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                       );
                       taskProvider.decreaseTaskNum();
 
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ControlView(),
-                          ),
-                          (route) => false);
+                      Navigator.pop(context);
                       BlocProvider.of<ShipmentTaskListBloc>(context)
                           .add(ShipmentTaskListLoadEvent());
                     }

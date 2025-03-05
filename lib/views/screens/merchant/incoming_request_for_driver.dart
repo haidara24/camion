@@ -29,8 +29,10 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class IncomingRequestForDriverScreen extends StatefulWidget {
-  const IncomingRequestForDriverScreen({
+  final int objectId;
+  IncomingRequestForDriverScreen({
     Key? key,
+    required this.objectId,
   }) : super(key: key);
 
   @override
@@ -261,6 +263,8 @@ class _IncomingRequestForDriverScreenState
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<SubShipmentDetailsBloc>(context)
+        .add(SubShipmentDetailsLoadEvent(widget.objectId));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // createMarkerIcons();
       setState(() {});
