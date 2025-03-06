@@ -188,7 +188,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 builder: (context) =>
                                                     IncomingShipmentDetailsScreen(
                                                   objectId: notificationProvider
-                                                      .ownernotifications[index]
+                                                      .notifications[index]!
                                                       .objectId!,
                                                 ),
                                               ),

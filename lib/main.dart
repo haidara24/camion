@@ -118,25 +118,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-// Top-level background message handler
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    name: "Camion",
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+// // Top-level background message handler
+// @pragma('vm:entry-point')
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   // Initialize Firebase
+//   await Firebase.initializeApp(
+//     name: "Camion",
+//     options: DefaultFirebaseOptions.currentPlatform,
+//   );
 
-  print("Handling a background message: ${message.messageId}");
+//   print("Handling a background message: ${message.messageId}");
 
-  // Display local notification for background/terminated messages
-  // await showLocalNotification(message);
-  if (!isMainIsolate()) return; // Prevent unnecessary service initialization
-}
+//   // Display local notification for background/terminated messages
+//   // await showLocalNotification(message);
+//   if (!isMainIsolate()) return; // Prevent unnecessary service initialization
+// }
 
-bool isMainIsolate() {
-  return Isolate.current.debugName == 'main';
-}
+// bool isMainIsolate() {
+//   return Isolate.current.debugName == 'main';
+// }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -150,7 +150,7 @@ void main() async {
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   HttpOverrides.global = MyHttpOverrides();
   SystemChrome.setSystemUIOverlayStyle(
