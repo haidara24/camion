@@ -140,11 +140,11 @@ class _DriverPricesScreenState extends State<DriverPricesScreen> {
                                                                       .id!),
                                                             );
                                                           },
-                                                          child: const Icon(
-                                                            Icons
-                                                                .delete_forever_rounded,
-                                                            color: Colors.red,
-                                                            size: 25,
+                                                          child: SizedBox(
+                                                            height: 25.h,
+                                                            width: 25.h,
+                                                            child: SvgPicture.asset(
+                                                                "assets/icons/delete.svg"),
                                                           ),
                                                         ),
                                                       ],
@@ -370,7 +370,7 @@ class _DriverPricesScreenState extends State<DriverPricesScreen> {
                                                             height: 25.h,
                                                             width: 25.h,
                                                             child: SvgPicture.asset(
-                                                                "assets/icons/grey/shipment_path.svg"),
+                                                                "assets/icons/edit.svg"),
                                                           ),
                                                         ),
                                                         SectionTitle(

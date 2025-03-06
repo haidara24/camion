@@ -1,4 +1,5 @@
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -13,14 +14,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 
-class PaymentInstructionDetailsScreen extends StatelessWidget {
-  final SubShipment shipment;
+class PaymentInstructionDetailsScreen extends StatefulWidget {
+  final int shipment;
 
   PaymentInstructionDetailsScreen({
     Key? key,
     required this.shipment,
   }) : super(key: key);
+
+  @override
+  State<PaymentInstructionDetailsScreen> createState() =>
+      _PaymentInstructionDetailsScreenState();
+}
+
+class _PaymentInstructionDetailsScreenState
+    extends State<PaymentInstructionDetailsScreen> {
   var f = intel.NumberFormat("#,###", "en_US");
+
   int calculatePrice(
     double distance,
     double weight,
@@ -43,6 +53,15 @@ class PaymentInstructionDetailsScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    BlocProvider.of<SubShipmentDetailsBloc>(context).add(
+      SubShipmentDetailsLoadEvent(widget.shipment),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
@@ -57,103 +76,153 @@ class PaymentInstructionDetailsScreen extends StatelessWidget {
                     .translate("payment_instruction"),
               ),
               backgroundColor: Colors.grey[100],
-              body: BlocBuilder<ReadPaymentInstructionBloc,
-                  ReadPaymentInstructionState>(
-                builder: (context, state) {
-                  if (state is ReadPaymentInstructionLoadedSuccess) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          Card(
-                            elevation: 2,
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('shipment_path_info'),
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColor.darkGrey,
+              body:
+                  BlocConsumer<SubShipmentDetailsBloc, SubShipmentDetailsState>(
+                listener: (context, shipmentstate) {
+                  if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
+                    BlocProvider.of<ReadPaymentInstructionBloc>(context).add(
+                      ReadPaymentInstructionLoadEvent(
+                          shipmentstate.shipment.shipmentpaymentv2!),
+                    );
+                  }
+                },
+                builder: (context, shipmentstate) {
+                  if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
+                    return BlocBuilder<ReadPaymentInstructionBloc,
+                        ReadPaymentInstructionState>(
+                      builder: (context, state) {
+                        if (state is ReadPaymentInstructionLoadedSuccess) {
+                          return Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Card(
+                                  elevation: 2,
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate(
+                                                      'shipment_path_info'),
+                                              style: TextStyle(
+                                                fontSize: 17,
+                                                fontWeight: FontWeight.bold,
+                                                color: AppColor.darkGrey,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ),
-                                    ],
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        ShipmentPathVerticalWidget(
+                                          pathpoints: shipmentstate
+                                              .shipment.pathpoints!,
+                                          pickupDate: shipmentstate
+                                              .shipment.pickupDate!,
+                                          deliveryDate: shipmentstate
+                                              .shipment.deliveryDate!,
+                                          langCode:
+                                              localeState.value.languageCode,
+                                          mini: false,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  const SizedBox(
-                                    height: 10,
+                                ),
+                                SizedBox(
+                                  height: 5.h,
+                                ),
+                                Card(
+                                  elevation: 1,
+                                  clipBehavior: Clip.antiAlias,
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
                                   ),
-                                  ShipmentPathVerticalWidget(
-                                    pathpoints: shipment.pathpoints!,
-                                    pickupDate: shipment.pickupDate!,
-                                    deliveryDate: shipment.deliveryDate!,
-                                    langCode: localeState.value.languageCode,
-                                    mini: false,
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(
+                                          width: double.infinity,
+                                        ),
+                                        SectionTitle(
+                                          text: AppLocalizations.of(context)!
+                                              .translate('operation_cost'),
+                                        ),
+                                        SizedBox(
+                                          height: 7.h,
+                                        ),
+                                        SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(shipmentstate.shipment.distance!, shipmentstate.shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
+                                        ),
+                                        SizedBox(
+                                          height: 7.h,
+                                        ),
+                                        SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('payment_method')}: ${getPaymentMethodName(state.instruction.paymentMethod!, localeState.value.languageCode)}',
+                                        ),
+                                        SizedBox(
+                                          height: 7.h,
+                                        ),
+                                        SectionBody(
+                                          text:
+                                              '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(
+                                  height: 5.h,
+                                ),
+                              ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          Card(
-                            elevation: 1,
-                            clipBehavior: Clip.antiAlias,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                            ),
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
+                          );
+                        } else {
+                          return Shimmer.fromColors(
+                            baseColor: (Colors.grey[300])!,
+                            highlightColor: (Colors.grey[100])!,
+                            enabled: true,
+                            direction: ShimmerDirection.ttb,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemBuilder: (_, __) => Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 5),
+                                    height: 150.h,
                                     width: double.infinity,
-                                  ),
-                                  SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate('operation_cost'),
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  SectionBody(
-                                    text:
-                                        '${AppLocalizations.of(context)!.translate('price')}: ${f.format(calculatePrice(shipment.distance!, shipment.totalWeight!.toDouble()))}.00  ${localeState.value.languageCode == 'en' ? 'S.P' : 'ل.س'}',
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  SectionBody(
-                                    text:
-                                        '${AppLocalizations.of(context)!.translate('payment_method')}: ${getPaymentMethodName(state.instruction.paymentMethod!, localeState.value.languageCode)}',
-                                  ),
-                                  SizedBox(
-                                    height: 7.h,
-                                  ),
-                                  SectionBody(
-                                    text:
-                                        '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
                                   ),
                                 ],
                               ),
+                              itemCount: 3,
                             ),
-                          ),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                        ],
-                      ),
+                          );
+                        }
+                      },
                     );
                   } else {
                     return Shimmer.fromColors(

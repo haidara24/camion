@@ -158,24 +158,9 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                               contentPadding: EdgeInsets.zero,
                                               onTap: () {
                                                 if (notificationProvider
-                                                            .notifications[
-                                                                index]!
-                                                            .noteficationType ==
-                                                        "A" ||
-                                                    notificationProvider
-                                                            .notifications[
-                                                                index]!
-                                                            .noteficationType ==
-                                                        "J") {
-                                                  // BlocProvider.of<
-                                                  //             RequestDetailsBloc>(
-                                                  //         context)
-                                                  //     .add(RequestDetailsLoadEvent(
-                                                  //         notificationProvider
-                                                  //             .notifications[
-                                                  //                 index]!
-                                                  //             .objectId!));
-
+                                                        .notifications[index]!
+                                                        .noteficationType ==
+                                                    "J") {
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -198,14 +183,6 @@ class _OwnerNotificationsScreenState extends State<OwnerNotificationsScreen>
                                                         .notifications[index]!
                                                         .noteficationType ==
                                                     "O") {
-                                                  // BlocProvider.of<
-                                                  //             SubShipmentDetailsBloc>(
-                                                  //         context)
-                                                  //     .add(SubShipmentDetailsLoadEvent(
-                                                  //         notificationProvider
-                                                  //             .notifications[
-                                                  //                 index]!
-                                                  //             .objectId!));
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(

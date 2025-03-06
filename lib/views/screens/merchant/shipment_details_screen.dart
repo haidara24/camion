@@ -850,25 +850,17 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                                 .subshipments![selectedIndex]
                                                 .shipmentinstructionv2 !=
                                             null) {
-                                          BlocProvider.of<ReadInstructionBloc>(
-                                                  context)
-                                              .add(
-                                            ReadInstructionLoadEvent(
-                                                shipmentstate
-                                                    .shipment
-                                                    .subshipments![
-                                                        selectedIndex]
-                                                    .shipmentinstructionv2!),
-                                          );
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   ShipmentInstructionDetailsScreen(
-                                                      shipment: shipmentstate
-                                                              .shipment
-                                                              .subshipments![
-                                                          selectedIndex]),
+                                                shipment: shipmentstate
+                                                    .shipment
+                                                    .subshipments![
+                                                        selectedIndex]
+                                                    .id!,
+                                              ),
                                             ),
                                           );
                                         }
@@ -1040,10 +1032,12 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   PaymentInstructionDetailsScreen(
-                                                      shipment: shipmentstate
-                                                              .shipment
-                                                              .subshipments![
-                                                          selectedIndex]),
+                                                shipment: shipmentstate
+                                                    .shipment
+                                                    .subshipments![
+                                                        selectedIndex]
+                                                    .id!,
+                                              ),
                                             ),
                                           );
                                         }

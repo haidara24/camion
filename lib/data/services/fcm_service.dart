@@ -187,7 +187,7 @@ class NotificationServices {
         MaterialPageRoute(
           builder: (context) => ApprovalRequestDetailsScreen(
             type: message.data['notification_type'],
-            objectId: int.parse(message.data['objectId']),
+            objectId: message.data['objectId'],
           ),
         ),
       );
@@ -199,7 +199,7 @@ class NotificationServices {
           context,
           MaterialPageRoute(
             builder: (context) => IncomingShipmentDetailsScreen(
-              objectId: int.parse(message.data['objectId']),
+              objectId: message.data['objectId'],
             ),
           ),
         );
@@ -208,7 +208,7 @@ class NotificationServices {
           context,
           MaterialPageRoute(
             builder: (context) => IncomingRequestForDriverScreen(
-              objectId: int.parse(message.data['objectId']),
+              objectId: message.data['objectId'],
             ),
           ),
         );
@@ -219,11 +219,30 @@ class NotificationServices {
         context,
         MaterialPageRoute(
           builder: (context) => SubShipmentDetailsScreen(
-            objectId: int.parse(message.data['objectId']),
+            objectId: message.data['objectId'],
           ),
         ),
       );
     }
+    // else if (message.data['notification_type'] == "I") {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => SubShipmentDetailsScreen(
+    //         objectId: message.data['objectId'],
+    //       ),
+    //     ),
+    //   );
+    // }else if (message.data['notification_type'] == "Y") {
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //       builder: (context) => SubShipmentDetailsScreen(
+    //         objectId: message.data['objectId'],
+    //       ),
+    //     ),
+    //   );
+    // }
   }
 
   void loadAppAssets(
@@ -238,8 +257,7 @@ class NotificationServices {
       return;
     }
     BlocProvider.of<NotificationBloc>(context).add(NotificationLoadEvent());
-    if (message.data['notification_type'] == "A" ||
-        message.data['notification_type'] == "J") {
+    if (message.data['notification_type'] == "J") {
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType");
       if (userType == "Driver") {
@@ -263,7 +281,8 @@ class NotificationServices {
         BlocProvider.of<MerchantRequestsListBloc>(context)
             .add(MerchantRequestsListLoadEvent());
       }
-    } else if (message.data['notification_type'] == "T" ||
+    } else if (message.data['notification_type'] == "A" ||
+        message.data['notification_type'] == "T" ||
         message.data['notification_type'] == "C") {
       BlocProvider.of<ShipmentRunningBloc>(context)
           .add(ShipmentRunningLoadEvent("R"));
