@@ -12,6 +12,8 @@ import 'package:camion/main.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
+import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
+import 'package:camion/views/screens/merchant/shipment_payment_instruction_details_screeen.dart';
 import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -48,9 +50,11 @@ class NotificationServices {
 
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     requestNotificationPermission();
     getDeviceToken();
+
     FirebaseMessaging.instance.setAutoInitEnabled(true);
 
     // Listen for foreground messages
@@ -79,7 +83,6 @@ class NotificationServices {
     });
 
     // setupInteractMessage(context);
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(
@@ -223,26 +226,25 @@ class NotificationServices {
           ),
         ),
       );
+    } else if (message.data['notification_type'] == "I") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ShipmentInstructionDetailsScreen(
+            shipment: int.parse(message.data['objectId']),
+          ),
+        ),
+      );
+    } else if (message.data['notification_type'] == "Y") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PaymentInstructionDetailsScreen(
+            shipment: int.parse(message.data['objectId']),
+          ),
+        ),
+      );
     }
-    // else if (message.data['notification_type'] == "I") {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => SubShipmentDetailsScreen(
-    //         objectId: int .parse(message.data['objectId']),
-    //       ),
-    //     ),
-    //   );
-    // }else if (message.data['notification_type'] == "Y") {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(
-    //       builder: (context) => SubShipmentDetailsScreen(
-    //         objectId: int .parse(message.data['objectId']),
-    //       ),
-    //     ),
-    //   );
-    // }
   }
 
   void loadAppAssets(

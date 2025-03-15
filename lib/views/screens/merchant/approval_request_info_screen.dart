@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter/services.dart';
 
 class ApprovalRequestDetailsScreen extends StatefulWidget {
   final String type;
@@ -125,6 +126,18 @@ class _ApprovalRequestDetailsScreenState
   }
 
   @override
+  void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Reset to default
+        statusBarColor: AppColor.deepBlack,
+        systemNavigationBarColor: AppColor.deepBlack,
+      ),
+    );
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
@@ -132,165 +145,176 @@ class _ApprovalRequestDetailsScreenState
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: SafeArea(
-            child: Scaffold(
-              backgroundColor: AppColor.lightGrey200,
-              appBar: CustomAppBar(
-                title: AppLocalizations.of(context)!
-                    .translate("approval_request_status"),
-              ),
-              body: SingleChildScrollView(
-                // physics: const NeverScrollableScrollPhysics(),
-                child: Container(
-                  padding: const EdgeInsets.all(8.0),
-                  constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height),
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      BlocBuilder<RequestDetailsBloc, RequestDetailsState>(
-                        builder: (context, state) {
-                          if (state is RequestDetailsLoadedSuccess) {
-                            return (widget.request == null
-                                ? (widget.type == "A"
-                                    ? Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            Lottie.asset(
-                                              'assets/images/accept_order.json',
-                                              width: 550.w,
-                                              height: 400.w,
-                                              fit: BoxFit.fill,
-                                            ),
-                                            const SizedBox(
-                                              height: 16,
-                                            ),
-                                            SectionTitle(
-                                                text: AppLocalizations.of(
-                                                        context)!
-                                                    .translate(
-                                                        "request_confirm")),
-                                          ],
-                                        ),
-                                      )
-                                    : Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          children: [
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            Lottie.asset(
-                                              'assets/images/reject_order.json',
-                                              width: 550.w,
-                                              height: 400.w,
-                                              fit: BoxFit.fill,
-                                            ),
-                                            const SizedBox(
-                                              height: 16,
-                                            ),
-                                            SectionBody(
-                                                text: AppLocalizations.of(
-                                                        context)!
-                                                    .translate(
-                                                        "request_reject")),
-                                            state.request.reason!.isNotEmpty
-                                                ? SectionBody(
-                                                    text:
-                                                        "${AppLocalizations.of(context)!.translate("reason")}: ${state.request.reason!} ")
-                                                : const SizedBox.shrink(),
-                                            const SizedBox(
-                                              height: 8,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceAround,
-                                                children: [
-                                                  CustomButton(
-                                                    title: SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              .83,
-                                                      child: Center(
-                                                        child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  "search_for_truck"),
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: AppColor.deepBlack, // Make status bar transparent
+              statusBarIconBrightness:
+                  Brightness.light, // Light icons for dark backgrounds
+              systemNavigationBarColor: Colors.grey[200], // Works on Android
+              systemNavigationBarIconBrightness: Brightness.dark,
+            ),
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: AppColor.lightGrey200,
+                appBar: CustomAppBar(
+                  title: AppLocalizations.of(context)!
+                      .translate("approval_request_status"),
+                ),
+                body: SingleChildScrollView(
+                  // physics: const NeverScrollableScrollPhysics(),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    constraints: BoxConstraints(
+                        maxHeight: MediaQuery.of(context).size.height),
+                    width: double.infinity,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BlocBuilder<RequestDetailsBloc, RequestDetailsState>(
+                          builder: (context, state) {
+                            if (state is RequestDetailsLoadedSuccess) {
+                              return (widget.request == null
+                                  ? (widget.type == "A"
+                                      ? Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              const SizedBox(
+                                                height: 8,
+                                              ),
+                                              Lottie.asset(
+                                                'assets/images/accept_order.json',
+                                                width: 550.w,
+                                                height: 400.w,
+                                                fit: BoxFit.fill,
+                                              ),
+                                              const SizedBox(
+                                                height: 16,
+                                              ),
+                                              SectionTitle(
+                                                  text: AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          "request_confirm")),
+                                            ],
+                                          ),
+                                        )
+                                      : Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                            children: [
+                                              const SizedBox(
+                                                height: 8,
+                                              ),
+                                              Lottie.asset(
+                                                'assets/images/reject_order.json',
+                                                width: 550.w,
+                                                height: 400.w,
+                                                fit: BoxFit.fill,
+                                              ),
+                                              const SizedBox(
+                                                height: 16,
+                                              ),
+                                              SectionBody(
+                                                  text: AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          "request_reject")),
+                                              state.request.reason!.isNotEmpty
+                                                  ? SectionBody(
+                                                      text:
+                                                          "${AppLocalizations.of(context)!.translate("reason")}: ${state.request.reason!} ")
+                                                  : const SizedBox.shrink(),
+                                              const SizedBox(
+                                                height: 8,
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceAround,
+                                                  children: [
+                                                    CustomButton(
+                                                      title: SizedBox(
+                                                        width: MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width *
+                                                            .83,
+                                                        child: Center(
+                                                          child: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    "search_for_truck"),
+                                                            style:
+                                                                const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
                                                           ),
                                                         ),
                                                       ),
+                                                      onTap: () {
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                SearchTruckScreen(
+                                                                    subshipmentId: state
+                                                                        .request
+                                                                        .subshipment!
+                                                                        .id!),
+                                                          ),
+                                                        );
+                                                      },
                                                     ),
-                                                    onTap: () {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              SearchTruckScreen(
-                                                                  subshipmentId: state
-                                                                      .request
-                                                                      .subshipment!
-                                                                      .id!),
-                                                        ),
-                                                      );
-                                                    },
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ))
-                                : Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        getMainPhoto(state.request),
-                                        const SizedBox(
-                                          height: 16,
-                                        ),
-                                        SectionTitle(
-                                          text: AppLocalizations.of(context)!
-                                              .translate(
-                                            getMainText(state.request),
+                                            ],
                                           ),
-                                        ),
-                                        getExtraAction(state.request, context),
-                                      ],
-                                    ),
-                                  ));
-                          } else {
-                            return Expanded(
-                              child: Center(child: LoadingIndicator()),
-                            );
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                    ],
+                                        ))
+                                  : Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          getMainPhoto(state.request),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          SectionTitle(
+                                            text: AppLocalizations.of(context)!
+                                                .translate(
+                                              getMainText(state.request),
+                                            ),
+                                          ),
+                                          getExtraAction(
+                                              state.request, context),
+                                        ],
+                                      ),
+                                    ));
+                            } else {
+                              return Expanded(
+                                child: Center(child: LoadingIndicator()),
+                              );
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

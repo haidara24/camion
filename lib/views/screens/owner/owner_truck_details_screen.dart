@@ -4,6 +4,7 @@ import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart'
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,7 +12,8 @@ import 'package:shimmer/shimmer.dart';
 
 class OwnerTruckDetailsScreen extends StatefulWidget {
   final int truckId;
-  const OwnerTruckDetailsScreen({Key? key, required this.truckId}) : super(key: key);
+  const OwnerTruckDetailsScreen({Key? key, required this.truckId})
+      : super(key: key);
 
   @override
   State<OwnerTruckDetailsScreen> createState() =>
@@ -34,6 +36,13 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen>
   @override
   void dispose() {
     super.dispose();
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Reset to default
+        statusBarColor: AppColor.deepBlack,
+        systemNavigationBarColor: AppColor.deepBlack,
+      ),
+    );
     _tabController.dispose();
   }
 
@@ -222,54 +231,63 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen>
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: SafeArea(
-            child: Scaffold(
-              backgroundColor: Colors.grey[100],
-              body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      color: Colors.grey[200],
-                      child: TabBar(
-                        indicatorColor: AppColor.deepYellow,
-                        controller: _tabController,
-                        onTap: (value) {
-                          switch (value) {
-                            case 0:
-                              BlocProvider.of<TruckDetailsBloc>(context)
-                                  .add(TruckDetailsLoadEvent(widget.truckId));
-                              break;
-                            case 1:
-                              BlocProvider.of<TruckFixListBloc>(context)
-                                  .add(TruckFixListLoad(widget.truckId));
-                              break;
-                            default:
-                          }
-                          setState(() {
-                            tabIndex = value;
-                          });
-                        },
-                        tabs: const [
-                          // first tab [you can add an icon using the icon property]
-                          Tab(
-                            child: Center(child: Text("معلومات المركبة")),
-                          ),
-                          Tab(
-                            child: Center(child: Text("المصاريف")),
-                          ),
-                        ],
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: AppColor.deepBlack, // Make status bar transparent
+              statusBarIconBrightness:
+                  Brightness.light, // Light icons for dark backgrounds
+              systemNavigationBarColor: Colors.grey[200], // Works on Android
+              systemNavigationBarIconBrightness: Brightness.dark,
+            ),
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.grey[100],
+                body: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        color: Colors.grey[200],
+                        child: TabBar(
+                          indicatorColor: AppColor.deepYellow,
+                          controller: _tabController,
+                          onTap: (value) {
+                            switch (value) {
+                              case 0:
+                                BlocProvider.of<TruckDetailsBloc>(context)
+                                    .add(TruckDetailsLoadEvent(widget.truckId));
+                                break;
+                              case 1:
+                                BlocProvider.of<TruckFixListBloc>(context)
+                                    .add(TruckFixListLoad(widget.truckId));
+                                break;
+                              default:
+                            }
+                            setState(() {
+                              tabIndex = value;
+                            });
+                          },
+                          tabs: const [
+                            // first tab [you can add an icon using the icon property]
+                            Tab(
+                              child: Center(child: Text("معلومات المركبة")),
+                            ),
+                            Tab(
+                              child: Center(child: Text("المصاريف")),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: showscreenBody(localeState.value.languageCode),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: showscreenBody(localeState.value.languageCode),
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

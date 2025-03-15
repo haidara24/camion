@@ -111,7 +111,7 @@ class ContactUsScreen extends StatelessWidget {
                     AppColor.deepBlack, // Make status bar transparent
                 statusBarIconBrightness:
                     Brightness.dark, // Light icons for dark backgrounds
-                systemNavigationBarColor: Colors.white, // Works on Android
+                systemNavigationBarColor: Colors.grey[200], // Works on Android
                 systemNavigationBarIconBrightness: Brightness.light,
               ),
               child: Scaffold(

@@ -43,7 +43,7 @@ dependencies:
   geolocator: ^10.1.0
   geocoding: ^2.1.1
   flutter_polyline_points: ^2.0.0
-  location: ^5.0.3
+  # location: ^5.0.3
   carousel_slider: ^5.0.0
   carousel_indicator: ^1.0.6
   timelines: ^0.1.0

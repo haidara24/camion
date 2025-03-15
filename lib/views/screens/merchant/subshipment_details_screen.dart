@@ -31,7 +31,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show SystemChrome, SystemUiOverlayStyle, rootBundle;
 import 'package:intl/intl.dart' as intel;
 import 'package:shimmer/shimmer.dart';
 
@@ -356,6 +357,14 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
   @override
   void dispose() {
     super.dispose();
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Reset to default
+        statusBarColor: AppColor.deepBlack,
+        systemNavigationBarColor: AppColor.deepBlack,
+      ),
+    );
+
     _controller.dispose();
   }
 
@@ -373,373 +382,393 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
-        return SafeArea(
-          child: Scaffold(
-            appBar: CustomAppBar(
-              title:
-                  "${AppLocalizations.of(context)!.translate('shipment_number')}: ${widget.shipment}",
-            ),
-            body: BlocConsumer<SubShipmentDetailsBloc, SubShipmentDetailsState>(
-              listener: (context, state) {
-                if (state is SubShipmentDetailsLoadedSuccess) {
-                  createMarkerIcons(state.shipment);
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    setLoadDate(state.shipment.pickupDate!);
-                    setLoadTime(state.shipment.pickupDate!);
-                  });
-                }
-              },
-              builder: (context, shipmentstate) {
-                if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 300.h,
-                          child: Stack(
-                            children: [
-                              GoogleMap(
-                                onMapCreated:
-                                    (GoogleMapController controller) async {
-                                  setState(() {
-                                    _controller = controller;
-                                    _controller.setMapStyle(_mapStyle);
-                                  });
-                                  initMapbounds(shipmentstate.shipment);
-                                },
-                                myLocationButtonEnabled: false,
-                                zoomGesturesEnabled: false,
-                                scrollGesturesEnabled: false,
-                                tiltGesturesEnabled: false,
-                                rotateGesturesEnabled: false,
-                                zoomControlsEnabled: false,
-                                initialCameraPosition: CameraPosition(
-                                    target: LatLng(
-                                        double.parse(shipmentstate
-                                            .shipment.pathpoints!
-                                            .singleWhere((element) =>
-                                                element.pointType == "P")
-                                            .location!
-                                            .split(",")[0]),
-                                        double.parse(shipmentstate
-                                            .shipment.pathpoints!
-                                            .singleWhere((element) =>
-                                                element.pointType == "P")
-                                            .location!
-                                            .split(",")[1])),
-                                    zoom: 14.45),
-                                gestureRecognizers: const {},
-                                markers: markers,
-                                polylines: {
-                                  Polyline(
-                                    polylineId: const PolylineId("route"),
-                                    points: deserializeLatLng(
-                                        shipmentstate.shipment.paths!),
-                                    color: AppColor.deepYellow,
-                                    width: 4,
-                                  ),
-                                },
-                                // mapType: shipmentProvider.mapType,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 4,
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      PageRouteBuilder(
-                                        pageBuilder: (context, animation,
-                                                secondaryAnimation) =>
-                                            ShipmentDetailsMapScreen(
-                                          shipment: shipmentstate.shipment,
-                                        ),
-                                        transitionDuration:
-                                            const Duration(milliseconds: 1000),
-                                        transitionsBuilder: (context, animation,
-                                            secondaryAnimation, child) {
-                                          var begin = const Offset(0.0, -1.0);
-                                          var end = Offset.zero;
-                                          var curve = Curves.ease;
-                                          var tween = Tween(
-                                                  begin: begin, end: end)
-                                              .chain(CurveTween(curve: curve));
-                                          return SlideTransition(
-                                            position: animation.drive(tween),
-                                            child: child,
-                                          );
-                                        },
-                                      ),
-                                    ).then((value) {
-                                      initMapbounds(shipmentstate.shipment);
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: AppColor.deepBlack, // Make status bar transparent
+            statusBarIconBrightness:
+                Brightness.light, // Light icons for dark backgrounds
+            systemNavigationBarColor: Colors.grey[200], // Works on Android
+            systemNavigationBarIconBrightness: Brightness.light,
+          ),
+          child: SafeArea(
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title:
+                    "${AppLocalizations.of(context)!.translate('shipment_number')}: ${widget.shipment}",
+              ),
+              body:
+                  BlocConsumer<SubShipmentDetailsBloc, SubShipmentDetailsState>(
+                listener: (context, state) {
+                  if (state is SubShipmentDetailsLoadedSuccess) {
+                    createMarkerIcons(state.shipment);
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      setLoadDate(state.shipment.pickupDate!);
+                      setLoadTime(state.shipment.pickupDate!);
+                    });
+                  }
+                },
+                builder: (context, shipmentstate) {
+                  if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 300.h,
+                            child: Stack(
+                              children: [
+                                GoogleMap(
+                                  onMapCreated:
+                                      (GoogleMapController controller) async {
+                                    setState(() {
+                                      _controller = controller;
+                                      _controller.setMapStyle(_mapStyle);
                                     });
-                                    // shipmentProvider.setMapMode(MapType.satellite);
+                                    initMapbounds(shipmentstate.shipment);
                                   },
-                                  child: const AbsorbPointer(
-                                    absorbing: false,
-                                    child: SizedBox(
-                                      height: 50,
-                                      width: 70,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.zoom_out_map,
-                                          color: Colors.grey,
-                                          size: 35,
-                                        ),
-                                      ),
+                                  myLocationButtonEnabled: false,
+                                  zoomGesturesEnabled: false,
+                                  scrollGesturesEnabled: false,
+                                  tiltGesturesEnabled: false,
+                                  rotateGesturesEnabled: false,
+                                  zoomControlsEnabled: false,
+                                  initialCameraPosition: CameraPosition(
+                                      target: LatLng(
+                                          double.parse(shipmentstate
+                                              .shipment.pathpoints!
+                                              .singleWhere((element) =>
+                                                  element.pointType == "P")
+                                              .location!
+                                              .split(",")[0]),
+                                          double.parse(shipmentstate
+                                              .shipment.pathpoints!
+                                              .singleWhere((element) =>
+                                                  element.pointType == "P")
+                                              .location!
+                                              .split(",")[1])),
+                                      zoom: 14.45),
+                                  gestureRecognizers: const {},
+                                  markers: markers,
+                                  polylines: {
+                                    Polyline(
+                                      polylineId: const PolylineId("route"),
+                                      points: deserializeLatLng(
+                                          shipmentstate.shipment.paths!),
+                                      color: AppColor.deepYellow,
+                                      width: 4,
                                     ),
-                                  ),
+                                  },
+                                  // mapType: shipmentProvider.mapType,
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    children: [
-                                      Container(
-                                        height: 58.w,
-                                        width: 58.w,
-                                        decoration: BoxDecoration(
-                                          // color: AppColor.lightGoldenYellow,
-                                          borderRadius:
-                                              BorderRadius.circular(5),
-                                        ),
-                                        child: CircleAvatar(
-                                          radius: 25.h,
-                                          // backgroundColor: AppColor.deepBlue,
-                                          child: Center(
-                                            child: (shipmentstate.shipment
-                                                        .driver_image!.length >
-                                                    1)
-                                                ? ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            180),
-                                                    child: Image.network(
-                                                      shipmentstate.shipment
-                                                          .driver_image!,
-                                                      height: 55.w,
-                                                      width: 55.w,
-                                                      fit: BoxFit.fill,
-                                                    ),
-                                                  )
-                                                : Text(
-                                                    shipmentstate.shipment
-                                                        .driver_first_name!,
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 28.sp,
-                                                    ),
-                                                  ),
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        "${shipmentstate.shipment.driver_first_name!} ${shipmentstate.shipment.driver_last_name!}",
-                                        style: TextStyle(
-                                          // color: AppColor.lightBlue,
-                                          fontSize: 19.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Column(
-                                    children: [
-                                      SizedBox(
-                                        height: 35.h,
-                                        width: 155.w,
-                                        child: CachedNetworkImage(
-                                          imageUrl: shipmentstate.shipment
-                                              .truck!.truck_type_image!,
-                                          progressIndicatorBuilder: (context,
-                                                  url, downloadProgress) =>
-                                              Shimmer.fromColors(
-                                            baseColor: (Colors.grey[300])!,
-                                            highlightColor: (Colors.grey[100])!,
-                                            enabled: true,
-                                            child: Container(
-                                              height: 25.h,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          errorWidget: (context, url, error) =>
-                                              Container(
-                                            height: 35.h,
-                                            width: 155.w,
-                                            color: Colors.grey[300],
-                                            child: Center(
-                                              child: Text(
-                                                  AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'image_load_error')),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 8,
-                                      ),
-                                      Text(
-                                        "${localeState.value.languageCode == 'en' ? shipmentstate.shipment.truck!.truck_type! : shipmentstate.shipment.truck!.truck_typeAr!}  ",
-                                        style: TextStyle(
-                                          // color: AppColor.lightBlue,
-                                          fontSize: 19.sp,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                height: 24,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SectionTitle(
-                                    text:
-                                        "${AppLocalizations.of(context)!.translate("shipment_status")}: ",
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: getStatusImage(
-                                      shipmentstate.shipment.shipmentStatus!,
-                                    ),
-                                  ),
-                                  SectionBody(
-                                    text: getStatusName(
-                                      shipmentstate.shipment.shipmentStatus!,
-                                      localeState.value.languageCode,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                height: 24,
-                              ),
-                              ShipmentInstructionCardsWidget(
-                                subshipment: shipmentstate.shipment,
-                              ),
-                              const Divider(
-                                height: 24,
-                              ),
-                              SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate("shipment_route"),
-                              ),
-                              ShipmentPathVerticalWidget(
-                                pathpoints: shipmentstate.shipment.pathpoints!,
-                                pickupDate: shipmentstate.shipment.pickupDate!,
-                                deliveryDate:
-                                    shipmentstate.shipment.deliveryDate!,
-                                langCode: localeState.value.languageCode,
-                                mini: false,
-                              ),
-                              const Divider(
-                                height: 24,
-                              ),
-                              SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate("commodity_info"),
-                              ),
-                              const SizedBox(height: 4),
-                              Commodity_info_widget(
-                                  shipmentItems:
-                                      shipmentstate.shipment.shipmentItems),
-                              const Divider(
-                                height: 24,
-                              ),
-                              SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate("shipment_route_statistics"),
-                              ),
-                              const SizedBox(height: 4),
-                              PathStatisticsWidget(
-                                distance: shipmentstate.shipment.distance!,
-                                period: shipmentstate.shipment.period!,
-                              ),
-                              const Divider(
-                                height: 24,
-                              ),
-                              Visibility(
-                                visible: shipmentstate.shipment.truck == null &&
-                                    !widget.preview,
-                                replacement: const SizedBox.shrink(),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: CustomButton(
-                                    title: SizedBox(
-                                      width: 200.w,
-                                      child: Row(
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'search_for_truck'),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          SizedBox(
-                                            height: 25.w,
-                                            width: 30.w,
-                                            child: SvgPicture.asset(
-                                              "assets/icons/white/search_for_truck.svg",
-                                              width: 25.w,
-                                              height: 30.w,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 4,
+                                  child: InkWell(
                                     onTap: () {
                                       Navigator.push(
                                         context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchTruckScreen(
-                                                  subshipmentId: shipmentstate
-                                                      .shipment.id!),
+                                        PageRouteBuilder(
+                                          pageBuilder: (context, animation,
+                                                  secondaryAnimation) =>
+                                              ShipmentDetailsMapScreen(
+                                            shipment: shipmentstate.shipment,
+                                          ),
+                                          transitionDuration: const Duration(
+                                              milliseconds: 1000),
+                                          transitionsBuilder: (context,
+                                              animation,
+                                              secondaryAnimation,
+                                              child) {
+                                            var begin = const Offset(0.0, -1.0);
+                                            var end = Offset.zero;
+                                            var curve = Curves.ease;
+                                            var tween = Tween(
+                                                    begin: begin, end: end)
+                                                .chain(
+                                                    CurveTween(curve: curve));
+                                            return SlideTransition(
+                                              position: animation.drive(tween),
+                                              child: child,
+                                            );
+                                          },
                                         ),
-                                      );
+                                      ).then((value) {
+                                        initMapbounds(shipmentstate.shipment);
+                                      });
+                                      // shipmentProvider.setMapMode(MapType.satellite);
                                     },
+                                    child: const AbsorbPointer(
+                                      absorbing: false,
+                                      child: SizedBox(
+                                        height: 50,
+                                        width: 70,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.zoom_out_map,
+                                            color: Colors.grey,
+                                            size: 35,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Center(child: LoadingIndicator());
-                }
-              },
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  // crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Container(
+                                          height: 58.w,
+                                          width: 58.w,
+                                          decoration: BoxDecoration(
+                                            // color: AppColor.lightGoldenYellow,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
+                                          child: CircleAvatar(
+                                            radius: 25.h,
+                                            // backgroundColor: AppColor.deepBlue,
+                                            child: Center(
+                                              child: (shipmentstate
+                                                          .shipment
+                                                          .driver_image!
+                                                          .length >
+                                                      1)
+                                                  ? ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              180),
+                                                      child: Image.network(
+                                                        shipmentstate.shipment
+                                                            .driver_image!,
+                                                        height: 55.w,
+                                                        width: 55.w,
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                    )
+                                                  : Text(
+                                                      shipmentstate.shipment
+                                                          .driver_first_name!,
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 28.sp,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                          "${shipmentstate.shipment.driver_first_name!} ${shipmentstate.shipment.driver_last_name!}",
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 19.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 35.h,
+                                          width: 155.w,
+                                          child: CachedNetworkImage(
+                                            imageUrl: shipmentstate.shipment
+                                                .truck!.truck_type_image!,
+                                            progressIndicatorBuilder: (context,
+                                                    url, downloadProgress) =>
+                                                Shimmer.fromColors(
+                                              baseColor: (Colors.grey[300])!,
+                                              highlightColor:
+                                                  (Colors.grey[100])!,
+                                              enabled: true,
+                                              child: Container(
+                                                height: 25.h,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Container(
+                                              height: 35.h,
+                                              width: 155.w,
+                                              color: Colors.grey[300],
+                                              child: Center(
+                                                child: Text(AppLocalizations.of(
+                                                        context)!
+                                                    .translate(
+                                                        'image_load_error')),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 8,
+                                        ),
+                                        Text(
+                                          "${localeState.value.languageCode == 'en' ? shipmentstate.shipment.truck!.truck_type! : shipmentstate.shipment.truck!.truck_typeAr!}  ",
+                                          style: TextStyle(
+                                            // color: AppColor.lightBlue,
+                                            fontSize: 19.sp,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const Divider(
+                                  height: 24,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SectionTitle(
+                                      text:
+                                          "${AppLocalizations.of(context)!.translate("shipment_status")}: ",
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4),
+                                      child: getStatusImage(
+                                        shipmentstate.shipment.shipmentStatus!,
+                                      ),
+                                    ),
+                                    SectionBody(
+                                      text: getStatusName(
+                                        shipmentstate.shipment.shipmentStatus!,
+                                        localeState.value.languageCode,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(
+                                  height: 24,
+                                ),
+                                ShipmentInstructionCardsWidget(
+                                  subshipment: shipmentstate.shipment,
+                                ),
+                                const Divider(
+                                  height: 24,
+                                ),
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("shipment_route"),
+                                ),
+                                ShipmentPathVerticalWidget(
+                                  pathpoints:
+                                      shipmentstate.shipment.pathpoints!,
+                                  pickupDate:
+                                      shipmentstate.shipment.pickupDate!,
+                                  deliveryDate:
+                                      shipmentstate.shipment.deliveryDate!,
+                                  langCode: localeState.value.languageCode,
+                                  mini: false,
+                                ),
+                                const Divider(
+                                  height: 24,
+                                ),
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("commodity_info"),
+                                ),
+                                const SizedBox(height: 4),
+                                Commodity_info_widget(
+                                    shipmentItems:
+                                        shipmentstate.shipment.shipmentItems),
+                                const Divider(
+                                  height: 24,
+                                ),
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("shipment_route_statistics"),
+                                ),
+                                const SizedBox(height: 4),
+                                PathStatisticsWidget(
+                                  distance: shipmentstate.shipment.distance!,
+                                  period: shipmentstate.shipment.period!,
+                                ),
+                                const Divider(
+                                  height: 24,
+                                ),
+                                Visibility(
+                                  visible:
+                                      shipmentstate.shipment.truck == null &&
+                                          !widget.preview,
+                                  replacement: const SizedBox.shrink(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: CustomButton(
+                                      title: SizedBox(
+                                        width: 200.w,
+                                        child: Row(
+                                          children: [
+                                            Center(
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        'search_for_truck'),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            SizedBox(
+                                              height: 25.w,
+                                              width: 30.w,
+                                              child: SvgPicture.asset(
+                                                "assets/icons/white/search_for_truck.svg",
+                                                width: 25.w,
+                                                height: 30.w,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SearchTruckScreen(
+                                                    subshipmentId: shipmentstate
+                                                        .shipment.id!),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Center(child: LoadingIndicator());
+                  }
+                },
+              ),
             ),
           ),
         );

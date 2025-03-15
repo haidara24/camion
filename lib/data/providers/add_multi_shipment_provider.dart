@@ -1391,11 +1391,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         backgroundColor: Colors.orange,
         message: 'خدمة تحديد الموقع غير مفعلة..',
       );
-
-      // setState(() {
-      //   pickupLoading = false;
-      // });
-      // return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {

@@ -37,7 +37,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:location/location.dart' as loc;
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -50,8 +50,7 @@ class DriverHomeScreen extends StatefulWidget {
 
 class _DriverHomeScreenState extends State<DriverHomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  final loc.Location location = loc.Location();
-  StreamSubscription<loc.LocationData>? _locationSubscription;
+  StreamSubscription<Position>? _locationSubscription;
 
   int currentIndex = 0;
   int navigationValue = 0;
@@ -63,24 +62,15 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   late SharedPreferences prefs;
   Timer? _timer;
 
-  _getLocation() async {
-    prefs = await SharedPreferences.getInstance();
-    var userprofile =
-        UserModel.fromJson(jsonDecode(prefs.getString("userProfile")!));
-    var driverId = prefs.getInt("truckuser");
-
-    try {
-      final loc.LocationData locationResult = await location.getLocation();
-      // await FirebaseFirestore.instance
-      //     .collection('location')
-      //     .doc('driver${userprofile.id}')
-      //     .set({
-      //   'latitude': _locationResult.latitude,
-      //   'longitude': _locationResult.longitude,
-      //   'name': '${userprofile.firstName!} ${userprofile.lastName!}'
-      // }, SetOptions(merge: true));
-    } catch (e) {
-      print(e);
+  Future<void> _requestPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.deniedForever) {
+        // Handle case when user denies permission permanently
+        print("Location permissions are permanently denied.");
+        return;
+      }
     }
   }
 
@@ -90,26 +80,21 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     String gpsId = prefs.getString("gpsId") ?? "";
     _locationSubscription?.cancel();
     _timer?.cancel();
-    print("truckId $truckId");
-    print("gpsId $gpsId");
+
+    await _requestPermission();
 
     if (gpsId.isEmpty || gpsId.length < 8) {
-      _locationSubscription = location.onLocationChanged.handleError((onError) {
-        _locationSubscription?.cancel();
-        setState(() {
-          _locationSubscription = null;
-        });
-      }).listen((loc.LocationData currentlocation) async {
+      _locationSubscription = Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 10, // Update when moving 10 meters
+        ),
+      ).listen((Position position) async {
         if (_timer == null || !_timer!.isActive) {
           if (truckId != 0) {
-            print(currentlocation.latitude);
             var jwt = prefs.getString("token");
-            var rs = await HttpHelper.patch(
-                '$TRUCKS_ENDPOINT$truckId/',
-                {
-                  'location_lat':
-                      '${currentlocation.latitude},${currentlocation.longitude}'
-                },
+            var rs = await HttpHelper.patch('$TRUCKS_ENDPOINT$truckId/',
+                {'location_lat': '${position.latitude},${position.longitude}'},
                 apiToken: jwt);
             _timer = Timer(const Duration(seconds: 10), () {});
           }
