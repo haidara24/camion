@@ -86,11 +86,16 @@ class AuthRepository {
       if (Platform.isAndroid) {}
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
+      var language = prefs.getString("language") ?? "ar";
       var newPhone = "00963${phone.substring(1)}";
       Response response = await post(
         Uri.parse(PHONE_LOGIN_ENDPOINT),
-        body: jsonEncode(
-            {"phone": newPhone, "role": userType, "fcm_token": firebaseToken}),
+        body: jsonEncode({
+          "phone": newPhone,
+          "role": userType,
+          "language": language,
+          "fcm_token": firebaseToken
+        }),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json; charset=UTF-8',
           HttpHeaders.acceptHeader: 'application/json'
@@ -219,12 +224,14 @@ class AuthRepository {
 
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType") ?? "";
+      var language = prefs.getString("language") ?? "ar";
       var newPhone = "00963${phone.substring(1)}";
       Response response = await post(
         Uri.parse(PHONE_REGISTER_ENDPOINT),
         body: jsonEncode({
           "phone": newPhone,
           "role": userType,
+          "language": language,
           'first_name': first_name,
           'last_name': last_name,
           "fcm_token": firebaseToken

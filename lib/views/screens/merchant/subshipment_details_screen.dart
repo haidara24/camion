@@ -497,7 +497,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                       });
                                       // shipmentProvider.setMapMode(MapType.satellite);
                                     },
-                                    child: const AbsorbPointer(
+                                    child: AbsorbPointer(
                                       absorbing: false,
                                       child: SizedBox(
                                         height: 50,
@@ -505,7 +505,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                         child: Center(
                                           child: Icon(
                                             Icons.zoom_out_map,
-                                            color: Colors.grey,
+                                            color: Colors.grey[400],
                                             size: 35,
                                           ),
                                         ),
@@ -659,12 +659,6 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                 const Divider(
                                   height: 24,
                                 ),
-                                ShipmentInstructionCardsWidget(
-                                  subshipment: shipmentstate.shipment,
-                                ),
-                                const Divider(
-                                  height: 24,
-                                ),
                                 SectionTitle(
                                   text: AppLocalizations.of(context)!
                                       .translate("shipment_route"),
@@ -701,6 +695,12 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                 PathStatisticsWidget(
                                   distance: shipmentstate.shipment.distance!,
                                   period: shipmentstate.shipment.period!,
+                                ),
+                                const Divider(
+                                  height: 24,
+                                ),
+                                ShipmentInstructionCardsWidget(
+                                  subshipment: shipmentstate.shipment,
                                 ),
                                 const Divider(
                                   height: 24,

@@ -27,14 +27,16 @@ class ShipmentRepository {
   List<Shipmentv2> kshipments = [];
   List<Shipmentv2> shipmentsC = [];
 
-  Future<bool> cancelShipment(int shipmentId) async {
+  Future<bool> cancelShipment(int requestId) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
     var response = await HttpHelper.patch(
-      "$SHIPPMENTSV2_ENDPOINT$shipmentId/cancel/",
+      "$APPROVAL_REQUESTS_ENDPOINT$requestId/cancel/",
       {},
       apiToken: jwt,
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       return true;
     } else {

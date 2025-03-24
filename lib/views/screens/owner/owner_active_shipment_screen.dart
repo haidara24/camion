@@ -732,7 +732,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                 createMarkerIcons(subshipment!);
                                 setState(() {});
                               },
-                              child: const AbsorbPointer(
+                              child: AbsorbPointer(
                                 absorbing: false,
                                 child: SizedBox(
                                   height: 40,
@@ -740,7 +740,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                   child: Center(
                                     child: Icon(
                                       Icons.zoom_out_map,
-                                      color: Colors.grey,
+                                      color: Colors.grey[400],
                                       size: 35,
                                     ),
                                   ),

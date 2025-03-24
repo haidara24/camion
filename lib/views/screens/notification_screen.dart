@@ -137,8 +137,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   return BlocConsumer<NotificationBloc, NotificationState>(
                     listener: (context, state) {
                       if (state is NotificationLoadedSuccess) {
-                        notificationProvider
-                            .initNotifications(state.notifications);
+                        // notificationProvider
+                        //     .initNotifications(state.notifications);
                       }
                     },
                     builder: (context, state) {

@@ -769,7 +769,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                     // });
                                     // shipmentProvider.setMapMode(MapType.satellite);
                                   },
-                                  child: const AbsorbPointer(
+                                  child: AbsorbPointer(
                                     absorbing: false,
                                     child: SizedBox(
                                       height: 50,
@@ -777,7 +777,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                       child: Center(
                                         child: Icon(
                                           Icons.zoom_out_map,
-                                          color: Colors.grey,
+                                          color: Colors.grey[400],
                                           size: 35,
                                         ),
                                       ),

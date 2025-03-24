@@ -238,6 +238,7 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                   target: location,
                   zoom: 15,
                 ),
+                myLocationButtonEnabled: false,
                 markers: {
                   Marker(
                     markerId: const MarkerId('location'),

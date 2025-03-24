@@ -208,6 +208,7 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                 target: location,
                 zoom: 15,
               ),
+              myLocationButtonEnabled: false,
               markers: {
                 Marker(
                   markerId: const MarkerId('location'),

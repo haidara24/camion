@@ -170,10 +170,11 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                         Navigator.pop(context);
                       },
                       icon: SizedBox(
-                        width: 32.w,
+                        width: 40.w,
+                        height: 16.h,
                         child: SvgPicture.asset(
                           "assets/icons/arrow_down.svg",
-                          fit: BoxFit.contain,
+                          fit: BoxFit.fill,
                           height: 8.h,
                         ),
                       ),
@@ -339,32 +340,44 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
         _onVerticalGesture(details, subshipments, language);
       },
       child: Container(
-        color: Colors.grey[200],
-        height: 140.h,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+        ),
+        height: 120.h,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    _onVerticalGesture(null, subshipments, language);
-                  },
-                  icon: SizedBox(
-                    width: 32.w,
-                    child: SvgPicture.asset(
-                      "assets/icons/arrow_up.svg",
-                      fit: BoxFit.contain,
-                      height: 8.h,
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      _onVerticalGesture(null, subshipments, language);
+                    },
+                    child: SizedBox(
+                      width: 40.w,
+                      height: 16.h,
+                      child: SvgPicture.asset(
+                        "assets/icons/arrow_up.svg",
+                        fit: BoxFit.fill,
+                        height: 8.h,
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
             // const Spacer(),
             SizedBox(
-              height: 88.h,
+              height: 90.h,
               child: ListView.builder(
                 itemCount: subshipments.length,
                 shrinkWrap: true,
@@ -417,7 +430,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                               children: [
                                 SizedBox(
                                   height: 23.5.h,
-                                  width: selectedTruck == index ? 122.w : 118.w,
+                                  width: 115.w,
                                   child: CachedNetworkImage(
                                     imageUrl: subshipments[index]
                                         .truck!
@@ -437,7 +450,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                         Container(
                                       height: 23.5.h,
                                       width: selectedTruck == index
-                                          ? 122.w
+                                          ? 119.w
                                           : 118.w,
                                       color: Colors.grey[300],
                                       child: Center(
@@ -451,9 +464,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                 Text('No: ${subshipments[index].id!}')
                               ],
                             ),
-                            SizedBox(
-                              height: selectedTruck == index ? 7.h : 2.h,
-                            ),
+                            Spacer(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -675,7 +686,6 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                         state.shipments,
                         localeState.value.languageCode,
                       );
-
                       setState(() {});
                     }
                   }
@@ -796,7 +806,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
 
                                 setState(() {});
                               },
-                              child: const AbsorbPointer(
+                              child: AbsorbPointer(
                                 absorbing: false,
                                 child: SizedBox(
                                   height: 40,
@@ -804,7 +814,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                   child: Center(
                                     child: Icon(
                                       Icons.zoom_out_map,
-                                      color: Colors.grey,
+                                      color: Colors.grey[400],
                                       size: 35,
                                     ),
                                   ),

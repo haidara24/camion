@@ -742,7 +742,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                               MainAxisAlignment.end,
                                           children: [
                                             SvgPicture.asset(
-                                              "assets/icons/orange/search_for_truck.svg",
+                                              "assets/icons/orange/search_shipment.svg",
                                               width: 28.w,
                                               height: 28.w,
                                             ),
@@ -773,7 +773,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                               MainAxisAlignment.end,
                                           children: [
                                             SvgPicture.asset(
-                                              "assets/icons/white/search_for_truck.svg",
+                                              "assets/icons/white/search_shipment.svg",
                                               width: 28.w,
                                               height: 28.w,
                                             ),

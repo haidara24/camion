@@ -45,10 +45,10 @@ class InstructionRepository {
     request.fields['shipment'] = shipment.shipment!.toString();
     request.fields['user_type'] = shipment.userType!;
     request.fields['charger_name'] = shipment.chargerName!;
-    request.fields['charger_address'] = shipment.chargerAddress!;
+    // request.fields['charger_address'] = shipment.chargerAddress!;
     request.fields['charger_phone'] = shipment.chargerPhone!;
     request.fields['reciever_name'] = shipment.recieverName!;
-    request.fields['reciever_address'] = shipment.recieverAddress!;
+    // request.fields['reciever_address'] = shipment.recieverAddress!;
     request.fields['reciever_phone'] = shipment.recieverPhone!;
     request.fields['net_weight'] = shipment.netWeight!.toString();
     request.fields['truck_weight'] = shipment.truckWeight!.toString();

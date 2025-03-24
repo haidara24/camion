@@ -1,4 +1,5 @@
 {
     "editor.codeActionsOnSave": {},
-    "editor.rulers": []
+    "editor.rulers": [],
+    "editor.formatOnSave": false
 }

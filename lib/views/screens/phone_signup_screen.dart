@@ -155,170 +155,141 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
+                                            MainAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'first_name'),
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 19.sp,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 4.h,
-                                                ),
-                                                SizedBox(
-                                                  width: 350.w,
-                                                  child: TextFormField(
-                                                    // initialValue: widget.initialValue,
-                                                    controller:
-                                                        _firstNameController,
-                                                    onTap: () {
-                                                      _firstNameController
-                                                              .selection =
-                                                          TextSelection.collapsed(
-                                                              offset:
-                                                                  _firstNameController
-                                                                      .text
-                                                                      .length);
-                                                    },
-                                                    validator: (value) {
-                                                      // Regular expression to validate the phone number format 0999999999
-
-                                                      if (value!.isEmpty) {
-                                                        return "First Name is required";
-                                                      }
-                                                      return null;
-                                                    },
-                                                    onSaved: (newValue) {
-                                                      _firstNameController
-                                                          .text = newValue!;
-                                                    },
-                                                    // autovalidateMode:
-                                                    //     AutovalidateMode.onUserInteraction,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 19.sp,
-                                                    ),
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 20.w,
-                                                              vertical: 2.h),
-                                                      hintText:
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'first_name'),
-                                                      hintStyle: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 19.sp,
-                                                      ),
-                                                      filled: true,
-                                                      fillColor: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                          const SizedBox(
+                                            width: 10,
                                           ),
-                                          const SizedBox(width: 4),
-                                          Expanded(
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    const SizedBox(
-                                                      width: 10,
-                                                    ),
-                                                    Text(
-                                                      AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'last_name'),
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 19.sp,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: 4.h,
-                                                ),
-                                                SizedBox(
-                                                  width: 350.w,
-                                                  child: TextFormField(
-                                                    // initialValue: widget.initialValue,
-                                                    controller:
-                                                        _lastNameController,
-                                                    onTap: () {
-                                                      _lastNameController
-                                                              .selection =
-                                                          TextSelection.collapsed(
-                                                              offset:
-                                                                  _lastNameController
-                                                                      .text
-                                                                      .length);
-                                                    },
-                                                    validator: (value) {
-                                                      // Regular expression to validate the phone number format 0999999999
-
-                                                      if (value!.isEmpty) {
-                                                        return "Last Name is required";
-                                                      }
-                                                      return null;
-                                                    },
-                                                    onSaved: (newValue) {
-                                                      _lastNameController.text =
-                                                          newValue!;
-                                                    },
-                                                    // autovalidateMode:
-                                                    //     AutovalidateMode.onUserInteraction,
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 19.sp,
-                                                    ),
-                                                    decoration: InputDecoration(
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                              horizontal: 20.w,
-                                                              vertical: 2.h),
-                                                      hintText:
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'last_name'),
-                                                      hintStyle: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 19.sp,
-                                                      ),
-                                                      filled: true,
-                                                      fillColor: Colors.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('first_name'),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 19.sp,
                                             ),
                                           ),
                                         ],
+                                      ),
+                                      SizedBox(
+                                        height: 4.h,
+                                      ),
+                                      SizedBox(
+                                        width: 350.w,
+                                        child: TextFormField(
+                                          // initialValue: widget.initialValue,
+                                          controller: _firstNameController,
+                                          onTap: () {
+                                            _firstNameController.selection =
+                                                TextSelection.collapsed(
+                                                    offset: _firstNameController
+                                                        .text.length);
+                                          },
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus!
+                                                .unfocus();
+                                          },
+                                          validator: (value) {
+                                            // Regular expression to validate the phone number format 0999999999
+
+                                            if (value!.isEmpty) {
+                                              return "First Name is required";
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            _firstNameController.text =
+                                                newValue!;
+                                          },
+                                          // autovalidateMode:
+                                          //     AutovalidateMode.onUserInteraction,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 19.sp,
+                                          ),
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: 20.w,
+                                                    vertical: 2.h),
+                                            hintText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('first_name'),
+                                            hintStyle: TextStyle(
+                                              color: Colors.grey,
+                                              fontSize: 19.sp,
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 4.h,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('last_name'),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 19.sp,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 4.h,
+                                      ),
+                                      TextFormField(
+                                        // initialValue: widget.initialValue,
+                                        controller: _lastNameController,
+                                        onTap: () {
+                                          _lastNameController.selection =
+                                              TextSelection.collapsed(
+                                            offset:
+                                                _lastNameController.text.length,
+                                          );
+                                        },
+                                        onTapOutside: (event) {
+                                          FocusManager.instance.primaryFocus!
+                                              .unfocus();
+                                        },
+                                        validator: (value) {
+                                          // Regular expression to validate the phone number format 0999999999
+
+                                          if (value!.isEmpty) {
+                                            return "Last Name is required";
+                                          }
+                                          return null;
+                                        },
+                                        onSaved: (newValue) {
+                                          _lastNameController.text = newValue!;
+                                        },
+                                        // autovalidateMode:
+                                        //     AutovalidateMode.onUserInteraction,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 19.sp,
+                                        ),
+                                        decoration: InputDecoration(
+                                          contentPadding: EdgeInsets.symmetric(
+                                              horizontal: 20.w, vertical: 2.h),
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .translate('last_name'),
+                                          hintStyle: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 19.sp,
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                        ),
                                       ),
                                       SizedBox(
                                         height: 4.h,
@@ -352,8 +323,13 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                           onTap: () {
                                             _phoneController.selection =
                                                 TextSelection.collapsed(
-                                                    offset: _phoneController
-                                                        .text.length);
+                                              offset:
+                                                  _phoneController.text.length,
+                                            );
+                                          },
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus!
+                                                .unfocus();
                                           },
                                           validator: (value) {
                                             // Regular expression to validate the phone number format 0999999999
@@ -414,37 +390,6 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                             );
                                           } else if (state
                                               is AuthLoggingInProgressState) {
-                                          } else if (state
-                                              is AuthDriverSuccessState) {
-                                            showCustomSnackBar(
-                                              context: context,
-                                              backgroundColor:
-                                                  AppColor.deepGreen,
-                                              message: localeState
-                                                          .value.languageCode ==
-                                                      'en'
-                                                  ? 'sign in successfully!'
-                                                  : 'تم تسجيل الدخول بنجاح!.',
-                                            );
-
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            var driverId =
-                                                prefs.getInt("truckuser");
-                                            BlocProvider.of<TruckTypeBloc>(
-                                                    context)
-                                                .add(TruckTypeLoadEvent());
-
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CreateTruckForDriverScreen(
-                                                        driverId: driverId!),
-                                              ),
-                                              (route) => false,
-                                            );
                                           } else {
                                             showCustomSnackBar(
                                               context: context,

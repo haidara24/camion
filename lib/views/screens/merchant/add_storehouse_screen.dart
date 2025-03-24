@@ -103,7 +103,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen> {
                   GoogleMap(
                     initialCameraPosition: _initialCameraPosition,
                     zoomControlsEnabled: false,
-
+                    myLocationButtonEnabled: false,
                     onCameraMove: (position) {
                       setState(() {
                         selectedPosition = LatLng(position.target.latitude,

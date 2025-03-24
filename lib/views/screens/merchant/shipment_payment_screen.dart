@@ -123,47 +123,47 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    Card(
-                      elevation: 1,
-                      clipBehavior: Clip.antiAlias,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('shipment_path_info'),
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColor.darkGrey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ShipmentPathVerticalWidget(
-                              pathpoints: widget.shipment.pathpoints!,
-                              pickupDate: widget.shipment.pickupDate!,
-                              deliveryDate: widget.shipment.deliveryDate!,
-                              langCode: localeState.value.languageCode,
-                              mini: false,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Card(
+                    //   elevation: 1,
+                    //   clipBehavior: Clip.antiAlias,
+                    //   shape: const RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.all(
+                    //       Radius.circular(10),
+                    //     ),
+                    //   ),
+                    //   color: Colors.white,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: Column(
+                    //       children: [
+                    //         Row(
+                    //           mainAxisAlignment: MainAxisAlignment.start,
+                    //           children: [
+                    //             Text(
+                    //               AppLocalizations.of(context)!
+                    //                   .translate('shipment_path_info'),
+                    //               style: TextStyle(
+                    //                 fontSize: 17,
+                    //                 fontWeight: FontWeight.bold,
+                    //                 color: AppColor.darkGrey,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         const SizedBox(
+                    //           height: 10,
+                    //         ),
+                    //         ShipmentPathVerticalWidget(
+                    //           pathpoints: widget.shipment.pathpoints!,
+                    //           pickupDate: widget.shipment.pickupDate!,
+                    //           deliveryDate: widget.shipment.deliveryDate!,
+                    //           langCode: localeState.value.languageCode,
+                    //           mini: false,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 5.h,
                     ),

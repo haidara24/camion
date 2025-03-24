@@ -689,7 +689,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
 
   @override
   void dispose() {
-    _animationController.dispose();
+    // _animationController.dispose();
     timer.cancel();
     _stopListening();
 
@@ -779,7 +779,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                                 setState(() {});
                               },
                               zoomControlsEnabled: false,
-
+                              myLocationButtonEnabled: false,
                               initialCameraPosition: const CameraPosition(
                                   target: LatLng(35.363149, 35.932120),
                                   zoom: 14.47),

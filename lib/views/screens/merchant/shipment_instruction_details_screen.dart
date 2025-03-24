@@ -170,18 +170,23 @@ class _ShipmentInstructionDetailsScreenState
                                                     const SizedBox(
                                                       height: 10,
                                                     ),
-                                                    Text(state.instruction
-                                                        .chargerName!),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('charger_name')}: ${state.instruction.chargerName!}'),
                                                     const SizedBox(
                                                       height: 8,
                                                     ),
-                                                    Text(state.instruction
-                                                        .chargerAddress!),
+                                                    // Text(state.instruction
+                                                    //     .chargerAddress!),
+                                                    // const SizedBox(
+                                                    //   height: 8,
+                                                    // ),
+                                                    SectionBody(
+                                                        text:
+                                                            '${AppLocalizations.of(context)!.translate('charger_phone')}: ${state.instruction.chargerPhone!}'),
                                                     const SizedBox(
                                                       height: 8,
                                                     ),
-                                                    Text(state.instruction
-                                                        .chargerPhone!),
                                                     const SizedBox(
                                                       height: 8,
                                                     ),
@@ -214,19 +219,19 @@ class _ShipmentInstructionDetailsScreenState
                                                     ),
                                                     SectionBody(
                                                         text:
-                                                            '${AppLocalizations.of(context)!.translate('charger_name')}: ${state.instruction.recieverName!}'),
+                                                            '${AppLocalizations.of(context)!.translate('reciever_name')}: ${state.instruction.recieverName!}'),
                                                     const SizedBox(
                                                       height: 8,
                                                     ),
+                                                    // SectionBody(
+                                                    //     text:
+                                                    //         '${AppLocalizations.of(context)!.translate('reciever_address')}: ${state.instruction.recieverAddress!}'),
+                                                    // const SizedBox(
+                                                    //   height: 8,
+                                                    // ),
                                                     SectionBody(
                                                         text:
-                                                            '${AppLocalizations.of(context)!.translate('charger_address')}: ${state.instruction.recieverAddress!}'),
-                                                    const SizedBox(
-                                                      height: 8,
-                                                    ),
-                                                    SectionBody(
-                                                        text:
-                                                            '${AppLocalizations.of(context)!.translate('charger_phone')}: ${state.instruction.recieverPhone!}'),
+                                                            '${AppLocalizations.of(context)!.translate('reciever_phone')}: ${state.instruction.recieverPhone!}'),
                                                     const SizedBox(
                                                       height: 8,
                                                     ),

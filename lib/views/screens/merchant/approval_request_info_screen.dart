@@ -1,4 +1,8 @@
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_update_status_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/request_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -56,7 +60,100 @@ class _ApprovalRequestDetailsScreenState
 
   Widget getExtraAction(ApprovalRequest request, BuildContext context) {
     if (request.responseTurn == "D") {
-      return const SizedBox.shrink();
+      return Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: BlocConsumer<CancelShipmentBloc, CancelShipmentState>(
+          listener: (context, cancelstate) {
+            if (cancelstate is CancelShipmentSuccessState) {
+              BlocProvider.of<MerchantRequestsListBloc>(context)
+                  .add(MerchantRequestsListLoadEvent());
+              Navigator.of(context).pop();
+            }
+          },
+          builder: (context, cancelstate) {
+            if (cancelstate is ShippmentLoadingProgressState) {
+              return CustomButton(
+                title: SizedBox(
+                  width: 90.w,
+                  child: Center(
+                    child: LoadingIndicator(),
+                  ),
+                ),
+                onTap: () {},
+                // color: Colors.white,
+              );
+            } else {
+              return CustomButton(
+                title: SizedBox(
+                  width: 100.w,
+                  child: Row(
+                    children: [
+                      Center(
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('cancel'),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        height: 28.w,
+                        width: 28.w,
+                        child: SvgPicture.asset(
+                          "assets/icons/white/notification_shipment_cancelation.svg",
+                          width: 28.w,
+                          height: 28.w,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  showDialog<void>(
+                    context: context,
+                    barrierDismissible: false, // user must tap button!
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: Colors.white,
+                        title: Text(
+                            AppLocalizations.of(context)!.translate('cancel')),
+                        content: Text(
+                          AppLocalizations.of(context)!
+                              .translate('cancel_confirm'),
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: Text(AppLocalizations.of(context)!
+                                .translate('cancel')),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text(
+                                AppLocalizations.of(context)!.translate('ok')),
+                            onPressed: () {
+                              BlocProvider.of<CancelShipmentBloc>(context).add(
+                                CancelShipmentButtonPressed(
+                                  request.id!,
+                                ),
+                              );
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            }
+          },
+        ),
+      );
     } else {
       if (request.isApproved!) {
         return const SizedBox.shrink();
@@ -121,6 +218,14 @@ class _ApprovalRequestDetailsScreenState
   @override
   void initState() {
     super.initState();
+    if (widget.type == "A") {
+      BlocProvider.of<ShipmentRunningBloc>(context)
+          .add(ShipmentRunningLoadEvent("R"));
+      BlocProvider.of<MerchantRequestsListBloc>(context)
+          .add(MerchantRequestsListLoadEvent());
+      BlocProvider.of<ShipmentTaskListBloc>(context)
+          .add(ShipmentTaskListLoadEvent());
+    }
     BlocProvider.of<RequestDetailsBloc>(context)
         .add(RequestDetailsLoadEvent(widget.objectId));
   }
@@ -194,10 +299,11 @@ class _ApprovalRequestDetailsScreenState
                                                 height: 16,
                                               ),
                                               SectionTitle(
-                                                  text: AppLocalizations.of(
-                                                          context)!
-                                                      .translate(
-                                                          "request_confirm")),
+                                                text: AppLocalizations.of(
+                                                        context)!
+                                                    .translate(
+                                                        "request_confirm"),
+                                              ),
                                             ],
                                           ),
                                         )

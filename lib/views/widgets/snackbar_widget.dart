@@ -13,9 +13,9 @@ void showCustomSnackBar({
 
   overlayEntry = OverlayEntry(
     builder: (context) => Positioned(
-      top: MediaQuery.of(context).viewInsets.top + 8.0,
-      left: 8.0,
-      right: 8.0,
+      top: MediaQuery.of(context).viewInsets.top,
+      left: 0.0,
+      right: 0.0,
       child: SafeArea(
         child: Material(
           color: Colors.transparent,
