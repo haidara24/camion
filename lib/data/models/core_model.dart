@@ -23,6 +23,7 @@ class TruckPrice {
   String? point2;
   String? point2En;
   int? value;
+  double? distance;
 
   TruckPrice({
     this.id,
@@ -31,6 +32,7 @@ class TruckPrice {
     this.point2,
     this.point2En,
     this.value,
+    this.distance,
   });
 
   TruckPrice.fromJson(Map<String, dynamic> json) {
@@ -40,5 +42,6 @@ class TruckPrice {
     point1En = json['point1nameEn'];
     point2 = json['point2name'];
     point2En = json['point2nameEn'];
+    distance = json['distance'];
   }
 }

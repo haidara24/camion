@@ -5,7 +5,6 @@ import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/helpers/notification_utils.dart';
 import 'package:camion/views/screens/driver/driver_home_screen.dart';
 import 'package:camion/views/screens/merchant/home_screen.dart';
 import 'package:camion/views/screens/owner/owner_home_screen.dart';

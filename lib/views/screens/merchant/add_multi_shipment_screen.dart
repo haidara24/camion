@@ -819,9 +819,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                     ),
                                                   );
                                                 },
-                                                icon: const Icon(
+                                                icon: Icon(
                                                   Icons.zoom_out_map,
-                                                  color: Colors.grey,
+                                                  color: Colors.grey[400],
                                                   size: 27,
                                                 ),
                                               )),

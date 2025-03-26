@@ -3,12 +3,10 @@ import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/bloc/core/commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/k_commodity_category_bloc.dart';
 import 'package:camion/business_logic/bloc/core/package_type_bloc.dart';
-import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/merchant_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_complete_list_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/bloc/store_list_bloc.dart';
@@ -19,7 +17,6 @@ import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
-import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/contact_us_screen.dart';
@@ -77,6 +74,8 @@ class _HomeScreenState extends State<HomeScreen>
     BlocProvider.of<StoreListBloc>(context).add(
       StoreListLoadEvent(),
     );
+    BlocProvider.of<ActiveShipmentListBloc>(context)
+        .add(ActiveShipmentListLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
     BlocProvider.of<PackageTypeBloc>(context).add(PackageTypeLoadEvent());
 
@@ -138,8 +137,6 @@ class _HomeScreenState extends State<HomeScreen>
         }
       case 3:
         {
-          BlocProvider.of<ActiveShipmentListBloc>(context)
-              .add(ActiveShipmentListLoadEvent());
           print("asdasdasd");
           setState(() {
             title = AppLocalizations.of(context)!.translate('tracking');
@@ -631,32 +628,32 @@ class _HomeScreenState extends State<HomeScreen>
                                                     )
                                                   ],
                                                 ),
-                                          value.requestNum > 0
-                                              ? Positioned(
-                                                  right: -7.w,
-                                                  top: -5.h,
-                                                  child: Container(
-                                                    height: 22.w,
-                                                    width: 22.w,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              45),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                          value.requestNum
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
-                                                          )),
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizedBox.shrink(),
+                                          // value.requestNum > 0
+                                          //     ? Positioned(
+                                          //         right: -7.w,
+                                          //         top: -5.h,
+                                          //         child: Container(
+                                          //           height: 22.w,
+                                          //           width: 22.w,
+                                          //           decoration: BoxDecoration(
+                                          //             color:
+                                          //                 AppColor.deepYellow,
+                                          //             borderRadius:
+                                          //                 BorderRadius.circular(
+                                          //                     45),
+                                          //           ),
+                                          //           child: Center(
+                                          //             child: Text(
+                                          //                 value.requestNum
+                                          //                     .toString(),
+                                          //                 style:
+                                          //                     const TextStyle(
+                                          //                   color: Colors.white,
+                                          //                 )),
+                                          //           ),
+                                          //         ),
+                                          //       )
+                                          //     : const SizedBox.shrink(),
                                         ],
                                       ),
                                     );

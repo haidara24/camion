@@ -139,6 +139,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
           },
           child: Container(
             padding: const EdgeInsets.all(8.0),
+            color: Colors.white,
             constraints:
                 BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
             width: double.infinity,
@@ -540,7 +541,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
     super.initState();
     timer = Timer.periodic(const Duration(minutes: 1), (timer) {
       if (startTracking) {
-      _fetchTruckLocation(subshipment!.truck!);
+        _fetchTruckLocation(subshipment!.truck!);
       }
     });
     animcontroller = BottomSheet.createAnimationController(this);
@@ -586,13 +587,16 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
       setState(() {
         truckLocation = location;
       });
-      await _controller
-        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-            target: LatLng(
-              double.parse(truckLocation!.split(",")[0]),
-              double.parse(truckLocation!.split(",")[1]),
-            ),
-            zoom: 14.47),),);
+      await _controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+              target: LatLng(
+                double.parse(truckLocation!.split(",")[0]),
+                double.parse(truckLocation!.split(",")[1]),
+              ),
+              zoom: 14.47),
+        ),
+      );
     } catch (e) {
       print('Failed to fetch truck location: $e');
     }
@@ -728,7 +732,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                 createMarkerIcons(subshipment!);
                                 setState(() {});
                               },
-                              child: const AbsorbPointer(
+                              child: AbsorbPointer(
                                 absorbing: false,
                                 child: SizedBox(
                                   height: 40,
@@ -736,7 +740,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                                   child: Center(
                                     child: Icon(
                                       Icons.zoom_out_map,
-                                      color: Colors.grey,
+                                      color: Colors.grey[400],
                                       size: 35,
                                     ),
                                   ),

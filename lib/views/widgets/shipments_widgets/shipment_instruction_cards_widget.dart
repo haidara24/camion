@@ -29,15 +29,12 @@ class ShipmentInstructionCardsWidget extends StatelessWidget {
               InkWell(
                 onTap: () {
                   if (subshipment.shipmentinstructionv2 != null) {
-                    BlocProvider.of<ReadInstructionBloc>(context).add(
-                      ReadInstructionLoadEvent(
-                          subshipment.shipmentinstructionv2!),
-                    );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ShipmentInstructionDetailsScreen(
-                            shipment: subshipment),
+                          shipment: subshipment.id!,
+                        ),
                       ),
                     );
                   }
@@ -139,15 +136,12 @@ class ShipmentInstructionCardsWidget extends StatelessWidget {
               InkWell(
                 onTap: () {
                   if (subshipment.shipmentpaymentv2 != null) {
-                    BlocProvider.of<ReadPaymentInstructionBloc>(context).add(
-                      ReadPaymentInstructionLoadEvent(
-                          subshipment.shipmentpaymentv2!),
-                    );
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => PaymentInstructionDetailsScreen(
-                            shipment: subshipment),
+                          shipment: subshipment.id!,
+                        ),
                       ),
                     );
                   }

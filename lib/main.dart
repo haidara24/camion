@@ -1,5 +1,5 @@
-import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:camion/Localization/app_localizations_setup.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_truck_price_bloc.dart';
@@ -104,11 +104,6 @@ import 'package:camion/data/repositories/truck_price_repository.dart';
 import 'package:camion/data/repositories/truck_repository.dart';
 import 'package:camion/firebase_options.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/helpers/notification_utils.dart';
-import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
-import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
-import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
-import 'package:camion/views/screens/sub_shipment_details_screen.dart';
 import 'package:camion/views/widgets/splash_screen.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -116,95 +111,33 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 // Top-level background message handler
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  if (Isolate.current.debugName != null &&
+      Isolate.current.debugName != "main") {
+    print("Skipping execution in background isolate.");
+    return;
+  }
   // Initialize Firebase
   await Firebase.initializeApp(
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Initialize local notifications
-  await initializeLocalNotifications();
-
   print("Handling a background message: ${message.messageId}");
-
-  // Display local notification for background/terminated messages
-  // await showLocalNotification(message);
 }
 
-@pragma('vm:entry-point')
-void onDidReceiveBackgroundNotificationResponse(
-    NotificationResponse response) async {
-  // Handle notification tap
-  print("Notification tapped: ${response.payload}");
-
-  // Parse the payload (assuming it's a JSON string)
-  final Map<String, dynamic> payload = jsonDecode(response.payload ?? '{}');
-
-  // Extract notification_type and objectId from the payload
-  final String? notificationType = payload['notification_type'];
-  final int? objectId = int.parse(payload['objectId']);
-
-  if (notificationType == null || objectId == null) {
-    print("Invalid payload: Missing notification_type or objectId");
-    return;
-  }
-
-  final navigator = navigatorKey.currentState;
-  if (navigator == null) {
-    print("Navigator is null. Cannot handle notification tap.");
-    return;
-  }
-  // Use the same logic as handleMessage
-  if (notificationType == "A" || notificationType == "J") {
-    navigator.push(
-      MaterialPageRoute(
-        builder: (context) => ApprovalRequestDetailsScreen(
-          type: notificationType,
-          objectId: objectId,
-        ),
-      ),
-    );
-  } else if (notificationType == "O") {
-    var prefs = await SharedPreferences.getInstance();
-    var userType = prefs.getString("userType");
-    if (userType == "Driver") {
-      navigator.push(
-        MaterialPageRoute(
-          builder: (context) => IncomingShipmentDetailsScreen(
-            objectId: objectId,
-          ),
-        ),
-      );
-    } else if (userType == "Merchant") {
-      BlocProvider.of<SubShipmentDetailsBloc>(navigator.context)
-          .add(SubShipmentDetailsLoadEvent(objectId));
-      navigator.push(
-        MaterialPageRoute(
-          builder: (context) => const IncomingRequestForDriverScreen(),
-        ),
-      );
-    }
-  } else if (notificationType == "T" || notificationType == "C") {
-    BlocProvider.of<SubShipmentDetailsBloc>(navigator.context)
-        .add(SubShipmentDetailsLoadEvent(objectId));
-    navigator.push(
-      MaterialPageRoute(
-        builder: (context) => const SubShipmentDetailsScreen(),
-      ),
-    );
-  }
+bool isMainIsolate() {
+  return Isolate.current.debugName == 'main';
 }
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -218,7 +151,6 @@ void main() async {
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   HttpOverrides.global = MyHttpOverrides();
@@ -228,6 +160,7 @@ void main() async {
       systemNavigationBarColor: AppColor.deepBlack,
     ),
   );
+  print("Running on isolate: ${Isolate.current.debugName}");
   runApp(MyApp(
     lang: lang,
   ));

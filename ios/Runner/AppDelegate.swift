@@ -2,7 +2,6 @@ import UIKit
 import Flutter
 import FirebaseCore
 import GoogleMaps
-import flutter_local_notifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -19,9 +18,7 @@ import flutter_local_notifications
 
     GMSServices.provideAPIKey("AIzaSyCl_H8BXqnTm32umdYVQrKMftTiFpRqd-c")
     GeneratedPluginRegistrant.register(with: self)
-    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
-      GeneratedPluginRegistrant.register(with: registry)
-    }
+   
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
   @available(iOS 10.0, *)

@@ -19,12 +19,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart'
-    show SystemUiOverlayStyle, Uint8List, rootBundle;
+    show SystemChrome, SystemUiOverlayStyle, Uint8List, rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class SubShipmentDetailsScreen extends StatefulWidget {
-  const SubShipmentDetailsScreen({
+  final int objectId;
+  SubShipmentDetailsScreen({
     Key? key,
+    required this.objectId,
   }) : super(key: key);
 
   @override
@@ -250,6 +252,8 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    BlocProvider.of<SubShipmentDetailsBloc>(context)
+        .add(SubShipmentDetailsLoadEvent(widget.objectId));
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // createMarkerIcons();
       setState(() {});
@@ -261,6 +265,13 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
 
   @override
   void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Reset to default
+        statusBarColor: AppColor.deepBlack,
+        systemNavigationBarColor: AppColor.deepBlack,
+      ),
+    );
     super.dispose();
   }
 
@@ -279,7 +290,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                     AppColor.deepBlack, // Make status bar transparent
                 statusBarIconBrightness:
                     Brightness.light, // Light icons for dark backgrounds
-                systemNavigationBarColor: Colors.white, // Works on Android
+                systemNavigationBarColor: Colors.grey[200], // Works on Android
                 systemNavigationBarIconBrightness: Brightness.dark,
               ),
               child: Scaffold(

@@ -148,7 +148,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                       child: GoogleMap(
                         initialCameraPosition: _initialCameraPosition,
                         zoomControlsEnabled: false,
-
+                        myLocationButtonEnabled: false,
                         onCameraMove: (position) {
                           if (shipmentProvider.pickMapMode) {
                             setState(() {
@@ -198,7 +198,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                     ),
                     AnimatedPositioned(
                       duration: const Duration(
-                          milliseconds: 300), // Animation duration
+                        milliseconds: 300,
+                      ), // Animation duration
                       curve: Curves.easeInOut,
                       top: shipmentProvider.topPosition,
                       child: Container(
@@ -957,7 +958,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                         },
                         title: SizedBox(
                           height: 50.h,
-                          width: 150.w,
+                          width: MediaQuery.sizeOf(context).width * .9,
                           child: Center(
                             child: pickLocationLoading
                                 ? LoadingIndicator()
@@ -974,24 +975,50 @@ class _AddPathScreenState extends State<AddPathScreen>
                       duration: const Duration(
                           milliseconds: 300), // Animation duration
                       curve: Curves.easeInOut,
-                      top: shipmentProvider.pickMapMode ? 20.h : -160,
-                      right: localeState.value.languageCode == "en" ? null : 20,
-                      left: localeState.value.languageCode == "en" ? 20 : null,
-                      child: CustomButton(
-                        onTap: () {
-                          shipmentProvider.toggleMapMode(selectedPointIndex);
-                        },
-                        title: SizedBox(
-                          height: 40.w,
-                          width: 40.w,
-                          child: const Center(
-                            child: Icon(
-                              Icons.arrow_back,
+                      top: shipmentProvider.pickMapMode ? 0 : -160,
+
+                      child: Container(
+                        width: MediaQuery.sizeOf(context).width,
+                        height: kToolbarHeight,
+                        color: AppColor.deepBlack,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CustomButton(
+                              onTap: () {
+                                shipmentProvider
+                                    .toggleMapMode(selectedPointIndex);
+                              },
+                              title: SizedBox(
+                                height: 40.w,
+                                width: 40.w,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              hieght: 40,
+                              color: AppColor.deepBlack,
+                              bordercolor: AppColor.deepBlack,
                             ),
-                          ),
+                            const Spacer(),
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .translate("pick_from_map"),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: 35.w,
+                            ),
+                          ],
                         ),
-                        hieght: 40,
-                        color: Colors.grey[200],
                       ),
                     ),
                   ],

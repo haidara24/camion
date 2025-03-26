@@ -79,8 +79,10 @@ class TruckPriceRepository {
   Future<List<TruckPrice>> getPrices() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
+    var truckId = prefs.getInt("truckId") ?? 0;
 
-    var rs = await HttpHelper.get(TRUCK_PRICES_ENDPOINT, apiToken: jwt);
+    var rs = await HttpHelper.get("$TRUCK_PRICES_ENDPOINT?truck=$truckId",
+        apiToken: jwt);
     truckPrices = [];
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);

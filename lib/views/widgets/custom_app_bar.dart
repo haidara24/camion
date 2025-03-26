@@ -51,13 +51,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       width: 35.w,
 
                       child: Center(
-                        child: SvgPicture.asset(
-                          localeState.value.languageCode == 'en'
-                              ? "assets/icons/arrow-left-en.svg"
-                              : "assets/icons/arrow-left-ar.svg",
-                          height: 30.h,
-                          width: 30.h,
-                        ),
+                        child: localeState.value.languageCode == 'en'
+                            ? SvgPicture.asset("assets/icons/arrow-left-en.svg")
+                            : SvgPicture.asset(
+                                "assets/icons/arrow-left-ar.svg"),
                       ),
                     ),
                   )
@@ -102,7 +99,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                             onPressed: () {
                               BlocProvider.of<NotificationBloc>(context)
                                   .add(NotificationLoadEvent());
-                              // notificationProvider.clearNotReadedNotification();
+                              notificationProvider.clearNotReadedNotification();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

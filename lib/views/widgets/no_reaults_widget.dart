@@ -13,7 +13,7 @@ class NoResultsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * .75,
+      height: MediaQuery.of(context).size.height * .7,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

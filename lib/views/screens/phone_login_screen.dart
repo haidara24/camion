@@ -3,10 +3,12 @@ import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/control_view.dart';
+import 'package:camion/views/screens/phone_signup_screen.dart';
 import 'package:camion/views/screens/verify_otp_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -290,7 +292,44 @@ class _PhoneSignInScreenState extends State<PhoneSignInScreen> {
                                           }
                                         },
                                       ),
-                                      // TermsOfUse(),
+                                      Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate("sign_in_or"),
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              softWrap: true,
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        PhoneSignUpScreen(),
+                                                  ),
+                                                );
+                                              },
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        "create_account"),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: AppColor.deepYellow,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),

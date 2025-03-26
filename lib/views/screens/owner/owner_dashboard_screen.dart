@@ -725,13 +725,13 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                               });
                               _updateMarkers(state.trucks);
                             },
-                            icon: const SizedBox(
+                            icon: SizedBox(
                               height: 40,
                               width: 40,
                               child: Center(
                                 child: Icon(
                                   Icons.zoom_out_map,
-                                  color: Colors.grey,
+                                  color: Colors.grey[400],
                                   size: 35,
                                 ),
                               ),

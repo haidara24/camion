@@ -769,7 +769,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                     // });
                                     // shipmentProvider.setMapMode(MapType.satellite);
                                   },
-                                  child: const AbsorbPointer(
+                                  child: AbsorbPointer(
                                     absorbing: false,
                                     child: SizedBox(
                                       height: 50,
@@ -777,7 +777,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                       child: Center(
                                         child: Icon(
                                           Icons.zoom_out_map,
-                                          color: Colors.grey,
+                                          color: Colors.grey[400],
                                           size: 35,
                                         ),
                                       ),
@@ -850,25 +850,17 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                                 .subshipments![selectedIndex]
                                                 .shipmentinstructionv2 !=
                                             null) {
-                                          BlocProvider.of<ReadInstructionBloc>(
-                                                  context)
-                                              .add(
-                                            ReadInstructionLoadEvent(
-                                                shipmentstate
-                                                    .shipment
-                                                    .subshipments![
-                                                        selectedIndex]
-                                                    .shipmentinstructionv2!),
-                                          );
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   ShipmentInstructionDetailsScreen(
-                                                      shipment: shipmentstate
-                                                              .shipment
-                                                              .subshipments![
-                                                          selectedIndex]),
+                                                shipment: shipmentstate
+                                                    .shipment
+                                                    .subshipments![
+                                                        selectedIndex]
+                                                    .id!,
+                                              ),
                                             ),
                                           );
                                         }
@@ -1040,10 +1032,12 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                             MaterialPageRoute(
                                               builder: (context) =>
                                                   PaymentInstructionDetailsScreen(
-                                                      shipment: shipmentstate
-                                                              .shipment
-                                                              .subshipments![
-                                                          selectedIndex]),
+                                                shipment: shipmentstate
+                                                    .shipment
+                                                    .subshipments![
+                                                        selectedIndex]
+                                                    .id!,
+                                              ),
                                             ),
                                           );
                                         }

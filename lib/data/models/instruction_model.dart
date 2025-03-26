@@ -3,10 +3,10 @@ class Shipmentinstruction {
   int? shipment;
   String? userType;
   String? chargerName;
-  String? chargerAddress;
+  // String? chargerAddress;
   String? chargerPhone;
   String? recieverName;
-  String? recieverAddress;
+  // String? recieverAddress;
   String? recieverPhone;
   int? totalWeight;
   int? netWeight;
@@ -20,10 +20,10 @@ class Shipmentinstruction {
     this.shipment,
     this.userType,
     this.chargerName,
-    this.chargerAddress,
+    // this.chargerAddress,
     this.chargerPhone,
     this.recieverName,
-    this.recieverAddress,
+    // this.recieverAddress,
     this.recieverPhone,
     this.totalWeight,
     this.netWeight,
@@ -38,10 +38,10 @@ class Shipmentinstruction {
     shipment = json['shipment'];
     userType = json['user_type'];
     chargerName = json['charger_name'];
-    chargerAddress = json['charger_address'];
+    // chargerAddress = json['charger_address'];
     chargerPhone = json['charger_phone'];
     recieverName = json['reciever_name'];
-    recieverAddress = json['reciever_address'];
+    // recieverAddress = json['reciever_address'];
     recieverPhone = json['reciever_phone'];
     totalWeight = json['total_weight'] ?? 0;
     netWeight = json['net_weight'];
@@ -71,10 +71,10 @@ class Shipmentinstruction {
     data['shipment'] = shipment;
     data['user_type'] = userType;
     data['charger_name'] = chargerName;
-    data['charger_address'] = chargerAddress;
+    // data['charger_address'] = chargerAddress;
     data['charger_phone'] = chargerPhone;
     data['reciever_name'] = recieverName;
-    data['reciever_address'] = recieverAddress;
+    // data['reciever_address'] = recieverAddress;
     data['reciever_phone'] = recieverPhone;
     data['total_weight'] = totalWeight;
     data['net_weight'] = netWeight;
@@ -92,18 +92,18 @@ class CommodityItems {
   String? commodityName;
   int? commodityWeight;
   int? commodityQuantity;
-  int? packageType;
-  String? packageName;
-  String? packageNameAr;
+  // int? packageType;
+  // String? packageName;
+  // String? packageNameAr;
 
   CommodityItems({
     this.id,
     this.commodityName,
     this.commodityWeight,
     this.commodityQuantity,
-    this.packageType,
-    this.packageName,
-    this.packageNameAr,
+    // this.packageType,
+    // this.packageName,
+    // this.packageNameAr,
   });
 
   CommodityItems.fromJson(Map<String, dynamic> json) {
@@ -111,9 +111,9 @@ class CommodityItems {
     commodityName = json['commodity_name'];
     commodityWeight = json['commodity_weight'];
     commodityQuantity = json['commodity_quantity'];
-    packageType = json['package_type'];
-    packageName = json['package_name'];
-    packageNameAr = json['package_name_ar'];
+    // packageType = json['package_type'];
+    // packageName = json['package_name'];
+    // packageNameAr = json['package_name_ar'];
   }
 
   Map<String, dynamic> toJson() {
@@ -121,7 +121,7 @@ class CommodityItems {
     data['commodity_name'] = commodityName;
     data['commodity_weight'] = commodityWeight;
     data['commodity_quantity'] = commodityQuantity;
-    data['package_type'] = packageType;
+    // data['package_type'] = packageType;
     return data;
   }
 }

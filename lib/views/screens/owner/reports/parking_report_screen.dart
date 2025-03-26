@@ -12,6 +12,7 @@ import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -237,6 +238,7 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                   target: location,
                   zoom: 15,
                 ),
+                myLocationButtonEnabled: false,
                 markers: {
                   Marker(
                     markerId: const MarkerId('location'),
@@ -280,6 +282,18 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
   }
 
   @override
+  void dispose() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark, // Reset to default
+        statusBarColor: AppColor.deepBlack,
+        systemNavigationBarColor: AppColor.deepBlack,
+      ),
+    );
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
@@ -287,337 +301,356 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: SafeArea(
-            child: Scaffold(
-              backgroundColor: Colors.grey[100],
-              appBar: CustomAppBar(
-                title:
-                    AppLocalizations.of(context)!.translate('parking_report'),
-              ),
-              body: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    _showDatePicker(
-                                        localeState.value.languageCode, true);
-                                  },
-                                  child: TextFormField(
-                                    controller: startdate_controller,
-                                    enabled: false,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                    ),
-                                    decoration: InputDecoration(
-                                      labelText: AppLocalizations.of(context)!
-                                          .translate('startDate'),
-                                      floatingLabelStyle: const TextStyle(
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: AppColor.deepBlack, // Make status bar transparent
+              statusBarIconBrightness:
+                  Brightness.light, // Light icons for dark backgrounds
+              systemNavigationBarColor: Colors.grey[200], // Works on Android
+              systemNavigationBarIconBrightness: Brightness.dark,
+            ),
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.grey[100],
+                appBar: CustomAppBar(
+                  title:
+                      AppLocalizations.of(context)!.translate('parking_report'),
+                ),
+                body: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      _showDatePicker(
+                                          localeState.value.languageCode, true);
+                                    },
+                                    child: TextFormField(
+                                      controller: startdate_controller,
+                                      enabled: false,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.black87,
                                       ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 11.0, horizontal: 9.0),
-                                      suffixIcon: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: SvgPicture.asset(
-                                          "assets/icons/grey/calendar.svg",
+                                      decoration: InputDecoration(
+                                        labelText: AppLocalizations.of(context)!
+                                            .translate('startDate'),
+                                        floatingLabelStyle: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black87,
+                                        ),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 11.0,
+                                                horizontal: 9.0),
+                                        suffixIcon: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: SvgPicture.asset(
+                                            "assets/icons/grey/calendar.svg",
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: () {
-                                    _showDatePicker(
-                                        localeState.value.languageCode, false);
-                                  },
-                                  child: TextFormField(
-                                    controller: enddate_controller,
-                                    enabled: false,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                    ),
-                                    decoration: InputDecoration(
-                                      labelText: AppLocalizations.of(context)!
-                                          .translate('endDate'),
-                                      floatingLabelStyle: const TextStyle(
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: () {
+                                      _showDatePicker(
+                                          localeState.value.languageCode,
+                                          false);
+                                    },
+                                    child: TextFormField(
+                                      controller: enddate_controller,
+                                      enabled: false,
+                                      style: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.black87,
                                       ),
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 11.0, horizontal: 9.0),
-                                      suffixIcon: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: SvgPicture.asset(
-                                          "assets/icons/grey/calendar.svg",
-                                          height: 15.h,
-                                          width: 15.h,
+                                      decoration: InputDecoration(
+                                        labelText: AppLocalizations.of(context)!
+                                            .translate('endDate'),
+                                        floatingLabelStyle: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.black87,
+                                        ),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 11.0,
+                                                horizontal: 9.0),
+                                        suffixIcon: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: SvgPicture.asset(
+                                            "assets/icons/grey/calendar.svg",
+                                            height: 15.h,
+                                            width: 15.h,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              CustomButton(
-                                title: const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8.0,
+                                const SizedBox(width: 8),
+                                CustomButton(
+                                  title: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 8.0,
+                                    ),
+                                    child: Icon(
+                                      Icons.search,
+                                      color: Colors.white,
+                                      size: 30,
+                                    ),
                                   ),
-                                  child: Icon(
-                                    Icons.search,
-                                    color: Colors.white,
-                                    size: 30,
-                                  ),
+                                  onTap: () {
+                                    BlocProvider.of<ParkingReportBloc>(context)
+                                        .add(
+                                      ParkingReportLoadEvent(
+                                        startdate,
+                                        enddate,
+                                        widget.carId,
+                                      ),
+                                    );
+                                  },
                                 ),
-                                onTap: () {
-                                  BlocProvider.of<ParkingReportBloc>(context)
-                                      .add(
-                                    ParkingReportLoadEvent(
-                                      startdate,
-                                      enddate,
-                                      widget.carId,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 16,
-                          ),
-                        ],
-                      ),
-                      BlocBuilder<ParkingReportBloc, ParkingReportState>(
-                        builder: (context, state) {
-                          if (state is ParkingReportLoadedSuccess) {
-                            return state.result.isEmpty
-                                ? ListView(
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    children: [
-                                      NoResultsWidget(
-                                        text: AppLocalizations.of(context)!
-                                            .translate('no_reports'),
-                                      )
-                                    ],
-                                  )
-                                : Table(
-                                    border: TableBorder.all(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: AppColor.deepYellow,
-                                      width: 1,
-                                    ),
-                                    children: [
-                                      TableRow(children: [
-                                        TableCell(
-                                          child: Container(
-                                            decoration: BoxDecoration(
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                          ],
+                        ),
+                        BlocBuilder<ParkingReportBloc, ParkingReportState>(
+                          builder: (context, state) {
+                            if (state is ParkingReportLoadedSuccess) {
+                              return state.result.isEmpty
+                                  ? ListView(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      children: [
+                                        NoResultsWidget(
+                                          text: AppLocalizations.of(context)!
+                                              .translate('no_reports'),
+                                        )
+                                      ],
+                                    )
+                                  : Table(
+                                      border: TableBorder.all(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: AppColor.deepYellow,
+                                        width: 1,
+                                      ),
+                                      children: [
+                                        TableRow(children: [
+                                          TableCell(
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: AppColor.lightYellow,
+                                                  borderRadius: BorderRadius.only(
+                                                      topLeft: localeState.value
+                                                                  .languageCode ==
+                                                              "en"
+                                                          ? const Radius
+                                                              .circular(8)
+                                                          : Radius.zero,
+                                                      topRight: localeState
+                                                                  .value
+                                                                  .languageCode ==
+                                                              "en"
+                                                          ? Radius.zero
+                                                          : const Radius
+                                                              .circular(8))),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Center(
+                                                  child: SectionBody(
+                                                      text: AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'startDate')),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          TableCell(
+                                            child: Container(
+                                              decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft: localeState.value
-                                                                .languageCode ==
-                                                            "en"
-                                                        ? const Radius.circular(
-                                                            8)
-                                                        : Radius.zero,
-                                                    topRight: localeState.value
-                                                                .languageCode ==
-                                                            "en"
-                                                        ? Radius.zero
-                                                        : const Radius.circular(
-                                                            8))),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Center(
-                                                child: SectionBody(
-                                                    text: AppLocalizations.of(
-                                                            context)!
-                                                        .translate(
-                                                            'startDate')),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Center(
+                                                  child: SectionBody(
+                                                      text: AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'endDate')),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        TableCell(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColor.lightYellow,
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Center(
-                                                child: SectionBody(
-                                                    text: AppLocalizations.of(
-                                                            context)!
-                                                        .translate('endDate')),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TableCell(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: AppColor.lightYellow,
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Center(
-                                                child: SectionBody(
-                                                    text: AppLocalizations.of(
-                                                            context)!
-                                                        .translate('stopTime')),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        TableCell(
-                                          child: Container(
-                                            decoration: BoxDecoration(
+                                          TableCell(
+                                            child: Container(
+                                              decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
-                                                borderRadius: BorderRadius.only(
-                                                    topRight: localeState.value
-                                                                .languageCode ==
-                                                            "en"
-                                                        ? const Radius.circular(
-                                                            8)
-                                                        : Radius.zero,
-                                                    topLeft: localeState.value
-                                                                .languageCode ==
-                                                            "en"
-                                                        ? Radius.zero
-                                                        : const Radius.circular(
-                                                            8))),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Center(
-                                                child: SectionBody(
-                                                    text: AppLocalizations.of(
-                                                            context)!
-                                                        .translate('location')),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Center(
+                                                  child: SectionBody(
+                                                      text: AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'stopTime')),
+                                                ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                      ]),
-                                      ...List.generate(
-                                        state.result.length,
-                                        (index) => TableRow(children: [
                                           TableCell(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SectionBody(
-                                                  text: state.result[index]
-                                                      ["startTime"]),
-                                            ),
-                                          ),
-                                          TableCell(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SectionBody(
-                                                  text: state.result[index]
-                                                      ["endTime"]),
-                                            ),
-                                          ),
-                                          TableCell(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SectionBody(
-                                                  text:
-                                                      '${MethodHelper.formatDuration(state.result[index]["stopTime"])} '),
-                                            ),
-                                          ),
-                                          TableCell(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: IconButton(
-                                                onPressed: () {
-                                                  location = LatLng(
-                                                      state.result[index]
-                                                          ["lat"],
-                                                      state.result[index]
-                                                          ["lon"]);
-
-                                                  showLocationModalSheet(
-                                                      context,
-                                                      localeState
-                                                          .value.languageCode);
-                                                  getAddressForPickupFromLatLng(
-                                                      location);
-                                                },
-                                                icon: Icon(
-                                                  Icons.location_on,
-                                                  color: AppColor.deepYellow,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                  color: AppColor.lightYellow,
+                                                  borderRadius: BorderRadius.only(
+                                                      topRight: localeState
+                                                                  .value
+                                                                  .languageCode ==
+                                                              "en"
+                                                          ? const Radius
+                                                              .circular(8)
+                                                          : Radius.zero,
+                                                      topLeft: localeState.value
+                                                                  .languageCode ==
+                                                              "en"
+                                                          ? Radius.zero
+                                                          : const Radius
+                                                              .circular(8))),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Center(
+                                                  child: SectionBody(
+                                                      text: AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'location')),
                                                 ),
                                               ),
                                             ),
                                           ),
                                         ]),
+                                        ...List.generate(
+                                          state.result.length,
+                                          (index) => TableRow(children: [
+                                            TableCell(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SectionBody(
+                                                    text: state.result[index]
+                                                        ["startTime"]),
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SectionBody(
+                                                    text: state.result[index]
+                                                        ["endTime"]),
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: SectionBody(
+                                                    text:
+                                                        '${MethodHelper.formatDuration(state.result[index]["stopTime"])} '),
+                                              ),
+                                            ),
+                                            TableCell(
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: IconButton(
+                                                  onPressed: () {
+                                                    location = LatLng(
+                                                        state.result[index]
+                                                            ["lat"],
+                                                        state.result[index]
+                                                            ["lon"]);
+
+                                                    showLocationModalSheet(
+                                                        context,
+                                                        localeState.value
+                                                            .languageCode);
+                                                    getAddressForPickupFromLatLng(
+                                                        location);
+                                                  },
+                                                  icon: Icon(
+                                                    Icons.location_on,
+                                                    color: AppColor.deepYellow,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
+                                        ),
+                                      ],
+                                    );
+                            } else {
+                              return Shimmer.fromColors(
+                                baseColor: (Colors.grey[300])!,
+                                highlightColor: (Colors.grey[100])!,
+                                enabled: true,
+                                direction: ShimmerDirection.ttb,
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemBuilder: (_, __) => Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 15, vertical: 5),
+                                        height: 75.h,
+                                        width: double.infinity,
+                                        clipBehavior: Clip.antiAlias,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
                                       ),
                                     ],
-                                  );
-                          } else {
-                            return Shimmer.fromColors(
-                              baseColor: (Colors.grey[300])!,
-                              highlightColor: (Colors.grey[100])!,
-                              enabled: true,
-                              direction: ShimmerDirection.ttb,
-                              child: ListView.builder(
-                                shrinkWrap: true,
-                                itemBuilder: (_, __) => Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 15, vertical: 5),
-                                      height: 75.h,
-                                      width: double.infinity,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
+                                  itemCount: 10,
                                 ),
-                                itemCount: 10,
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                    ],
+                              );
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

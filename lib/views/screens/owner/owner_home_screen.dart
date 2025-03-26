@@ -16,7 +16,6 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
-import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/contact_us_screen.dart';
@@ -33,7 +32,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:location/location.dart' as loc;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,8 +44,6 @@ class OwnerHomeScreen extends StatefulWidget {
 
 class _OwnerHomeScreenState extends State<OwnerHomeScreen>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  final loc.Location location = loc.Location();
-  StreamSubscription<loc.LocationData>? _locationSubscription;
   late SharedPreferences prefs;
 
   int currentIndex = 0;

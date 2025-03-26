@@ -339,7 +339,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
   }
 
   Future<void> onRefresh() async {
-    tabIndex == 0
+    tabIndex != 0
         ? BlocProvider.of<MerchantRequestsListBloc>(context)
             .add(MerchantRequestsListLoadEvent())
         : BlocProvider.of<ShipmentRunningBloc>(context)
@@ -371,78 +371,83 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                         indicatorColor: AppColor.deepYellow,
                         controller: _tabController,
                         onTap: (value) {
-                          switch (value) {
-                            case 0:
-                              BlocProvider.of<MerchantRequestsListBloc>(context)
-                                  .add(MerchantRequestsListLoadEvent());
-                              break;
-                            case 1:
-                              BlocProvider.of<ShipmentRunningBloc>(context)
-                                  .add(ShipmentRunningLoadEvent("R"));
-                              break;
-                            default:
-                          }
+                          // switch (value) {
+                          //   case 0:
+                          //     BlocProvider.of<ShipmentRunningBloc>(context)
+                          //         .add(ShipmentRunningLoadEvent("R"));
+                          //     break;
+                          //   case 1:
+                          //     BlocProvider.of<MerchantRequestsListBloc>(context)
+                          //         .add(MerchantRequestsListLoadEvent());
+                          //     break;
+                          //   default:
+                          // }
                           setState(() {
                             tabIndex = value;
                           });
                         },
                         tabs: [
                           // first tab [you can add an icon using the icon property]
-
-                          Tab(
-                            child: Center(child: Consumer<RequestNumProvider>(
-                                builder: (context, value, child) {
-                              return BlocListener<MerchantRequestsListBloc,
-                                  MerchantRequestsListState>(
-                                listener: (context, state) {
-                                  // TODO: implement listener
-                                  if (state
-                                      is MerchantRequestsListLoadedSuccess) {
-                                    var taskNum = 0;
-
-                                    value.setRequestNum(state.requests.length);
-                                  }
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(AppLocalizations.of(context)!
-                                        .translate('pending')),
-                                    const SizedBox(width: 4),
-                                    value.requestNum > 0
-                                        ? Container(
-                                            height: 25.w,
-                                            width: 25.w,
-                                            decoration: BoxDecoration(
-                                              color: AppColor.deepYellow,
-                                              borderRadius:
-                                                  BorderRadius.circular(45),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                  value.requestNum.toString(),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                  )),
-                                            ),
-                                          )
-                                        : const SizedBox.shrink(),
-                                  ],
-                                ),
-                              );
-                            })),
-                          ),
                           Tab(
                             child: Center(
                                 child: Text(AppLocalizations.of(context)!
                                     .translate('running'))),
+                          ),
+                          Tab(
+                            child: Center(
+                              child: Consumer<RequestNumProvider>(
+                                builder: (context, value, child) {
+                                  return BlocListener<MerchantRequestsListBloc,
+                                      MerchantRequestsListState>(
+                                    listener: (context, state) {
+                                      // TODO: implement listener
+                                      if (state
+                                          is MerchantRequestsListLoadedSuccess) {
+                                        var taskNum = 0;
+
+                                        value.setRequestNum(
+                                            state.requests.length);
+                                      }
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(AppLocalizations.of(context)!
+                                            .translate('pending')),
+                                        const SizedBox(width: 4),
+                                        value.requestNum > 0
+                                            ? Container(
+                                                height: 25.w,
+                                                width: 25.w,
+                                                decoration: BoxDecoration(
+                                                  color: AppColor.deepYellow,
+                                                  borderRadius:
+                                                      BorderRadius.circular(45),
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                      value.requestNum
+                                                          .toString(),
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                      )),
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ],
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: tabIndex != 0
+                      child: tabIndex == 0
                           ? BlocConsumer<ShipmentRunningBloc,
                               ShipmentRunningState>(
                               listener: (context, state) {},
@@ -508,32 +513,21 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       Container(
                                                         width: double.infinity,
                                                         height: 48.h,
-                                                        decoration: BoxDecoration(
-                                                            border: Border.all(
-                                                              color: AppColor
-                                                                  .deepYellow,
-                                                              width: 1,
-                                                            ),
-                                                            borderRadius: const BorderRadius.vertical(top: Radius.circular(10))
-                                                            // gradient:
-                                                            //     LinearGradient(
-                                                            //   begin: Alignment
-                                                            //       .topLeft,
-                                                            //   end: Alignment
-                                                            //       .bottomRight,
-                                                            //   colors: [
-                                                            //     AppColor
-                                                            //         .deepYellow,
-                                                            //     AppColor
-                                                            //         .deepYellow,
-                                                            //     AppColor
-                                                            //         .deepYellow,
-                                                            //     Colors.white,
-                                                            //   ],
-                                                            // ),
-                                                            // color:
-                                                            //     Colors.grey[300],
-                                                            ),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          border: Border.all(
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            width: 1,
+                                                          ),
+                                                          borderRadius:
+                                                              const BorderRadius
+                                                                  .vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    10),
+                                                          ),
+                                                        ),
                                                         child: Row(
                                                           children: [
                                                             Container(
@@ -712,16 +706,6 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                 if (state.requests[index]
                                                         .requestOwner ==
                                                     "T") {
-                                                  // BlocProvider.of<
-                                                  //             RequestDetailsBloc>(
-                                                  //         context)
-                                                  //     .add(
-                                                  //         RequestDetailsLoadEvent(
-                                                  //             state
-                                                  //                 .requests[
-                                                  //                     index]
-                                                  //                 .id!));
-
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -741,21 +725,16 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                     ),
                                                   );
                                                 } else {
-                                                  BlocProvider.of<
-                                                              SubShipmentDetailsBloc>(
-                                                          context)
-                                                      .add(
-                                                          SubShipmentDetailsLoadEvent(
-                                                              state
-                                                                  .requests[
-                                                                      index]
-                                                                  .subshipment!
-                                                                  .id!));
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            IncomingRequestForDriverScreen(),
+                                                            IncomingRequestForDriverScreen(
+                                                          objectId: state
+                                                              .requests[index]
+                                                              .subshipment!
+                                                              .id!,
+                                                        ),
                                                       ));
                                                 }
                                               },
@@ -785,8 +764,6 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       Container(
                                                         width: double.infinity,
                                                         height: 48.h,
-                                                        // color:
-                                                        //     AppColor.deepYellow,
                                                         decoration:
                                                             BoxDecoration(
                                                           border: Border.all(

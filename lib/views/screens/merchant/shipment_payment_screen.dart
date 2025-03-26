@@ -5,6 +5,7 @@ import 'package:camion/business_logic/bloc/instructions/payment_create_bloc.dart
 import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
@@ -91,6 +92,23 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
     return result.toInt();
   }
 
+  String setLoadDate(DateTime date, String lang) {
+    var mon = date.month;
+    var month = lang == "en"
+        ? TextConstants.monthsEn[mon - 1]
+        : TextConstants.monthsAr[mon - 1];
+
+    // Determine AM/PM
+    String period = date.hour >= 12
+        ? (lang == "en" ? 'PM' : 'م')
+        : (lang == "en" ? 'AM' : 'ص');
+
+    // Convert hour to 12-hour format
+    int hour = date.hour % 12 == 0 ? 12 : date.hour % 12;
+
+    return '${date.day}-$month-${date.year}, $hour:${date.minute.toString().padLeft(2, '0')} $period';
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -105,47 +123,47 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
-                    Card(
-                      elevation: 1,
-                      clipBehavior: Clip.antiAlias,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('shipment_path_info'),
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColor.darkGrey,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ShipmentPathVerticalWidget(
-                              pathpoints: widget.shipment.pathpoints!,
-                              pickupDate: widget.shipment.pickupDate!,
-                              deliveryDate: widget.shipment.deliveryDate!,
-                              langCode: localeState.value.languageCode,
-                              mini: false,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // Card(
+                    //   elevation: 1,
+                    //   clipBehavior: Clip.antiAlias,
+                    //   shape: const RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.all(
+                    //       Radius.circular(10),
+                    //     ),
+                    //   ),
+                    //   color: Colors.white,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.all(8.0),
+                    //     child: Column(
+                    //       children: [
+                    //         Row(
+                    //           mainAxisAlignment: MainAxisAlignment.start,
+                    //           children: [
+                    //             Text(
+                    //               AppLocalizations.of(context)!
+                    //                   .translate('shipment_path_info'),
+                    //               style: TextStyle(
+                    //                 fontSize: 17,
+                    //                 fontWeight: FontWeight.bold,
+                    //                 color: AppColor.darkGrey,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         const SizedBox(
+                    //           height: 10,
+                    //         ),
+                    //         ShipmentPathVerticalWidget(
+                    //           pathpoints: widget.shipment.pathpoints!,
+                    //           pickupDate: widget.shipment.pickupDate!,
+                    //           deliveryDate: widget.shipment.deliveryDate!,
+                    //           langCode: localeState.value.languageCode,
+                    //           mini: false,
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 5.h,
                     ),
@@ -204,7 +222,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                                             ),
                                             SectionBody(
                                               text:
-                                                  '${AppLocalizations.of(context)!.translate('date')}: ${state.instruction.created_date!}',
+                                                  '${AppLocalizations.of(context)!.translate('date')}: ${setLoadDate(state.instruction.created_date!, localeState.value.languageCode)}',
                                             ),
                                           ],
                                         );
@@ -412,12 +430,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                       );
                       taskProvider.decreaseTaskNum();
 
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ControlView(),
-                          ),
-                          (route) => false);
+                      Navigator.pop(context);
                       BlocProvider.of<ShipmentTaskListBloc>(context)
                           .add(ShipmentTaskListLoadEvent());
                     }

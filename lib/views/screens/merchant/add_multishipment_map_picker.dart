@@ -107,7 +107,6 @@ class _MultiShippmentPickUpMapScreenState
                 GoogleMap(
                   initialCameraPosition: _initialCameraPosition,
                   zoomControlsEnabled: false,
-
                   onCameraMove: (position) {
                     setState(() {
                       selectedPosition = LatLng(
@@ -137,8 +136,8 @@ class _MultiShippmentPickUpMapScreenState
                   onMapCreated: _onMapCreated,
                   myLocationEnabled: true,
                   compassEnabled: true,
+                  myLocationButtonEnabled: false,
                   rotateGesturesEnabled: false,
-                  // mapType: controller.currentMapType,
                   mapToolbarEnabled: true,
                 ),
               ],

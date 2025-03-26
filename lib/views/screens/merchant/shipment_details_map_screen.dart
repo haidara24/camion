@@ -128,6 +128,15 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
         markers.add(marker);
       }
     }
+    var marker = Marker(
+      markerId: const MarkerId("truck"),
+      position: LatLng(
+        double.parse(widget.shipment.truck!.location_lat!.split(",")[0]),
+        double.parse(widget.shipment.truck!.location_lat!.split(",")[1]),
+      ),
+      icon: truckicon,
+    );
+    markers.add(marker);
     setState(() {});
   }
 
@@ -198,6 +207,7 @@ class _ShipmentDetailsMapScreenState extends State<ShipmentDetailsMapScreen> {
                     width: 7,
                   ),
                 },
+                myLocationButtonEnabled: false,
                 // mapType: shipmentProvider.mapType,
               ),
             ),

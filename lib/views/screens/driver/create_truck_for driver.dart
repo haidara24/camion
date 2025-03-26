@@ -21,6 +21,7 @@ import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -227,774 +228,797 @@ class _CreateTruckForDriverScreenState
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: SafeArea(
-            child: Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: AppColor.lightGrey200,
-              appBar: CustomAppBar(
-                title: AppLocalizations.of(context)!.translate('add_new_truck'),
-              ),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    Form(
-                      key: _newtruckFormKey,
-                      child: Card(
-                        margin: const EdgeInsets.all(8.0),
-                        color: Colors.white,
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate('truck_info'),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: 4.h,
-                              ),
-                              Visibility(
-                                visible: !istruckOwner,
-                                child: Column(
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: AppColor.deepBlack, // Make status bar transparent
+              statusBarIconBrightness:
+                  Brightness.light, // Light icons for dark backgrounds
+              systemNavigationBarColor: Colors.grey[100], // Works on Android
+              systemNavigationBarIconBrightness: Brightness.light,
+            ),
+            child: SafeArea(
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                backgroundColor: Colors.grey[100],
+                appBar: CustomAppBar(
+                  title:
+                      AppLocalizations.of(context)!.translate('add_new_truck'),
+                ),
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Form(
+                        key: _newtruckFormKey,
+                        child: Card(
+                          margin: const EdgeInsets.all(16.0),
+                          color: Colors.white,
+                          elevation: 2,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    TextField(
-                                      controller: truckownerController,
-                                      keyboardType: TextInputType.phone,
-                                      onSubmitted: validateAndFetchOwner,
-                                      decoration: InputDecoration(
-                                        labelText: AppLocalizations.of(context)!
-                                            .translate('truck_owner_phone'),
-                                        hintText: AppLocalizations.of(context)!
-                                            .translate('enter_phone'),
-                                        errorText: isPhoneValid
-                                            ? null
-                                            : "Invalid phone number or owner not found",
-                                        suffixIcon: isLoading
-                                            ? const Padding(
-                                                padding: EdgeInsets.all(10.0),
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                ),
-                                              )
-                                            : null,
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 12.0,
-                                          vertical: 16.0,
-                                        ),
-                                      ),
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate('truck_info'),
                                     ),
-                                    if (!isPhoneValid)
-                                      const Padding(
-                                        padding: EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          "Owner not found. Please check the phone number.",
-                                          style: TextStyle(
-                                              color: Colors.red, fontSize: 14),
-                                        ),
-                                      ),
                                   ],
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              CheckboxListTile(
-                                controlAffinity:
-                                    ListTileControlAffinity.leading,
-                                value: istruckOwner,
-                                onChanged: (value) {
-                                  setState(() {
-                                    istruckOwner = !istruckOwner;
-                                  });
-                                },
-                                title: Text(AppLocalizations.of(context)!
-                                    .translate('is_owner')),
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              BlocBuilder<TruckTypeBloc, TruckTypeState>(
-                                builder: (context, state2) {
-                                  if (state2 is TruckTypeLoadedSuccess) {
-                                    return DropdownButtonHideUnderline(
-                                      child: DropdownButton2<TruckType>(
-                                        isExpanded: true,
-                                        hint: Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('select_truck_type'),
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Theme.of(context).hintColor,
+                                SizedBox(
+                                  height: 4.h,
+                                ),
+                                Visibility(
+                                  visible: !istruckOwner,
+                                  child: Column(
+                                    children: [
+                                      TextField(
+                                        controller: truckownerController,
+                                        keyboardType: TextInputType.phone,
+                                        onSubmitted: validateAndFetchOwner,
+                                        decoration: InputDecoration(
+                                          labelText: AppLocalizations.of(
+                                                  context)!
+                                              .translate('truck_owner_phone'),
+                                          hintText:
+                                              AppLocalizations.of(context)!
+                                                  .translate('enter_phone'),
+                                          errorText: isPhoneValid
+                                              ? null
+                                              : "Invalid phone number or owner not found",
+                                          suffixIcon: isLoading
+                                              ? const Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                  ),
+                                                )
+                                              : null,
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 12.0,
+                                            vertical: 16.0,
                                           ),
                                         ),
-                                        items: state2.truckTypes
-                                            .map((TruckType item) =>
-                                                DropdownMenuItem<TruckType>(
-                                                  value: item,
-                                                  child: SizedBox(
-                                                    width: 200,
-                                                    child: Text(
-                                                      item.nameAr!,
-                                                      style: const TextStyle(
-                                                        fontSize: 17,
+                                      ),
+                                      if (!isPhoneValid)
+                                        const Padding(
+                                          padding: EdgeInsets.only(top: 8.0),
+                                          child: Text(
+                                            "Owner not found. Please check the phone number.",
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontSize: 14),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                CheckboxListTile(
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  value: istruckOwner,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      istruckOwner = !istruckOwner;
+                                    });
+                                  },
+                                  title: Text(AppLocalizations.of(context)!
+                                      .translate('is_owner')),
+                                ),
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                BlocBuilder<TruckTypeBloc, TruckTypeState>(
+                                  builder: (context, state2) {
+                                    if (state2 is TruckTypeLoadedSuccess) {
+                                      return DropdownButtonHideUnderline(
+                                        child: DropdownButton2<TruckType>(
+                                          isExpanded: true,
+                                          hint: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('select_truck_type'),
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                            ),
+                                          ),
+                                          items: state2.truckTypes
+                                              .map((TruckType item) =>
+                                                  DropdownMenuItem<TruckType>(
+                                                    value: item,
+                                                    child: SizedBox(
+                                                      width: 200,
+                                                      child: Text(
+                                                        item.nameAr!,
+                                                        style: const TextStyle(
+                                                          fontSize: 17,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ))
-                                            .toList(),
-                                        value: trucktype,
-                                        onChanged: (TruckType? value) {
-                                          setState(() {
-                                            trucktype = value!;
-                                          });
-                                        },
-                                        buttonStyleData: ButtonStyleData(
-                                          height: 50,
-                                          width: double.infinity,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 9.0,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            border: Border.all(
-                                              color: Colors.black26,
+                                                  ))
+                                              .toList(),
+                                          value: trucktype,
+                                          onChanged: (TruckType? value) {
+                                            setState(() {
+                                              trucktype = value!;
+                                            });
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 50,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 9.0,
                                             ),
-                                            color: Colors.white,
-                                          ),
-                                          // elevation: 2,
-                                        ),
-                                        iconStyleData: IconStyleData(
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_down_sharp,
-                                          ),
-                                          iconSize: 20,
-                                          iconEnabledColor: AppColor.deepYellow,
-                                          iconDisabledColor: Colors.grey,
-                                        ),
-                                        dropdownStyleData: DropdownStyleData(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(14),
-                                            color: Colors.white,
-                                          ),
-                                          scrollbarTheme: ScrollbarThemeData(
-                                            radius: const Radius.circular(40),
-                                            thickness:
-                                                WidgetStateProperty.all(6),
-                                            thumbVisibility:
-                                                WidgetStateProperty.all(true),
-                                          ),
-                                        ),
-                                        menuItemStyleData:
-                                            const MenuItemStyleData(
-                                          height: 40,
-                                        ),
-                                      ),
-                                    );
-                                  } else if (state2
-                                      is TruckTypeLoadingProgress) {
-                                    return const Center(
-                                      child: LinearProgressIndicator(),
-                                    );
-                                  } else if (state2 is TruckTypeLoadedFailed) {
-                                    return Center(
-                                      child: InkWell(
-                                        onTap: () {
-                                          BlocProvider.of<TruckTypeBloc>(
-                                                  context)
-                                              .add(TruckTypeLoadEvent());
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('list_error'),
-                                              style: const TextStyle(
-                                                  color: Colors.red),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                color: Colors.black26,
+                                              ),
+                                              color: Colors.white,
                                             ),
-                                            const Icon(
-                                              Icons.refresh,
-                                              color: Colors.grey,
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                },
-                              ),
-                              SizedBox(
-                                height: 8.h,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: 350.w,
-                                      child: TextFormField(
-                                        controller: heightController,
-                                        onTap: () {
-                                          heightController.selection =
-                                              TextSelection(
-                                                  baseOffset: 0,
-                                                  extentOffset: heightController
-                                                      .value.text.length);
-                                        },
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                20),
-                                        textInputAction: TextInputAction.done,
-                                        keyboardType: TextInputType.phone,
-                                        style: const TextStyle(fontSize: 18),
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('height'),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 11.0,
-                                                  horizontal: 9.0),
-                                          suffix: Text(
-                                            localeState.value.languageCode ==
-                                                    "en"
-                                                ? "m"
-                                                : "م",
+                                            // elevation: 2,
                                           ),
-                                          suffixStyle:
-                                              const TextStyle(fontSize: 15),
-                                        ),
-                                        onTapOutside: (event) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        onEditingComplete: () {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return AppLocalizations.of(context)!
-                                                .translate(
-                                                    'insert_value_validate');
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (newValue) {
-                                          heightController.text = newValue!;
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: 350.w,
-                                      child: TextFormField(
-                                        controller: widthController,
-                                        onTap: () {
-                                          widthController.selection =
-                                              TextSelection(
-                                                  baseOffset: 0,
-                                                  extentOffset: widthController
-                                                      .value.text.length);
-                                        },
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                20),
-                                        textInputAction: TextInputAction.done,
-                                        keyboardType: TextInputType.phone,
-                                        style: const TextStyle(fontSize: 18),
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('width'),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 11.0,
-                                                  horizontal: 9.0),
-                                          suffix: Text(
-                                            localeState.value.languageCode ==
-                                                    "en"
-                                                ? "m"
-                                                : "م",
+                                          iconStyleData: IconStyleData(
+                                            icon: const Icon(
+                                              Icons.keyboard_arrow_down_sharp,
+                                            ),
+                                            iconSize: 20,
+                                            iconEnabledColor:
+                                                AppColor.deepYellow,
+                                            iconDisabledColor: Colors.grey,
                                           ),
-                                          suffixStyle:
-                                              const TextStyle(fontSize: 15),
+                                          dropdownStyleData: DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: Colors.white,
+                                            ),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  WidgetStateProperty.all(6),
+                                              thumbVisibility:
+                                                  WidgetStateProperty.all(true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                          ),
                                         ),
-                                        onTapOutside: (event) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        onEditingComplete: () {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return AppLocalizations.of(context)!
-                                                .translate(
-                                                    'insert_value_validate');
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (newValue) {
-                                          widthController.text = newValue!;
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      children: [
-                                        // Row(
-                                        //   mainAxisAlignment:
-                                        //       MainAxisAlignment.start,
-                                        //   children: [
-                                        //     const SizedBox(
-                                        //       width: 10,
-                                        //     ),
-                                        //     Text(
-                                        //       AppLocalizations.of(context)!
-                                        //           .translate('number_of_axels'),
-                                        //       style: TextStyle(
-                                        //         fontSize: 19.sp,
-                                        //       ),
-                                        //     ),
-                                        //   ],
-                                        // ),
-                                        // SizedBox(
-                                        //   height: 4.h,
-                                        // ),
-                                        SizedBox(
-                                          width: 350.w,
-                                          child: TextFormField(
-                                            controller: numberOfAxelsController,
-                                            onTap: () {
-                                              numberOfAxelsController
-                                                      .selection =
-                                                  TextSelection(
-                                                      baseOffset: 0,
-                                                      extentOffset:
-                                                          numberOfAxelsController
-                                                              .value
-                                                              .text
-                                                              .length);
-                                            },
-                                            scrollPadding: EdgeInsets.only(
-                                                bottom: MediaQuery.of(context)
-                                                        .viewInsets
-                                                        .bottom +
-                                                    20),
-                                            textInputAction:
-                                                TextInputAction.done,
-                                            keyboardType: TextInputType.phone,
-                                            style:
-                                                const TextStyle(fontSize: 18),
-                                            decoration: InputDecoration(
-                                              labelText: AppLocalizations.of(
+                                      );
+                                    } else if (state2
+                                        is TruckTypeLoadingProgress) {
+                                      return const Center(
+                                        child: LinearProgressIndicator(),
+                                      );
+                                    } else if (state2
+                                        is TruckTypeLoadedFailed) {
+                                      return Center(
+                                        child: InkWell(
+                                          onTap: () {
+                                            BlocProvider.of<TruckTypeBloc>(
+                                                    context)
+                                                .add(TruckTypeLoadEvent());
+                                          },
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate('list_error'),
+                                                style: const TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                              const Icon(
+                                                Icons.refresh,
+                                                color: Colors.grey,
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return Container();
+                                    }
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 8.h,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(
+                                      child: SizedBox(
+                                        width: 350.w,
+                                        child: TextFormField(
+                                          controller: heightController,
+                                          onTap: () {
+                                            heightController.selection =
+                                                TextSelection(
+                                                    baseOffset: 0,
+                                                    extentOffset:
+                                                        heightController
+                                                            .value.text.length);
+                                          },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  20),
+                                          textInputAction: TextInputAction.done,
+                                          keyboardType: TextInputType.phone,
+                                          style: const TextStyle(fontSize: 18),
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('height'),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 11.0,
+                                                    horizontal: 9.0),
+                                            suffix: Text(
+                                              localeState.value.languageCode ==
+                                                      "en"
+                                                  ? "m"
+                                                  : "م",
+                                            ),
+                                            suffixStyle:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          onEditingComplete: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return AppLocalizations.of(
                                                       context)!
-                                                  .translate('number_of_axels'),
-                                              contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      vertical: 11.0,
-                                                      horizontal: 9.0),
+                                                  .translate(
+                                                      'insert_value_validate');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            heightController.text = newValue!;
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: SizedBox(
+                                        width: 350.w,
+                                        child: TextFormField(
+                                          controller: widthController,
+                                          onTap: () {
+                                            widthController.selection =
+                                                TextSelection(
+                                                    baseOffset: 0,
+                                                    extentOffset:
+                                                        widthController
+                                                            .value.text.length);
+                                          },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  20),
+                                          textInputAction: TextInputAction.done,
+                                          keyboardType: TextInputType.phone,
+                                          style: const TextStyle(fontSize: 18),
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('width'),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 11.0,
+                                                    horizontal: 9.0),
+                                            suffix: Text(
+                                              localeState.value.languageCode ==
+                                                      "en"
+                                                  ? "m"
+                                                  : "م",
                                             ),
-                                            onTapOutside: (event) {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                            },
-                                            onEditingComplete: () {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                            },
-                                            autovalidateMode: AutovalidateMode
-                                                .onUserInteraction,
-                                            validator: (value) {
-                                              if (value!.isEmpty) {
-                                                return AppLocalizations.of(
+                                            suffixStyle:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          onEditingComplete: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'insert_value_validate');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            widthController.text = newValue!;
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        children: [
+                                          // Row(
+                                          //   mainAxisAlignment:
+                                          //       MainAxisAlignment.start,
+                                          //   children: [
+                                          //     const SizedBox(
+                                          //       width: 10,
+                                          //     ),
+                                          //     Text(
+                                          //       AppLocalizations.of(context)!
+                                          //           .translate('number_of_axels'),
+                                          //       style: TextStyle(
+                                          //         fontSize: 19.sp,
+                                          //       ),
+                                          //     ),
+                                          //   ],
+                                          // ),
+                                          // SizedBox(
+                                          //   height: 4.h,
+                                          // ),
+                                          SizedBox(
+                                            width: 350.w,
+                                            child: TextFormField(
+                                              controller:
+                                                  numberOfAxelsController,
+                                              onTap: () {
+                                                numberOfAxelsController
+                                                        .selection =
+                                                    TextSelection(
+                                                        baseOffset: 0,
+                                                        extentOffset:
+                                                            numberOfAxelsController
+                                                                .value
+                                                                .text
+                                                                .length);
+                                              },
+                                              scrollPadding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                          .viewInsets
+                                                          .bottom +
+                                                      20),
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              keyboardType: TextInputType.phone,
+                                              style:
+                                                  const TextStyle(fontSize: 18),
+                                              decoration: InputDecoration(
+                                                labelText: AppLocalizations.of(
                                                         context)!
                                                     .translate(
-                                                        'insert_value_validate');
-                                              }
-                                              return null;
-                                            },
-                                            onSaved: (newValue) {
-                                              numberOfAxelsController.text =
-                                                  newValue!;
-                                            },
+                                                        'number_of_axels'),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 11.0,
+                                                        horizontal: 9.0),
+                                              ),
+                                              onTapOutside: (event) {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              onEditingComplete: () {
+                                                FocusManager
+                                                    .instance.primaryFocus
+                                                    ?.unfocus();
+                                              },
+                                              autovalidateMode: AutovalidateMode
+                                                  .onUserInteraction,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return AppLocalizations.of(
+                                                          context)!
+                                                      .translate(
+                                                          'insert_value_validate');
+                                                }
+                                                return null;
+                                              },
+                                              onSaved: (newValue) {
+                                                numberOfAxelsController.text =
+                                                    newValue!;
+                                              },
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: 350.w,
-                                      child: TextFormField(
-                                        controller: longController,
-                                        onTap: () {
-                                          longController.selection =
-                                              TextSelection(
-                                                  baseOffset: 0,
-                                                  extentOffset: longController
-                                                      .value.text.length);
-                                        },
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                20),
-                                        textInputAction: TextInputAction.done,
-                                        keyboardType: TextInputType.phone,
-                                        style: const TextStyle(fontSize: 18),
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('long'),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 11.0,
-                                                  horizontal: 9.0),
-                                          suffix: Text(
-                                            localeState.value.languageCode ==
-                                                    "en"
-                                                ? "m"
-                                                : "م",
-                                          ),
-                                          suffixStyle:
-                                              const TextStyle(fontSize: 15),
-                                        ),
-                                        onTapOutside: (event) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        onEditingComplete: () {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return AppLocalizations.of(context)!
-                                                .translate(
-                                                    'insert_value_validate');
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (newValue) {
-                                          longController.text = newValue!;
-                                        },
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              TextFormField(
-                                controller: truckNumberController,
-                                onTap: () {
-                                  truckNumberController.selection =
-                                      TextSelection(
-                                          baseOffset: 0,
-                                          extentOffset: truckNumberController
-                                              .value.text.length);
-                                },
-                                scrollPadding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom +
-                                        20),
-                                textInputAction: TextInputAction.done,
-                                keyboardType: TextInputType.phone,
-                                style: const TextStyle(fontSize: 18),
-                                decoration: InputDecoration(
-                                  labelText: AppLocalizations.of(context)!
-                                      .translate('truck_number'),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 11.0, horizontal: 9.0),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: SizedBox(
+                                        width: 350.w,
+                                        child: TextFormField(
+                                          controller: longController,
+                                          onTap: () {
+                                            longController.selection =
+                                                TextSelection(
+                                                    baseOffset: 0,
+                                                    extentOffset: longController
+                                                        .value.text.length);
+                                          },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  20),
+                                          textInputAction: TextInputAction.done,
+                                          keyboardType: TextInputType.phone,
+                                          style: const TextStyle(fontSize: 18),
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('long'),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 11.0,
+                                                    horizontal: 9.0),
+                                            suffix: Text(
+                                              localeState.value.languageCode ==
+                                                      "en"
+                                                  ? "m"
+                                                  : "م",
+                                            ),
+                                            suffixStyle:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          onEditingComplete: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'insert_value_validate');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            longController.text = newValue!;
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                onTapOutside: (event) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                onEditingComplete: () {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return AppLocalizations.of(context)!
-                                        .translate('insert_value_validate');
-                                  }
-                                  return null;
-                                },
-                                onSaved: (newValue) {
-                                  truckNumberController.text = newValue!;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              TextFormField(
-                                controller: trafficController,
-                                onTap: () {
-                                  trafficController.selection = TextSelection(
-                                      baseOffset: 0,
-                                      extentOffset:
-                                          trafficController.value.text.length);
-                                },
-                                scrollPadding: EdgeInsets.only(
-                                    bottom: MediaQuery.of(context)
-                                            .viewInsets
-                                            .bottom +
-                                        20),
-                                textInputAction: TextInputAction.done,
-                                keyboardType: TextInputType.phone,
-                                style: const TextStyle(fontSize: 18),
-                                decoration: InputDecoration(
-                                  labelText: AppLocalizations.of(context)!
-                                      .translate('traffic_number'),
-                                  contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 11.0, horizontal: 9.0),
+                                const SizedBox(
+                                  height: 16,
                                 ),
-                                onTapOutside: (event) {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                onEditingComplete: () {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                },
-                                autovalidateMode:
-                                    AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return AppLocalizations.of(context)!
-                                        .translate('insert_value_validate');
-                                  }
-                                  return null;
-                                },
-                                onSaved: (newValue) {
-                                  trafficController.text = newValue!;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: 350.w,
-                                      child: TextFormField(
-                                        controller: emptyWeightController,
-                                        onTap: () {
-                                          emptyWeightController.selection =
-                                              TextSelection(
-                                                  baseOffset: 0,
-                                                  extentOffset:
-                                                      emptyWeightController
-                                                          .value.text.length);
-                                        },
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                20),
-                                        textInputAction: TextInputAction.done,
-                                        keyboardType: TextInputType.phone,
-                                        style: const TextStyle(fontSize: 18),
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('empty_weight'),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 11.0,
-                                                  horizontal: 9.0),
-                                          suffix: Text(
-                                            localeState.value.languageCode ==
-                                                    "en"
-                                                ? "kg"
-                                                : "كغ",
-                                          ),
-                                          suffixStyle:
-                                              const TextStyle(fontSize: 15),
-                                        ),
-                                        onTapOutside: (event) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        onEditingComplete: () {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return AppLocalizations.of(context)!
-                                                .translate(
-                                                    'insert_value_validate');
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (newValue) {
-                                          emptyWeightController.text =
-                                              newValue!;
-                                        },
-                                      ),
-                                    ),
+                                TextFormField(
+                                  controller: truckNumberController,
+                                  onTap: () {
+                                    truckNumberController.selection =
+                                        TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: truckNumberController
+                                                .value.text.length);
+                                  },
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          20),
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.phone,
+                                  style: const TextStyle(fontSize: 18),
+                                  decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('truck_number'),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 11.0, horizontal: 9.0),
                                   ),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: 350.w,
-                                      child: TextFormField(
-                                        controller: grossWeightController,
-                                        onTap: () {
-                                          grossWeightController.selection =
-                                              TextSelection(
-                                                  baseOffset: 0,
-                                                  extentOffset:
-                                                      grossWeightController
-                                                          .value.text.length);
-                                        },
-                                        scrollPadding: EdgeInsets.only(
-                                            bottom: MediaQuery.of(context)
-                                                    .viewInsets
-                                                    .bottom +
-                                                20),
-                                        textInputAction: TextInputAction.done,
-                                        keyboardType: TextInputType.phone,
-                                        style: const TextStyle(fontSize: 18),
-                                        decoration: InputDecoration(
-                                          labelText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('gross_weight'),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 11.0,
-                                                  horizontal: 9.0),
-                                          suffix: Text(
-                                            localeState.value.languageCode ==
-                                                    "en"
-                                                ? "kg"
-                                                : "كغ",
-                                          ),
-                                          suffixStyle:
-                                              const TextStyle(fontSize: 15),
-                                        ),
-                                        onTapOutside: (event) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        onEditingComplete: () {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        validator: (value) {
-                                          if (value!.isEmpty) {
-                                            return AppLocalizations.of(context)!
-                                                .translate(
-                                                    'insert_value_validate');
-                                          }
-                                          return null;
-                                        },
-                                        onSaved: (newValue) {
-                                          grossWeightController.text =
-                                              newValue!;
-                                        },
-                                      ),
-                                    ),
+                                  onTapOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  onEditingComplete: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .translate('insert_value_validate');
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (newValue) {
+                                    truckNumberController.text = newValue!;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                TextFormField(
+                                  controller: trafficController,
+                                  onTap: () {
+                                    trafficController.selection = TextSelection(
+                                        baseOffset: 0,
+                                        extentOffset: trafficController
+                                            .value.text.length);
+                                  },
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          20),
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.phone,
+                                  style: const TextStyle(fontSize: 18),
+                                  decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('traffic_number'),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 11.0, horizontal: 9.0),
                                   ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 12,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const SectionTitle(
-                                      text: "ارفع الصور والملفات"),
-                                  InkWell(
-                                    onTap: () async {
-                                      var pickedImages =
-                                          await _picker.pickMultiImage();
-                                      for (var element in pickedImages) {
-                                        _files.add(File(element.path));
-                                      }
-                                      setState(
-                                        () {},
-                                      );
-                                    },
-                                    child: Card(
-                                      elevation: 1,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: SizedBox(
-                                            height: 40.h,
-                                            width: 70.w,
-                                            child: SvgPicture.asset(
-                                                "assets/icons/grey/add_image.svg"),
+                                  onTapOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  onEditingComplete: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .translate('insert_value_validate');
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (newValue) {
+                                    trafficController.text = newValue!;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Expanded(
+                                      child: SizedBox(
+                                        width: 350.w,
+                                        child: TextFormField(
+                                          controller: emptyWeightController,
+                                          onTap: () {
+                                            emptyWeightController.selection =
+                                                TextSelection(
+                                                    baseOffset: 0,
+                                                    extentOffset:
+                                                        emptyWeightController
+                                                            .value.text.length);
+                                          },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  20),
+                                          textInputAction: TextInputAction.done,
+                                          keyboardType: TextInputType.phone,
+                                          style: const TextStyle(fontSize: 18),
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('empty_weight'),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 11.0,
+                                                    horizontal: 9.0),
+                                            suffix: Text(
+                                              localeState.value.languageCode ==
+                                                      "en"
+                                                  ? "kg"
+                                                  : "كغ",
+                                            ),
+                                            suffixStyle:
+                                                const TextStyle(fontSize: 15),
                                           ),
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          onEditingComplete: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'insert_value_validate');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            emptyWeightController.text =
+                                                newValue!;
+                                          },
                                         ),
                                       ),
                                     ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: SizedBox(
+                                        width: 350.w,
+                                        child: TextFormField(
+                                          controller: grossWeightController,
+                                          onTap: () {
+                                            grossWeightController.selection =
+                                                TextSelection(
+                                                    baseOffset: 0,
+                                                    extentOffset:
+                                                        grossWeightController
+                                                            .value.text.length);
+                                          },
+                                          scrollPadding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom +
+                                                  20),
+                                          textInputAction: TextInputAction.done,
+                                          keyboardType: TextInputType.phone,
+                                          style: const TextStyle(fontSize: 18),
+                                          decoration: InputDecoration(
+                                            labelText:
+                                                AppLocalizations.of(context)!
+                                                    .translate('gross_weight'),
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 11.0,
+                                                    horizontal: 9.0),
+                                            suffix: Text(
+                                              localeState.value.languageCode ==
+                                                      "en"
+                                                  ? "kg"
+                                                  : "كغ",
+                                            ),
+                                            suffixStyle:
+                                                const TextStyle(fontSize: 15),
+                                          ),
+                                          onTapOutside: (event) {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          onEditingComplete: () {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                          },
+                                          autovalidateMode: AutovalidateMode
+                                              .onUserInteraction,
+                                          validator: (value) {
+                                            if (value!.isEmpty) {
+                                              return AppLocalizations.of(
+                                                      context)!
+                                                  .translate(
+                                                      'insert_value_validate');
+                                            }
+                                            return null;
+                                          },
+                                          onSaved: (newValue) {
+                                            grossWeightController.text =
+                                                newValue!;
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 12,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SectionTitle(
+                                      text: AppLocalizations.of(context)!
+                                          .translate('upload_files'),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                CustomButton(
+                                  title: const Icon(
+                                    Icons.cloud_upload_outlined,
+                                    size: 35,
                                   ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                              Wrap(
-                                alignment: WrapAlignment.start,
-                                children: _buildAttachmentImages(),
-                              ),
-                              const SizedBox(height: 8),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: BlocConsumer<CreateTruckBloc,
-                                    CreateTruckState>(
+                                  onTap: () async {
+                                    var pickedImages =
+                                        await _picker.pickMultiImage();
+                                    for (var element in pickedImages) {
+                                      _files.add(File(element.path));
+                                    }
+                                    setState(
+                                      () {},
+                                    );
+                                  },
+                                  color: Colors.grey[200],
+                                  bordercolor: Colors.grey[400],
+                                ),
+                                const SizedBox(height: 16),
+                                Wrap(
+                                  alignment: WrapAlignment.start,
+                                  children: _buildAttachmentImages(),
+                                ),
+                                const SizedBox(height: 8),
+                                BlocConsumer<CreateTruckBloc, CreateTruckState>(
                                   listener: (context, state) async {
                                     if (state is CreateTruckSuccessState) {
                                       // instructionProvider.addInstruction(state.shipment);
@@ -1034,7 +1058,8 @@ class _CreateTruckForDriverScreenState
                                     } else {
                                       return CustomButton(
                                         title: Text(
-                                          "إضافة مركبة جديدة",
+                                          AppLocalizations.of(context)!
+                                              .translate("add_new_truck"),
                                           style: TextStyle(
                                             fontSize: 20.sp,
                                           ),
@@ -1105,19 +1130,19 @@ class _CreateTruckForDriverScreenState
                                     }
                                   },
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                            ],
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 96,
-                    ),
-                  ],
+                      const SizedBox(
+                        height: 96,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

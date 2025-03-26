@@ -5,12 +5,10 @@ import 'dart:typed_data';
 
 import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/place_model.dart';
-import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/data/services/map_service.dart';
 import 'package:camion/data/services/places_service.dart';
-import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -211,6 +209,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<Map<String, dynamic>> get pickupCachedSearchResults =>
       _pickupCachedSearchResults;
 
+  bool _isFetchingLocation = false;
+  Position? _currentPosition;
+
   Future<void> _saveCachedResults() async {
     final prefs = await SharedPreferences.getInstance();
     final jsonString = jsonEncode(_cachedSearchResults);
@@ -392,7 +393,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
     _toptextfeildPosition = _toptextfeildPosition == 0 ? -250 : 0;
 
-    _bottomPosition = _bottomPosition == 111 ? -height : 111;
+    _bottomPosition = _bottomPosition == 110 ? -height : 110;
     notifyListeners();
   }
 
@@ -1032,12 +1033,20 @@ class AddMultiShipmentProvider extends ChangeNotifier {
 
   Future<void> getCurrentPosition(
       Function(LatLng) onSuccess, int index, BuildContext context) async {
+    if (_isFetchingLocation) {
+      print("Location fetch already in progress, skipping duplicate request.");
+      return;
+    }
+
+    _isFetchingLocation = true;
+
     final hasPermission = await _handleLocationPermission(
       context,
       index,
     );
     if (!hasPermission) {
       print("Location permission denied.");
+      _isFetchingLocation = false;
       return;
     }
 
@@ -1060,6 +1069,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     } catch (e, stacktrace) {
       print("Error getting location: ${e.toString()}");
       print("Stacktrace: $stacktrace");
+    } finally {
+      _isFetchingLocation = false;
     }
   }
 
@@ -1380,11 +1391,6 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         backgroundColor: Colors.orange,
         message: 'خدمة تحديد الموقع غير مفعلة..',
       );
-
-      // setState(() {
-      //   pickupLoading = false;
-      // });
-      // return false;
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
