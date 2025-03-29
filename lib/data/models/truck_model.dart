@@ -203,6 +203,7 @@ class KTruck {
   int? id;
   String? driver_firstname;
   String? driver_lastname;
+  String? driver_phone;
   int? owner;
   String? phoneowner;
   int? truckuser;
@@ -232,6 +233,7 @@ class KTruck {
     this.id,
     this.driver_firstname,
     this.driver_lastname,
+    this.driver_phone,
     this.owner,
     this.phoneowner,
     this.truckuser,
@@ -270,6 +272,7 @@ class KTruck {
     truckuser = json['truckuser'] ?? 0;
     driver_firstname = json['driver_firstname'];
     driver_lastname = json['driver_lastname'];
+    driver_phone = json['driver_phone'];
 
     location = json['location'];
     locationLat = json['location_lat'];

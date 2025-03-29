@@ -50,7 +50,7 @@ class NotificationServices {
 
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
-    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     requestNotificationPermission();
     getDeviceToken();

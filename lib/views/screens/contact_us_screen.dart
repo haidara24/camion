@@ -104,16 +104,15 @@ class ContactUsScreen extends StatelessWidget {
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: SafeArea(
-            child: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle(
-                statusBarColor:
-                    AppColor.deepBlack, // Make status bar transparent
-                statusBarIconBrightness:
-                    Brightness.dark, // Light icons for dark backgrounds
-                systemNavigationBarColor: Colors.grey[200], // Works on Android
-                systemNavigationBarIconBrightness: Brightness.light,
-              ),
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: AppColor.deepBlack, // Make status bar transparent
+              statusBarIconBrightness:
+                  Brightness.dark, // Light icons for dark backgrounds
+              systemNavigationBarColor: Colors.grey[100], // Works on Android
+              systemNavigationBarIconBrightness: Brightness.light,
+            ),
+            child: SafeArea(
               child: Scaffold(
                 resizeToAvoidBottomInset: false,
                 // backgroundColor: AppColor.deepBlack,

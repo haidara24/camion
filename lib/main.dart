@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:camion/Localization/app_localizations_setup.dart';
+import 'package:camion/business_logic/bloc/bloc/delete_store_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/update_truck_price_bloc.dart';
@@ -151,7 +152,7 @@ void main() async {
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   HttpOverrides.global = MyHttpOverrides();
   SystemChrome.setSystemUIOverlayStyle(
@@ -328,6 +329,12 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => StoreListBloc(
+                        storeRepository:
+                            RepositoryProvider.of<StoreRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => DeleteStoreBloc(
                         storeRepository:
                             RepositoryProvider.of<StoreRepository>(context),
                       ),

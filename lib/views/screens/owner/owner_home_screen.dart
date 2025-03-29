@@ -141,8 +141,7 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
         }
       case 3:
         {
-          BlocProvider.of<OwnerActiveShipmentsBloc>(context)
-              .add(OwnerActiveShipmentsLoadEvent());
+          BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('tracking');
 
@@ -452,313 +451,317 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                       ]),
                     ),
                   ),
-                  bottomNavigationBar:
-                      BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
-                    builder: (context, state) {
-                      if (state is BottomNavBarShown) {
-                        return Container(
-                          height: 75.h,
-                          color: AppColor.deepBlack,
-                          child: TabBar(
-                            labelPadding: EdgeInsets.zero,
-                            controller: _tabController,
-                            indicatorColor: AppColor.deepYellow,
-                            labelColor: AppColor.deepYellow,
-                            dividerColor: Colors.transparent,
-                            unselectedLabelColor: Colors.white,
-                            // labelStyle: TextStyle(fontSize: 12.sp),
-                            // unselectedLabelStyle: TextStyle(fontSize: 14.sp),
-                            padding: EdgeInsets.zero,
-                            onTap: (value) {
-                              changeSelectedValue(
-                                  selectedValue: value, contxt: context);
-                            },
-                            tabs: [
-                              Tab(
-                                // text: "طلب مخلص",
-                                height: 62.h,
-                                icon: navigationValue == 0
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/orange/home.svg",
-                                            width: 28.w,
-                                            height: 28.w,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('home'),
-                                            style: TextStyle(
-                                                color: AppColor.deepYellow,
-                                                fontSize: 12.sp),
-                                          )
-                                        ],
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/white/home.svg",
-                                            width: 28.w,
-                                            height: 28.w,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('home'),
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12.sp),
-                                          )
-                                        ],
-                                      ),
-                              ),
-                              Tab(
-                                // text: "الحاسبة",
-                                height: 62.h,
-                                icon: navigationValue == 1
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/orange/my_shipments.svg",
-                                            width: 28.w,
-                                            height: 28.w,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 1,
-                                              ),
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'incoming_orders'),
-                                                style: TextStyle(
-                                                    color: AppColor.deepYellow,
-                                                    fontSize: 12.sp),
-                                              ),
+                  bottomNavigationBar: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: BlocBuilder<BottomNavBarCubit, BottomNavBarState>(
+                      builder: (context, state) {
+                        if (state is BottomNavBarShown) {
+                          return Container(
+                            height: 75.h,
+                            color: AppColor.deepBlack,
+                            child: TabBar(
+                              labelPadding: EdgeInsets.zero,
+                              controller: _tabController,
+                              indicatorColor: AppColor.deepYellow,
+                              labelColor: AppColor.deepYellow,
+                              dividerColor: Colors.transparent,
+                              unselectedLabelColor: Colors.white,
+                              // labelStyle: TextStyle(fontSize: 12.sp),
+                              // unselectedLabelStyle: TextStyle(fontSize: 14.sp),
+                              padding: EdgeInsets.zero,
+                              onTap: (value) {
+                                changeSelectedValue(
+                                    selectedValue: value, contxt: context);
+                              },
+                              tabs: [
+                                Tab(
+                                  // text: "طلب مخلص",
+                                  height: 62.h,
+                                  icon: navigationValue == 0
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/orange/home.svg",
+                                              width: 28.w,
+                                              height: 28.w,
                                             ),
-                                          )
-                                        ],
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/white/my_shipments.svg",
-                                            width: 28.w,
-                                            height: 28.w,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 1,
-                                              ),
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'incoming_orders'),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12.sp),
-                                              ),
+                                            const SizedBox(
+                                              height: 4,
                                             ),
-                                          )
-                                        ],
-                                      ),
-                              ),
-                              Tab(
-                                height: 62.h,
-                                icon: navigationValue == 2
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/orange/search_for_truck.svg",
-                                            width: 36.w,
-                                            height: 28.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 1,
-                                              ),
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'shipment_search'),
-                                                style: TextStyle(
-                                                    color: AppColor.deepYellow,
-                                                    fontSize: 12.sp),
-                                              ),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('home'),
+                                              style: TextStyle(
+                                                  color: AppColor.deepYellow,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/white/home.svg",
+                                              width: 28.w,
+                                              height: 28.w,
                                             ),
-                                          )
-                                        ],
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/white/search_for_truck.svg",
-                                            width: 31.w,
-                                            height: 28.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          FittedBox(
-                                            fit: BoxFit.scaleDown,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                horizontal: 1,
-                                              ),
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        'shipment_search'),
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12.sp),
-                                              ),
+                                            const SizedBox(
+                                              height: 4,
                                             ),
-                                          )
-                                        ],
-                                      ),
-                              ),
-                              Tab(
-                                // text: "التعرفة",
-                                height: 62.h,
-                                icon: navigationValue == 3
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/orange/location.svg",
-                                            width: 28.w,
-                                            height: 28.w,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('tracking'),
-                                            style: TextStyle(
-                                                color: AppColor.deepYellow,
-                                                fontSize: 12.sp),
-                                          )
-                                        ],
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/white/location.svg",
-                                            width: 28.w,
-                                            height: 28.w,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('tracking'),
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12.sp),
-                                          )
-                                        ],
-                                      ),
-                              ),
-                              Tab(
-                                // text: "التعرفة",
-                                height: 62.h,
-                                icon: navigationValue == 4
-                                    ? Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/orange/truck.svg",
-                                            width: 36.w,
-                                            height: 28.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('my_trucks'),
-                                            style: TextStyle(
-                                                color: AppColor.deepYellow,
-                                                fontSize: 12.sp),
-                                          )
-                                        ],
-                                      )
-                                    : Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            "assets/icons/white/truck.svg",
-                                            width: 31.w,
-                                            height: 28.w,
-                                            fit: BoxFit.fill,
-                                          ),
-                                          const SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('my_trucks'),
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 12.sp),
-                                          )
-                                        ],
-                                      ),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
-                    },
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('home'),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                                Tab(
+                                  // text: "الحاسبة",
+                                  height: 62.h,
+                                  icon: navigationValue == 1
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/orange/my_shipments.svg",
+                                              width: 28.w,
+                                              height: 28.w,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 1,
+                                                ),
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'incoming_orders'),
+                                                  style: TextStyle(
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                      fontSize: 12.sp),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/white/my_shipments.svg",
+                                              width: 28.w,
+                                              height: 28.w,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 1,
+                                                ),
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'incoming_orders'),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12.sp),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                                Tab(
+                                  height: 62.h,
+                                  icon: navigationValue == 2
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/orange/search_shipment.svg",
+                                              width: 36.w,
+                                              height: 28.w,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 1,
+                                                ),
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'shipment_search'),
+                                                  style: TextStyle(
+                                                      color:
+                                                          AppColor.deepYellow,
+                                                      fontSize: 12.sp),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/white/search_shipment.svg",
+                                              width: 31.w,
+                                              height: 28.w,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            FittedBox(
+                                              fit: BoxFit.scaleDown,
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 1,
+                                                ),
+                                                child: Text(
+                                                  AppLocalizations.of(context)!
+                                                      .translate(
+                                                          'shipment_search'),
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12.sp),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                                Tab(
+                                  // text: "التعرفة",
+                                  height: 62.h,
+                                  icon: navigationValue == 3
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/orange/location.svg",
+                                              width: 28.w,
+                                              height: 28.w,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('tracking'),
+                                              style: TextStyle(
+                                                  color: AppColor.deepYellow,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/white/location.svg",
+                                              width: 28.w,
+                                              height: 28.w,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('tracking'),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                                Tab(
+                                  // text: "التعرفة",
+                                  height: 62.h,
+                                  icon: navigationValue == 4
+                                      ? Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/orange/truck.svg",
+                                              width: 36.w,
+                                              height: 28.w,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('my_trucks'),
+                                              style: TextStyle(
+                                                  color: AppColor.deepYellow,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        )
+                                      : Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            SvgPicture.asset(
+                                              "assets/icons/white/truck.svg",
+                                              width: 31.w,
+                                              height: 28.w,
+                                              fit: BoxFit.fill,
+                                            ),
+                                            const SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('my_trucks'),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12.sp),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                              ],
+                            ),
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
                   ),
                   body: currentScreen,
                 ),

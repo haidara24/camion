@@ -233,15 +233,6 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                       icon: const Icon(Icons.arrow_back),
                     ),
                     const Spacer(),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate('choose_shippment_path'),
-                      size: 20,
-                    ),
-                    const Spacer(),
-                    const SizedBox(
-                      width: 25,
-                    ),
                   ],
                 ),
               ),

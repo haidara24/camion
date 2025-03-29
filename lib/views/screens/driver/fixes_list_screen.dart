@@ -26,7 +26,9 @@ class _FixesListScreenState extends State<FixesListScreen> {
 
   void getTruckId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    truckId = prefs.getInt("truckId") ?? 0;
+    setState(() {
+      truckId = prefs.getInt("truckId") ?? 0;
+    });
   }
 
   @override

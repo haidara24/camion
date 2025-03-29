@@ -27,6 +27,7 @@ import 'package:camion/views/screens/merchant/complete_shipment_screen.dart';
 import 'package:camion/views/screens/merchant/merchant_profile_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_task_screen.dart';
 import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
+import 'package:camion/views/screens/merchant/storehouse_list_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -378,6 +379,36 @@ class _HomeScreenState extends State<HomeScreen>
                             title: Text(
                               AppLocalizations.of(context)!
                                   .translate('shippment_log'),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.white,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            BlocProvider.of<StoreListBloc>(context)
+                                .add(StoreListLoadEvent());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StorehouseListScreen(),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/orange/warehouse.svg",
+                              height: 27.h,
+                              width: 27.h,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('my_stores'),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16.sp,

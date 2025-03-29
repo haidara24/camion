@@ -34,6 +34,21 @@ class StoreRepository {
     }
   }
 
+  Future<bool?> deleteStore(
+    int storeId,
+  ) async {
+    prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString("token");
+
+    Response response =
+        await HttpHelper.delete("$STORES_ENDPOINT$storeId/", apiToken: token);
+    if (response.statusCode == 204) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<List<Stores>> getStoress() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");

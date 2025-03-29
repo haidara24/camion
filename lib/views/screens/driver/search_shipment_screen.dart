@@ -89,7 +89,10 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
 
   void getTruckId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState((){
+
     truckId = prefs.getInt("truckId") ?? 0;
+    });
   }
 
   @override

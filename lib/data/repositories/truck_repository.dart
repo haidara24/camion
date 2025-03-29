@@ -318,7 +318,6 @@ class TruckRepository {
     request.fields['truck_number'] = truck.truckNumber!.toString();
     request.fields['traffic'] = truck.traffic!.toString();
     request.fields['empty_weight'] = truck.emptyWeight!.toString();
-    request.fields['gross_weight'] = truck.grossWeight!.toString();
     request.fields['gpsId'] = "";
     var response = await request.send();
     if (response.statusCode == 201) {

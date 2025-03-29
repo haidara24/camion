@@ -290,6 +290,7 @@
     "location":"Location",
     "stopTime":"Stop Period",
     "no_reports":"No Reports",
+    "reports":"Reports",
 
     "phone_required":"Phone number is required",
     "phone_valid":"Enter Valid Phone Number",

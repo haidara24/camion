@@ -5,7 +5,6 @@ import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
-import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
@@ -315,14 +314,13 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                       child: SizedBox(
                                         width: 350.w,
                                         child: TextFormField(
-                                          controller: heightController,
+                                          controller: longController,
                                           onTap: () {
-                                            heightController.selection =
+                                            longController.selection =
                                                 TextSelection(
                                                     baseOffset: 0,
-                                                    extentOffset:
-                                                        heightController
-                                                            .value.text.length);
+                                                    extentOffset: longController
+                                                        .value.text.length);
                                           },
                                           scrollPadding: EdgeInsets.only(
                                               bottom: MediaQuery.of(context)
@@ -335,7 +333,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                           decoration: InputDecoration(
                                             labelText:
                                                 AppLocalizations.of(context)!
-                                                    .translate('height'),
+                                                    .translate('long'),
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
                                                     vertical: 11.0,
@@ -369,7 +367,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                             return null;
                                           },
                                           onSaved: (newValue) {
-                                            heightController.text = newValue!;
+                                            longController.text = newValue!;
                                           },
                                         ),
                                       ),
@@ -508,13 +506,14 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                       child: SizedBox(
                                         width: 350.w,
                                         child: TextFormField(
-                                          controller: longController,
+                                          controller: heightController,
                                           onTap: () {
-                                            longController.selection =
+                                            heightController.selection =
                                                 TextSelection(
                                                     baseOffset: 0,
-                                                    extentOffset: longController
-                                                        .value.text.length);
+                                                    extentOffset:
+                                                        heightController
+                                                            .value.text.length);
                                           },
                                           scrollPadding: EdgeInsets.only(
                                               bottom: MediaQuery.of(context)
@@ -527,7 +526,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                           decoration: InputDecoration(
                                             labelText:
                                                 AppLocalizations.of(context)!
-                                                    .translate('long'),
+                                                    .translate('height'),
                                             contentPadding:
                                                 const EdgeInsets.symmetric(
                                                     vertical: 11.0,
@@ -561,7 +560,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                             return null;
                                           },
                                           onSaved: (newValue) {
-                                            longController.text = newValue!;
+                                            heightController.text = newValue!;
                                           },
                                         ),
                                       ),
@@ -664,140 +663,55 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                 const SizedBox(
                                   height: 12,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    Expanded(
-                                      child: SizedBox(
-                                        width: 350.w,
-                                        child: TextFormField(
-                                          controller: emptyWeightController,
-                                          onTap: () {
-                                            emptyWeightController.selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        emptyWeightController
-                                                            .value.text.length);
-                                          },
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .viewInsets
-                                                      .bottom +
-                                                  20),
-                                          textInputAction: TextInputAction.done,
-                                          keyboardType: TextInputType.phone,
-                                          style: const TextStyle(fontSize: 18),
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(context)!
-                                                    .translate('empty_weight'),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 11.0,
-                                                    horizontal: 9.0),
-                                            suffix: Text(
-                                              localeState.value.languageCode ==
-                                                      "en"
-                                                  ? "kg"
-                                                  : "كغ",
-                                            ),
-                                            suffixStyle:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                          onTapOutside: (event) {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          onEditingComplete: () {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return AppLocalizations.of(
-                                                      context)!
-                                                  .translate(
-                                                      'insert_value_validate');
-                                            }
-                                            return null;
-                                          },
-                                          onSaved: (newValue) {
-                                            emptyWeightController.text =
-                                                newValue!;
-                                          },
-                                        ),
-                                      ),
+                                TextFormField(
+                                  controller: emptyWeightController,
+                                  onTap: () {
+                                    emptyWeightController.selection =
+                                        TextSelection(
+                                            baseOffset: 0,
+                                            extentOffset: emptyWeightController
+                                                .value.text.length);
+                                  },
+                                  scrollPadding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom +
+                                          20),
+                                  textInputAction: TextInputAction.done,
+                                  keyboardType: TextInputType.phone,
+                                  style: const TextStyle(fontSize: 18),
+                                  decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(context)!
+                                        .translate('empty_weight'),
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        vertical: 11.0, horizontal: 9.0),
+                                    suffix: Text(
+                                      localeState.value.languageCode == "en"
+                                          ? "kg"
+                                          : "كغ",
                                     ),
-                                    const SizedBox(width: 4),
-                                    Expanded(
-                                      child: SizedBox(
-                                        width: 350.w,
-                                        child: TextFormField(
-                                          controller: grossWeightController,
-                                          onTap: () {
-                                            grossWeightController.selection =
-                                                TextSelection(
-                                                    baseOffset: 0,
-                                                    extentOffset:
-                                                        grossWeightController
-                                                            .value.text.length);
-                                          },
-                                          scrollPadding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context)
-                                                      .viewInsets
-                                                      .bottom +
-                                                  20),
-                                          textInputAction: TextInputAction.done,
-                                          keyboardType: TextInputType.phone,
-                                          style: const TextStyle(fontSize: 18),
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                AppLocalizations.of(context)!
-                                                    .translate('gross_weight'),
-                                            contentPadding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 11.0,
-                                                    horizontal: 9.0),
-                                            suffix: Text(
-                                              localeState.value.languageCode ==
-                                                      "en"
-                                                  ? "kg"
-                                                  : "كغ",
-                                            ),
-                                            suffixStyle:
-                                                const TextStyle(fontSize: 15),
-                                          ),
-                                          onTapOutside: (event) {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          onEditingComplete: () {
-                                            FocusManager.instance.primaryFocus
-                                                ?.unfocus();
-                                          },
-                                          autovalidateMode: AutovalidateMode
-                                              .onUserInteraction,
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return AppLocalizations.of(
-                                                      context)!
-                                                  .translate(
-                                                      'insert_value_validate');
-                                            }
-                                            return null;
-                                          },
-                                          onSaved: (newValue) {
-                                            grossWeightController.text =
-                                                newValue!;
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    suffixStyle: const TextStyle(fontSize: 15),
+                                  ),
+                                  onTapOutside: (event) {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  onEditingComplete: () {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                  },
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return AppLocalizations.of(context)!
+                                          .translate('insert_value_validate');
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (newValue) {
+                                    emptyWeightController.text = newValue!;
+                                  },
                                 ),
                                 const SizedBox(
                                   height: 4,
@@ -1007,36 +921,30 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        const SectionTitle(
-                                            text: "ارفع الصور والملفات"),
-                                        InkWell(
-                                          onTap: () async {
-                                            var pickedImages =
-                                                await _picker.pickMultiImage();
-                                            for (var element in pickedImages) {
-                                              _files.add(File(element.path));
-                                            }
-                                            setState(
-                                              () {},
-                                            );
-                                          },
-                                          child: Card(
-                                            elevation: 1,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Center(
-                                                child: SizedBox(
-                                                  height: 40.h,
-                                                  width: 50.w,
-                                                  child: SvgPicture.asset(
-                                                      "assets/icons/grey/add_image.svg"),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
+                                        SectionTitle(
+                                          text: AppLocalizations.of(context)!
+                                              .translate('upload_files'),
                                         ),
                                       ],
+                                    ),
+                                    const SizedBox(height: 16),
+                                    CustomButton(
+                                      title: const Icon(
+                                        Icons.cloud_upload_outlined,
+                                        size: 35,
+                                      ),
+                                      onTap: () async {
+                                        var pickedImages =
+                                            await _picker.pickMultiImage();
+                                        for (var element in pickedImages) {
+                                          _files.add(File(element.path));
+                                        }
+                                        setState(
+                                          () {},
+                                        );
+                                      },
+                                      color: Colors.grey[200],
+                                      bordercolor: Colors.grey[400],
                                     ),
                                     const SizedBox(height: 16),
                                     Wrap(
@@ -1044,132 +952,116 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                       children: _buildAttachmentImages(),
                                     ),
                                     const SizedBox(height: 8),
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: BlocConsumer<CreateTruckBloc,
-                                          CreateTruckState>(
-                                        listener: (context, state) async {
-                                          if (state
-                                              is CreateTruckSuccessState) {
-                                            // instructionProvider.addInstruction(state.shipment);
+                                    BlocConsumer<CreateTruckBloc,
+                                        CreateTruckState>(
+                                      listener: (context, state) async {
+                                        if (state is CreateTruckSuccessState) {
+                                          // instructionProvider.addInstruction(state.shipment);
 
-                                            showCustomSnackBar(
-                                              context: context,
-                                              backgroundColor:
-                                                  AppColor.deepGreen,
-                                              message: localeState
-                                                          .value.languageCode ==
-                                                      'en'
-                                                  ? 'Truck has been created successfully.'
-                                                  : 'تم اضافة مركبة جديدة..',
-                                            );
+                                          showCustomSnackBar(
+                                            context: context,
+                                            backgroundColor: AppColor.deepGreen,
+                                            message: localeState
+                                                        .value.languageCode ==
+                                                    'en'
+                                                ? 'Truck has been created successfully.'
+                                                : 'تم اضافة مركبة جديدة..',
+                                          );
 
-                                            SharedPreferences prefs =
-                                                await SharedPreferences
-                                                    .getInstance();
-                                            var owner =
-                                                prefs.getInt("truckowner");
-                                            // ignore: use_build_context_synchronously
-                                            BlocProvider.of<OwnerProfileBloc>(
-                                                    context)
-                                                .add(OwnerProfileLoad(owner!));
-                                            Navigator.pop(context);
-                                          }
-                                          if (state
-                                              is CreateTruckFailureState) {
-                                            print(state.errorMessage);
-                                          }
-                                        },
-                                        builder: (context, state) {
-                                          if (state
-                                              is CreateTruckLoadingProgressState) {
-                                            return CustomButton(
-                                              title: LoadingIndicator(),
-                                              onTap: () {},
-                                            );
-                                          } else {
-                                            return CustomButton(
-                                              title: Text(
-                                                "إضافة مركبة جديدة",
-                                                style: TextStyle(
-                                                  fontSize: 20.sp,
-                                                ),
+                                          SharedPreferences prefs =
+                                              await SharedPreferences
+                                                  .getInstance();
+                                          var owner =
+                                              prefs.getInt("truckowner");
+                                          // ignore: use_build_context_synchronously
+                                          BlocProvider.of<OwnerProfileBloc>(
+                                                  context)
+                                              .add(OwnerProfileLoad(owner!));
+                                          Navigator.pop(context);
+                                        }
+                                        if (state is CreateTruckFailureState) {
+                                          print(state.errorMessage);
+                                        }
+                                      },
+                                      builder: (context, state) {
+                                        if (state
+                                            is CreateTruckLoadingProgressState) {
+                                          return CustomButton(
+                                            title: LoadingIndicator(),
+                                            onTap: () {},
+                                          );
+                                        } else {
+                                          return CustomButton(
+                                            title: Text(
+                                              "إضافة مركبة جديدة",
+                                              style: TextStyle(
+                                                fontSize: 20.sp,
                                               ),
-                                              onTap: () {
-                                                FocusManager
-                                                    .instance.primaryFocus
-                                                    ?.unfocus();
+                                            ),
+                                            onTap: () {
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
 
-                                                if (_newtruckFormKey
-                                                    .currentState!
-                                                    .validate()) {
-                                                  _newtruckFormKey.currentState
-                                                      ?.save();
-                                                  Map<String, dynamic> truck = {
-                                                    'height': double.parse(
-                                                            heightController
-                                                                .text)
-                                                        .toInt(),
-                                                    'width': double.parse(
-                                                            widthController
-                                                                .text)
-                                                        .toInt(),
-                                                    'long': double.parse(
-                                                            longController.text)
-                                                        .toInt(),
-                                                    'truckNumber': double.parse(
-                                                            truckNumberController
-                                                                .text)
-                                                        .toInt(),
-                                                    'traffic': double.parse(
-                                                            trafficController
-                                                                .text)
-                                                        .toInt(),
-                                                    'numberOfAxels': double.parse(
-                                                            numberOfAxelsController
-                                                                .text)
-                                                        .toInt(),
-                                                    'emptyWeight': double.parse(
-                                                            emptyWeightController
-                                                                .text)
-                                                        .toInt(),
-                                                    'grossWeight': double.parse(
-                                                            grossWeightController
-                                                                .text)
-                                                        .toInt(),
-                                                    'locationLat': "",
-                                                    'driver_first_name':
-                                                        _firstNameController
-                                                            .text,
-                                                    'driver_last_name':
-                                                        _lastNameController
-                                                            .text,
-                                                    'driver_phone':
-                                                        _phoneController.text,
-                                                    'owner': widget.ownerId,
-                                                    'truckType': trucktype,
-                                                  };
+                                              if (_newtruckFormKey.currentState!
+                                                  .validate()) {
+                                                _newtruckFormKey.currentState
+                                                    ?.save();
+                                                Map<String, dynamic> truck = {
+                                                  'height': double.parse(
+                                                          heightController.text)
+                                                      .toInt(),
+                                                  'width': double.parse(
+                                                          widthController.text)
+                                                      .toInt(),
+                                                  'long': double.parse(
+                                                          longController.text)
+                                                      .toInt(),
+                                                  'truckNumber': double.parse(
+                                                          truckNumberController
+                                                              .text)
+                                                      .toInt(),
+                                                  'traffic': double.parse(
+                                                          trafficController
+                                                              .text)
+                                                      .toInt(),
+                                                  'numberOfAxels': double.parse(
+                                                          numberOfAxelsController
+                                                              .text)
+                                                      .toInt(),
+                                                  'emptyWeight': double.parse(
+                                                          emptyWeightController
+                                                              .text)
+                                                      .toInt(),
+                                                  'locationLat': "",
+                                                  'driver_first_name':
+                                                      _firstNameController.text,
+                                                  'driver_last_name':
+                                                      _lastNameController.text,
+                                                  'driver_phone':
+                                                      _phoneController.text,
+                                                  'owner': widget.ownerId,
+                                                  'truckType': trucktype,
+                                                };
 
-                                                  BlocProvider.of<
-                                                              CreateTruckBloc>(
-                                                          context)
-                                                      .add(
-                                                    CreateOwnerTruckButtonPressed(
-                                                        truck, _files),
-                                                  );
-                                                } else {
-                                                  // Scrollable.ensureVisible(
-                                                  //   key1.currentContext!,
-                                                  //   duration: const Duration(
-                                                  //     milliseconds: 500,
-                                                  //   ),
-                                                  // );
-                                                }
-                                              },
-                                            );
-                                          }
-                                        },
-                                      ),
+                                                BlocProvider.of<
+                                                            CreateTruckBloc>(
+                                                        context)
+                                                    .add(
+                                                  CreateOwnerTruckButtonPressed(
+                                                      truck, _files),
+                                                );
+                                              } else {
+                                                // Scrollable.ensureVisible(
+                                                //   key1.currentContext!,
+                                                //   duration: const Duration(
+                                                //     milliseconds: 500,
+                                                //   ),
+                                                // );
+                                              }
+                                            },
+                                          );
+                                        }
+                                      },
                                     ),
                                   ],
                                 ),
