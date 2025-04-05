@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 
 import 'package:camion/Localization/app_localizations_setup.dart';
+import 'package:camion/business_logic/bloc/bloc/car_gps_status_details_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_store_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
@@ -119,25 +120,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-// Top-level background message handler
-@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  if (Isolate.current.debugName != null &&
-      Isolate.current.debugName != "main") {
-    print("Skipping execution in background isolate.");
-    return;
-  }
-  // Initialize Firebase
+  // you need to initialize firebase first
   await Firebase.initializeApp(
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
   print("Handling a background message: ${message.messageId}");
-}
-
-bool isMainIsolate() {
-  return Isolate.current.debugName == 'main';
 }
 
 void main() async {
@@ -152,9 +142,9 @@ void main() async {
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   HttpOverrides.global = MyHttpOverrides();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: AppColor.deepBlack,
@@ -682,6 +672,9 @@ class MyApp extends StatelessWidget {
                               RepositoryProvider.of<GpsRepository>(context)),
                     ),
                     BlocProvider(
+                      create: (context) => CarGpsStatusDetailsBloc(),
+                    ),
+                    BlocProvider(
                       create: (context) => TripReportBloc(
                           gpsRepository:
                               RepositoryProvider.of<GpsRepository>(context)),
@@ -787,12 +780,12 @@ class MyApp extends StatelessWidget {
                         builder: (context, child) {
                           return AnnotatedRegion<SystemUiOverlayStyle>(
                             value: SystemUiOverlayStyle(
-                              statusBarColor:
-                                  Colors.white, // Make status bar transparent
+                              statusBarColor: AppColor
+                                  .deepBlack, // Make status bar transparent
                               statusBarIconBrightness: Brightness
                                   .light, // Light icons for dark backgrounds
                               systemNavigationBarColor:
-                                  AppColor.landscapeNatural, // Works on Android
+                                  Colors.white, // Works on Android
                               systemNavigationBarIconBrightness:
                                   Brightness.light,
                             ),

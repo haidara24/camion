@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/bloc/car_gps_status_details_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/over_speed_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/parking_report_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/total_milage_day_bloc.dart';
@@ -106,6 +107,33 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen> {
     _controller.dispose();
 
     super.dispose();
+  }
+
+  String getSpeedImage(dynamic data) {
+    double speed = (data['carStatus']['speed'] as num).toDouble();
+
+    if (speed < 35) {
+      return "assets/images/speed0.png";
+    } else if (speed >= 35 && speed < 70.0) {
+      return "assets/images/speed1.png";
+    } else if (speed >= 70 && speed < 105) {
+      return "assets/images/speed2.png";
+    } else if (speed >= 105) {
+      return "assets/images/speed3.png";
+    } else {
+      return "assets/images/speed0.png";
+    }
+  }
+
+  Widget speedText(dynamic data) {
+    double speed = (data['carStatus']['speed'] as num).toDouble();
+    return Text(
+      "${speed.toInt().toString()} km/h",
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 15.sp,
+      ),
+    );
   }
 
   void getAddressForPickupFromLatLng(String location) async {
@@ -314,44 +342,27 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen> {
                                         .translate("no_gps_device"),
                                   ),
                                 )
-                              : CarouselSlider.builder(
-                                  itemCount: widget.truck.images!.length,
-                                  itemBuilder: (BuildContext context,
-                                          int itemIndex, int pageViewIndex) =>
-                                      Image.network(
-                                    widget.truck.images![itemIndex].image!,
-                                    fit: BoxFit.cover,
-                                    height: 230.h,
-                                    width: double.infinity,
-                                    loadingBuilder:
-                                        (context, child, loadingProgress) {
-                                      if (loadingProgress == null) {
-                                        // setState(() {
-                                        //   homeCarouselIndicator = itemIndex;
-                                        // });
-                                        return child;
+                              : SizedBox(
+                                  width: double.infinity,
+                                  child: BlocBuilder<CarGpsStatusDetailsBloc,
+                                      CarGpsStatusDetailsState>(
+                                    builder: (context, state) {
+                                      if (state
+                                          is CarGpsStatusDetailsLoadedSuccess) {
+                                        return Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Image.asset(
+                                              getSpeedImage(state.data),
+                                              height: 200.h,
+                                            ),
+                                            speedText(state.data),
+                                          ],
+                                        );
+                                      } else {
+                                        return LoadingIndicator();
                                       }
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
                                     },
-                                  ),
-                                  options: CarouselOptions(
-                                    height: 230.h,
-                                    viewportFraction: 1,
-                                    initialPage: 0,
-                                    enableInfiniteScroll: false,
-                                    enlargeCenterPage: true,
-                                    scrollDirection: Axis.horizontal,
                                   ),
                                 ),
                         ),

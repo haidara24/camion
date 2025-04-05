@@ -10,6 +10,7 @@ import 'package:camion/business_logic/bloc/post_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/driver_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_active_status_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/fix_type_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_fixes/truck_fix_list_bloc.dart';
@@ -32,6 +33,7 @@ import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/driver/tracking_shippment_screen.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
+import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,14 +65,35 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   Timer? _timer;
 
   Future<void> _requestPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      showCustomSnackBar(
+        context: context,
+        backgroundColor: Colors.orange,
+        message: 'خدمة تحديد الموقع غير مفعلة..',
+      );
+    }
+    permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.deniedForever) {
-        // Handle case when user denies permission permanently
-        print("Location permissions are permanently denied.");
-        return;
+      if (permission == LocationPermission.denied) {
+        showCustomSnackBar(
+          context: context,
+          backgroundColor: Colors.orange,
+          message: 'Location permissions are denied',
+        );
       }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      showCustomSnackBar(
+        context: context,
+        backgroundColor: Colors.orange,
+        message:
+            'Location permissions are permanently denied, we cannot request permissions.',
+      );
     }
   }
 
@@ -78,25 +101,23 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     prefs = await SharedPreferences.getInstance();
     int truckId = prefs.getInt("truckId") ?? 0;
     String gpsId = prefs.getString("gpsId") ?? "";
-    _locationSubscription?.cancel();
-    _timer?.cancel();
 
     await _requestPermission();
-
-    if (gpsId.isEmpty || gpsId.length < 8) {
+    print(gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN");
+    if (gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN") {
       _locationSubscription = Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
           distanceFilter: 10, // Update when moving 10 meters
         ),
       ).listen((Position position) async {
+        print(position);
         if (_timer == null || !_timer!.isActive) {
           if (truckId != 0) {
             var jwt = prefs.getString("token");
             var rs = await HttpHelper.patch('$TRUCKS_ENDPOINT$truckId/',
                 {'location_lat': '${position.latitude},${position.longitude}'},
                 apiToken: jwt);
-            _timer = Timer(const Duration(seconds: 10), () {});
           }
         }
       });
@@ -110,28 +131,34 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
           var rs = await HttpHelper.patch(
               '$TRUCKS_ENDPOINT$truckId/', {'location_lat': location},
               apiToken: jwt);
-          _timer = Timer(const Duration(seconds: 10), () {});
         }
       }
     }
   }
 
-  _stopListening() {
-    _locationSubscription?.cancel();
-    // setState(() {
-    //   _locationSubscription = null;
-    // });
+  int truckId = 0;
+
+  void getTruckId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      truckId = prefs.getInt("truckId") ?? 0;
+    });
   }
 
   @override
   void initState() {
     super.initState();
     GpsRepository.getTokenForGps();
+    getTruckId();
 
     // _getLocation();
-    _listenLocation();
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      print("timer");
+      _listenLocation();
+    });
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<FixTypeListBloc>(context).add(FixTypeListLoad());
+    BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
     BlocProvider.of<GovernoratesListBloc>(context)
         .add(GovernoratesListLoadEvent());
     BlocProvider.of<TruckPricesListBloc>(context)
@@ -141,7 +168,10 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     BlocProvider.of<TruckActiveStatusBloc>(context).add(
       LoadTruckActiveStatusEvent(),
     );
-
+    BlocProvider.of<UnassignedShipmentListBloc>(context)
+        .add(UnassignedShipmentListLoadEvent());
+    BlocProvider.of<DriverActiveShipmentBloc>(context)
+        .add(DriverActiveShipmentLoadEvent("R"));
     _tabController = TabController(
       initialIndex: 0,
       length: 5,
@@ -159,9 +189,11 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
   void dispose() {
     // Remove the WidgetsBindingObserver when the state is disposed
     // scroll.dispose();
-    super.dispose();
+    _locationSubscription?.cancel();
+    _timer?.cancel();
     _tabController.dispose();
-    _stopListening();
+    _locationSubscription?.cancel();
+    super.dispose();
   }
 
   void changeSelectedValue(
@@ -182,28 +214,26 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         }
       case 1:
         {
-          BlocProvider.of<DriverRequestsListBloc>(context)
-              .add(const DriverRequestsListLoadEvent(null));
           setState(() {
             title = AppLocalizations.of(context)!.translate('incoming_orders');
-            currentScreen = IncomingShippmentLogScreen();
+            currentScreen = IncomingShippmentLogScreen(
+              truckId: truckId,
+            );
           });
           break;
         }
       case 2:
         {
-          BlocProvider.of<UnassignedShipmentListBloc>(context)
-              .add(UnassignedShipmentListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('shipment_search');
-            currentScreen = SearchShippmentScreen();
+            currentScreen = SearchShippmentScreen(
+              truckId: truckId,
+            );
           });
           break;
         }
       case 3:
         {
-          BlocProvider.of<DriverActiveShipmentBloc>(context)
-              .add(DriverActiveShipmentLoadEvent("R"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_path');
 
@@ -216,7 +246,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_prices');
 
-            currentScreen = DriverPricesScreen();
+            currentScreen = DriverPricesScreen(
+              truckId: truckId,
+            );
           });
           break;
         }
@@ -433,7 +465,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const FixesListScreen(),
+                                  builder: (context) => FixesListScreen(
+                                    truckId: truckId,
+                                  ),
                                 ));
                             _scaffoldKey.currentState!.closeDrawer();
                           },

@@ -5,6 +5,7 @@ import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
+import 'package:camion/views/screens/driver/search_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
@@ -179,24 +180,56 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       child: ListTile(
                                         // contentPadding: EdgeInsets.zero,
                                         onTap: () async {
+                                          print(notificationProvider
+                                              .notifications[index]!
+                                              .noteficationType);
                                           if (notificationProvider
                                                   .notifications[index]!
                                                   .noteficationType ==
                                               "J") {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ApprovalRequestDetailsScreen(
-                                                  type: notificationProvider
-                                                      .notifications[index]!
-                                                      .noteficationType!,
-                                                  objectId: notificationProvider
-                                                      .notifications[index]!
-                                                      .objectId!,
+                                            if (usertype == "Merchant") {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ApprovalRequestDetailsScreen(
+                                                    type: notificationProvider
+                                                        .notifications[index]!
+                                                        .noteficationType!,
+                                                    objectId:
+                                                        notificationProvider
+                                                            .notifications[
+                                                                index]!
+                                                            .objectId!,
+                                                  ),
                                                 ),
-                                              ),
-                                            );
+                                              );
+                                            } else if (usertype == "Driver") {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      SubShipmentDetailsScreen(
+                                                    objectId:
+                                                        notificationProvider
+                                                            .notifications[
+                                                                index]!
+                                                            .objectId!,
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              // Navigator.push(
+                                              //   context,
+                                              //   MaterialPageRoute(
+                                              //     builder: (context) =>
+                                              //         SearchShipmentDetailsScreen(
+                                              //           userType: usertype,
+                                              //           isOwner: true,
+                                              //     ),
+                                              //   ),
+                                              // );
+                                            }
                                           } else if (notificationProvider
                                                   .notifications[index]!
                                                   .noteficationType ==
@@ -282,6 +315,21 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 builder: (context) =>
                                                     PaymentInstructionDetailsScreen(
                                                   shipment: notificationProvider
+                                                      .notifications[index]!
+                                                      .objectId!,
+                                                ),
+                                              ),
+                                            );
+                                          } else if (notificationProvider
+                                                  .notifications[index]!
+                                                  .noteficationType ==
+                                              "F") {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SubShipmentDetailsScreen(
+                                                  objectId: notificationProvider
                                                       .notifications[index]!
                                                       .objectId!,
                                                 ),

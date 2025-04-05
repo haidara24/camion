@@ -13,7 +13,9 @@ import 'package:intl/intl.dart' as intl;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchShippmentScreen extends StatefulWidget {
-  const SearchShippmentScreen({Key? key}) : super(key: key);
+  final int truckId;
+  const SearchShippmentScreen({Key? key, required this.truckId})
+      : super(key: key);
 
   @override
   State<SearchShippmentScreen> createState() => _SearchShippmentScreenState();
@@ -85,22 +87,6 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
         .add(UnassignedShipmentListLoadEvent());
   }
 
-  int truckId = 0;
-
-  void getTruckId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState((){
-
-    truckId = prefs.getInt("truckId") ?? 0;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getTruckId();
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -113,7 +99,7 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
             backgroundColor: Colors.grey[100],
             body: RefreshIndicator(
               onRefresh: onRefresh,
-              child: truckId == 0
+              child: widget.truckId == 0
                   ? Padding(
                       padding: const EdgeInsets.all(16),
                       child: NoTruckProfileWidget(

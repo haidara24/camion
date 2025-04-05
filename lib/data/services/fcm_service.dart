@@ -50,7 +50,6 @@ class NotificationServices {
 
     notificationProvider =
         Provider.of<NotificationProvider>(context, listen: false);
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     requestNotificationPermission();
     getDeviceToken();
@@ -81,6 +80,7 @@ class NotificationServices {
       forgroundMessage();
       loadAppAssets(message);
     });
+    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     // setupInteractMessage(context);
   }
@@ -103,7 +103,7 @@ class NotificationServices {
       badge: true,
       sound: true,
       provisional: false,
-      announcement: false,
+      announcement: true,
       carPlay: false,
       criticalAlert: false,
     );

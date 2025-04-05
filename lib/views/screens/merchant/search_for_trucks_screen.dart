@@ -27,9 +27,17 @@ import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart' as intel;
 import 'package:timeline_tile/timeline_tile.dart';
 
-class SearchForTrucksScreen extends StatelessWidget {
+class SearchForTrucksScreen extends StatefulWidget {
   SearchForTrucksScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SearchForTrucksScreen> createState() => _SearchForTrucksScreenState();
+}
+
+class _SearchForTrucksScreenState extends State<SearchForTrucksScreen> {
   int selectedIndex = 0;
+
+  int truckNum = -1;
 
   int calculatePrice(
     double distance,
@@ -375,7 +383,14 @@ class SearchForTrucksScreen extends StatelessWidget {
                               child: truckTypeList(shipmentProvider, context,
                                   localeState.value.languageCode),
                             ),
-                            BlocBuilder<TrucksListBloc, TrucksListState>(
+                            BlocConsumer<TrucksListBloc, TrucksListState>(
+                              listener: (context, state) {
+                                if (state is TrucksListLoadedSuccess) {
+                                  setState(() {
+                                    truckNum = state.trucks.length;
+                                  });
+                                }
+                              },
                               builder: (context, state) {
                                 if (state is TrucksListLoadedSuccess) {
                                   return state.trucks.isEmpty
@@ -394,8 +409,7 @@ class SearchForTrucksScreen extends StatelessWidget {
                                                 ),
                                                 Text(
                                                   AppLocalizations.of(context)!
-                                                      .translate(
-                                                          'search_for_truck'),
+                                                      .translate('no_trucks'),
                                                   style: const TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
@@ -764,8 +778,8 @@ class SearchForTrucksScreen extends StatelessWidget {
                                         print(state.errorMessage);
                                       }
                                     },
-                                    builder: (context, state) {
-                                      if (state
+                                    builder: (context, btnstate) {
+                                      if (btnstate
                                           is ShippmentLoadingProgressState) {
                                         return SizedBox(
                                           width: MediaQuery.of(context)
@@ -786,7 +800,9 @@ class SearchForTrucksScreen extends StatelessWidget {
                                           child: CustomButton(
                                             title: Text(
                                               AppLocalizations.of(context)!
-                                                  .translate('send_request'),
+                                                  .translate(truckNum == 0
+                                                      ? 'leave_it_public'
+                                                      : 'send_request'),
                                               style: TextStyle(
                                                 fontSize: 20.sp,
                                               ),

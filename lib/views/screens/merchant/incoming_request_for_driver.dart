@@ -25,7 +25,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show SystemUiOverlayStyle, rootBundle;
 import 'package:intl/intl.dart' as intel;
 
 class IncomingRequestForDriverScreen extends StatefulWidget {
@@ -281,381 +281,384 @@ class _IncomingRequestForDriverScreenState
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: BlocBuilder<LocaleCubit, LocaleState>(
-        builder: (context, localeState) {
-          return Directionality(
-            textDirection: localeState.value.languageCode == 'en'
-                ? TextDirection.ltr
-                : TextDirection.rtl,
-            child: Scaffold(
-              appBar: DriverAppBar(
-                title:
-                    AppLocalizations.of(context)!.translate('shipment_details'),
-              ),
-              body:
-                  BlocConsumer<SubShipmentDetailsBloc, SubShipmentDetailsState>(
-                listener: (context, state) {
-                  if (state is SubShipmentDetailsLoadedSuccess) {
-                    createMarkerIcons(state.shipment);
-                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      setLoadDate(state.shipment.pickupDate!);
-                      setLoadTime(state.shipment.pickupDate!);
-                    });
-                  }
-                },
-                builder: (context, shipmentstate) {
-                  if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: 300.h,
-                            child: Stack(
-                              children: [
-                                GoogleMap(
-                                  onMapCreated:
-                                      (GoogleMapController controller) async {
-                                    setState(() {
-                                      _controller = controller;
-                                      _controller.setMapStyle(_mapStyle);
-                                    });
-                                    initMapbounds(shipmentstate.shipment);
-                                  },
-                                  myLocationButtonEnabled: false,
-                                  zoomGesturesEnabled: false,
-                                  scrollGesturesEnabled: false,
-                                  tiltGesturesEnabled: false,
-                                  rotateGesturesEnabled: false,
-                                  zoomControlsEnabled: false,
-                                  initialCameraPosition: CameraPosition(
-                                      target: LatLng(
-                                          double.parse(shipmentstate
-                                              .shipment.pathpoints!
-                                              .singleWhere((element) =>
-                                                  element.pointType == "P")
-                                              .location!
-                                              .split(",")[0]),
-                                          double.parse(shipmentstate
-                                              .shipment.pathpoints!
-                                              .singleWhere((element) =>
-                                                  element.pointType == "P")
-                                              .location!
-                                              .split(",")[1])),
-                                      zoom: 14.47),
-                                  gestureRecognizers: const {},
-                                  markers: markers,
-                                  polylines: {
-                                    Polyline(
-                                      polylineId: const PolylineId("route"),
-                                      points: deserializeLatLng(
-                                          shipmentstate.shipment.paths!),
-                                      color: AppColor.deepYellow,
-                                      width: 4,
-                                    ),
-                                  },
-                                  // mapType: shipmentProvider.mapType,
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("shipment_route"),
-                                ),
-                                ShipmentPathVerticalWidget(
-                                  pathpoints:
-                                      shipmentstate.shipment.pathpoints!,
-                                  pickupDate:
-                                      shipmentstate.shipment.pickupDate!,
-                                  deliveryDate:
-                                      shipmentstate.shipment.deliveryDate!,
-                                  langCode: localeState.value.languageCode,
-                                  mini: false,
-                                ),
-                                const Divider(
-                                  height: 32,
-                                ),
-                                SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("commodity_info"),
-                                ),
-                                const SizedBox(height: 4),
-                                Commodity_info_widget(
-                                    shipmentItems:
-                                        shipmentstate.shipment.shipmentItems!),
-                                const Divider(
-                                  height: 32,
-                                ),
-                                SectionTitle(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("shipment_route_statistics"),
-                                ),
-                                const SizedBox(height: 4),
-                                PathStatisticsWidget(
-                                  distance: shipmentstate.shipment.distance!,
-                                  period: shipmentstate.shipment.period!,
-                                ),
-                                const Divider(
-                                  height: 32,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      BlocConsumer<AcceptRequestForDriverBloc,
-                                          AcceptRequestForDriverState>(
-                                        listener: (context, acceptstate) {
-                                          if (acceptstate
-                                              is AcceptRequestForDriverSuccessState) {
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const ControlView(),
-                                                ),
-                                                (route) => false);
-                                          }
-                                        },
-                                        builder: (context, acceptstate) {
-                                          if (acceptstate
-                                              is AcceptRequestLoadingProgressState) {
-                                            return CustomButton(
-                                              title: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .4,
-                                                child: Center(
-                                                  child: LoadingIndicator(),
-                                                ),
-                                              ),
-                                              onTap: () {},
-                                              // color: Colors.white,
-                                            );
-                                          } else {
-                                            return CustomButton(
-                                              title: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .4,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Center(
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate(
-                                                                'accept'),
-                                                        style: const TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 30.w,
-                                                      width: 30.w,
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/white/notification_shipment_complete.svg",
-                                                        width: 30.w,
-                                                        height: 30.w,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                showDialog<void>(
-                                                  context: context,
-                                                  barrierDismissible:
-                                                      false, // user must tap button!
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      title: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate(
-                                                                'accept'),
-                                                      ),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'cancel')),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                        TextButton(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'ok')),
-                                                          onPressed: () {
-                                                            print("asd");
-                                                            BlocProvider.of<
-                                                                        AcceptRequestForDriverBloc>(
-                                                                    context)
-                                                                .add(
-                                                              AcceptRequestButtonPressedEvent(
-                                                                shipmentstate
-                                                                    .shipment
-                                                                    .approvalrequest!,
-                                                              ),
-                                                            );
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              // color: Colors.white,
-                                            );
-                                          }
-                                        },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: AppColor.deepBlack, // Make status bar transparent
+        statusBarIconBrightness:
+            Brightness.light, // Light icons for dark backgrounds
+        systemNavigationBarColor: Colors.grey[100], // Works on Android
+        systemNavigationBarIconBrightness: Brightness.light,
+      ),
+      child: SafeArea(
+        child: BlocBuilder<LocaleCubit, LocaleState>(
+          builder: (context, localeState) {
+            return Directionality(
+              textDirection: localeState.value.languageCode == 'en'
+                  ? TextDirection.ltr
+                  : TextDirection.rtl,
+              child: Scaffold(
+                appBar: DriverAppBar(
+                  title: AppLocalizations.of(context)!
+                      .translate('shipment_details'),
+                ),
+                body: BlocConsumer<SubShipmentDetailsBloc,
+                    SubShipmentDetailsState>(
+                  listener: (context, state) {
+                    if (state is SubShipmentDetailsLoadedSuccess) {
+                      createMarkerIcons(state.shipment);
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        setLoadDate(state.shipment.pickupDate!);
+                        setLoadTime(state.shipment.pickupDate!);
+                      });
+                    }
+                  },
+                  builder: (context, shipmentstate) {
+                    if (shipmentstate is SubShipmentDetailsLoadedSuccess) {
+                      return SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 300.h,
+                              child: Stack(
+                                children: [
+                                  GoogleMap(
+                                    onMapCreated:
+                                        (GoogleMapController controller) async {
+                                      setState(() {
+                                        _controller = controller;
+                                        _controller.setMapStyle(_mapStyle);
+                                      });
+                                      initMapbounds(shipmentstate.shipment);
+                                    },
+                                    myLocationButtonEnabled: false,
+                                    zoomGesturesEnabled: false,
+                                    scrollGesturesEnabled: false,
+                                    tiltGesturesEnabled: false,
+                                    rotateGesturesEnabled: false,
+                                    zoomControlsEnabled: false,
+                                    initialCameraPosition: CameraPosition(
+                                        target: LatLng(
+                                            double.parse(shipmentstate
+                                                .shipment.pathpoints!
+                                                .singleWhere((element) =>
+                                                    element.pointType == "P")
+                                                .location!
+                                                .split(",")[0]),
+                                            double.parse(shipmentstate
+                                                .shipment.pathpoints!
+                                                .singleWhere((element) =>
+                                                    element.pointType == "P")
+                                                .location!
+                                                .split(",")[1])),
+                                        zoom: 14.47),
+                                    gestureRecognizers: const {},
+                                    markers: markers,
+                                    polylines: {
+                                      Polyline(
+                                        polylineId: const PolylineId("route"),
+                                        points: deserializeLatLng(
+                                            shipmentstate.shipment.paths!),
+                                        color: AppColor.deepYellow,
+                                        width: 4,
                                       ),
-                                      BlocConsumer<RejectRequestForDriverBloc,
-                                          RejectRequestForDriverState>(
-                                        listener: (context, rejectstate) {
-                                          if (rejectstate
-                                              is RejectRequestForDriverSuccessState) {
-                                            Navigator.pushAndRemoveUntil(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const ControlView(),
+                                    },
+                                    // mapType: shipmentProvider.mapType,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("shipment_route"),
+                                  ),
+                                  ShipmentPathVerticalWidget(
+                                    pathpoints:
+                                        shipmentstate.shipment.pathpoints!,
+                                    pickupDate:
+                                        shipmentstate.shipment.pickupDate!,
+                                    deliveryDate:
+                                        shipmentstate.shipment.deliveryDate!,
+                                    langCode: localeState.value.languageCode,
+                                    mini: false,
+                                  ),
+                                  const Divider(
+                                    height: 32,
+                                  ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("commodity_info"),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Commodity_info_widget(
+                                      shipmentItems: shipmentstate
+                                          .shipment.shipmentItems!),
+                                  const Divider(
+                                    height: 32,
+                                  ),
+                                  SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("shipment_route_statistics"),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  PathStatisticsWidget(
+                                    distance: shipmentstate.shipment.distance!,
+                                    period: shipmentstate.shipment.period!,
+                                  ),
+                                  const Divider(
+                                    height: 32,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        BlocConsumer<AcceptRequestForDriverBloc,
+                                            AcceptRequestForDriverState>(
+                                          listener: (context, acceptstate) {
+                                            if (acceptstate
+                                                is AcceptRequestForDriverSuccessState) {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ControlView(),
+                                                  ),
+                                                  (route) => false);
+                                            }
+                                          },
+                                          builder: (context, acceptstate) {
+                                            if (acceptstate
+                                                is AcceptRequestLoadingProgressState) {
+                                              return CustomButton(
+                                                title: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: Center(
+                                                    child: LoadingIndicator(),
+                                                  ),
                                                 ),
-                                                (route) => false);
-                                          }
-                                        },
-                                        builder: (context, rejectstate) {
-                                          if (rejectstate
-                                              is RejectRequestLoadingProgressState) {
-                                            return CustomButton(
-                                              title: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .4,
-                                                child: Center(
-                                                  child: LoadingIndicator(),
-                                                ),
-                                              ),
-                                              onTap: () {},
-                                              color: Colors.white,
-                                            );
-                                          } else {
-                                            return CustomButton(
-                                              title: SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    .4,
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceAround,
-                                                  children: [
-                                                    Center(
-                                                      child: Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate(
-                                                                'cancel'),
-                                                        style: TextStyle(
-                                                          color: AppColor
-                                                              .deepYellow,
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 30.w,
-                                                      width: 30.w,
-                                                      child: SvgPicture.asset(
-                                                        "assets/icons/orange/notification_shipment_cancelation.svg",
-                                                        width: 30.w,
-                                                        height: 30.w,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              onTap: () {
-                                                showDialog<void>(
-                                                  context: context,
-                                                  barrierDismissible:
-                                                      false, // user must tap button!
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      backgroundColor:
-                                                          Colors.white,
-                                                      title: Text(
+                                                onTap: () {},
+                                                // color: Colors.white,
+                                              );
+                                            } else {
+                                              return CustomButton(
+                                                title: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Center(
+                                                        child: Text(
                                                           AppLocalizations.of(
                                                                   context)!
                                                               .translate(
-                                                                  'reject')),
-                                                      content: const SizedBox
-                                                          .shrink(),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'cancel')),
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
+                                                                  'accept'),
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
-                                                        TextButton(
-                                                          child: Text(
-                                                              AppLocalizations.of(
-                                                                      context)!
-                                                                  .translate(
-                                                                      'ok')),
-                                                          onPressed: () {
-                                                            if (_rejectformKey
-                                                                .currentState!
-                                                                .validate()) {
-                                                              _rejectformKey
-                                                                  .currentState!
-                                                                  .save();
+                                                      ),
+                                                      SizedBox(
+                                                        height: 30.w,
+                                                        width: 30.w,
+                                                        child: SvgPicture.asset(
+                                                          "assets/icons/white/notification_shipment_complete.svg",
+                                                          width: 30.w,
+                                                          height: 30.w,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  showDialog<void>(
+                                                    context: context,
+                                                    barrierDismissible:
+                                                        false, // user must tap button!
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        title: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'accept'),
+                                                        ),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'cancel')),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                          TextButton(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'ok')),
+                                                            onPressed: () {
+                                                              print("asd");
+                                                              BlocProvider.of<
+                                                                          AcceptRequestForDriverBloc>(
+                                                                      context)
+                                                                  .add(
+                                                                AcceptRequestButtonPressedEvent(
+                                                                  shipmentstate
+                                                                      .shipment
+                                                                      .approvalrequest!,
+                                                                ),
+                                                              );
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                // color: Colors.white,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                        BlocConsumer<RejectRequestForDriverBloc,
+                                            RejectRequestForDriverState>(
+                                          listener: (context, rejectstate) {
+                                            if (rejectstate
+                                                is RejectRequestForDriverSuccessState) {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const ControlView(),
+                                                  ),
+                                                  (route) => false);
+                                            }
+                                          },
+                                          builder: (context, rejectstate) {
+                                            if (rejectstate
+                                                is RejectRequestLoadingProgressState) {
+                                              return CustomButton(
+                                                title: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: Center(
+                                                    child: LoadingIndicator(),
+                                                  ),
+                                                ),
+                                                onTap: () {},
+                                                color: Colors.white,
+                                              );
+                                            } else {
+                                              return CustomButton(
+                                                title: SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .4,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      Center(
+                                                        child: Text(
+                                                          AppLocalizations.of(
+                                                                  context)!
+                                                              .translate(
+                                                                  'cancel'),
+                                                          style: TextStyle(
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 30.w,
+                                                        width: 30.w,
+                                                        child: SvgPicture.asset(
+                                                          "assets/icons/orange/notification_shipment_cancelation.svg",
+                                                          width: 30.w,
+                                                          height: 30.w,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                onTap: () {
+                                                  showDialog<void>(
+                                                    context: context,
+                                                    barrierDismissible:
+                                                        false, // user must tap button!
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        backgroundColor:
+                                                            Colors.white,
+                                                        title: Text(
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'reject')),
+                                                        content: const SizedBox
+                                                            .shrink(),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'cancel')),
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                          ),
+                                                          TextButton(
+                                                            child: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'ok')),
+                                                            onPressed: () {
                                                               BlocProvider.of<
                                                                           RejectRequestForDriverBloc>(
                                                                       context)
@@ -669,36 +672,36 @@ class _IncomingRequestForDriverScreenState
                                                               Navigator.of(
                                                                       context)
                                                                   .pop();
-                                                            }
-                                                          },
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                              color: Colors.white,
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ],
+                                                            },
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                                color: Colors.white,
+                                              );
+                                            }
+                                          },
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Center(child: LoadingIndicator());
-                  }
-                },
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Center(child: LoadingIndicator());
+                    }
+                  },
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

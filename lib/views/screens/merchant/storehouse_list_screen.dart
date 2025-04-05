@@ -44,8 +44,7 @@ class _StorehouseListScreenState extends State<StorehouseListScreen> {
           statusBarColor: AppColor.deepBlack, // Make status bar transparent
           statusBarIconBrightness:
               Brightness.light, // Light icons for dark backgrounds
-          systemNavigationBarColor:
-              AppColor.landscapeNatural, // Works on Android
+          systemNavigationBarColor: Colors.white, // Works on Android
           systemNavigationBarIconBrightness: Brightness.dark,
         ),
         child: SafeArea(
@@ -120,7 +119,7 @@ class _StorehouseListScreenState extends State<StorehouseListScreen> {
                                                   builder:
                                                       (context, deletestate) {
                                                     if (deletestate
-                                                            is DeleteTruckPriceLoadingProgressState &&
+                                                            is DeleteStoreLoadingProgressState &&
                                                         selectedIndex ==
                                                             index) {
                                                       return LoadingIndicator();
@@ -136,6 +135,8 @@ class _StorehouseListScreenState extends State<StorehouseListScreen> {
                                                                 selectedIndex =
                                                                     index;
                                                               });
+                                                              print(
+                                                                  selectedIndex);
                                                               showDialog<void>(
                                                                 context:
                                                                     context,

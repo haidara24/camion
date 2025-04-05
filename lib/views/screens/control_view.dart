@@ -27,10 +27,13 @@ class ControlView extends StatefulWidget {
 
 class _ControlViewState extends State<ControlView> {
   late SharedPreferences prefs;
+  NotificationServices notificationServices = NotificationServices();
+
   @override
   void initState() {
     super.initState();
-
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
     initPrefs();
   }
 

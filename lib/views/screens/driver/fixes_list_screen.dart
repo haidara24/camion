@@ -15,28 +15,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shimmer/shimmer.dart';
 
 class FixesListScreen extends StatefulWidget {
-  const FixesListScreen({Key? key}) : super(key: key);
+  final int truckId;
+  const FixesListScreen({
+    Key? key,
+    required this.truckId,
+  }) : super(key: key);
 
   @override
   State<FixesListScreen> createState() => _FixesListScreenState();
 }
 
 class _FixesListScreenState extends State<FixesListScreen> {
-  int truckId = 0;
-
-  void getTruckId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      truckId = prefs.getInt("truckId") ?? 0;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getTruckId();
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -59,7 +48,7 @@ class _FixesListScreenState extends State<FixesListScreen> {
                 appBar: DriverAppBar(
                   title: AppLocalizations.of(context)!.translate('my_fixes'),
                 ),
-                floatingActionButton: truckId == 0
+                floatingActionButton: widget.truckId == 0
                     ? null
                     : FloatingActionButton(
                         onPressed: () => Navigator.push(
@@ -83,7 +72,7 @@ class _FixesListScreenState extends State<FixesListScreen> {
                       SizedBox(
                         height: 5.h,
                       ),
-                      truckId == 0
+                      widget.truckId == 0
                           ? Padding(
                               padding: const EdgeInsets.all(16),
                               child: NoTruckProfileWidget(

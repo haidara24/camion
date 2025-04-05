@@ -358,7 +358,6 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
           child: Scaffold(
             backgroundColor: Colors.grey[100],
             body: RefreshIndicator(
-              // physics: const NeverScrollableScrollPhysics(),
               onRefresh: onRefresh,
               child: SingleChildScrollView(
                 child: Column(

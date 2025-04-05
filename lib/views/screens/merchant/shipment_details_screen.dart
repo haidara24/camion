@@ -27,7 +27,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show SystemUiOverlayStyle, rootBundle;
 import 'package:intl/intl.dart' as intel;
 import 'package:shimmer/shimmer.dart';
 
@@ -658,924 +658,940 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
       builder: (context, localeState) {
-        return SafeArea(
-          child: Scaffold(
-            appBar: CustomAppBar(
-              title:
-                  "${AppLocalizations.of(context)!.translate('shipment_number')}: ${widget.shipment}",
-            ),
-            body: BlocConsumer<ShipmentDetailsBloc, ShipmentDetailsState>(
-              listener: (context, state) {
-                if (state is ShipmentDetailsLoadedSuccess) {
-                  createMarkerIcons(state.shipment);
-                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                    setLoadDate(state.shipment.subshipments![0].pickupDate!);
-                    setLoadTime(state.shipment.subshipments![0].pickupDate!);
-                  });
-                }
-              },
-              builder: (context, shipmentstate) {
-                if (shipmentstate is ShipmentDetailsLoadedSuccess) {
-                  return SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: 300.h,
-                          child: Stack(
-                            children: [
-                              GoogleMap(
-                                onMapCreated:
-                                    (GoogleMapController controller) async {
-                                  setState(() {
-                                    _controller = controller;
-                                    // _controller.setMapStyle(_mapStyle);
-                                  });
-                                  initMapbounds(shipmentstate.shipment);
-                                },
-                                myLocationButtonEnabled: false,
-                                zoomGesturesEnabled: false,
-                                scrollGesturesEnabled: false,
-                                tiltGesturesEnabled: false,
-                                rotateGesturesEnabled: false,
-                                zoomControlsEnabled: false,
-                                initialCameraPosition: CameraPosition(
-                                    target: LatLng(
-                                        double.parse(shipmentstate
-                                            .shipment
-                                            .subshipments![selectedIndex]
-                                            .pathpoints!
-                                            .singleWhere((element) =>
-                                                element.pointType == "P")
-                                            .location!
-                                            .split(",")[0]),
-                                        double.parse(shipmentstate
-                                            .shipment
-                                            .subshipments![selectedIndex]
-                                            .pathpoints!
-                                            .singleWhere((element) =>
-                                                element.pointType == "P")
-                                            .location!
-                                            .split(",")[1])),
-                                    zoom: 14.45),
-                                gestureRecognizers: const {},
-                                markers: markers,
-                                polylines: {
-                                  Polyline(
-                                    polylineId: const PolylineId("route"),
-                                    points: deserializeLatLng(shipmentstate
-                                        .shipment
-                                        .subshipments![selectedIndex]
-                                        .paths!),
-                                    color: AppColor.deepYellow,
-                                    width: 4,
-                                  ),
-                                },
-                                // mapType: shipmentProvider.mapType,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 4,
-                                child: InkWell(
-                                  onTap: () {
-                                    // Navigator.push(
-                                    //   context,
-                                    //   PageRouteBuilder(
-                                    //     pageBuilder: (context, animation,
-                                    //             secondaryAnimation) =>
-                                    //         ShipmentDetailsMapScreen(
-                                    //       shipment: shipmentstate.shipment,
-                                    //     ),
-                                    //     transitionDuration:
-                                    //         const Duration(milliseconds: 1000),
-                                    //     transitionsBuilder: (context, animation,
-                                    //         secondaryAnimation, child) {
-                                    //       var begin = const Offset(0.0, -1.0);
-                                    //       var end = Offset.zero;
-                                    //       var curve = Curves.ease;
-
-                                    //       var tween = Tween(
-                                    //               begin: begin, end: end)
-                                    //           .chain(CurveTween(curve: curve));
-
-                                    //       return SlideTransition(
-                                    //         position: animation.drive(tween),
-                                    //         child: child,
-                                    //       );
-                                    //     },
-                                    //   ),
-                                    // ).then((value) {
-                                    //   initMapbounds(shipmentstate.shipment);
-                                    // });
-                                    // shipmentProvider.setMapMode(MapType.satellite);
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: AppColor.deepBlack, // Make status bar transparent
+            statusBarIconBrightness:
+                Brightness.light, // Light icons for dark backgrounds
+            systemNavigationBarColor: Colors.white, // Works on Android
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          child: SafeArea(
+            child: Scaffold(
+              appBar: CustomAppBar(
+                title:
+                    "${AppLocalizations.of(context)!.translate('shipment_number')}: ${widget.shipment}",
+              ),
+              body: BlocConsumer<ShipmentDetailsBloc, ShipmentDetailsState>(
+                listener: (context, state) {
+                  if (state is ShipmentDetailsLoadedSuccess) {
+                    createMarkerIcons(state.shipment);
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      setLoadDate(state.shipment.subshipments![0].pickupDate!);
+                      setLoadTime(state.shipment.subshipments![0].pickupDate!);
+                    });
+                  }
+                },
+                builder: (context, shipmentstate) {
+                  if (shipmentstate is ShipmentDetailsLoadedSuccess) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 300.h,
+                            child: Stack(
+                              children: [
+                                GoogleMap(
+                                  onMapCreated:
+                                      (GoogleMapController controller) async {
+                                    setState(() {
+                                      _controller = controller;
+                                      // _controller.setMapStyle(_mapStyle);
+                                    });
+                                    initMapbounds(shipmentstate.shipment);
                                   },
-                                  child: AbsorbPointer(
-                                    absorbing: false,
-                                    child: SizedBox(
-                                      height: 50,
-                                      width: 70,
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.zoom_out_map,
-                                          color: Colors.grey[400],
-                                          size: 35,
+                                  myLocationButtonEnabled: false,
+                                  zoomGesturesEnabled: false,
+                                  scrollGesturesEnabled: false,
+                                  tiltGesturesEnabled: false,
+                                  rotateGesturesEnabled: false,
+                                  zoomControlsEnabled: false,
+                                  initialCameraPosition: CameraPosition(
+                                      target: LatLng(
+                                          double.parse(shipmentstate
+                                              .shipment
+                                              .subshipments![selectedIndex]
+                                              .pathpoints!
+                                              .singleWhere((element) =>
+                                                  element.pointType == "P")
+                                              .location!
+                                              .split(",")[0]),
+                                          double.parse(shipmentstate
+                                              .shipment
+                                              .subshipments![selectedIndex]
+                                              .pathpoints!
+                                              .singleWhere((element) =>
+                                                  element.pointType == "P")
+                                              .location!
+                                              .split(",")[1])),
+                                      zoom: 14.45),
+                                  gestureRecognizers: const {},
+                                  markers: markers,
+                                  polylines: {
+                                    Polyline(
+                                      polylineId: const PolylineId("route"),
+                                      points: deserializeLatLng(shipmentstate
+                                          .shipment
+                                          .subshipments![selectedIndex]
+                                          .paths!),
+                                      color: AppColor.deepYellow,
+                                      width: 4,
+                                    ),
+                                  },
+                                  // mapType: shipmentProvider.mapType,
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 4,
+                                  child: InkWell(
+                                    onTap: () {
+                                      // Navigator.push(
+                                      //   context,
+                                      //   PageRouteBuilder(
+                                      //     pageBuilder: (context, animation,
+                                      //             secondaryAnimation) =>
+                                      //         ShipmentDetailsMapScreen(
+                                      //       shipment: shipmentstate.shipment,
+                                      //     ),
+                                      //     transitionDuration:
+                                      //         const Duration(milliseconds: 1000),
+                                      //     transitionsBuilder: (context, animation,
+                                      //         secondaryAnimation, child) {
+                                      //       var begin = const Offset(0.0, -1.0);
+                                      //       var end = Offset.zero;
+                                      //       var curve = Curves.ease;
+
+                                      //       var tween = Tween(
+                                      //               begin: begin, end: end)
+                                      //           .chain(CurveTween(curve: curve));
+
+                                      //       return SlideTransition(
+                                      //         position: animation.drive(tween),
+                                      //         child: child,
+                                      //       );
+                                      //     },
+                                      //   ),
+                                      // ).then((value) {
+                                      //   initMapbounds(shipmentstate.shipment);
+                                      // });
+                                      // shipmentProvider.setMapMode(MapType.satellite);
+                                    },
+                                    child: AbsorbPointer(
+                                      absorbing: false,
+                                      child: SizedBox(
+                                        height: 50,
+                                        width: 70,
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.zoom_out_map,
+                                            color: Colors.grey[400],
+                                            size: 35,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate("assigned_trucks"),
-                              ),
-                              const SizedBox(height: 4),
-                              widgetList(
-                                  widget.preview, shipmentstate.shipment),
-                              const Divider(
-                                height: 16,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SectionTitle(
-                                    text:
-                                        "${AppLocalizations.of(context)!.translate("shipment_status")}: ",
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 4),
-                                    child: getStatusImage(
-                                      shipmentstate
-                                          .shipment
-                                          .subshipments![selectedIndex]
-                                          .shipmentStatus!,
-                                    ),
-                                  ),
-                                  SectionBody(
-                                    text: getStatusName(
-                                      shipmentstate
-                                          .shipment
-                                          .subshipments![selectedIndex]
-                                          .shipmentStatus!,
-                                      localeState.value.languageCode,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Divider(
-                                height: 16,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {
-                                        if (shipmentstate
-                                                .shipment
-                                                .subshipments![selectedIndex]
-                                                .shipmentinstructionv2 !=
-                                            null) {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ShipmentInstructionDetailsScreen(
-                                                shipment: shipmentstate
-                                                    .shipment
-                                                    .subshipments![
-                                                        selectedIndex]
-                                                    .id!,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            margin: const EdgeInsets.all(1),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                Radius.circular(10),
-                                              ),
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                color: shipmentstate
-                                                            .shipment
-                                                            .subshipments![
-                                                                selectedIndex]
-                                                            .shipmentinstructionv2 !=
-                                                        null
-                                                    ? AppColor.deepYellow
-                                                    : AppColor.lightGrey,
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      // SizedBox(
-                                                      //     height: 25.h,
-                                                      //     width: 25.w,
-                                                      //     child: SvgPicture.asset(
-                                                      //         "assets/icons/instruction.svg")),
-                                                      const SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            .35,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'shipment_instruction'),
-                                                            style: TextStyle(
-                                                                // color: AppColor.lightBlue,
-                                                                fontSize: 18.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 7.h,
-                                                  ),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            .4,
-                                                    child: shipmentstate
-                                                                .shipment
-                                                                .subshipments![
-                                                                    selectedIndex]
-                                                                .shipmentinstructionv2 ==
-                                                            null
-                                                        ? Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'instruction_not_complete'),
-                                                            maxLines: 2,
-                                                          )
-                                                        : Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'instruction_complete'),
-                                                            maxLines: 2,
-                                                          ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: -5,
-                                            right: localeState
-                                                        .value.languageCode ==
-                                                    "en"
-                                                ? -5
-                                                : null,
-                                            left: localeState
-                                                        .value.languageCode ==
-                                                    "en"
-                                                ? null
-                                                : -5,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          45)),
-                                              child: shipmentstate
-                                                          .shipment
-                                                          .subshipments![
-                                                              selectedIndex]
-                                                          .shipmentinstructionv2 ==
-                                                      null
-                                                  ? Icon(
-                                                      Icons
-                                                          .warning_amber_rounded,
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                    )
-                                                  : Icon(
-                                                      Icons.check_circle,
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                    ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        if (shipmentstate
-                                                .shipment
-                                                .subshipments![selectedIndex]
-                                                .shipmentpaymentv2 !=
-                                            null) {
-                                          BlocProvider.of<
-                                                      ReadPaymentInstructionBloc>(
-                                                  context)
-                                              .add(
-                                            ReadPaymentInstructionLoadEvent(
-                                                shipmentstate
-                                                    .shipment
-                                                    .subshipments![
-                                                        selectedIndex]
-                                                    .shipmentpaymentv2!),
-                                          );
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  PaymentInstructionDetailsScreen(
-                                                shipment: shipmentstate
-                                                    .shipment
-                                                    .subshipments![
-                                                        selectedIndex]
-                                                    .id!,
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                      },
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                .4,
-                                            margin: const EdgeInsets.all(1),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.all(
-                                                Radius.circular(10),
-                                              ),
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                color: shipmentstate
-                                                            .shipment
-                                                            .subshipments![
-                                                                selectedIndex]
-                                                            .shipmentpaymentv2 !=
-                                                        null
-                                                    ? AppColor.deepYellow
-                                                    : AppColor.lightGrey,
-                                                width: 2,
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(5.0),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      // SizedBox(
-                                                      //     height: 25.h,
-                                                      //     width: 25.w,
-                                                      //     child: SvgPicture.asset(
-                                                      //         "assets/icons/payment.svg")),
-                                                      const SizedBox(
-                                                        width: 5,
-                                                      ),
-                                                      SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            .35,
-                                                        child: FittedBox(
-                                                          fit: BoxFit.scaleDown,
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'payment_instruction'),
-                                                            style: TextStyle(
-                                                                // color: AppColor.lightBlue,
-                                                                fontSize: 18.sp,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBox(
-                                                    height: 7.h,
-                                                  ),
-                                                  SizedBox(
-                                                    width:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .width *
-                                                            .4,
-                                                    child: shipmentstate
-                                                                .shipment
-                                                                .subshipments![
-                                                                    selectedIndex]
-                                                                .shipmentpaymentv2 ==
-                                                            null
-                                                        ? Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'payment_not_complete'),
-                                                            maxLines: 2,
-                                                          )
-                                                        : Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    'payment_complete'),
-                                                            maxLines: 2,
-                                                          ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: -5,
-                                            right: localeState
-                                                        .value.languageCode ==
-                                                    "en"
-                                                ? -5
-                                                : null,
-                                            left: localeState
-                                                        .value.languageCode ==
-                                                    "en"
-                                                ? null
-                                                : -5,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          45)),
-                                              child: shipmentstate
-                                                          .shipment
-                                                          .subshipments![
-                                                              selectedIndex]
-                                                          .shipmentpaymentv2 ==
-                                                      null
-                                                  ? Icon(
-                                                      Icons
-                                                          .warning_amber_rounded,
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                    )
-                                                  : Icon(
-                                                      Icons.check_circle,
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                    ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(
+                                  height: 5,
                                 ),
-                              ),
-                              const Divider(
-                                height: 24,
-                              ),
-                              SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate("shipment_route"),
-                              ),
-                              ShipmentPathVerticalWidget(
-                                pathpoints: shipmentstate.shipment
-                                    .subshipments![selectedIndex].pathpoints!,
-                                pickupDate: shipmentstate.shipment
-                                    .subshipments![selectedIndex].pickupDate!,
-                                deliveryDate: shipmentstate.shipment
-                                    .subshipments![selectedIndex].deliveryDate!,
-                                langCode: localeState.value.languageCode,
-                                mini: false,
-                              ),
-                              const Divider(
-                                height: 32,
-                              ),
-                              SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate("commodity_info"),
-                              ),
-                              const SizedBox(height: 4),
-                              Commodity_info_widget(
-                                  shipmentItems: shipmentstate
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("assigned_trucks"),
+                                ),
+                                const SizedBox(height: 4),
+                                widgetList(
+                                    widget.preview, shipmentstate.shipment),
+                                const Divider(
+                                  height: 16,
+                                ),
+                                // Row(
+                                //   mainAxisAlignment: MainAxisAlignment.start,
+                                //   children: [
+                                //     SectionTitle(
+                                //       text:
+                                //           "${AppLocalizations.of(context)!.translate("shipment_status")}: ",
+                                //     ),
+                                //     Padding(
+                                //       padding: const EdgeInsets.symmetric(
+                                //           horizontal: 4),
+                                //       child: getStatusImage(
+                                //         shipmentstate
+                                //             .shipment
+                                //             .subshipments![selectedIndex]
+                                //             .shipmentStatus!,
+                                //       ),
+                                //     ),
+                                //     SectionBody(
+                                //       text: getStatusName(
+                                //         shipmentstate
+                                //             .shipment
+                                //             .subshipments![selectedIndex]
+                                //             .shipmentStatus!,
+                                //         localeState.value.languageCode,
+                                //       ),
+                                //     ),
+                                //   ],
+                                // ),
+                                // const Divider(
+                                //   height: 16,
+                                // ),
+
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("shipment_route"),
+                                ),
+                                ShipmentPathVerticalWidget(
+                                  pathpoints: shipmentstate.shipment
+                                      .subshipments![selectedIndex].pathpoints!,
+                                  pickupDate: shipmentstate.shipment
+                                      .subshipments![selectedIndex].pickupDate!,
+                                  deliveryDate: shipmentstate
                                       .shipment
                                       .subshipments![selectedIndex]
-                                      .shipmentItems),
-                              const Divider(
-                                height: 32,
-                              ),
-                              SectionTitle(
-                                text: AppLocalizations.of(context)!
-                                    .translate("shipment_route_statistics"),
-                              ),
-                              const SizedBox(height: 4),
-                              PathStatisticsWidget(
-                                distance: shipmentstate.shipment
-                                    .subshipments![selectedIndex].distance!,
-                                period: shipmentstate.shipment
-                                    .subshipments![selectedIndex].period!,
-                              ),
-                              const Divider(
-                                height: 32,
-                              ),
-                              Visibility(
-                                visible: shipmentstate
-                                            .shipment
-                                            .subshipments![selectedIndex]
-                                            .truck ==
-                                        null &&
-                                    !widget.preview,
-                                replacement: const SizedBox.shrink(),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 10.0),
-                                  child: CustomButton(
-                                    title: SizedBox(
-                                      width: 200.w,
-                                      child: Row(
-                                        children: [
-                                          Center(
-                                            child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate(
-                                                      'search_for_truck'),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          SizedBox(
-                                            height: 25.w,
-                                            width: 30.w,
-                                            child: SvgPicture.asset(
-                                              "assets/icons/white/search_for_truck.svg",
-                                              width: 25.w,
-                                              height: 30.w,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SearchTruckScreen(
-                                                  subshipmentId: shipmentstate
+                                      .deliveryDate!,
+                                  langCode: localeState.value.languageCode,
+                                  mini: false,
+                                ),
+                                const Divider(
+                                  height: 32,
+                                ),
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("commodity_info"),
+                                ),
+                                const SizedBox(height: 4),
+                                Commodity_info_widget(
+                                    shipmentItems: shipmentstate
+                                        .shipment
+                                        .subshipments![selectedIndex]
+                                        .shipmentItems),
+                                const Divider(
+                                  height: 32,
+                                ),
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("shipment_route_statistics"),
+                                ),
+                                const SizedBox(height: 4),
+                                PathStatisticsWidget(
+                                  distance: shipmentstate.shipment
+                                      .subshipments![selectedIndex].distance!,
+                                  period: shipmentstate.shipment
+                                      .subshipments![selectedIndex].period!,
+                                ),
+                                const Divider(
+                                  height: 32,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          if (shipmentstate
+                                                  .shipment
+                                                  .subshipments![selectedIndex]
+                                                  .shipmentinstructionv2 !=
+                                              null) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ShipmentInstructionDetailsScreen(
+                                                  shipment: shipmentstate
                                                       .shipment
                                                       .subshipments![
                                                           selectedIndex]
-                                                      .id!),
+                                                      .id!,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .4,
+                                              margin: const EdgeInsets.all(1),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: shipmentstate
+                                                              .shipment
+                                                              .subshipments![
+                                                                  selectedIndex]
+                                                              .shipmentinstructionv2 !=
+                                                          null
+                                                      ? AppColor.deepYellow
+                                                      : AppColor.lightGrey,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        // SizedBox(
+                                                        //     height: 25.h,
+                                                        //     width: 25.w,
+                                                        //     child: SvgPicture.asset(
+                                                        //         "assets/icons/instruction.svg")),
+                                                        const SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .35,
+                                                          child: FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'shipment_instruction'),
+                                                              style: TextStyle(
+                                                                  // color: AppColor.lightBlue,
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 7.h,
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .4,
+                                                      child: shipmentstate
+                                                                  .shipment
+                                                                  .subshipments![
+                                                                      selectedIndex]
+                                                                  .shipmentinstructionv2 ==
+                                                              null
+                                                          ? Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'instruction_not_complete'),
+                                                              maxLines: 2,
+                                                            )
+                                                          : Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'instruction_complete'),
+                                                              maxLines: 2,
+                                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: -5,
+                                              right: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? -5
+                                                  : null,
+                                              left: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? null
+                                                  : -5,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45)),
+                                                child: shipmentstate
+                                                            .shipment
+                                                            .subshipments![
+                                                                selectedIndex]
+                                                            .shipmentinstructionv2 ==
+                                                        null
+                                                    ? Icon(
+                                                        Icons
+                                                            .warning_amber_rounded,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      )
+                                                    : Icon(
+                                                        Icons.check_circle,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      );
-                                    },
+                                      ),
+                                      InkWell(
+                                        onTap: () {
+                                          if (shipmentstate
+                                                  .shipment
+                                                  .subshipments![selectedIndex]
+                                                  .shipmentpaymentv2 !=
+                                              null) {
+                                            BlocProvider.of<
+                                                        ReadPaymentInstructionBloc>(
+                                                    context)
+                                                .add(
+                                              ReadPaymentInstructionLoadEvent(
+                                                  shipmentstate
+                                                      .shipment
+                                                      .subshipments![
+                                                          selectedIndex]
+                                                      .shipmentpaymentv2!),
+                                            );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PaymentInstructionDetailsScreen(
+                                                  shipment: shipmentstate
+                                                      .shipment
+                                                      .subshipments![
+                                                          selectedIndex]
+                                                      .id!,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .4,
+                                              margin: const EdgeInsets.all(1),
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(10),
+                                                ),
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                  color: shipmentstate
+                                                              .shipment
+                                                              .subshipments![
+                                                                  selectedIndex]
+                                                              .shipmentpaymentv2 !=
+                                                          null
+                                                      ? AppColor.deepYellow
+                                                      : AppColor.lightGrey,
+                                                  width: 2,
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        // SizedBox(
+                                                        //     height: 25.h,
+                                                        //     width: 25.w,
+                                                        //     child: SvgPicture.asset(
+                                                        //         "assets/icons/payment.svg")),
+                                                        const SizedBox(
+                                                          width: 5,
+                                                        ),
+                                                        SizedBox(
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              .35,
+                                                          child: FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'payment_instruction'),
+                                                              style: TextStyle(
+                                                                  // color: AppColor.lightBlue,
+                                                                  fontSize:
+                                                                      18.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(
+                                                      height: 7.h,
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width *
+                                                              .4,
+                                                      child: shipmentstate
+                                                                  .shipment
+                                                                  .subshipments![
+                                                                      selectedIndex]
+                                                                  .shipmentpaymentv2 ==
+                                                              null
+                                                          ? Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'payment_not_complete'),
+                                                              maxLines: 2,
+                                                            )
+                                                          : Text(
+                                                              AppLocalizations.of(
+                                                                      context)!
+                                                                  .translate(
+                                                                      'payment_complete'),
+                                                              maxLines: 2,
+                                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              top: -5,
+                                              right: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? -5
+                                                  : null,
+                                              left: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? null
+                                                  : -5,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45)),
+                                                child: shipmentstate
+                                                            .shipment
+                                                            .subshipments![
+                                                                selectedIndex]
+                                                            .shipmentpaymentv2 ==
+                                                        null
+                                                    ? Icon(
+                                                        Icons
+                                                            .warning_amber_rounded,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      )
+                                                    : Icon(
+                                                        Icons.check_circle,
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                      ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              // Visibility(
-                              //   visible: !widget.preview,
-                              //   replacement: shipmentstate
-                              //               .shipment.shipmentStatus ==
-                              //           "F"
-                              //       ? Padding(
-                              //           padding: const EdgeInsets.all(10.0),
-                              //           child: BlocConsumer<
-                              //               ReActiveShipmentBloc,
-                              //               ReActiveShipmentState>(
-                              //             listener: (context, reActivestate) {
-                              //               if (reActivestate
-                              //                   is ReActiveShipmentSuccessState) {
-                              //                 Navigator.pushAndRemoveUntil(
-                              //                     context,
-                              //                     MaterialPageRoute(
-                              //                       builder: (context) =>
-                              //                           const ControlView(),
-                              //                     ),
-                              //                     (route) => false);
-                              //               }
-                              //             },
-                              //             builder: (context, reActivestate) {
-                              //               if (reActivestate
-                              //                   is ReActiveShippmentLoadingProgressState) {
-                              //                 return CustomButton(
-                              //                   title: SizedBox(
-                              //                     width: 110.w,
-                              //                     child: Center(
-                              //                       child: LoadingIndicator(),
-                              //                     ),
-                              //                   ),
-                              //                   onTap: () {},
-                              //                   // color: Colors.white,
-                              //                 );
-                              //               } else {
-                              //                 return CustomButton(
-                              //                   title: SizedBox(
-                              //                     width: 110.w,
-                              //                     child: Row(
-                              //                       children: [
-                              //                         Center(
-                              //                           child: Text(
-                              //                             AppLocalizations.of(
-                              //                                     context)!
-                              //                                 .translate(
-                              //                                     'reactive'),
-                              //                             style:
-                              //                                 const TextStyle(
-                              //                               color: Colors.white,
-                              //                               fontSize: 18,
-                              //                               fontWeight:
-                              //                                   FontWeight.bold,
-                              //                             ),
-                              //                           ),
-                              //                         ),
-                              //                         SizedBox(
-                              //                           height: 30.w,
-                              //                           width: 30.w,
-                              //                           child: SvgPicture.asset(
-                              //                             "assets/icons/complete.svg",
-                              //                             width: 30.w,
-                              //                             height: 30.w,
-                              //                           ),
-                              //                         ),
-                              //                       ],
-                              //                     ),
-                              //                   ),
-                              //                   onTap: () {
-                              //                     showDialog<void>(
-                              //                       context: context,
-                              //                       barrierDismissible:
-                              //                           false, // user must tap button!
-                              //                       builder:
-                              //                           (BuildContext context) {
-                              //                         return AlertDialog(
-                              //                           backgroundColor:
-                              //                               Colors.white,
-                              //                           title: Text(
-                              //                               AppLocalizations.of(
-                              //                                       context)!
-                              //                                   .translate(
-                              //                                       'reactive')),
-                              //                           content: Text(
-                              //                             AppLocalizations.of(
-                              //                                     context)!
-                              //                                 .translate(
-                              //                                     'reactive_confirm'),
-                              //                           ),
-                              //                           actions: <Widget>[
-                              //                             TextButton(
-                              //                               child: Text(
-                              //                                   AppLocalizations.of(
-                              //                                           context)!
-                              //                                       .translate(
-                              //                                           'cancel')),
-                              //                               onPressed: () {
-                              //                                 Navigator.of(
-                              //                                         context)
-                              //                                     .pop();
-                              //                               },
-                              //                             ),
-                              //                             TextButton(
-                              //                               child: Text(
-                              //                                   AppLocalizations.of(
-                              //                                           context)!
-                              //                                       .translate(
-                              //                                           'ok')),
-                              //                               onPressed: () {
-                              //                                 BlocProvider.of<
-                              //                                             ReActiveShipmentBloc>(
-                              //                                         context)
-                              //                                     .add(
-                              //                                   ReActiveShipmentButtonPressed(
-                              //                                     shipmentstate
-                              //                                         .shipment
-                              //                                         .id!,
-                              //                                   ),
-                              //                                 );
-                              //                                 Navigator.of(
-                              //                                         context)
-                              //                                     .pop();
-                              //                               },
-                              //                             ),
-                              //                           ],
-                              //                         );
-                              //                       },
-                              //                     );
-                              //                   },
-                              //                 );
-                              //               }
-                              //             },
-                              //           ),
-                              //         )
-                              //       : const SizedBox.shrink(),
-                              //   child: Padding(
-                              //     padding: const EdgeInsets.all(10.0),
-                              //     child: BlocConsumer<CancelShipmentBloc,
-                              //         CancelShipmentState>(
-                              //       listener: (context, cancelstate) {
-                              //         if (cancelstate
-                              //             is CancelShipmentSuccessState) {
-                              //           Navigator.pushAndRemoveUntil(
-                              //               context,
-                              //               MaterialPageRoute(
-                              //                 builder: (context) =>
-                              //                     const ControlView(),
-                              //               ),
-                              //               (route) => false);
-                              //         }
-                              //       },
-                              //       builder: (context, cancelstate) {
-                              //         if (cancelstate
-                              //             is ShippmentLoadingProgressState) {
-                              //           return CustomButton(
-                              //             title: SizedBox(
-                              //               width: 90.w,
-                              //               child: Center(
-                              //                 child: LoadingIndicator(),
-                              //               ),
-                              //             ),
-                              //             onTap: () {},
-                              //             // color: Colors.white,
-                              //           );
-                              //         } else {
-                              //           return CustomButton(
-                              //             title: SizedBox(
-                              //               width: 100.w,
-                              //               child: Row(
-                              //                 children: [
-                              //                   Center(
-                              //                     child: Text(
-                              //                       AppLocalizations.of(
-                              //                               context)!
-                              //                           .translate('cancel'),
-                              //                       style: const TextStyle(
-                              //                         color: Colors.white,
-                              //                         fontSize: 18,
-                              //                         fontWeight:
-                              //                             FontWeight.bold,
-                              //                       ),
-                              //                     ),
-                              //                   ),
-                              //                   const SizedBox(width: 8),
-                              //                   SizedBox(
-                              //                     height: 28.w,
-                              //                     width: 28.w,
-                              //                     child: SvgPicture.asset(
-                              //                       "assets/icons/white/notification_shipment_cancelation.svg",
-                              //                       width: 28.w,
-                              //                       height: 28.w,
-                              //                     ),
-                              //                   ),
-                              //                 ],
-                              //               ),
-                              //             ),
-                              //             onTap: () {
-                              //               showDialog<void>(
-                              //                 context: context,
-                              //                 barrierDismissible:
-                              //                     false, // user must tap button!
-                              //                 builder: (BuildContext context) {
-                              //                   return AlertDialog(
-                              //                     backgroundColor: Colors.white,
-                              //                     title: Text(
-                              //                         AppLocalizations.of(
-                              //                                 context)!
-                              //                             .translate('cancel')),
-                              //                     content: Text(
-                              //                       AppLocalizations.of(
-                              //                               context)!
-                              //                           .translate(
-                              //                               'cancel_confirm'),
-                              //                     ),
-                              //                     actions: <Widget>[
-                              //                       TextButton(
-                              //                         child: Text(
-                              //                             AppLocalizations.of(
-                              //                                     context)!
-                              //                                 .translate(
-                              //                                     'cancel')),
-                              //                         onPressed: () {
-                              //                           Navigator.of(context)
-                              //                               .pop();
-                              //                         },
-                              //                       ),
-                              //                       TextButton(
-                              //                         child: Text(
-                              //                             AppLocalizations.of(
-                              //                                     context)!
-                              //                                 .translate('ok')),
-                              //                         onPressed: () {
-                              //                           BlocProvider.of<
-                              //                                       CancelShipmentBloc>(
-                              //                                   context)
-                              //                               .add(
-                              //                             CancelShipmentButtonPressed(
-                              //                               shipmentstate
-                              //                                   .shipment.id!,
-                              //                             ),
-                              //                           );
-                              //                           Navigator.of(context)
-                              //                               .pop();
-                              //                         },
-                              //                       ),
-                              //                     ],
-                              //                   );
-                              //                 },
-                              //               );
-                              //             },
-                              //           );
-                              //         }
-                              //       },
-                              //     ),
-                              //   ),
-                              // ),
-                            ],
+                                const Divider(
+                                  height: 24,
+                                ),
+                                Visibility(
+                                  visible: shipmentstate
+                                              .shipment
+                                              .subshipments![selectedIndex]
+                                              .truck ==
+                                          null &&
+                                      !widget.preview,
+                                  replacement: const SizedBox.shrink(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10.0),
+                                    child: CustomButton(
+                                      title: SizedBox(
+                                        width: 200.w,
+                                        child: Row(
+                                          children: [
+                                            Center(
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        'search_for_truck'),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            SizedBox(
+                                              height: 25.w,
+                                              width: 30.w,
+                                              child: SvgPicture.asset(
+                                                "assets/icons/white/search_for_truck.svg",
+                                                width: 25.w,
+                                                height: 30.w,
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SearchTruckScreen(
+                                                    subshipmentId: shipmentstate
+                                                        .shipment
+                                                        .subshipments![
+                                                            selectedIndex]
+                                                        .id!),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                // Visibility(
+                                //   visible: !widget.preview,
+                                //   replacement: shipmentstate
+                                //               .shipment.shipmentStatus ==
+                                //           "F"
+                                //       ? Padding(
+                                //           padding: const EdgeInsets.all(10.0),
+                                //           child: BlocConsumer<
+                                //               ReActiveShipmentBloc,
+                                //               ReActiveShipmentState>(
+                                //             listener: (context, reActivestate) {
+                                //               if (reActivestate
+                                //                   is ReActiveShipmentSuccessState) {
+                                //                 Navigator.pushAndRemoveUntil(
+                                //                     context,
+                                //                     MaterialPageRoute(
+                                //                       builder: (context) =>
+                                //                           const ControlView(),
+                                //                     ),
+                                //                     (route) => false);
+                                //               }
+                                //             },
+                                //             builder: (context, reActivestate) {
+                                //               if (reActivestate
+                                //                   is ReActiveShippmentLoadingProgressState) {
+                                //                 return CustomButton(
+                                //                   title: SizedBox(
+                                //                     width: 110.w,
+                                //                     child: Center(
+                                //                       child: LoadingIndicator(),
+                                //                     ),
+                                //                   ),
+                                //                   onTap: () {},
+                                //                   // color: Colors.white,
+                                //                 );
+                                //               } else {
+                                //                 return CustomButton(
+                                //                   title: SizedBox(
+                                //                     width: 110.w,
+                                //                     child: Row(
+                                //                       children: [
+                                //                         Center(
+                                //                           child: Text(
+                                //                             AppLocalizations.of(
+                                //                                     context)!
+                                //                                 .translate(
+                                //                                     'reactive'),
+                                //                             style:
+                                //                                 const TextStyle(
+                                //                               color: Colors.white,
+                                //                               fontSize: 18,
+                                //                               fontWeight:
+                                //                                   FontWeight.bold,
+                                //                             ),
+                                //                           ),
+                                //                         ),
+                                //                         SizedBox(
+                                //                           height: 30.w,
+                                //                           width: 30.w,
+                                //                           child: SvgPicture.asset(
+                                //                             "assets/icons/complete.svg",
+                                //                             width: 30.w,
+                                //                             height: 30.w,
+                                //                           ),
+                                //                         ),
+                                //                       ],
+                                //                     ),
+                                //                   ),
+                                //                   onTap: () {
+                                //                     showDialog<void>(
+                                //                       context: context,
+                                //                       barrierDismissible:
+                                //                           false, // user must tap button!
+                                //                       builder:
+                                //                           (BuildContext context) {
+                                //                         return AlertDialog(
+                                //                           backgroundColor:
+                                //                               Colors.white,
+                                //                           title: Text(
+                                //                               AppLocalizations.of(
+                                //                                       context)!
+                                //                                   .translate(
+                                //                                       'reactive')),
+                                //                           content: Text(
+                                //                             AppLocalizations.of(
+                                //                                     context)!
+                                //                                 .translate(
+                                //                                     'reactive_confirm'),
+                                //                           ),
+                                //                           actions: <Widget>[
+                                //                             TextButton(
+                                //                               child: Text(
+                                //                                   AppLocalizations.of(
+                                //                                           context)!
+                                //                                       .translate(
+                                //                                           'cancel')),
+                                //                               onPressed: () {
+                                //                                 Navigator.of(
+                                //                                         context)
+                                //                                     .pop();
+                                //                               },
+                                //                             ),
+                                //                             TextButton(
+                                //                               child: Text(
+                                //                                   AppLocalizations.of(
+                                //                                           context)!
+                                //                                       .translate(
+                                //                                           'ok')),
+                                //                               onPressed: () {
+                                //                                 BlocProvider.of<
+                                //                                             ReActiveShipmentBloc>(
+                                //                                         context)
+                                //                                     .add(
+                                //                                   ReActiveShipmentButtonPressed(
+                                //                                     shipmentstate
+                                //                                         .shipment
+                                //                                         .id!,
+                                //                                   ),
+                                //                                 );
+                                //                                 Navigator.of(
+                                //                                         context)
+                                //                                     .pop();
+                                //                               },
+                                //                             ),
+                                //                           ],
+                                //                         );
+                                //                       },
+                                //                     );
+                                //                   },
+                                //                 );
+                                //               }
+                                //             },
+                                //           ),
+                                //         )
+                                //       : const SizedBox.shrink(),
+                                //   child: Padding(
+                                //     padding: const EdgeInsets.all(10.0),
+                                //     child: BlocConsumer<CancelShipmentBloc,
+                                //         CancelShipmentState>(
+                                //       listener: (context, cancelstate) {
+                                //         if (cancelstate
+                                //             is CancelShipmentSuccessState) {
+                                //           Navigator.pushAndRemoveUntil(
+                                //               context,
+                                //               MaterialPageRoute(
+                                //                 builder: (context) =>
+                                //                     const ControlView(),
+                                //               ),
+                                //               (route) => false);
+                                //         }
+                                //       },
+                                //       builder: (context, cancelstate) {
+                                //         if (cancelstate
+                                //             is ShippmentLoadingProgressState) {
+                                //           return CustomButton(
+                                //             title: SizedBox(
+                                //               width: 90.w,
+                                //               child: Center(
+                                //                 child: LoadingIndicator(),
+                                //               ),
+                                //             ),
+                                //             onTap: () {},
+                                //             // color: Colors.white,
+                                //           );
+                                //         } else {
+                                //           return CustomButton(
+                                //             title: SizedBox(
+                                //               width: 100.w,
+                                //               child: Row(
+                                //                 children: [
+                                //                   Center(
+                                //                     child: Text(
+                                //                       AppLocalizations.of(
+                                //                               context)!
+                                //                           .translate('cancel'),
+                                //                       style: const TextStyle(
+                                //                         color: Colors.white,
+                                //                         fontSize: 18,
+                                //                         fontWeight:
+                                //                             FontWeight.bold,
+                                //                       ),
+                                //                     ),
+                                //                   ),
+                                //                   const SizedBox(width: 8),
+                                //                   SizedBox(
+                                //                     height: 28.w,
+                                //                     width: 28.w,
+                                //                     child: SvgPicture.asset(
+                                //                       "assets/icons/white/notification_shipment_cancelation.svg",
+                                //                       width: 28.w,
+                                //                       height: 28.w,
+                                //                     ),
+                                //                   ),
+                                //                 ],
+                                //               ),
+                                //             ),
+                                //             onTap: () {
+                                //               showDialog<void>(
+                                //                 context: context,
+                                //                 barrierDismissible:
+                                //                     false, // user must tap button!
+                                //                 builder: (BuildContext context) {
+                                //                   return AlertDialog(
+                                //                     backgroundColor: Colors.white,
+                                //                     title: Text(
+                                //                         AppLocalizations.of(
+                                //                                 context)!
+                                //                             .translate('cancel')),
+                                //                     content: Text(
+                                //                       AppLocalizations.of(
+                                //                               context)!
+                                //                           .translate(
+                                //                               'cancel_confirm'),
+                                //                     ),
+                                //                     actions: <Widget>[
+                                //                       TextButton(
+                                //                         child: Text(
+                                //                             AppLocalizations.of(
+                                //                                     context)!
+                                //                                 .translate(
+                                //                                     'cancel')),
+                                //                         onPressed: () {
+                                //                           Navigator.of(context)
+                                //                               .pop();
+                                //                         },
+                                //                       ),
+                                //                       TextButton(
+                                //                         child: Text(
+                                //                             AppLocalizations.of(
+                                //                                     context)!
+                                //                                 .translate('ok')),
+                                //                         onPressed: () {
+                                //                           BlocProvider.of<
+                                //                                       CancelShipmentBloc>(
+                                //                                   context)
+                                //                               .add(
+                                //                             CancelShipmentButtonPressed(
+                                //                               shipmentstate
+                                //                                   .shipment.id!,
+                                //                             ),
+                                //                           );
+                                //                           Navigator.of(context)
+                                //                               .pop();
+                                //                         },
+                                //                       ),
+                                //                     ],
+                                //                   );
+                                //                 },
+                                //               );
+                                //             },
+                                //           );
+                                //         }
+                                //       },
+                                //     ),
+                                //   ),
+                                // ),
+                              ],
+                            ),
                           ),
-                        ),
 
-                        // Expanded(
-                        //   child: ListView(
-                        //     children: [
-                        //       Padding(
-                        //         padding: const EdgeInsets.all(8.0),
-                        //         child: Column(
-                        //           crossAxisAlignment: CrossAxisAlignment.start,
-                        //           children: [
-                        //             ],
-                        //         ),
-                        //       )
-                        //     ],
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Center(child: LoadingIndicator());
-                }
-              },
+                          // Expanded(
+                          //   child: ListView(
+                          //     children: [
+                          //       Padding(
+                          //         padding: const EdgeInsets.all(8.0),
+                          //         child: Column(
+                          //           crossAxisAlignment: CrossAxisAlignment.start,
+                          //           children: [
+                          //             ],
+                          //         ),
+                          //       )
+                          //     ],
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Center(child: LoadingIndicator());
+                  }
+                },
+              ),
             ),
           ),
         );

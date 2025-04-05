@@ -8,6 +8,7 @@ import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -90,215 +91,228 @@ class CompleteShipmentScreen extends StatelessWidget {
           textDirection: localeState.value.languageCode == 'en'
               ? TextDirection.ltr
               : TextDirection.rtl,
-          child: SafeArea(
-            child: Scaffold(
-              backgroundColor: Colors.grey[100],
-              appBar: CustomAppBar(
-                title: AppLocalizations.of(context)!.translate('shippment_log'),
-              ),
-              body: SingleChildScrollView(
-                // physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    BlocBuilder<ShipmentCompleteListBloc,
-                        ShipmentCompleteListState>(
-                      builder: (context, state) {
-                        if (state is ShipmentCompleteListLoadedSuccess) {
-                          return state.shipments.isEmpty
-                              ? NoResultsWidget(
-                                  text: AppLocalizations.of(context)!
-                                      .translate('no_shipments'),
-                                )
-                              : Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ListView.builder(
-                                    itemCount: state.shipments.length,
-                                    // physics:
-                                    //     const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      // DateTime now = DateTime.now();
-                                      // Duration diff = now
-                                      //     .difference(state.offers[index].createdDate!);
-                                      return InkWell(
-                                        onTap: () {
-                                          BlocProvider.of<ShipmentDetailsBloc>(
-                                                  context)
-                                              .add(ShipmentDetailsLoadEvent(
-                                                  state.shipments[index].id!));
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ShipmentDetailsScreen(
-                                                  shipment: state
-                                                      .shipments[index].id!,
-                                                  preview: true,
-                                                ),
-                                              ));
-                                        },
-                                        child: AbsorbPointer(
-                                          absorbing: false,
-                                          child: Card(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              ),
-                                            ),
-                                            margin: const EdgeInsets.symmetric(
-                                              horizontal: 16,
-                                              vertical: 8,
-                                            ),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 48.h,
-                                                  color: Colors.grey[300],
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 4,
-                                                        ),
-                                                        child: SectionTitle(
-                                                          text:
-                                                              "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}",
-                                                        ),
-                                                      ),
-                                                      const Spacer(),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 4,
-                                                        ),
-                                                        child: SectionTitle(
-                                                          text: state
-                                                                      .shipments[
-                                                                          index]
-                                                                      .shipmentStatus! ==
-                                                                  'C'
-                                                              ? AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'completed')
-                                                              : AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'cancelled'),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        height: 45.h,
-                                                        width: 45.w,
-                                                        margin: const EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: 4,
-                                                        ),
-                                                        child: Center(
-                                                          child: state
-                                                                      .shipments[
-                                                                          index]
-                                                                      .shipmentStatus! ==
-                                                                  'C'
-                                                              ? Icon(
-                                                                  Icons
-                                                                      .check_circle_outline_outlined,
-                                                                  color: AppColor
-                                                                      .darkGrey,
-                                                                  size: 30,
-                                                                )
-                                                              : SvgPicture
-                                                                  .asset(
-                                                                  "assets/icons/grey/notification_shipment_cancelation.svg",
-                                                                  height: 28.w,
-                                                                  width: 28.w,
-                                                                  fit: BoxFit
-                                                                      .fill,
-                                                                ),
-                                                        ),
-                                                      ),
-                                                    ],
+          child: AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: AppColor.deepBlack, // Make status bar transparent
+              statusBarIconBrightness:
+                  Brightness.light, // Light icons for dark backgrounds
+              systemNavigationBarColor: Colors.white, // Works on Android
+              systemNavigationBarIconBrightness: Brightness.dark,
+            ),
+            child: SafeArea(
+              child: Scaffold(
+                backgroundColor: Colors.grey[100],
+                appBar: CustomAppBar(
+                  title:
+                      AppLocalizations.of(context)!.translate('shippment_log'),
+                ),
+                body: SingleChildScrollView(
+                  // physics: const NeverScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      BlocBuilder<ShipmentCompleteListBloc,
+                          ShipmentCompleteListState>(
+                        builder: (context, state) {
+                          if (state is ShipmentCompleteListLoadedSuccess) {
+                            return state.shipments.isEmpty
+                                ? NoResultsWidget(
+                                    text: AppLocalizations.of(context)!
+                                        .translate('no_shipments'),
+                                  )
+                                : Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ListView.builder(
+                                      itemCount: state.shipments.length,
+                                      // physics:
+                                      //     const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemBuilder: (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            BlocProvider.of<
+                                                        ShipmentDetailsBloc>(
+                                                    context)
+                                                .add(ShipmentDetailsLoadEvent(
+                                                    state
+                                                        .shipments[index].id!));
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ShipmentDetailsScreen(
+                                                    shipment: state
+                                                        .shipments[index].id!,
+                                                    preview: true,
                                                   ),
+                                                ));
+                                          },
+                                          child: AbsorbPointer(
+                                            absorbing: false,
+                                            child: Card(
+                                              color: Colors.white,
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(10),
                                                 ),
-                                                ShipmentPathVerticalWidget(
-                                                  pathpoints: state
-                                                      .shipments[index]
-                                                      .subshipments![0]
-                                                      .pathpoints!,
-                                                  pickupDate: state
-                                                      .shipments[index]
-                                                      .subshipments![0]
-                                                      .pickupDate!,
-                                                  deliveryDate: state
-                                                      .shipments[index]
-                                                      .subshipments![0]
-                                                      .deliveryDate!,
-                                                  langCode: localeState
-                                                      .value.languageCode,
-                                                  mini: true,
-                                                ),
-                                              ],
-                                            ),
-                                          ).animate().slideX(
-                                              duration: 350.ms,
-                                              delay: 0.ms,
-                                              begin: 1,
-                                              end: 0,
-                                              curve: Curves.easeInOutSine),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                );
-                        } else {
-                          return Shimmer.fromColors(
-                            baseColor: (Colors.grey[300])!,
-                            highlightColor: (Colors.grey[100])!,
-                            enabled: true,
-                            direction: ShimmerDirection.ttb,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemBuilder: (_, __) => Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 5),
-                                    height: 250.h,
-                                    width: double.infinity,
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 16,
+                                                vertical: 8,
+                                              ),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: double.infinity,
+                                                    height: 48.h,
+                                                    color: Colors.grey[300],
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 4,
+                                                          ),
+                                                          child: SectionTitle(
+                                                            text:
+                                                                "${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.shipments[index].id!}",
+                                                          ),
+                                                        ),
+                                                        const Spacer(),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 4,
+                                                          ),
+                                                          child: SectionTitle(
+                                                            text: state
+                                                                        .shipments[
+                                                                            index]
+                                                                        .shipmentStatus! ==
+                                                                    'C'
+                                                                ? AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'completed')
+                                                                : AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'cancelled'),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          height: 45.h,
+                                                          width: 45.w,
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .symmetric(
+                                                            horizontal: 4,
+                                                          ),
+                                                          child: Center(
+                                                            child: state
+                                                                        .shipments[
+                                                                            index]
+                                                                        .shipmentStatus! ==
+                                                                    'C'
+                                                                ? Icon(
+                                                                    Icons
+                                                                        .check_circle_outline_outlined,
+                                                                    color: AppColor
+                                                                        .darkGrey,
+                                                                    size: 30,
+                                                                  )
+                                                                : SvgPicture
+                                                                    .asset(
+                                                                    "assets/icons/grey/notification_shipment_cancelation.svg",
+                                                                    height:
+                                                                        28.w,
+                                                                    width: 28.w,
+                                                                    fit: BoxFit
+                                                                        .fill,
+                                                                  ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  ShipmentPathVerticalWidget(
+                                                    pathpoints: state
+                                                        .shipments[index]
+                                                        .subshipments![0]
+                                                        .pathpoints!,
+                                                    pickupDate: state
+                                                        .shipments[index]
+                                                        .subshipments![0]
+                                                        .pickupDate!,
+                                                    deliveryDate: state
+                                                        .shipments[index]
+                                                        .subshipments![0]
+                                                        .deliveryDate!,
+                                                    langCode: localeState
+                                                        .value.languageCode,
+                                                    mini: true,
+                                                  ),
+                                                ],
+                                              ),
+                                            ).animate().slideX(
+                                                duration: 350.ms,
+                                                delay: 0.ms,
+                                                begin: 1,
+                                                end: 0,
+                                                curve: Curves.easeInOutSine),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  ),
-                                ],
+                                  );
+                          } else {
+                            return Shimmer.fromColors(
+                              baseColor: (Colors.grey[300])!,
+                              highlightColor: (Colors.grey[100])!,
+                              enabled: true,
+                              direction: ShimmerDirection.ttb,
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemBuilder: (_, __) => Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 15, vertical: 5),
+                                      height: 250.h,
+                                      width: double.infinity,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                itemCount: 6,
                               ),
-                              itemCount: 6,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                  ],
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

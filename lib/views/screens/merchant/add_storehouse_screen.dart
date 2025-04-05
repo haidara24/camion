@@ -338,6 +338,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                 togglePosition(
                                     MediaQuery.sizeOf(context).height);
                                 print(_topsearchfieldPosition);
+                                print(placesResult[index]);
                                 if (placesResult[index].description ==
                                     "اللاذقية، Syria") {
                                   selectedPosition = LatLng(
@@ -374,6 +375,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                 );
                                 placesResult = [];
                                 _searchController.text = "";
+                                storeAddressController.text = "";
                                 setState(() {});
                               },
                             ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/assign_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
@@ -28,6 +29,7 @@ import 'package:flutter/services.dart'
     show SystemChrome, SystemUiOverlayStyle, rootBundle;
 import 'package:intl/intl.dart' as intel;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SearchShipmentDetailsScreen extends StatefulWidget {
   final SubShipment shipment;
@@ -336,12 +338,80 @@ class _SearchShipmentDetailsScreenState
                                   Navigator.pop(context);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "${state.trucks[index].driver_firstname!} ${state.trucks[index].driver_lastname!}",
-                                    style: TextStyle(
-                                      fontSize: 18.sp,
-                                    ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                    horizontal: 16.0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 23.5.h,
+                                            width: 115.w,
+                                            child: CachedNetworkImage(
+                                              imageUrl: state.trucks[index]
+                                                  .truckType!.image!,
+                                              progressIndicatorBuilder:
+                                                  (context, url,
+                                                          downloadProgress) =>
+                                                      Shimmer.fromColors(
+                                                baseColor: (Colors.grey[300])!,
+                                                highlightColor:
+                                                    (Colors.grey[100])!,
+                                                enabled: true,
+                                                child: Container(
+                                                  height: 23.5.h,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Container(
+                                                height: 23.5.h,
+                                                width: selectedTruck == index
+                                                    ? 119.w
+                                                    : 118.w,
+                                                color: Colors.grey[300],
+                                                child: Center(
+                                                  child: Text(AppLocalizations
+                                                          .of(context)!
+                                                      .translate(
+                                                          'image_load_error')),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            "${lang == "en" ? state.trucks[index].truckType!.name! : state.trucks[index].truckType!.nameAr!} ",
+                                            style: TextStyle(
+                                              fontSize: selectedTruck == index
+                                                  ? 17.sp
+                                                  : 15.sp,
+                                              color: AppColor.deepBlack,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Text(
+                                            'No: ${state.trucks[index].truckNumber!}',
+                                          ),
+                                          Text(
+                                            "${state.trucks[index].driver_firstname!} ${state.trucks[index].driver_lastname!}",
+                                            style: TextStyle(
+                                              fontSize: selectedTruck == index
+                                                  ? 17.sp
+                                                  : 15.sp,
+                                              color: AppColor.deepBlack,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               );
@@ -569,11 +639,12 @@ class _SearchShipmentDetailsScreenState
                                                             return AlertDialog(
                                                               backgroundColor:
                                                                   Colors.white,
-                                                              title: Text(AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      'accept')),
+                                                              title: Text(
+                                                                AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        'serve'),
+                                                              ),
                                                               content:
                                                                   SingleChildScrollView(
                                                                 child: ListBody(

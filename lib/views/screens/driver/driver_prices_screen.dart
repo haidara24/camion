@@ -19,30 +19,18 @@ import 'package:timeline_tile/timeline_tile.dart';
 import 'package:intl/intl.dart' as intel;
 
 class DriverPricesScreen extends StatefulWidget {
-  const DriverPricesScreen({super.key});
+  final int truckId;
+  const DriverPricesScreen({
+    super.key,
+    required this.truckId,
+  });
 
   @override
   State<DriverPricesScreen> createState() => _DriverPricesScreenState();
 }
 
 class _DriverPricesScreenState extends State<DriverPricesScreen> {
-  int truckId = 0;
   int selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadTruckId();
-  }
-
-  Future<void> _loadTruckId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      truckId = prefs.getInt('truckId') ??
-          0; // Assuming 'truckId' is the key used to store the value
-    });
-  }
-
   var f = intel.NumberFormat("#,###", "en_US");
 
   @override
@@ -51,7 +39,7 @@ class _DriverPricesScreenState extends State<DriverPricesScreen> {
         builder: (context, localeState) {
       return SafeArea(
         child: Scaffold(
-          body: truckId == 0
+          body: widget.truckId == 0
               ? Padding(
                   padding: const EdgeInsets.all(16),
                   child: NoTruckProfileWidget(
@@ -429,7 +417,7 @@ class _DriverPricesScreenState extends State<DriverPricesScreen> {
                                                                           (context) =>
                                                                               AddNewPriceScreen(
                                                                         truckId:
-                                                                            truckId,
+                                                                            widget.truckId,
                                                                         price: pricestate
                                                                             .prices[index],
                                                                       ),
@@ -477,8 +465,8 @@ class _DriverPricesScreenState extends State<DriverPricesScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        AddNewPriceScreen(truckId: truckId),
+                                    builder: (context) => AddNewPriceScreen(
+                                        truckId: widget.truckId),
                                   ),
                                 );
                               },

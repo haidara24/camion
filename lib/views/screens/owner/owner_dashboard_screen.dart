@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/bloc/car_gps_status_details_bloc.dart';
 import 'package:camion/business_logic/bloc/gps_reports/total_statistics_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -114,6 +115,15 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                                                 formattedStartTime,
                                                 formattedEndTime,
                                                 state.trucks[index].carId!),
+                                          );
+
+                                          BlocProvider.of<
+                                                      CarGpsStatusDetailsBloc>(
+                                                  context)
+                                              .add(
+                                            CarGpsStatusDetailsButtonPressed(
+                                              state.trucks[index].gpsId!,
+                                            ),
                                           );
                                         }
                                         Navigator.push(
@@ -260,8 +270,8 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
                                                   width: 25.h,
                                                   child: SvgPicture.asset(
                                                     state.trucks[index].isOn!
-                                                        ? "assets/icons/delete.svg"
-                                                        : "assets/icons/delete.svg",
+                                                        ? "assets/icons/truck_on.svg"
+                                                        : "assets/icons/truck_off.svg",
                                                   ),
                                                 ),
                                               ],

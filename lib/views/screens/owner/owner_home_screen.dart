@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
+import 'package:camion/business_logic/bloc/core/governorates_list_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_active_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/owner_shipments/owner_shipment_list_bloc.dart';
@@ -69,7 +70,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
     super.initState();
     getUserData();
     BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
-
+    BlocProvider.of<OwnerShipmentListBloc>(context)
+        .add(OwnerShipmentListLoadEvent("P"));
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
     BlocProvider.of<OwnerIncomingShipmentsBloc>(context)
         .add(OwnerIncomingShipmentsLoadEvent());
@@ -78,6 +80,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
     BlocProvider.of<OwnerActiveShipmentsBloc>(context)
         .add(OwnerActiveShipmentsLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
+    BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
+    BlocProvider.of<GovernoratesListBloc>(context)
+        .add(GovernoratesListLoadEvent());
 
     GpsRepository.getTokenForGps();
     _tabController = TabController(
@@ -111,7 +116,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
     switch (selectedValue) {
       case 0:
         {
-          BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
           print("sdfsdf");
           setState(() {
             title = AppLocalizations.of(context)!.translate('home');
@@ -121,8 +125,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
         }
       case 1:
         {
-          BlocProvider.of<OwnerShipmentListBloc>(context)
-              .add(OwnerShipmentListLoadEvent("P"));
           setState(() {
             title = AppLocalizations.of(context)!.translate('incoming_orders');
             currentScreen = AllIncomingShippmentLogScreen();
@@ -131,8 +133,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
         }
       case 2:
         {
-          BlocProvider.of<UnassignedShipmentListBloc>(context)
-              .add(UnassignedShipmentListLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('shipment_search');
             currentScreen = OwnerSearchShippmentScreen();
@@ -141,7 +141,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
         }
       case 3:
         {
-          BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('tracking');
 
@@ -151,7 +150,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
         }
       case 4:
         {
-          BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
           setState(() {
             title = AppLocalizations.of(context)!.translate('my_trucks');
 

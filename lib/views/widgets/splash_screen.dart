@@ -12,13 +12,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  NotificationServices notificationServices = NotificationServices();
-
   @override
   void initState() {
     // TODO: implement initState
-    notificationServices.firebaseInit(context);
-    notificationServices.setupInteractMessage(context);
 
     Future.delayed(const Duration(seconds: 4))
         .then((value) => Navigator.pushAndRemoveUntil(

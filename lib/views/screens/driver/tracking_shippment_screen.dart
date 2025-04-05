@@ -130,33 +130,45 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   Widget pathList(SubShipment subshipment, String language) {
     return GestureDetector(
       onVerticalDragUpdate: (details) {
-        _onVerticalGesture(details, subshipment, language);
+        _onVerticalGesture(
+          details,
+          subshipment,
+          language,
+        );
       },
       child: Container(
         color: Colors.grey[200],
-        height: 115.h,
+        height: 117.h,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      height: 4.h,
-                      width: 25.w,
-                      child: SvgPicture.asset(
-                        "assets/icons/arrow_up.svg",
-                        fit: BoxFit.contain,
+            InkWell(
+              onTap: () {
+                showshipmentDetailsModal(
+                  subshipment,
+                  language,
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
                         height: 8.h,
                         width: 25.w,
+                        child: SvgPicture.asset(
+                          "assets/icons/arrow_up.svg",
+                          fit: BoxFit.contain,
+                          height: 8.h,
+                          width: 25.w,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -252,313 +264,319 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     );
   }
 
-  void _onVerticalGesture(
-      DragUpdateDetails details, SubShipment subshipment, String language) {
-    if (details.primaryDelta! < -7) {
-      panelState = PanelState.open;
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        useSafeArea: true,
-        // isDismissible: false,
-        // enableDrag: false,
+  void showshipmentDetailsModal(
+    SubShipment subshipment,
+    String language,
+  ) {
+    panelState = PanelState.open;
 
-        backgroundColor: Colors.grey[200],
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(0),
-          ),
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      // isDismissible: false,
+      // enableDrag: false,
+
+      backgroundColor: Colors.grey[200],
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(0),
         ),
-        builder: (context) => GestureDetector(
-          onVerticalDragUpdate: (details) {
-            if (details.primaryDelta! > 7) {
-              Navigator.pop(context);
-            }
-          },
-          child: Container(
-            color: Colors.white,
-            padding: const EdgeInsets.all(8.0),
-            constraints:
-                BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-            width: double.infinity,
-            child: ListView(
-              shrinkWrap: true,
-              // physics: const NeverScrollableScrollPhysics(),
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: AbsorbPointer(
-                        absorbing: false,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * .8,
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: SizedBox(
+      ),
+      builder: (context) => GestureDetector(
+        onVerticalDragUpdate: (details) {
+          if (details.primaryDelta! > 7) {
+            Navigator.pop(context);
+          }
+        },
+        child: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.all(8.0),
+          constraints:
+              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          width: double.infinity,
+          child: ListView(
+            shrinkWrap: true,
+            // physics: const NeverScrollableScrollPhysics(),
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: AbsorbPointer(
+                      absorbing: false,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * .8,
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: SizedBox(
+                            height: 8.h,
+                            width: 25.w,
+                            child: SvgPicture.asset(
+                              "assets/icons/arrow_down.svg",
+                              fit: BoxFit.contain,
                               height: 8.h,
                               width: 25.w,
-                              child: SvgPicture.asset(
-                                "assets/icons/arrow_down.svg",
-                                fit: BoxFit.contain,
-                                height: 8.h,
-                                width: 25.w,
-                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            Container(
-                              height: 58.w,
-                              width: 58.w,
-                              decoration: BoxDecoration(
-                                  // color: AppColor.lightGoldenYellow,
-                                  borderRadius: BorderRadius.circular(5)),
-                              child: CircleAvatar(
-                                radius: 25.h,
-                                // backgroundColor: AppColor.deepBlue,
-                                child: Center(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(180),
-                                    child: Image.network(
-                                      subshipment.merchant_image!,
-                                      height: 55.w,
-                                      width: 55.w,
-                                      fit: BoxFit.fill,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Center(
-                                        child: Text(
-                                          "${subshipment.merchant_first_name![0].toUpperCase()} ${subshipment.merchant_last_name![0].toUpperCase()}",
-                                          style: TextStyle(
-                                            fontSize: 28.sp,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "${subshipment.merchant_first_name!} ${subshipment.merchant_last_name!}",
-                              style: TextStyle(
-                                // color: AppColor.lightBlue,
-                                fontSize: 19.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            SizedBox(
-                              height: 35.h,
-                              width: 155.w,
-                              child: CachedNetworkImage(
-                                imageUrl: subshipment.truck!.truck_type_image!,
-                                progressIndicatorBuilder:
-                                    (context, url, downloadProgress) =>
-                                        Shimmer.fromColors(
-                                  baseColor: (Colors.grey[300])!,
-                                  highlightColor: (Colors.grey[100])!,
-                                  enabled: true,
-                                  child: Container(
-                                    height: 25.h,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                errorWidget: (context, url, error) => Container(
-                                  height: 35.h,
-                                  width: 155.w,
-                                  color: Colors.grey[300],
-                                  child: Center(
-                                    child: Text(AppLocalizations.of(context)!
-                                        .translate('image_load_error')),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "${language == 'en' ? subshipment.truck!.truck_type! : subshipment.truck!.truck_typeAr!}  ",
-                              style: TextStyle(
-                                // color: AppColor.lightBlue,
-                                fontSize: 19.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    const Divider(
-                      height: 24,
-                    ),
-                    ShipmentInstructionCardsWidget(
-                      subshipment: subshipment,
-                    ),
-                    const Divider(
-                      height: 24,
-                    ),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate("shipment_route"),
-                    ),
-                    ShipmentPathVerticalWidget(
-                      pathpoints: subshipment.pathpoints!,
-                      pickupDate: subshipment.pickupDate!,
-                      deliveryDate: subshipment.deliveryDate!,
-                      langCode: language,
-                      mini: false,
-                    ),
-                    const Divider(),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate("commodity_info"),
-                    ),
-                    const SizedBox(height: 4),
-                    Commodity_info_widget(
-                        shipmentItems: subshipment.shipmentItems!),
-                    const Divider(),
-                    SectionTitle(
-                      text: AppLocalizations.of(context)!
-                          .translate("shipment_route_statistics"),
-                    ),
-                    const SizedBox(height: 4),
-                    PathStatisticsWidget(
-                      distance: subshipment.distance!,
-                      period: subshipment.period!,
-                    ),
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: BlocConsumer<CompleteSubShipmentBloc,
-                          CompleteSubShipmentState>(
-                        listener: (context, completestate) {
-                          if (completestate
-                              is CompleteSubShipmentLoadedSuccess) {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ControlView(),
-                                ),
-                                (route) => false);
-                          }
-                        },
-                        builder: (context, completestate) {
-                          if (completestate
-                              is CompleteSubShipmentLoadingProgress) {
-                            return CustomButton(
-                              title: SizedBox(
-                                width: 90.w,
-                                child: Center(
-                                  child: LoadingIndicator(),
-                                ),
-                              ),
-                              onTap: () {},
-                              // color: Colors.white,
-                            );
-                          } else {
-                            return CustomButton(
-                              title: SizedBox(
-                                width: 110.w,
-                                child: Row(
-                                  children: [
-                                    Center(
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        children: [
+                          Container(
+                            height: 58.w,
+                            width: 58.w,
+                            decoration: BoxDecoration(
+                                // color: AppColor.lightGoldenYellow,
+                                borderRadius: BorderRadius.circular(5)),
+                            child: CircleAvatar(
+                              radius: 25.h,
+                              // backgroundColor: AppColor.deepBlue,
+                              child: Center(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(180),
+                                  child: Image.network(
+                                    subshipment.merchant_image!,
+                                    height: 55.w,
+                                    width: 55.w,
+                                    fit: BoxFit.fill,
+                                    errorBuilder:
+                                        (context, error, stackTrace) => Center(
                                       child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('finish'),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
+                                        "${subshipment.merchant_first_name![0].toUpperCase()} ${subshipment.merchant_last_name![0].toUpperCase()}",
+                                        style: TextStyle(
+                                          fontSize: 28.sp,
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
-                                    SizedBox(
-                                      height: 30.w,
-                                      width: 30.w,
-                                      child: SvgPicture.asset(
-                                        "assets/icons/white/notification_shipment_complete.svg",
-                                        width: 30.w,
-                                        height: 30.w,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
                               ),
-                              onTap: () {
-                                showDialog<void>(
-                                  context: context,
-                                  barrierDismissible:
-                                      false, // user must tap button!
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      backgroundColor: Colors.white,
-                                      title: Text(AppLocalizations.of(context)!
-                                          .translate('finish')),
-                                      content: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('finish_confirm'),
-                                      ),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('no')),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                        TextButton(
-                                          child: Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('yes')),
-                                          onPressed: () {
-                                            BlocProvider.of<
-                                                        CompleteSubShipmentBloc>(
-                                                    context)
-                                                .add(
-                                              CompleteSubShipmentButtonPressed(
-                                                subshipment.id!,
-                                              ),
-                                            );
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          }
-                        },
+                            ),
+                          ),
+                          Text(
+                            "${subshipment.merchant_first_name!} ${subshipment.merchant_last_name!}",
+                            style: TextStyle(
+                              // color: AppColor.lightBlue,
+                              fontSize: 19.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 35.h,
+                            width: 155.w,
+                            child: CachedNetworkImage(
+                              imageUrl: subshipment.truck!.truck_type_image!,
+                              progressIndicatorBuilder:
+                                  (context, url, downloadProgress) =>
+                                      Shimmer.fromColors(
+                                baseColor: (Colors.grey[300])!,
+                                highlightColor: (Colors.grey[100])!,
+                                enabled: true,
+                                child: Container(
+                                  height: 25.h,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Container(
+                                height: 35.h,
+                                width: 155.w,
+                                color: Colors.grey[300],
+                                child: Center(
+                                  child: Text(AppLocalizations.of(context)!
+                                      .translate('image_load_error')),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            "${language == 'en' ? subshipment.truck!.truck_type! : subshipment.truck!.truck_typeAr!}  ",
+                            style: TextStyle(
+                              // color: AppColor.lightBlue,
+                              fontSize: 19.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const Divider(
+                    height: 24,
+                  ),
+                  ShipmentInstructionCardsWidget(
+                    subshipment: subshipment,
+                  ),
+                  const Divider(
+                    height: 24,
+                  ),
+                  SectionTitle(
+                    text: AppLocalizations.of(context)!
+                        .translate("shipment_route"),
+                  ),
+                  ShipmentPathVerticalWidget(
+                    pathpoints: subshipment.pathpoints!,
+                    pickupDate: subshipment.pickupDate!,
+                    deliveryDate: subshipment.deliveryDate!,
+                    langCode: language,
+                    mini: false,
+                  ),
+                  const Divider(),
+                  SectionTitle(
+                    text: AppLocalizations.of(context)!
+                        .translate("commodity_info"),
+                  ),
+                  const SizedBox(height: 4),
+                  Commodity_info_widget(
+                      shipmentItems: subshipment.shipmentItems!),
+                  const Divider(),
+                  SectionTitle(
+                    text: AppLocalizations.of(context)!
+                        .translate("shipment_route_statistics"),
+                  ),
+                  const SizedBox(height: 4),
+                  PathStatisticsWidget(
+                    distance: subshipment.distance!,
+                    period: subshipment.period!,
+                  ),
+                  const SizedBox(height: 4),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: BlocConsumer<CompleteSubShipmentBloc,
+                        CompleteSubShipmentState>(
+                      listener: (context, completestate) {
+                        if (completestate is CompleteSubShipmentLoadedSuccess) {
+                          Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ControlView(),
+                              ),
+                              (route) => false);
+                        }
+                      },
+                      builder: (context, completestate) {
+                        if (completestate
+                            is CompleteSubShipmentLoadingProgress) {
+                          return CustomButton(
+                            title: SizedBox(
+                              width: 110.w,
+                              child: Center(
+                                child: LoadingIndicator(),
+                              ),
+                            ),
+                            onTap: () {},
+                            // color: Colors.white,
+                          );
+                        } else {
+                          return CustomButton(
+                            title: SizedBox(
+                              width: 155.w,
+                              child: Row(
+                                children: [
+                                  Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('finish'),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  SizedBox(
+                                    height: 30.w,
+                                    width: 30.w,
+                                    child: SvgPicture.asset(
+                                      "assets/icons/white/notification_shipment_complete.svg",
+                                      width: 30.w,
+                                      height: 30.w,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              showDialog<void>(
+                                context: context,
+                                barrierDismissible:
+                                    false, // user must tap button!
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.white,
+                                    title: Text(AppLocalizations.of(context)!
+                                        .translate('finish')),
+                                    content: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('finish_confirm'),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('no')),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      TextButton(
+                                        child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('yes')),
+                                        onPressed: () {
+                                          BlocProvider.of<
+                                                      CompleteSubShipmentBloc>(
+                                                  context)
+                                              .add(
+                                            CompleteSubShipmentButtonPressed(
+                                              subshipment.id!,
+                                            ),
+                                          );
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        }
+                      },
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-      );
+      ),
+    );
+  }
+
+  void _onVerticalGesture(
+      DragUpdateDetails details, SubShipment subshipment, String language) {
+    if (details.primaryDelta! < -7) {
+      showshipmentDetailsModal(subshipment, language);
     } else if (details.primaryDelta! > 7 && panelState == PanelState.open) {
       // changeToHidden();
     }
@@ -635,17 +653,20 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     var prefs = await SharedPreferences.getInstance();
     int truckId = prefs.getInt("truckId") ?? 0;
     String gpsId = prefs.getString("gpsId") ?? "";
-    _positionStream?.cancel();
+
+    print(gpsId);
 
     await _requestPermission();
-
-    if ((gpsId.isEmpty || gpsId.length < 8) && startTracking) {
+    print(gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN");
+    if ((gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN") &&
+        startTracking) {
       _positionStream = Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
           distanceFilter: 10, // Update when moving 10 meters
         ),
       ).listen((Position position) async {
+        print(position);
         if (_timer == null || !_timer!.isActive) {
           if (truckId != 0) {
             print(position.latitude);
@@ -689,10 +710,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
 
   @override
   void dispose() {
-    // _animationController.dispose();
-    timer.cancel();
     _stopListening();
-
     super.dispose();
   }
 

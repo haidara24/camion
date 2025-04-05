@@ -69,7 +69,7 @@ class _OwnerTruckListScreenState extends State<OwnerTruckListScreen> {
                         return state.trucks.isEmpty
                             ? Center(
                                 child: Text(AppLocalizations.of(context)!
-                                    .translate('no_tucks')),
+                                    .translate('no_trucks')),
                               )
                             : ListView.builder(
                                 itemCount: state.trucks.length,

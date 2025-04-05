@@ -142,6 +142,7 @@ class RequestRepository {
         '$APPROVAL_REQUESTS_ENDPOINT$id/reject_driver_request/',
         {"response_turn": "D", "is_approved": false},
         apiToken: jwt);
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       return true;
     } else {

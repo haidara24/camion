@@ -16,7 +16,9 @@ import 'package:intl/intl.dart' as intel;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IncomingShippmentLogScreen extends StatefulWidget {
-  const IncomingShippmentLogScreen({Key? key}) : super(key: key);
+  final int truckId;
+  const IncomingShippmentLogScreen({Key? key, required this.truckId})
+      : super(key: key);
 
   @override
   State<IncomingShippmentLogScreen> createState() =>
@@ -93,19 +95,9 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
         .add(const DriverRequestsListLoadEvent(null));
   }
 
-  int truckId = 0;
-
-  void getTruckId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      truckId = prefs.getInt("truckId") ?? 0;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
-    getTruckId();
   }
 
   @override
@@ -119,15 +111,14 @@ class _IncomingShippmentLogScreenState extends State<IncomingShippmentLogScreen>
               : TextDirection.rtl,
           child: Scaffold(
             backgroundColor: Colors.grey[100],
-            body: SingleChildScrollView(
-              // physics: const NeverScrollableScrollPhysics(),
-              child: RefreshIndicator(
-                onRefresh: onRefresh,
+            body: RefreshIndicator(
+              onRefresh: onRefresh,
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    truckId == 0
+                    widget.truckId == 0
                         ? Padding(
                             padding: const EdgeInsets.all(16),
                             child: NoTruckProfileWidget(

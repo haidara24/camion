@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/core/governorates_list_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/data/models/core_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
@@ -38,6 +40,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
 
   TruckType? trucktype;
   bool trucktypeError = false;
+
+  bool isGovernorateValid = true;
+  Governorate? governorate;
 
   TextEditingController truckuserController = TextEditingController();
   TextEditingController heightController = TextEditingController();
@@ -617,49 +622,113 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                 const SizedBox(
                                   height: 12,
                                 ),
-                                TextFormField(
-                                  controller: trafficController,
-                                  onTap: () {
-                                    trafficController.selection = TextSelection(
-                                        baseOffset: 0,
-                                        extentOffset: trafficController
-                                            .value.text.length);
-                                  },
-                                  scrollPadding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom +
-                                          20),
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.phone,
-                                  style: const TextStyle(fontSize: 18),
-                                  decoration: InputDecoration(
-                                    labelText: AppLocalizations.of(context)!
-                                        .translate('truck_number'),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 11.0, horizontal: 9.0),
-                                  ),
-                                  onTapOutside: (event) {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  onEditingComplete: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return AppLocalizations.of(context)!
-                                          .translate('insert_value_validate');
+                                SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate('governorate')),
+                                BlocBuilder<GovernoratesListBloc,
+                                    GovernoratesListState>(
+                                  builder: (context, state) {
+                                    if (state
+                                        is GovernoratesListLoadedSuccess) {
+                                      return DropdownButtonHideUnderline(
+                                        child: DropdownButton2<Governorate>(
+                                          isExpanded: true,
+                                          hint: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate(
+                                                    'select_governorate'),
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                            ),
+                                          ),
+                                          items: state.governorates
+                                              .map((Governorate item) =>
+                                                  DropdownMenuItem<Governorate>(
+                                                    value: item,
+                                                    child: SizedBox(
+                                                      width: 200,
+                                                      child: Text(
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                "en"
+                                                            ? item.nameEn!
+                                                            : item.name!,
+                                                        style: const TextStyle(
+                                                          fontSize: 17,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          value: governorate,
+                                          onChanged: (Governorate? value) {
+                                            setState(() {
+                                              governorate = value;
+                                              isGovernorateValid = true;
+                                            });
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 50,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 9.0,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                color: Colors.black26,
+                                              ),
+                                            ),
+                                          ),
+                                          iconStyleData: IconStyleData(
+                                            icon: const Icon(
+                                              Icons.keyboard_arrow_down_sharp,
+                                            ),
+                                            iconSize: 20,
+                                            iconEnabledColor:
+                                                AppColor.deepYellow,
+                                            iconDisabledColor: Colors.grey,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: Colors.white,
+                                            ),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  WidgetStateProperty.all(6),
+                                              thumbVisibility:
+                                                  WidgetStateProperty.all(true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return const LinearProgressIndicator();
                                     }
-                                    return null;
-                                  },
-                                  onSaved: (newValue) {
-                                    trafficController.text = newValue!;
                                   },
                                 ),
+                                if (!isGovernorateValid)
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      "الرجاء اختيار محافظة.",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
                                 const SizedBox(
                                   height: 12,
                                 ),
@@ -965,7 +1034,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                         .value.languageCode ==
                                                     'en'
                                                 ? 'Truck has been created successfully.'
-                                                : 'تم اضافة مركبة جديدة..',
+                                                : 'تم اضافة مركبة جديدة.',
                                           );
 
                                           SharedPreferences prefs =
@@ -1002,61 +1071,69 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                               FocusManager.instance.primaryFocus
                                                   ?.unfocus();
 
-                                              if (_newtruckFormKey.currentState!
-                                                  .validate()) {
-                                                _newtruckFormKey.currentState
-                                                    ?.save();
-                                                Map<String, dynamic> truck = {
-                                                  'height': double.parse(
-                                                          heightController.text)
-                                                      .toInt(),
-                                                  'width': double.parse(
-                                                          widthController.text)
-                                                      .toInt(),
-                                                  'long': double.parse(
-                                                          longController.text)
-                                                      .toInt(),
-                                                  'truckNumber': double.parse(
-                                                          truckNumberController
-                                                              .text)
-                                                      .toInt(),
-                                                  'traffic': double.parse(
-                                                          trafficController
-                                                              .text)
-                                                      .toInt(),
-                                                  'numberOfAxels': double.parse(
-                                                          numberOfAxelsController
-                                                              .text)
-                                                      .toInt(),
-                                                  'emptyWeight': double.parse(
-                                                          emptyWeightController
-                                                              .text)
-                                                      .toInt(),
-                                                  'locationLat': "",
-                                                  'driver_first_name':
-                                                      _firstNameController.text,
-                                                  'driver_last_name':
-                                                      _lastNameController.text,
-                                                  'driver_phone':
-                                                      _phoneController.text,
-                                                  'owner': widget.ownerId,
-                                                  'truckType': trucktype,
-                                                };
+                                              if (governorate != null) {
+                                                if (_newtruckFormKey
+                                                    .currentState!
+                                                    .validate()) {
+                                                  _newtruckFormKey.currentState
+                                                      ?.save();
+                                                  Map<String, dynamic> truck = {
+                                                    'height': double.parse(
+                                                            heightController
+                                                                .text)
+                                                        .toInt(),
+                                                    'width': double.parse(
+                                                            widthController
+                                                                .text)
+                                                        .toInt(),
+                                                    'long': double.parse(
+                                                            longController.text)
+                                                        .toInt(),
+                                                    'truckNumber': double.parse(
+                                                            truckNumberController
+                                                                .text)
+                                                        .toInt(),
+                                                    'traffic': governorate!.id!,
+                                                    'numberOfAxels': double.parse(
+                                                            numberOfAxelsController
+                                                                .text)
+                                                        .toInt(),
+                                                    'emptyWeight': double.parse(
+                                                            emptyWeightController
+                                                                .text)
+                                                        .toInt(),
+                                                    'locationLat': "",
+                                                    'driver_first_name':
+                                                        _firstNameController
+                                                            .text,
+                                                    'driver_last_name':
+                                                        _lastNameController
+                                                            .text,
+                                                    'driver_phone':
+                                                        _phoneController.text,
+                                                    'owner': widget.ownerId,
+                                                    'truckType': trucktype,
+                                                  };
 
-                                                BlocProvider.of<
-                                                            CreateTruckBloc>(
-                                                        context)
-                                                    .add(
-                                                  CreateOwnerTruckButtonPressed(
-                                                      truck, _files),
-                                                );
+                                                  BlocProvider.of<
+                                                              CreateTruckBloc>(
+                                                          context)
+                                                      .add(
+                                                    CreateOwnerTruckButtonPressed(
+                                                        truck, _files),
+                                                  );
+                                                } else {
+                                                  // Scrollable.ensureVisible(
+                                                  //   key1.currentContext!,
+                                                  //   duration: const Duration(
+                                                  //     milliseconds: 500,
+                                                  //   ),
+                                                  // );
+                                                }
                                               } else {
-                                                // Scrollable.ensureVisible(
-                                                //   key1.currentContext!,
-                                                //   duration: const Duration(
-                                                //     milliseconds: 500,
-                                                //   ),
-                                                // );
+                                                setState(() {
+                                                  isGovernorateValid = false;
+                                                });
                                               }
                                             },
                                           );

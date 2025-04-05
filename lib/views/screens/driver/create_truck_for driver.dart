@@ -4,9 +4,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/core/governorates_list_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
+import 'package:camion/data/models/core_model.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
 import 'package:camion/data/models/user_model.dart';
@@ -71,7 +73,10 @@ class _CreateTruckForDriverScreenState
   final RegExp phoneRegExp = RegExp(r'^09\d{8}$');
   bool isLoading = false;
 
-  bool isPhoneValid = true;
+  bool isPhoneValid = false;
+  bool isOwnerExist = true;
+  bool isGovernorateValid = true;
+  Governorate? governorate;
 
   List<Widget> _buildAttachmentImages() {
     List<Widget> list = [];
@@ -155,14 +160,14 @@ class _CreateTruckForDriverScreenState
   void validateAndFetchOwner(String phone) async {
     if (!phoneRegExp.hasMatch(phone)) {
       setState(() {
-        isPhoneValid = false;
+        isOwnerExist = false;
         isLoading = false;
       });
       return;
     }
 
     setState(() {
-      isPhoneValid = true;
+      isOwnerExist = true;
       isLoading = true;
     });
 
@@ -170,14 +175,12 @@ class _CreateTruckForDriverScreenState
 
     if (owner != null) {
       setState(() {
-        truckownerController.text =
-            owner["first_name"] + " " + owner["last_name"];
         isLoading = false;
-        isPhoneValid = true;
+        isOwnerExist = true;
       });
     } else {
       setState(() {
-        isPhoneValid = false;
+        isOwnerExist = false;
         isLoading = false;
       });
     }
@@ -187,6 +190,15 @@ class _CreateTruckForDriverScreenState
   void initState() {
     super.initState();
     // truckownerController.addListener(_onPhoneChanged);
+    truckownerController.addListener(() {
+      setState(() {
+        // Check if the entered text matches the phone number pattern
+        isPhoneValid = phoneRegExp.hasMatch(truckownerController.text);
+      });
+      if (isPhoneValid) {
+        validateAndFetchOwner(truckownerController.text);
+      }
+    });
   }
 
   // void _onPhoneChanged() async {
@@ -218,6 +230,24 @@ class _CreateTruckForDriverScreenState
   void dispose() {
     truckownerController.dispose();
     super.dispose();
+  }
+
+  Widget? suffixOwnerPhone() {
+    if (isPhoneValid) {
+      return Icon(
+        Icons.check_circle_outline,
+        color: AppColor.deepGreen,
+      );
+    } else if (isLoading) {
+      return const Padding(
+        padding: EdgeInsets.all(10.0),
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+        ),
+      );
+    } else {
+      return null;
+    }
   }
 
   @override
@@ -286,28 +316,19 @@ class _CreateTruckForDriverScreenState
                                                   .translate('enter_phone'),
                                           errorText: isPhoneValid
                                               ? null
-                                              : "Invalid phone number or owner not found",
-                                          suffixIcon: isLoading
-                                              ? const Padding(
-                                                  padding: EdgeInsets.all(10.0),
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth: 2,
-                                                  ),
-                                                )
-                                              : null,
+                                              : "رقم الجوال خاطئ أو أن المالك غير موجود",
+                                          suffixIcon: suffixOwnerPhone(),
                                           contentPadding:
                                               const EdgeInsets.symmetric(
-                                            horizontal: 12.0,
-                                            vertical: 16.0,
-                                          ),
+                                                  vertical: 11.0,
+                                                  horizontal: 9.0),
                                         ),
                                       ),
-                                      if (!isPhoneValid)
+                                      if (!isOwnerExist)
                                         const Padding(
                                           padding: EdgeInsets.only(top: 8.0),
                                           child: Text(
-                                            "Owner not found. Please check the phone number.",
+                                            "المالك غير موجود,الرجاء التأكد من رقم الجوال.",
                                             style: TextStyle(
                                                 color: Colors.red,
                                                 fontSize: 14),
@@ -798,52 +819,114 @@ class _CreateTruckForDriverScreenState
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                TextFormField(
-                                  controller: trafficController,
-                                  onTap: () {
-                                    trafficController.selection = TextSelection(
-                                        baseOffset: 0,
-                                        extentOffset: trafficController
-                                            .value.text.length);
-                                  },
-                                  scrollPadding: EdgeInsets.only(
-                                      bottom: MediaQuery.of(context)
-                                              .viewInsets
-                                              .bottom +
-                                          20),
-                                  textInputAction: TextInputAction.done,
-                                  keyboardType: TextInputType.phone,
-                                  style: const TextStyle(fontSize: 18),
-                                  decoration: InputDecoration(
-                                    labelText: AppLocalizations.of(context)!
-                                        .translate('traffic_number'),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 11.0, horizontal: 9.0),
-                                  ),
-                                  onTapOutside: (event) {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  onEditingComplete: () {
-                                    FocusManager.instance.primaryFocus
-                                        ?.unfocus();
-                                  },
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return AppLocalizations.of(context)!
-                                          .translate('insert_value_validate');
+                                SectionTitle(
+                                    text: AppLocalizations.of(context)!
+                                        .translate('governorate')),
+                                BlocBuilder<GovernoratesListBloc,
+                                    GovernoratesListState>(
+                                  builder: (context, state) {
+                                    if (state
+                                        is GovernoratesListLoadedSuccess) {
+                                      return DropdownButtonHideUnderline(
+                                        child: DropdownButton2<Governorate>(
+                                          isExpanded: true,
+                                          hint: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate(
+                                                    'select_governorate'),
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              color:
+                                                  Theme.of(context).hintColor,
+                                            ),
+                                          ),
+                                          items: state.governorates
+                                              .map((Governorate item) =>
+                                                  DropdownMenuItem<Governorate>(
+                                                    value: item,
+                                                    child: SizedBox(
+                                                      width: 200,
+                                                      child: Text(
+                                                        localeState.value
+                                                                    .languageCode ==
+                                                                "en"
+                                                            ? item.nameEn!
+                                                            : item.name!,
+                                                        style: const TextStyle(
+                                                          fontSize: 17,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ))
+                                              .toList(),
+                                          value: governorate,
+                                          onChanged: (Governorate? value) {
+                                            setState(() {
+                                              governorate = value;
+                                              isGovernorateValid = true;
+                                            });
+                                          },
+                                          buttonStyleData: ButtonStyleData(
+                                            height: 50,
+                                            width: double.infinity,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 9.0,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                color: Colors.black26,
+                                              ),
+                                            ),
+                                          ),
+                                          iconStyleData: IconStyleData(
+                                            icon: const Icon(
+                                              Icons.keyboard_arrow_down_sharp,
+                                            ),
+                                            iconSize: 20,
+                                            iconEnabledColor:
+                                                AppColor.deepYellow,
+                                            iconDisabledColor: Colors.grey,
+                                          ),
+                                          dropdownStyleData: DropdownStyleData(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              color: Colors.white,
+                                            ),
+                                            scrollbarTheme: ScrollbarThemeData(
+                                              radius: const Radius.circular(40),
+                                              thickness:
+                                                  WidgetStateProperty.all(6),
+                                              thumbVisibility:
+                                                  WidgetStateProperty.all(true),
+                                            ),
+                                          ),
+                                          menuItemStyleData:
+                                              const MenuItemStyleData(
+                                            height: 40,
+                                          ),
+                                        ),
+                                      );
+                                    } else {
+                                      return const LinearProgressIndicator();
                                     }
-                                    return null;
-                                  },
-                                  onSaved: (newValue) {
-                                    trafficController.text = newValue!;
                                   },
                                 ),
-                                const SizedBox(
-                                  height: 16,
-                                ),
+                                if (!isGovernorateValid)
+                                  const Padding(
+                                    padding: EdgeInsets.only(top: 8.0),
+                                    child: Text(
+                                      "الرجاء اختيار محافظة.",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                const SizedBox(height: 8),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
@@ -1031,7 +1114,7 @@ class _CreateTruckForDriverScreenState
                                                     .value.languageCode ==
                                                 'en'
                                             ? 'A Truck has been created successfully.'
-                                            : 'تم انشاء مركبة جديدة بنجاح..',
+                                            : 'تم انشاء مركبة جديدة بنجاح.',
                                       );
 
                                       prefs.setInt("truckId", state.truck.id!);
@@ -1068,62 +1151,70 @@ class _CreateTruckForDriverScreenState
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
 
-                                          if (_newtruckFormKey.currentState!
-                                              .validate()) {
-                                            _newtruckFormKey.currentState
-                                                ?.save();
-                                            KTruck truck = KTruck();
-                                            truck.height = double.parse(
-                                                    heightController.text)
-                                                .toInt();
-                                            truck.width = double.parse(
-                                                    widthController.text)
-                                                .toInt();
-                                            truck.locationLat =
-                                                "35.363149,35.932120";
-                                            truck.long = double.parse(
-                                                    longController.text)
-                                                .toInt();
-                                            truck.truckNumber = double.parse(
-                                                    truckNumberController.text)
-                                                .toInt();
-                                            truck.traffic = double.parse(
-                                                    trafficController.text)
-                                                .toInt();
-                                            truck.numberOfAxels = double.parse(
-                                                    numberOfAxelsController
-                                                        .text)
-                                                .toInt();
-                                            truck.emptyWeight = double.parse(
-                                                    emptyWeightController.text)
-                                                .toInt();
-                                            truck.grossWeight = double.parse(
-                                                    grossWeightController.text)
-                                                .toInt();
+                                          if (governorate != null) {
+                                            if (_newtruckFormKey.currentState!
+                                                .validate()) {
+                                              _newtruckFormKey.currentState
+                                                  ?.save();
+                                              KTruck truck = KTruck();
+                                              truck.height = double.parse(
+                                                      heightController.text)
+                                                  .toInt();
+                                              truck.width = double.parse(
+                                                      widthController.text)
+                                                  .toInt();
+                                              truck.locationLat =
+                                                  "35.363149,35.932120";
+                                              truck.long = double.parse(
+                                                      longController.text)
+                                                  .toInt();
+                                              truck.truckNumber = double.parse(
+                                                      truckNumberController
+                                                          .text)
+                                                  .toInt();
+                                              truck.traffic = governorate!.id!;
+                                              truck
+                                                  .numberOfAxels = double.parse(
+                                                      numberOfAxelsController
+                                                          .text)
+                                                  .toInt();
+                                              truck.emptyWeight = double.parse(
+                                                      emptyWeightController
+                                                          .text)
+                                                  .toInt();
+                                              truck.grossWeight = double.parse(
+                                                      grossWeightController
+                                                          .text)
+                                                  .toInt();
 
-                                            truck.truckuser = widget.driverId;
+                                              truck.truckuser = widget.driverId;
 
-                                            if (istruckOwner) {
-                                              truck.owner = 0;
+                                              if (istruckOwner) {
+                                                truck.owner = 0;
+                                              } else {
+                                                truck.phoneowner =
+                                                    truckownerController.text;
+                                              }
+                                              truck.truckType = trucktype;
+                                              truck.gpsId = gpsController.text;
+                                              BlocProvider.of<CreateTruckBloc>(
+                                                      context)
+                                                  .add(
+                                                CreateTruckButtonPressed(
+                                                    truck, _files),
+                                              );
                                             } else {
-                                              truck.phoneowner =
-                                                  truckownerController.text;
+                                              // Scrollable.ensureVisible(
+                                              //   key1.currentContext!,
+                                              //   duration: const Duration(
+                                              //     milliseconds: 500,
+                                              //   ),
+                                              // );
                                             }
-                                            truck.truckType = trucktype;
-                                            truck.gpsId = gpsController.text;
-                                            BlocProvider.of<CreateTruckBloc>(
-                                                    context)
-                                                .add(
-                                              CreateTruckButtonPressed(
-                                                  truck, _files),
-                                            );
                                           } else {
-                                            // Scrollable.ensureVisible(
-                                            //   key1.currentContext!,
-                                            //   duration: const Duration(
-                                            //     milliseconds: 500,
-                                            //   ),
-                                            // );
+                                            setState(() {
+                                              isGovernorateValid = false;
+                                            });
                                           }
                                         },
                                       );

@@ -83,7 +83,7 @@
     "period":"المدة الزمنية",
     "distance_from_loading":"البعد عن التحميل",
     "energy_consumption":"كمية الطاقة المستهلكة",
-    "location_service_diabled":"خدمة تحديد الموقع متوقفة. الرجاء تفعيلالخدمة.",
+    "location_service_diabled":"خدمة تحديد الموقع متوقفة. الرجاء تفعيل الخدمة.",
     "add_station":"أضف محطة",
     "station_no":"محطة رقم",
 
@@ -167,7 +167,7 @@
     "add_new_truck":"إضافة مركبة جديدة",
     "is_owner":"هل أنت مالك للمركبة؟",
     "search_result":"نتائج البحث",
-    "no_tucks":"لم يتم العثور على شاحنات",
+    "no_trucks":"لم يتم العثور على شاحنات",
     "truck_type":"نوع المركبة",
     "truck_number":"رقم المركبة",
     "truck_location":"المكان",
@@ -262,6 +262,7 @@
     "truck_owner_phone":"رقم الجوال المالك",
 
     "order_truck":"اطلب المركبة",
+    "leave_it_public":"اترك الشحنة للعموم",
     "form_init":"تهيئة الفورم",
     "form_clear":"إعادة التهيئة",
     "form_init_confirm":"هل أنت متأكد من تهيئة الفورم؟",
