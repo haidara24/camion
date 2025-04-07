@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
@@ -295,6 +296,12 @@ class NotificationServices {
           .add(MerchantRequestsListLoadEvent());
       BlocProvider.of<ShipmentTaskListBloc>(context)
           .add(ShipmentTaskListLoadEvent());
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        BlocProvider.of<DriverActiveShipmentBloc>(context)
+            .add(DriverActiveShipmentLoadEvent("R"));
+      }
     }
   }
 

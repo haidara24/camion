@@ -197,6 +197,46 @@ class _ApprovalRequestDetailsScreenState
                 ],
               ),
             ),
+            const SizedBox(
+              height: 8,
+            ),
+            SectionBody(text: "أو"),
+            const SizedBox(
+              height: 8,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  CustomButton(
+                    title: SizedBox(
+                      width: MediaQuery.of(context).size.width * .83,
+                      child: Center(
+                        child: Text(
+                          AppLocalizations.of(context)!
+                              .translate("leave_it_public"),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ControlView(),
+                        ),
+                        (route) => false,
+                      );
+                    },
+                    color: Colors.grey[200],
+                    bordercolor: Colors.grey[400],
+                  ),
+                ],
+              ),
+            ),
           ],
         );
       }
@@ -413,13 +453,21 @@ class _ApprovalRequestDetailsScreenState
                                                             style:
                                                                 const TextStyle(
                                                               color:
-                                                                  Colors.white,
+                                                                  Colors.grey,
                                                             ),
                                                           ),
                                                         ),
                                                       ),
                                                       onTap: () {
-                                                        Navigator.pop(context);
+                                                        Navigator
+                                                            .pushAndRemoveUntil(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ControlView(),
+                                                          ),
+                                                          (route) => false,
+                                                        );
                                                       },
                                                       color: Colors.grey[200],
                                                       bordercolor:

@@ -2510,14 +2510,6 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                           .text
                                                                           .length);
                                                             },
-                                                            // enabled:
-                                                            //     widget.shipment.shipmentinstruction == null,
-                                                            // scrollPadding: EdgeInsets.only(
-                                                            //     bottom: MediaQuery.of(
-                                                            //                 context)
-                                                            //             .viewInsets
-                                                            //             .bottom +
-                                                            //         20),
                                                             textInputAction:
                                                                 TextInputAction
                                                                     .done,
@@ -2629,14 +2621,6 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                         .length,
                                                               );
                                                             },
-                                                            // scrollPadding:
-                                                            //     EdgeInsets.only(
-                                                            //   bottom: MediaQuery.of(
-                                                            //               context)
-                                                            //           .viewInsets
-                                                            //           .bottom +
-                                                            //       20,
-                                                            // ),
                                                             textInputAction:
                                                                 TextInputAction
                                                                     .done,

@@ -582,9 +582,12 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     }
   }
 
-  createMarkerIcons(SubShipment shipment) async {
+  truckiconload() async {
     truckicon = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(), "assets/icons/truck.png");
+  }
+
+  createMarkerIcons(SubShipment shipment) async {
     markers = {};
 
     for (var i = 0; i < shipment.pathpoints!.length; i++) {
@@ -698,6 +701,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   @override
   void initState() {
     super.initState();
+    truckiconload();
     timer = Timer.periodic(const Duration(seconds: 10), (timer) {
       print("timer");
       _listenLocation();
