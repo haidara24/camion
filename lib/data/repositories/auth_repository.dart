@@ -81,7 +81,7 @@ class AuthRepository {
       // }
       // firebaseToken = await messaging.getAPNSToken();
       // print(firebaseToken);
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(Duration(seconds: 1));
       firebaseToken = await messaging.getToken();
       if (Platform.isAndroid) {}
       var prefs = await SharedPreferences.getInstance();
