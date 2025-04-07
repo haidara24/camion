@@ -10,7 +10,6 @@ import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/views/screens/driver/search_shipment_details_screen.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchShippmentScreen extends StatefulWidget {
   final int truckId;

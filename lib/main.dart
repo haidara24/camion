@@ -120,8 +120,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+// Top-level background message handler
+@pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // you need to initialize firebase first
+  // Initialize Firebase
   await Firebase.initializeApp(
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
@@ -142,9 +144,9 @@ void main() async {
     name: "Camion",
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   HttpOverrides.global = MyHttpOverrides();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       statusBarColor: AppColor.deepBlack,

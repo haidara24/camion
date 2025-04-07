@@ -58,6 +58,10 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
     super.dispose();
   }
 
+  Future<void> onRefresh() async {
+    BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LocaleCubit, LocaleState>(
@@ -68,255 +72,263 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen> {
               : TextDirection.rtl,
           child: Scaffold(
             backgroundColor: Colors.grey[100],
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: BlocConsumer<OwnerTrucksBloc, OwnerTrucksState>(
-                  listener: (context, state) {
-                    if (state is OwnerTrucksLoadedSuccess) {}
-                  },
-                  builder: (context, state) {
-                    if (state is OwnerTrucksLoadedSuccess) {
-                      // if (subshipment != null) {
-                      //   subshipment = state.shipments[0];
-                      //   truckLocation = subshipment!.truck!.location_lat!;
-                      // }
-                      return Column(
-                        children: [
-                          state.trucks.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: state.trucks.length,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return InkWell(
-                                      onTap: () {
-                                        if (!(state.trucks[index].gpsId ==
-                                                null ||
-                                            state
-                                                .trucks[index].gpsId!.isEmpty ||
-                                            state.trucks[index].gpsId!.length <
-                                                8)) {
-                                          final now = DateTime.now();
-                                          final startTime = now.subtract(
-                                              const Duration(days: 29));
-                                          final dateFormat = intel.DateFormat(
-                                              'yyyy-MM-dd HH:mm:ss');
+            body: RefreshIndicator(
+              onRefresh: onRefresh,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: BlocConsumer<OwnerTrucksBloc, OwnerTrucksState>(
+                    listener: (context, state) {
+                      if (state is OwnerTrucksLoadedSuccess) {}
+                    },
+                    builder: (context, state) {
+                      if (state is OwnerTrucksLoadedSuccess) {
+                        // if (subshipment != null) {
+                        //   subshipment = state.shipments[0];
+                        //   truckLocation = subshipment!.truck!.location_lat!;
+                        // }
+                        return Column(
+                          children: [
+                            state.trucks.isNotEmpty
+                                ? ListView.builder(
+                                    itemCount: state.trucks.length,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemBuilder: (context, index) {
+                                      return InkWell(
+                                        onTap: () {
+                                          if (!(state.trucks[index].gpsId ==
+                                                  null ||
+                                              state.trucks[index].gpsId!
+                                                  .isEmpty ||
+                                              state.trucks[index].gpsId!
+                                                      .length <
+                                                  8)) {
+                                            final now = DateTime.now();
+                                            final startTime = now.subtract(
+                                                const Duration(days: 29));
+                                            final dateFormat = intel.DateFormat(
+                                                'yyyy-MM-dd HH:mm:ss');
 
-                                          final formattedStartTime =
-                                              dateFormat.format(startTime);
-                                          final formattedEndTime =
-                                              dateFormat.format(now);
+                                            final formattedStartTime =
+                                                dateFormat.format(startTime);
+                                            final formattedEndTime =
+                                                dateFormat.format(now);
 
-                                          BlocProvider.of<TotalStatisticsBloc>(
-                                                  context)
-                                              .add(
-                                            TotalStatisticsLoadEvent(
-                                                formattedStartTime,
-                                                formattedEndTime,
-                                                state.trucks[index].carId!),
+                                            BlocProvider.of<
+                                                        TotalStatisticsBloc>(
+                                                    context)
+                                                .add(
+                                              TotalStatisticsLoadEvent(
+                                                  formattedStartTime,
+                                                  formattedEndTime,
+                                                  state.trucks[index].carId!),
+                                            );
+
+                                            BlocProvider.of<
+                                                        CarGpsStatusDetailsBloc>(
+                                                    context)
+                                                .add(
+                                              CarGpsStatusDetailsButtonPressed(
+                                                state.trucks[index].gpsId!,
+                                              ),
+                                            );
+                                          }
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OwnerTruckDetailsScreen(
+                                                truck: state.trucks[index],
+                                              ),
+                                            ),
                                           );
-
-                                          BlocProvider.of<
-                                                      CarGpsStatusDetailsBloc>(
-                                                  context)
-                                              .add(
-                                            CarGpsStatusDetailsButtonPressed(
-                                              state.trucks[index].gpsId!,
+                                        },
+                                        child: AbsorbPointer(
+                                          absorbing: false,
+                                          child: Card(
+                                            color: AppColor.lightYellow,
+                                            elevation: 1,
+                                            margin: const EdgeInsets.symmetric(
+                                              vertical: 8,
                                             ),
-                                          );
-                                        }
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                OwnerTruckDetailsScreen(
-                                              truck: state.trucks[index],
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(10),
+                                              ),
+                                              side: BorderSide(
+                                                color: AppColor.deepYellow,
+                                                width: 2,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                      },
-                                      child: AbsorbPointer(
-                                        absorbing: false,
-                                        child: Card(
-                                          color: AppColor.lightYellow,
-                                          elevation: 1,
-                                          margin: const EdgeInsets.symmetric(
-                                            vertical: 8,
-                                          ),
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                const BorderRadius.all(
-                                              Radius.circular(10),
-                                            ),
-                                            side: BorderSide(
-                                              color: AppColor.deepYellow,
-                                              width: 2,
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                      vertical: 8.0,
-                                                      horizontal: 16.0,
-                                                    ),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Column(
-                                                          children: [
-                                                            SizedBox(
-                                                              height: 23.5.h,
-                                                              width: 115.w,
-                                                              child:
-                                                                  CachedNetworkImage(
-                                                                imageUrl: state
-                                                                    .trucks[
-                                                                        index]
-                                                                    .truckType!
-                                                                    .image!,
-                                                                progressIndicatorBuilder:
-                                                                    (context,
-                                                                            url,
-                                                                            downloadProgress) =>
-                                                                        Shimmer
-                                                                            .fromColors(
-                                                                  baseColor:
-                                                                      (Colors.grey[
-                                                                          300])!,
-                                                                  highlightColor:
-                                                                      (Colors.grey[
-                                                                          100])!,
-                                                                  enabled: true,
-                                                                  child:
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Expanded(
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        vertical: 8.0,
+                                                        horizontal: 16.0,
+                                                      ),
+                                                      child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        children: [
+                                                          Column(
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 23.5.h,
+                                                                width: 115.w,
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl: state
+                                                                      .trucks[
+                                                                          index]
+                                                                      .truckType!
+                                                                      .image!,
+                                                                  progressIndicatorBuilder: (context,
+                                                                          url,
+                                                                          downloadProgress) =>
+                                                                      Shimmer
+                                                                          .fromColors(
+                                                                    baseColor:
+                                                                        (Colors.grey[
+                                                                            300])!,
+                                                                    highlightColor:
+                                                                        (Colors.grey[
+                                                                            100])!,
+                                                                    enabled:
+                                                                        true,
+                                                                    child:
+                                                                        Container(
+                                                                      height:
+                                                                          23.5.h,
+                                                                      color: Colors
+                                                                          .white,
+                                                                    ),
+                                                                  ),
+                                                                  errorWidget: (context,
+                                                                          url,
+                                                                          error) =>
                                                                       Container(
                                                                     height:
                                                                         23.5.h,
+                                                                    width: selectedTruck ==
+                                                                            index
+                                                                        ? 119.w
+                                                                        : 118.w,
                                                                     color: Colors
-                                                                        .white,
+                                                                            .grey[
+                                                                        300],
+                                                                    child:
+                                                                        Center(
+                                                                      child: Text(AppLocalizations.of(
+                                                                              context)!
+                                                                          .translate(
+                                                                              'image_load_error')),
+                                                                    ),
                                                                   ),
                                                                 ),
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    Container(
-                                                                  height:
-                                                                      23.5.h,
-                                                                  width: selectedTruck ==
+                                                              ),
+                                                              Text(
+                                                                "${localeState.value.languageCode == "en" ? state.trucks[index].truckType!.name! : state.trucks[index].truckType!.nameAr!} ",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: selectedTruck ==
                                                                           index
-                                                                      ? 119.w
-                                                                      : 118.w,
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      300],
-                                                                  child: Center(
-                                                                    child: Text(AppLocalizations.of(
-                                                                            context)!
-                                                                        .translate(
-                                                                            'image_load_error')),
-                                                                  ),
+                                                                      ? 17.sp
+                                                                      : 15.sp,
+                                                                  color: AppColor
+                                                                      .deepBlack,
                                                                 ),
                                                               ),
-                                                            ),
-                                                            Text(
-                                                              "${localeState.value.languageCode == "en" ? state.trucks[index].truckType!.name! : state.trucks[index].truckType!.nameAr!} ",
-                                                              style: TextStyle(
-                                                                fontSize:
-                                                                    selectedTruck ==
-                                                                            index
-                                                                        ? 17.sp
-                                                                        : 15.sp,
-                                                                color: AppColor
-                                                                    .deepBlack,
+                                                            ],
+                                                          ),
+                                                          Column(
+                                                            children: [
+                                                              Text(
+                                                                'No: ${state.trucks[index].truckNumber!}',
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Column(
-                                                          children: [
-                                                            Text(
-                                                              'No: ${state.trucks[index].truckNumber!}',
-                                                            ),
-                                                            Text(
-                                                              "${state.trucks[index].driver_firstname!} ${state.trucks[index].driver_lastname!}",
-                                                              style: TextStyle(
-                                                                fontSize:
-                                                                    selectedTruck ==
-                                                                            index
-                                                                        ? 17.sp
-                                                                        : 15.sp,
-                                                                color: AppColor
-                                                                    .deepBlack,
+                                                              Text(
+                                                                "${state.trucks[index].driver_firstname!} ${state.trucks[index].driver_lastname!}",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: selectedTruck ==
+                                                                          index
+                                                                      ? 17.sp
+                                                                      : 15.sp,
+                                                                  color: AppColor
+                                                                      .deepBlack,
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  height: 25.h,
-                                                  width: 25.h,
-                                                  child: SvgPicture.asset(
-                                                    state.trucks[index].isOn!
-                                                        ? "assets/icons/truck_on.svg"
-                                                        : "assets/icons/truck_off.svg",
+                                                  SizedBox(
+                                                    height: 25.h,
+                                                    width: 25.h,
+                                                    child: SvgPicture.asset(
+                                                      state.trucks[index].isOn!
+                                                          ? "assets/icons/truck_on.svg"
+                                                          : "assets/icons/truck_off.svg",
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  })
-                              : NoResultsWidget(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("no_trucks"),
-                                ),
-                          SizedBox(
-                            height: 4.h,
-                          ),
-                          CustomButton(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AddNewTruckScreen(ownerId: ownerId),
-                                ),
-                              );
-                            },
-                            title: SizedBox(
-                              height: 50.h,
-                              width: MediaQuery.sizeOf(context).width * .9,
-                              child: Center(
-                                child: SectionBody(
-                                  text: AppLocalizations.of(context)!
-                                      .translate("create_new_truck"),
+                                      );
+                                    })
+                                : NoResultsWidget(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("no_trucks"),
+                                  ),
+                            SizedBox(
+                              height: 4.h,
+                            ),
+                            CustomButton(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        AddNewTruckScreen(ownerId: ownerId),
+                                  ),
+                                );
+                              },
+                              title: SizedBox(
+                                height: 50.h,
+                                width: MediaQuery.sizeOf(context).width * .9,
+                                child: Center(
+                                  child: SectionBody(
+                                    text: AppLocalizations.of(context)!
+                                        .translate("create_new_truck"),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return Center(
-                        child: LoadingIndicator(),
-                      );
-                    }
-                  },
+                          ],
+                        );
+                      } else {
+                        return Center(
+                          child: LoadingIndicator(),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ),
             ),

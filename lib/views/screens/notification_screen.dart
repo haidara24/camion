@@ -180,9 +180,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       child: ListTile(
                                         // contentPadding: EdgeInsets.zero,
                                         onTap: () async {
-                                          print(notificationProvider
-                                              .notifications[index]!
-                                              .noteficationType);
                                           if (notificationProvider
                                                   .notifications[index]!
                                                   .noteficationType ==

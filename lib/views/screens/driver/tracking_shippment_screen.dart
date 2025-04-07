@@ -750,9 +750,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                   if (state.shipments.isNotEmpty) {
                     truckLocation = state.shipments[0].truck!.location_lat!;
                     createMarkerIcons(state.shipments[0]);
-                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                      setState(() {});
-                    });
+                    setState(() {});
                   }
                 }
               },

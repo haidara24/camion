@@ -107,7 +107,7 @@ class PathStatisticsWidget extends StatelessWidget {
                       builder: (context, localeState) {
                         return SectionBody(
                           text:
-                              "${distance.toStringAsFixed(2)} ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
+                              "${distance.toStringAsFixed(1)} ${localeState.value.languageCode == 'en' ? "km" : "كم"}",
                         );
                       },
                     ),

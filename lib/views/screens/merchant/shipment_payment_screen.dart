@@ -425,8 +425,8 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                         context: context,
                         backgroundColor: AppColor.deepGreen,
                         message: localeState.value.languageCode == 'en'
-                            ? 'Payment has been created successfully.'
-                            : 'تم الدفع بنجاح',
+                            ? 'Payment Settled.'
+                            : 'تم الدفع',
                       );
                       taskProvider.decreaseTaskNum();
 

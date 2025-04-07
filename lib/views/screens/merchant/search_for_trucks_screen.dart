@@ -1150,50 +1150,6 @@ class _SearchForTrucksScreenState extends State<SearchForTrucksScreen> {
                             ),
                           ),
                         ),
-                        // Positioned(
-                        //   bottom: 0,
-                        //   child: Container(
-                        //     height: 80.h,
-                        //     decoration: BoxDecoration(
-                        //       color: Colors.white,
-                        //       border: Border(
-                        //         top: BorderSide(
-                        //             color: AppColor.darkGrey200, width: 2),
-                        //       ),
-                        //     ),
-                        //     width: MediaQuery.of(context).size.width,
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.symmetric(vertical: 2.5),
-                        //       child: Row(
-                        //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        //         children: [
-                        //           SizedBox(
-                        //             width:
-                        //                 MediaQuery.of(context).size.width * .92,
-                        //             child: CustomButton(
-                        //               title: Text(
-                        //                 AppLocalizations.of(context)!
-                        //                     .translate('confirm'),
-                        //                 style: TextStyle(
-                        //                   fontSize: 20.sp,
-                        //                 ),
-                        //               ),
-                        //               onTap: () {
-                        //                 // Navigator.push(
-                        //                 //   context,
-                        //                 //   MaterialPageRoute(
-                        //                 //     builder: (context) =>
-                        //                 //         AddCommodityScreen(),
-                        //                 //   ),
-                        //                 // );
-                        //               },
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                       ],
                     ),
                   );

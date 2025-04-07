@@ -77,6 +77,8 @@ class TruckRepository {
     var rs = await HttpHelper.get('${TRUCKS_ENDPOINT}list_for_owner/',
         apiToken: jwt);
     ktrucks = [];
+    print(rs.statusCode);
+    print(rs.body);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 

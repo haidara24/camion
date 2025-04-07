@@ -1033,8 +1033,8 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                             message: localeState
                                                         .value.languageCode ==
                                                     'en'
-                                                ? 'Truck has been created successfully.'
-                                                : 'تم اضافة مركبة جديدة.',
+                                                ? 'Truck Added.'
+                                                : 'تم إضافة شاحنة.',
                                           );
 
                                           SharedPreferences prefs =

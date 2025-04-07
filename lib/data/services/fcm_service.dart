@@ -183,17 +183,29 @@ class NotificationServices {
       return;
     }
 
-    if (message.data['notification_type'] == "A" ||
-        message.data['notification_type'] == "J") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ApprovalRequestDetailsScreen(
-            type: message.data['notification_type'],
-            objectId: int.parse(message.data['objectId']),
+    if (message.data['notification_type'] == "J") {
+      var prefs = await SharedPreferences.getInstance();
+      var userType = prefs.getString("userType");
+      if (userType == "Driver") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SubShipmentDetailsScreen(
+              objectId: int.parse(message.data['objectId']),
+            ),
           ),
-        ),
-      );
+        );
+      } else if (userType == "Merchant") {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ApprovalRequestDetailsScreen(
+              type: message.data['notification_type'],
+              objectId: int.parse(message.data['objectId']),
+            ),
+          ),
+        );
+      }
     } else if (message.data['notification_type'] == "O") {
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType");
@@ -217,7 +229,8 @@ class NotificationServices {
         );
       }
     } else if (message.data['notification_type'] == "T" ||
-        message.data['notification_type'] == "C") {
+        message.data['notification_type'] == "C" ||
+        message.data['notification_type'] == "A") {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -241,6 +254,15 @@ class NotificationServices {
         MaterialPageRoute(
           builder: (context) => PaymentInstructionDetailsScreen(
             shipment: int.parse(message.data['objectId']),
+          ),
+        ),
+      );
+    } else if (message.data['notification_type'] == "F") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SubShipmentDetailsScreen(
+            objectId: int.parse(message.data['objectId']),
           ),
         ),
       );

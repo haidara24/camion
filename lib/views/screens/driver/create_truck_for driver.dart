@@ -474,7 +474,7 @@ class _CreateTruckForDriverScreenState
                                   },
                                 ),
                                 SizedBox(
-                                  height: 8.h,
+                                  height: 16.h,
                                 ),
                                 Row(
                                   mainAxisAlignment:
@@ -819,9 +819,14 @@ class _CreateTruckForDriverScreenState
                                 const SizedBox(
                                   height: 16,
                                 ),
-                                SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate('governorate')),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SectionTitle(
+                                        text: AppLocalizations.of(context)!
+                                            .translate('governorate')),
+                                  ],
+                                ),
                                 BlocBuilder<GovernoratesListBloc,
                                     GovernoratesListState>(
                                   builder: (context, state) {
@@ -863,6 +868,8 @@ class _CreateTruckForDriverScreenState
                                           onChanged: (Governorate? value) {
                                             setState(() {
                                               governorate = value;
+                                              trafficController.text =
+                                                  value!.id!.toString();
                                               isGovernorateValid = true;
                                             });
                                           },

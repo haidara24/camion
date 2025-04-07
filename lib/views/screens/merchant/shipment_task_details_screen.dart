@@ -3046,8 +3046,8 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                     message: localeState.value
                                                                 .languageCode ==
                                                             'en'
-                                                        ? 'shipment instruction has been created successfully.'
-                                                        : 'تم اضافة تعليمات الشحن بنجاح.',
+                                                        ? 'Instructions Submitted.'
+                                                        : 'تم إدخال التعليمات.',
                                                   );
 
                                                   Navigator.pop(context);
