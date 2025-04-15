@@ -12,6 +12,7 @@ import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
+import 'package:camion/business_logic/bloc/update_owner_trucks_locations_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/user_model.dart';
@@ -69,7 +70,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
   void initState() {
     super.initState();
     getUserData();
-    BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
     BlocProvider.of<OwnerShipmentListBloc>(context)
         .add(OwnerShipmentListLoadEvent("P"));
     BlocProvider.of<PostBloc>(context).add(PostLoadEvent());
@@ -80,6 +80,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
     BlocProvider.of<OwnerActiveShipmentsBloc>(context)
         .add(OwnerActiveShipmentsLoadEvent());
     BlocProvider.of<TruckTypeBloc>(context).add(TruckTypeLoadEvent());
+    BlocProvider.of<UpdateOwnerTrucksLocationsBloc>(context)
+        .add(UpdateOwnerTrucksLocationsLoadEvent());
     BlocProvider.of<OwnerTrucksBloc>(context).add(OwnerTrucksLoadEvent());
     BlocProvider.of<GovernoratesListBloc>(context)
         .add(GovernoratesListLoadEvent());

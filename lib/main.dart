@@ -5,6 +5,7 @@ import 'package:camion/Localization/app_localizations_setup.dart';
 import 'package:camion/business_logic/bloc/bloc/car_gps_status_details_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_store_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_truck_price_bloc.dart';
+import 'package:camion/business_logic/bloc/bloc/get_owner_trucks_with_gps_locations_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/update_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
@@ -79,6 +80,7 @@ import 'package:camion/business_logic/bloc/truck_fixes/create_truck_fix_bloc.dar
 import 'package:camion/business_logic/bloc/truck_papers/create_truck_paper_bloc.dart';
 import 'package:camion/business_logic/bloc/truck_papers/truck_papers_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/update_owner_trucks_locations_bloc.dart';
 import 'package:camion/business_logic/cubit/bottom_nav_bar_cubit.dart';
 import 'package:camion/business_logic/cubit/internet_cubit.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -252,6 +254,18 @@ class MyApp extends StatelessWidget {
                         truckPriceRepository:
                             RepositoryProvider.of<TruckPriceRepository>(
                                 context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => UpdateOwnerTrucksLocationsBloc(
+                        truckRepository:
+                            RepositoryProvider.of<TruckRepository>(context),
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => GetOwnerTrucksWithGpsLocationsBloc(
+                        truckRepository:
+                            RepositoryProvider.of<TruckRepository>(context),
                       ),
                     ),
                     BlocProvider(
@@ -765,7 +779,7 @@ class MyApp extends StatelessWidget {
                               ),
                             ),
                           ),
-                          textTheme: localeState.value.languageCode == "en"
+                          textTheme: localeState.value.languageCode == "ar"
                               ? GoogleFonts.tajawalTextTheme(
                                   Theme.of(context).textTheme,
                                 )

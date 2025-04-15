@@ -32,6 +32,35 @@ class TruckRepository {
     return ktrucks;
   }
 
+  Future<bool> getOwnerTrucksLocations() async {
+    prefs = await SharedPreferences.getInstance();
+    print("get owner trucks locations");
+
+    var jwt = prefs.getString("token");
+    var owner = prefs.getInt("truckowner");
+    print("owner $owner");
+    print(OWNER_TRUCKS_GPS_LOCATION_ENDPOINT);
+
+    try {
+      var response = await HttpHelper.get(
+          '$OWNER_TRUCKS_GPS_LOCATION_ENDPOINT$owner/',
+          apiToken: jwt);
+      print("response.statusCode ${response.statusCode}");
+      print("body ${response.body}");
+      if (response.statusCode == 200) {
+        print('Truck locations updated successfully');
+        return true;
+      } else {
+        print('Failed to update truck locations: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Error during API call: $e');
+      return false;
+    }
+  }
+
   Future<List<KTruck>> getNearestTrucks(
       List<int> types, String location, String pol, String pod) async {
     prefs = await SharedPreferences.getInstance();
@@ -78,13 +107,35 @@ class TruckRepository {
         apiToken: jwt);
     ktrucks = [];
     print(rs.statusCode);
-    print(rs.body);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
 
       for (var element in result) {
+        ktrucks.add(KTruck.fromJson(element));
+      }
+    }
+    return ktrucks;
+  }
+
+  Future<List<KTruck>> getTrucksWithGpsForOwner() async {
+    prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var owner = prefs.getInt("truckowner");
+
+    var response = await HttpHelper.get(
+        '$OWNER_TRUCKS_LIST_GPS_LOCATION_ENDPOINT$owner/',
+        apiToken: jwt);
+    ktrucks = [];
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      var myDataString = utf8.decode(response.bodyBytes);
+
+      var result = jsonDecode(myDataString);
+
+      for (var element in result["trucks"]) {
         ktrucks.add(KTruck.fromJson(element));
       }
     }

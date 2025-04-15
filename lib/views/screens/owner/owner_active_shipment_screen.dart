@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/bloc/get_owner_trucks_with_gps_locations_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
+import 'package:camion/business_logic/bloc/update_owner_trucks_locations_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/helpers/color_constants.dart';
@@ -28,7 +30,8 @@ class OwnerActiveShipmentScreen extends StatefulWidget {
 class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
     with TickerProviderStateMixin {
   late AnimationController animcontroller;
-  late Timer timer;
+  int _countdown = 10;
+  late Timer? _timer;
   late GoogleMapController _controller;
   String? truckLocation = "";
   ScrollController _scrollController = ScrollController();
@@ -127,9 +130,17 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
                         ),
                         onTap: () {
                           setState(() {
-                            truckLocation = truckLocation!;
-                            _bottomPosition = 150.h;
+                            selectedIndex = index; // Update selected index
+                            selectedTruck = index;
+                            truckLocation = trucks[index].locationLat!;
                           });
+                          _updateMarkers(trucks);
+                          _scrollController.animateTo(
+                            index * 180.w, // Calculate the scroll offset
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeInOut,
+                          ); // Rebuild markers with updated colors
+                          mymap();
                         },
                       ),
                     );
@@ -248,12 +259,7 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    timer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      // _fetchTruckLocation(subshipment!.truck!.id!);
-      if (startTracking) {
-        mymap();
-      }
-    });
+    startCountdown();
     rootBundle.loadString('assets/style/map_style.json').then((string) {
       _mapStyle = string;
     });
@@ -266,8 +272,26 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
     _scrollController.dispose();
     animcontroller.dispose();
     _controller.dispose();
-    timer.cancel();
+    _timer!.cancel();
     super.dispose();
+  }
+
+  void startCountdown() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      if (_countdown > 0) {
+        setState(() {
+          _countdown--;
+        });
+      } else {
+        BlocProvider.of<GetOwnerTrucksWithGpsLocationsBloc>(context)
+            .add(GetOwnerTrucksWithGpsLocationsLoadEvent());
+        // await callApi(); // Wait for API call to complete
+        setState(() {
+          _countdown = 10; // Reset counter
+        });
+        // Timer continues automatically for the next cycle
+      }
+    });
   }
 
 // Helper method to update markers
@@ -313,90 +337,156 @@ class _OwnerActiveShipmentScreenState extends State<OwnerActiveShipmentScreen>
               : TextDirection.rtl,
           child: Scaffold(
             backgroundColor: Colors.grey[100],
-            body: BlocConsumer<OwnerTrucksBloc, OwnerTrucksState>(
-              listener: (context, state) {
-                if (state is OwnerTrucksLoadedSuccess) {}
+            body: BlocListener<UpdateOwnerTrucksLocationsBloc,
+                UpdateOwnerTrucksLocationsState>(
+              listener: (context, ownerLocationstate) {
+                // TODO: implement listener
+                if (ownerLocationstate
+                    is UpdateOwnerTrucksLocationsLoadedSuccess) {
+                  BlocProvider.of<OwnerTrucksBloc>(context)
+                      .add(OwnerTrucksLoadEvent());
+                }
               },
-              builder: (context, state) {
-                if (state is OwnerTrucksLoadedSuccess) {
-                  return Visibility(
-                    visible: state.trucks.isNotEmpty,
-                    replacement: NoResultsWidget(
-                        text: AppLocalizations.of(context)!
-                            .translate('no_active')),
-                    child: Stack(
-                      children: [
-                        GoogleMap(
-                          onMapCreated: (GoogleMapController controller) async {
-                            setState(() {
-                              _controller = controller;
-                              _controller.setMapStyle(_mapStyle);
-                            });
-                            initMapbounds(state.trucks);
+              child: BlocListener<GetOwnerTrucksWithGpsLocationsBloc,
+                  GetOwnerTrucksWithGpsLocationsState>(
+                listener: (context, ownerTruckListstate) {
+                  // TODO: implement listener
+                  if (ownerTruckListstate
+                      is GetOwnerTrucksWithGpsLocationsLoadedSuccess) {
+                    _updateMarkers(ownerTruckListstate.trucks);
+                  }
+                },
+                child: BlocConsumer<OwnerTrucksBloc, OwnerTrucksState>(
+                  listener: (context, state) {
+                    if (state is OwnerTrucksLoadedSuccess) {}
+                  },
+                  builder: (context, state) {
+                    if (state is OwnerTrucksLoadedSuccess) {
+                      return Visibility(
+                        visible: state.trucks.isNotEmpty,
+                        replacement: NoResultsWidget(
+                            text: AppLocalizations.of(context)!
+                                .translate('no_trucks')),
+                        child: Stack(
+                          children: [
+                            GoogleMap(
+                              onMapCreated:
+                                  (GoogleMapController controller) async {
+                                setState(() {
+                                  _controller = controller;
+                                  _controller.setMapStyle(_mapStyle);
+                                });
+                                initMapbounds(state.trucks);
 
-                            _updateMarkers(state.trucks);
-                          },
-                          zoomControlsEnabled: true,
-                          mapToolbarEnabled: true,
-                          myLocationButtonEnabled: false,
-                          myLocationEnabled: false,
+                                _updateMarkers(state.trucks);
+                              },
+                              zoomControlsEnabled: true,
+                              mapToolbarEnabled: true,
+                              myLocationButtonEnabled: false,
+                              myLocationEnabled: false,
 
-                          initialCameraPosition: const CameraPosition(
-                              target: LatLng(35.363149, 35.932120),
-                              zoom: 14.47),
-                          // gestureRecognizers: {},
-                          markers: markers,
+                              initialCameraPosition: const CameraPosition(
+                                  target: LatLng(35.363149, 35.932120),
+                                  zoom: 14.47),
+                              // gestureRecognizers: {},
+                              markers: markers,
 
-                          // mapType: shipmentProvider.mapType,
-                        ),
-                        Positioned(
-                          top: 0,
-                          right: 5,
-                          child: IconButton(
-                            onPressed: () {
-                              initMapbounds(state.trucks);
-                              setState(() {
-                                _bottomPosition = 0;
-                                selectedIndex = -1;
-                                selectedTruck = -1;
-                              });
-                              _updateMarkers(state.trucks);
-                            },
-                            icon: SizedBox(
-                              height: 40,
-                              width: 40,
-                              child: Center(
-                                child: Icon(
-                                  Icons.zoom_out_map,
-                                  color: Colors.grey[400],
-                                  size: 35,
+                              // mapType: shipmentProvider.mapType,
+                            ),
+                            Positioned(
+                              top: 0,
+                              right: 5,
+                              child: IconButton(
+                                onPressed: () {
+                                  initMapbounds(state.trucks);
+                                  setState(() {
+                                    _bottomPosition = 0;
+                                    selectedIndex = -1;
+                                    selectedTruck = -1;
+                                  });
+                                  _updateMarkers(state.trucks);
+                                },
+                                icon: SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.zoom_out_map,
+                                      color: Colors.grey[400],
+                                      size: 35,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        AnimatedPositioned(
-                          duration: const Duration(
-                              milliseconds: 300), // Animation duration
-                          curve: Curves.easeInOut,
-                          bottom: _bottomPosition,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: pathList(
-                              state.trucks,
-                              localeState.value.languageCode,
+                            AnimatedPositioned(
+                              duration: const Duration(
+                                  milliseconds: 300), // Animation duration
+                              curve: Curves.easeInOut,
+                              bottom: _bottomPosition,
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: pathList(
+                                  state.trucks,
+                                  localeState.value.languageCode,
+                                ),
+                              ),
                             ),
-                          ),
+                            Visibility(
+                              visible: state.trucks.isNotEmpty,
+                              child: Positioned(
+                                bottom: 110,
+                                left: 5,
+                                child: InkWell(
+                                  onTap: () {
+                                    BlocProvider.of<
+                                                GetOwnerTrucksWithGpsLocationsBloc>(
+                                            context)
+                                        .add(
+                                            GetOwnerTrucksWithGpsLocationsLoadEvent());
+                                  },
+                                  child: AbsorbPointer(
+                                    absorbing: false,
+                                    child: SizedBox(
+                                      height: 40.h,
+                                      width: 40.h,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(45),
+                                          border: Border.all(
+                                            color: AppColor.deepYellow,
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            '$_countdown',
+                                            style: const TextStyle(
+                                              // color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                } else {
-                  return Center(
-                    child: LoadingIndicator(),
-                  );
-                }
-              },
+                      );
+                    } else {
+                      return Center(
+                        child: LoadingIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
             ),
           ),
         );

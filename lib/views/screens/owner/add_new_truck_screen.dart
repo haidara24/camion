@@ -4,6 +4,7 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/core/governorates_list_bloc.dart';
 import 'package:camion/business_logic/bloc/profile/owner_profile_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/create_truck_bloc.dart';
+import 'package:camion/business_logic/bloc/truck/owner_trucks_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/truck_type_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/core_model.dart';
@@ -1037,15 +1038,9 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                                 : 'تم إضافة شاحنة.',
                                           );
 
-                                          SharedPreferences prefs =
-                                              await SharedPreferences
-                                                  .getInstance();
-                                          var owner =
-                                              prefs.getInt("truckowner");
-                                          // ignore: use_build_context_synchronously
-                                          BlocProvider.of<OwnerProfileBloc>(
+                                          BlocProvider.of<OwnerTrucksBloc>(
                                                   context)
-                                              .add(OwnerProfileLoad(owner!));
+                                              .add(OwnerTrucksLoadEvent());
                                           Navigator.pop(context);
                                         }
                                         if (state is CreateTruckFailureState) {

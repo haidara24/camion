@@ -7,6 +7,9 @@ import 'package:http/http.dart' as http;
 
 const DOMAIN = 'https://matjari.app/';
 
+const OWNER_TRUCKS_GPS_LOCATION_ENDPOINT = '${DOMAIN}update-truck-locations/';
+const OWNER_TRUCKS_LIST_GPS_LOCATION_ENDPOINT = '${DOMAIN}get-truck-locations/';
+
 const LOGIN_ENDPOINT = '${DOMAIN}camionauth/jwt/create/';
 const PHONE_LOGIN_ENDPOINT = '${DOMAIN}accounts/login/';
 const PHONE_REGISTER_ENDPOINT = '${DOMAIN}accounts/register/';
