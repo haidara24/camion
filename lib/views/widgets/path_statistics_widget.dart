@@ -161,7 +161,7 @@ class PathStatisticsWidget extends StatelessWidget {
                             fit: BoxFit.scaleDown,
                             child: SectionBody(
                               text:
-                                  " ${localeState.value.languageCode == "en" ? period.replaceAll("hours", "h").replaceAll("hour", "h") : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("minutes", "دقيقة").replaceAll("minute", "دقيقة").replaceAll("mins", "دقيقة").replaceAll("min", "دقيقة")} ",
+                                  " ${localeState.value.languageCode == "en" ? period.replaceAll("hours", "h").replaceAll("hour", "h") : period.replaceAll("hours", "ساعة").replaceAll("hour", "ساعة").replaceAll("minutes", "د").replaceAll("minute", "د").replaceAll("mins", "د").replaceAll("min", "د")} ",
                             ),
                           ),
                         );

@@ -7,6 +7,7 @@ import 'package:camion/data/models/place_model.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
 import 'package:camion/data/services/places_service.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/merchant/add_storehouse_screen.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/location_list_tile.dart';
 import 'package:camion/views/widgets/path_statistics_widget.dart';
@@ -622,119 +623,114 @@ class _AddPathScreenState extends State<AddPathScreen>
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        shipmentProvider.setStopPointLoading(
-                                          true,
-                                          selectedPointIndex,
-                                        );
-                                        shipmentProvider
-                                            .getCurrentPositionForStop(
-                                          context,
-                                          selectedPointIndex,
-                                          MediaQuery.sizeOf(context).height,
-                                        )
-                                            .then(
-                                          (value) {
-                                            shipmentProvider.togglePosition(
-                                                MediaQuery.sizeOf(context)
-                                                    .height);
-                                            placesResult = [];
-                                            _searchController.text = "";
-                                            setState(() {});
-                                            // valueProvider.setPickupPositionClick(false, selectedIndex);
-                                          },
-                                        );
-                                        if (shipmentProvider.showStores) {
-                                          shipmentProvider.setShowStores();
-                                        }
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('pick_my_location'),
-                                          ),
-                                          Icon(
-                                            Icons.location_on,
-                                            color: AppColor.deepYellow,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 30.h,
-                                    width: 16,
-                                    child: const VerticalDivider(
-                                      color: Colors.grey,
-                                      thickness: 1,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        shipmentProvider
-                                            .toggleMapMode(selectedPointIndex);
-                                        shipmentProvider.togglePosition(
-                                            MediaQuery.sizeOf(context).height);
-                                        if (shipmentProvider.showStores) {
-                                          shipmentProvider.setShowStores();
-                                        }
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('pick_from_map'),
-                                          ),
-                                          Icon(
-                                            Icons.map,
-                                            color: AppColor.deepYellow,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 30.h,
-                                    width: 16,
-                                    child: const VerticalDivider(
-                                      color: Colors.grey,
-                                      thickness: 1,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
+                                  InkWell(
+                                    onTap: () {
+                                      shipmentProvider.setStopPointLoading(
+                                        true,
+                                        selectedPointIndex,
+                                      );
+                                      shipmentProvider
+                                          .getCurrentPositionForStop(
+                                        context,
+                                        selectedPointIndex,
+                                        MediaQuery.sizeOf(context).height,
+                                      )
+                                          .then(
+                                        (value) {
+                                          shipmentProvider.togglePosition(
+                                              MediaQuery.sizeOf(context)
+                                                  .height);
+                                          placesResult = [];
+                                          _searchController.text = "";
+                                          setState(() {});
+                                          // valueProvider.setPickupPositionClick(false, selectedIndex);
+                                        },
+                                      );
+                                      if (shipmentProvider.showStores) {
                                         shipmentProvider.setShowStores();
-                                      },
-                                      child: Container(
-                                        height: 30.h,
-                                        color: shipmentProvider.showStores
-                                            ? AppColor.lightYellow
-                                            : Colors.white,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              AppLocalizations.of(context)!
-                                                  .translate('pick_store'),
-                                            ),
-                                            Icon(
-                                              Icons.warehouse,
-                                              color: AppColor.deepYellow,
-                                            ),
-                                          ],
+                                      }
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('pick_my_location'),
                                         ),
+                                        SizedBox(width: 6.w),
+                                        Icon(
+                                          Icons.location_on,
+                                          color: AppColor.deepYellow,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 30.h,
+                                    width: 16,
+                                    child: const VerticalDivider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      shipmentProvider
+                                          .toggleMapMode(selectedPointIndex);
+                                      shipmentProvider.togglePosition(
+                                          MediaQuery.sizeOf(context).height);
+                                      if (shipmentProvider.showStores) {
+                                        shipmentProvider.setShowStores();
+                                      }
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('pick_from_map'),
+                                        ),
+                                        SizedBox(width: 6.w),
+                                        Icon(
+                                          Icons.map,
+                                          color: AppColor.deepYellow,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 30.h,
+                                    width: 16,
+                                    child: const VerticalDivider(
+                                      color: Colors.grey,
+                                      thickness: 1,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      shipmentProvider.setShowStores();
+                                    },
+                                    child: Container(
+                                      height: 30.h,
+                                      color: shipmentProvider.showStores
+                                          ? AppColor.lightYellow
+                                          : Colors.white,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('pick_store'),
+                                          ),
+                                          SizedBox(width: 6.w),
+                                          Icon(
+                                            Icons.warehouse,
+                                            color: AppColor.deepYellow,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -765,39 +761,126 @@ class _AddPathScreenState extends State<AddPathScreen>
                             ? BlocBuilder<StoreListBloc, StoreListState>(
                                 builder: (context, storestate) {
                                   if (storestate is StoreListLoadedSuccess) {
-                                    return ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: storestate.stores.length,
-                                      itemBuilder: (context, index) =>
-                                          Container(
-                                        color: Colors.white,
-                                        child: StoreListTile(
-                                          store:
-                                              storestate.stores[index].address!,
-                                          onTap: () {
-                                            shipmentProvider
-                                                .setStopPointLoading(
-                                              true,
-                                              selectedPointIndex,
-                                            );
-                                            shipmentProvider.setStopPointStore(
-                                              storestate
-                                                  .stores[index].location!,
-                                              selectedPointIndex,
-                                              MediaQuery.sizeOf(context).height,
-                                            );
-                                            shipmentProvider.togglePosition(
-                                                MediaQuery.sizeOf(context)
-                                                    .height);
+                                    return storestate.stores.isEmpty
+                                        ? Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                color: Colors.white,
+                                                child: ListTile(
+                                                  horizontalTitleGap: 0,
+                                                  leading: Container(
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              45),
+                                                      color: AppColor.darkGrey,
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(4),
+                                                    child: const Icon(
+                                                      Icons.history,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  title: Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                      horizontal: 8.0,
+                                                    ),
+                                                    child: SectionBody(
+                                                      text: AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              "store_not_found"),
+                                                      color: AppColor.darkGrey,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Container(
+                                                color: Colors.white,
+                                                child: const Divider(
+                                                  height: 8,
+                                                  thickness: 2,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 4.h,
+                                              ),
+                                              SizedBox(
+                                                width:
+                                                    MediaQuery.sizeOf(context)
+                                                            .width *
+                                                        .8,
+                                                child: CustomButton(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AddStoreHouseScreen(),
+                                                      ),
+                                                    );
+                                                  },
+                                                  title: SizedBox(
+                                                    height: 50.h,
+                                                    width: MediaQuery.sizeOf(
+                                                                context)
+                                                            .width *
+                                                        .8,
+                                                    child: Center(
+                                                      child: SectionBody(
+                                                        text: AppLocalizations
+                                                                .of(context)!
+                                                            .translate(
+                                                                "add_store"),
+                                                        // color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        : ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: storestate.stores.length,
+                                            itemBuilder: (context, index) =>
+                                                Container(
+                                              color: Colors.white,
+                                              child: StoreListTile(
+                                                store: storestate
+                                                    .stores[index].address!,
+                                                onTap: () {
+                                                  shipmentProvider
+                                                      .setStopPointLoading(
+                                                    true,
+                                                    selectedPointIndex,
+                                                  );
+                                                  shipmentProvider
+                                                      .setStopPointStore(
+                                                    storestate.stores[index]
+                                                        .location!,
+                                                    selectedPointIndex,
+                                                    MediaQuery.sizeOf(context)
+                                                        .height,
+                                                  );
+                                                  shipmentProvider
+                                                      .togglePosition(
+                                                          MediaQuery.sizeOf(
+                                                                  context)
+                                                              .height);
 
-                                            placesResult = [];
-                                            _searchController.text = "";
-                                            shipmentProvider.setShowStores();
-                                            setState(() {});
-                                          },
-                                        ),
-                                      ),
-                                    );
+                                                  placesResult = [];
+                                                  _searchController.text = "";
+                                                  shipmentProvider
+                                                      .setShowStores();
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            ),
+                                          );
                                   } else {
                                     return LoadingIndicator();
                                   }
@@ -988,6 +1071,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                               onTap: () {
                                 shipmentProvider
                                     .toggleMapMode(selectedPointIndex);
+                                shipmentProvider.togglePosition(
+                                    MediaQuery.sizeOf(context).height);
                               },
                               title: SizedBox(
                                 height: 40.w,

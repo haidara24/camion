@@ -277,89 +277,6 @@ class _HomeScreenState extends State<HomeScreen>
                           color: Colors.white,
                         ),
                         InkWell(
-                          onTap: () async {
-                            if (AppLocalizations.of(context)!.isEnLocale) {
-                              BlocProvider.of<LocaleCubit>(context).toArabic();
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setString("language", "ar");
-                              UserService.updateLang("ar");
-                            } else {
-                              BlocProvider.of<LocaleCubit>(context).toEnglish();
-                              SharedPreferences prefs =
-                                  await SharedPreferences.getInstance();
-                              prefs.setString("language", "en");
-                              UserService.updateLang("en");
-                            }
-                            Future.delayed(const Duration(milliseconds: 500))
-                                .then((value) {
-                              _scaffoldKey.currentState!.closeDrawer();
-                              switch (navigationValue) {
-                                case 0:
-                                  {
-                                    setState(() {
-                                      title = AppLocalizations.of(context)!
-                                          .translate('home');
-                                    });
-                                    break;
-                                  }
-                                case 1:
-                                  {
-                                    setState(() {
-                                      title = AppLocalizations.of(context)!
-                                          .translate('myshipments');
-                                    });
-                                    break;
-                                  }
-                                case 2:
-                                  {
-                                    setState(() {
-                                      title = AppLocalizations.of(context)!
-                                          .translate('search_truck');
-                                    });
-                                    break;
-                                  }
-                                case 3:
-                                  {
-                                    setState(() {
-                                      title = AppLocalizations.of(context)!
-                                          .translate('tracking');
-                                    });
-                                    break;
-                                  }
-                                case 4:
-                                  {
-                                    setState(() {
-                                      title = AppLocalizations.of(context)!
-                                          .translate('tasks');
-                                    });
-                                    break;
-                                  }
-                              }
-                            });
-                          },
-                          child: ListTile(
-                            leading: SvgPicture.asset(
-                              "assets/icons/orange/translate_camion.svg",
-                              height: 27.h,
-                              width: 27.h,
-                            ),
-                            title: Text(
-                              localeState.value.languageCode != 'en'
-                                  ? "English"
-                                  : "العربية",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const Divider(
-                          color: Colors.white,
-                        ),
-                        InkWell(
                           onTap: () {
                             BlocProvider.of<ShipmentCompleteListBloc>(context)
                                 .add(ShipmentCompleteListLoadEvent());
@@ -437,6 +354,89 @@ class _HomeScreenState extends State<HomeScreen>
                             title: Text(
                               AppLocalizations.of(context)!
                                   .translate('contact_us'),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.white,
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            if (AppLocalizations.of(context)!.isEnLocale) {
+                              BlocProvider.of<LocaleCubit>(context).toArabic();
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString("language", "ar");
+                              UserService.updateLang("ar");
+                            } else {
+                              BlocProvider.of<LocaleCubit>(context).toEnglish();
+                              SharedPreferences prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString("language", "en");
+                              UserService.updateLang("en");
+                            }
+                            Future.delayed(const Duration(milliseconds: 500))
+                                .then((value) {
+                              _scaffoldKey.currentState!.closeDrawer();
+                              switch (navigationValue) {
+                                case 0:
+                                  {
+                                    setState(() {
+                                      title = AppLocalizations.of(context)!
+                                          .translate('home');
+                                    });
+                                    break;
+                                  }
+                                case 1:
+                                  {
+                                    setState(() {
+                                      title = AppLocalizations.of(context)!
+                                          .translate('myshipments');
+                                    });
+                                    break;
+                                  }
+                                case 2:
+                                  {
+                                    setState(() {
+                                      title = AppLocalizations.of(context)!
+                                          .translate('search_truck');
+                                    });
+                                    break;
+                                  }
+                                case 3:
+                                  {
+                                    setState(() {
+                                      title = AppLocalizations.of(context)!
+                                          .translate('tracking');
+                                    });
+                                    break;
+                                  }
+                                case 4:
+                                  {
+                                    setState(() {
+                                      title = AppLocalizations.of(context)!
+                                          .translate('tasks');
+                                    });
+                                    break;
+                                  }
+                              }
+                            });
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/orange/translate_camion.svg",
+                              height: 27.h,
+                              width: 27.h,
+                            ),
+                            title: Text(
+                              localeState.value.languageCode != 'en'
+                                  ? "English"
+                                  : "العربية",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16.sp,

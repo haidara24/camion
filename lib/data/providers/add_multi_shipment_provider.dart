@@ -30,7 +30,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   LatLng _center = const LatLng(35.363149, 35.932120);
   LatLng get center => _center;
 
-  double _zoom = 11.0;
+  double _zoom = 9.0;
   double get zoom => _zoom;
 
 /*----------------------------------*/
@@ -254,7 +254,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   void initForm() {
     // Reset Google Map-related fields
     _center = const LatLng(35.363149, 35.932120);
-    _zoom = 13.0;
+    _zoom = 9.0;
 
     // Reset commodity-related fields
     _commodityWeight_controllers = [

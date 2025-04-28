@@ -418,7 +418,7 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen> {
                                       double.parse(widget.truck.locationLat!
                                           .split(',')[1]),
                                     ),
-                                    zoom: 14.47,
+                                    zoom: 12,
                                   ),
                                   gestureRecognizers: const {},
                                   markers: {
@@ -555,12 +555,16 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen> {
                                                             height: 50.h,
                                                             width: 50.h,
                                                           ),
-                                                          SectionBody(
-                                                            text: AppLocalizations
-                                                                    .of(
-                                                                        context)!
-                                                                .translate(
-                                                                    "total_overspeed"),
+                                                          FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: SectionBody(
+                                                              text: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      "total_overspeed"),
+                                                            ),
                                                           ),
                                                           Text(state.result[
                                                                   "overSpeeds"]
@@ -638,12 +642,15 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen> {
                                                             height: 50.h,
                                                             width: 50.h,
                                                           ),
-                                                          SectionBody(
-                                                              text: AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      "total_parking")),
+                                                          FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: SectionBody(
+                                                                text: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        "total_parking")),
+                                                          ),
                                                           Text(state
                                                               .result["stops"]
                                                               .toString()),
@@ -732,12 +739,15 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen> {
                                                               width: 50.h,
                                                             ),
                                                           ),
-                                                          SectionBody(
-                                                              text: AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      "total_mileage")),
+                                                          FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: SectionBody(
+                                                                text: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        "total_mileage")),
+                                                          ),
                                                           Text(state.result[
                                                                   "totalMileage"]
                                                               .toString()),
@@ -810,12 +820,15 @@ class _OwnerTruckDetailsScreenState extends State<OwnerTruckDetailsScreen> {
                                                             height: 50.h,
                                                             width: 50.h,
                                                           ),
-                                                          SectionBody(
-                                                              text: AppLocalizations
-                                                                      .of(
-                                                                          context)!
-                                                                  .translate(
-                                                                      "total_trips")),
+                                                          FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: SectionBody(
+                                                                text: AppLocalizations.of(
+                                                                        context)!
+                                                                    .translate(
+                                                                        "total_trips")),
+                                                          ),
                                                           const Text(""),
                                                         ],
                                                       ),

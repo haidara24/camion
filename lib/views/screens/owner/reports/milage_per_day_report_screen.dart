@@ -310,6 +310,7 @@ class _MilagePerDayReportScreenState extends State<MilagePerDayReportScreen> {
                                         TableRow(children: [
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
                                                 borderRadius: BorderRadius.only(
@@ -352,6 +353,7 @@ class _MilagePerDayReportScreenState extends State<MilagePerDayReportScreen> {
                                           ),
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
                                               ),
@@ -379,6 +381,7 @@ class _MilagePerDayReportScreenState extends State<MilagePerDayReportScreen> {
                                           ),
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
                                               ),
@@ -405,6 +408,7 @@ class _MilagePerDayReportScreenState extends State<MilagePerDayReportScreen> {
                                           ),
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
                                                 borderRadius: BorderRadius.only(

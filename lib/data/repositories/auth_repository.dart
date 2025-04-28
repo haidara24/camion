@@ -104,14 +104,16 @@ class AuthRepository {
 
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
-      var jsonObject = jsonDecode(response.body);
+      var myDataString = utf8.decode(response.bodyBytes);
+      var jsonObject = jsonDecode(myDataString);
 
+      print(response.statusCode);
+      print(myDataString);
       if (response.statusCode == 401 || response.statusCode == 400) {
         data["details"] = jsonObject["details"];
         data["success"] = jsonObject["isSuccess"];
       } else if (response.statusCode == 200) {
         presisteToken(jsonObject);
-
         data["token"] = jsonObject["access"];
         data["details"] = jsonObject["details"];
         data["success"] = jsonObject["isSuccess"];
@@ -120,7 +122,7 @@ class AuthRepository {
             await HttpHelper.get(PROFILE_ENDPOINT, apiToken: data["token"]);
         if (userresponse.statusCode == 200) {
           var myDataString = utf8.decode(userresponse.bodyBytes);
-
+          print(userresponse.body);
           prefs.setString("userProfile", myDataString);
           var result = jsonDecode(myDataString);
           userProvider.setUser(UserModel.fromJson(result));
@@ -188,7 +190,8 @@ class AuthRepository {
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
 
-      var jsonObject = jsonDecode(response.body);
+      var myDataString = utf8.decode(response.bodyBytes);
+      var jsonObject = jsonDecode(myDataString);
 
       if (data["status"] == 200) {
         data["details"] = jsonObject["details"];
@@ -244,7 +247,8 @@ class AuthRepository {
 
       final Map<String, dynamic> data = <String, dynamic>{};
       data["status"] = response.statusCode;
-      var jsonObject = jsonDecode(response.body);
+      var myDataString = utf8.decode(response.bodyBytes);
+      var jsonObject = jsonDecode(myDataString);
 
       if (response.statusCode == 401 || response.statusCode == 400) {
         data["details"] = jsonObject["details"];

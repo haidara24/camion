@@ -326,8 +326,8 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => CreateStoreBloc(
-                        profileRepository:
-                            RepositoryProvider.of<ProfileRepository>(context),
+                        storeRepository:
+                            RepositoryProvider.of<StoreRepository>(context),
                       ),
                     ),
                     BlocProvider(

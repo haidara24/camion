@@ -792,9 +792,9 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                                   polylineId:
                                                       const PolylineId("route"),
                                                   points: deserializeLatLng(
-                                                      jsonEncode(
-                                                          shipmentProvider
-                                                              .pathes)),
+                                                    jsonEncode(shipmentProvider
+                                                        .pathes),
+                                                  ),
                                                   color: AppColor.deepYellow,
                                                   width: 7,
                                                 ),

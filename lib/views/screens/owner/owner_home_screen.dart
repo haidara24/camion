@@ -279,6 +279,34 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                           color: Colors.white,
                         ),
                         InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactUsScreen(),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/orange/help_info.svg",
+                              height: 25.h,
+                              width: 25.h,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('contact_us'),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.white,
+                        ),
+                        InkWell(
                           onTap: () async {
                             if (AppLocalizations.of(context)!.isEnLocale) {
                               BlocProvider.of<LocaleCubit>(context).toArabic();
@@ -350,34 +378,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen>
                               localeState.value.languageCode != 'en'
                                   ? "English"
                                   : "العربية",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        const Divider(
-                          color: Colors.white,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ContactUsScreen(),
-                              ),
-                            );
-                          },
-                          child: ListTile(
-                            leading: SvgPicture.asset(
-                              "assets/icons/orange/help_info.svg",
-                              height: 25.h,
-                              width: 25.h,
-                            ),
-                            title: Text(
-                              AppLocalizations.of(context)!
-                                  .translate('contact_us'),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16.sp,

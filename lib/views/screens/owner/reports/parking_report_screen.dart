@@ -6,6 +6,7 @@ import 'package:camion/business_logic/bloc/gps_reports/parking_report_bloc.dart'
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/methods_helper.dart';
+import 'package:camion/views/screens/owner/reports/location_map_detail_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
@@ -184,85 +185,19 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
     return str.replaceRange(str.length - 1, null, ".");
   }
 
-  showLocationModalSheet(BuildContext context, String lang) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(0),
-        ),
-      ),
-      builder: (context) => Container(
-        color: Colors.grey[200],
-        constraints:
-            BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-        width: double.infinity,
-        child: ListView(
-          // shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            AbsorbPointer(
-              absorbing: false,
-              child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    const Spacer(),
-                    // SectionTitle(
-                    //   text: AppLocalizations.of(context)!
-                    //       .translate('choose_shippment_path'),
-                    //   size: 20,
-                    // ),
-                    // const Spacer(),
-                    // const SizedBox(
-                    //   width: 25,
-                    // ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * .9,
-              child: GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: location,
-                  zoom: 15,
-                ),
-                myLocationButtonEnabled: false,
-                markers: {
-                  Marker(
-                    markerId: const MarkerId('location'),
-                    position: location,
-                  ),
-                },
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Container(
-            //   padding: const EdgeInsets.all(16),
-            //   decoration: BoxDecoration(
-            //     color: Colors.white,
-            //     borderRadius: BorderRadius.circular(15),
-            //   ),
-            //   child: Text(
-            //     positionName,
-            //     style: const TextStyle(fontSize: 16),
-            //   ),
-            // ),
-          ],
-        ),
-      ),
-    );
+  String removeSeconds(String value) {
+    String original = "07:30:13 2025-04-15";
+    // First split into time and date parts
+    var parts = original.split(' ');
+    var timePart = parts[0];
+    var datePart = parts[1];
+
+    // Remove seconds from time
+    var timeWithoutSeconds = timePart.replaceFirst(RegExp(r':\d{2}$'), '');
+
+    // Combine date first then time
+    String modified = '$datePart $timeWithoutSeconds';
+    return modified;
   }
 
   @override
@@ -456,6 +391,7 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                                         TableRow(children: [
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                   color: AppColor.lightYellow,
                                                   borderRadius: BorderRadius.only(
@@ -475,54 +411,67 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: SectionBody(
-                                                      text: AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'startDate')),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Center(
+                                                    child: SectionBody(
+                                                        text: AppLocalizations
+                                                                .of(context)!
+                                                            .translate(
+                                                                'startDate')),
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
                                               ),
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: SectionBody(
-                                                      text: AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'endDate')),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Center(
+                                                    child: SectionBody(
+                                                        text:
+                                                            AppLocalizations.of(
+                                                                    context)!
+                                                                .translate(
+                                                                    'endDate')),
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                 color: AppColor.lightYellow,
                                               ),
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: SectionBody(
-                                                      text: AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'stopTime')),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Center(
+                                                    child: SectionBody(
+                                                        text: AppLocalizations
+                                                                .of(context)!
+                                                            .translate(
+                                                                'stopTime')),
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
                                           TableCell(
                                             child: Container(
+                                              height: 50.h,
                                               decoration: BoxDecoration(
                                                   color: AppColor.lightYellow,
                                                   borderRadius: BorderRadius.only(
@@ -542,12 +491,15 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Center(
-                                                  child: SectionBody(
-                                                      text: AppLocalizations.of(
-                                                              context)!
-                                                          .translate(
-                                                              'location')),
+                                                child: FittedBox(
+                                                  fit: BoxFit.scaleDown,
+                                                  child: Center(
+                                                    child: SectionBody(
+                                                        text: AppLocalizations
+                                                                .of(context)!
+                                                            .translate(
+                                                                'location')),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -561,8 +513,11 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: SectionBody(
-                                                    text: state.result[index]
-                                                        ["startTime"]),
+                                                  text: removeSeconds(
+                                                          state.result[index]
+                                                              ["startTime"])
+                                                      .replaceAll(" ", "\n"),
+                                                ),
                                               ),
                                             ),
                                             TableCell(
@@ -570,8 +525,11 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: SectionBody(
-                                                    text: state.result[index]
-                                                        ["endTime"]),
+                                                  text: removeSeconds(
+                                                          state.result[index]
+                                                              ["endTime"])
+                                                      .replaceAll(" ", "\n"),
+                                                ),
                                               ),
                                             ),
                                             TableCell(
@@ -595,12 +553,15 @@ class _ParkingReportScreenState extends State<ParkingReportScreen> {
                                                         state.result[index]
                                                             ["lon"]);
 
-                                                    showLocationModalSheet(
-                                                        context,
-                                                        localeState.value
-                                                            .languageCode);
-                                                    getAddressForPickupFromLatLng(
-                                                        location);
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LocationMapDetailScreen(
+                                                          location: location,
+                                                        ),
+                                                      ),
+                                                    );
                                                   },
                                                   icon: Icon(
                                                     Icons.location_on,

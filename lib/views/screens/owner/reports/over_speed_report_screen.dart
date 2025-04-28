@@ -4,6 +4,7 @@ import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/gps_reports/over_speed_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/views/screens/owner/reports/location_map_detail_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
@@ -183,66 +184,6 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
     return str.replaceRange(str.length - 1, null, ".");
   }
 
-  void showMapModalSheet(BuildContext context, String lang) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(0),
-        ),
-      ),
-      builder: (context) => Container(
-        color: Colors.grey[200],
-        padding: const EdgeInsets.all(16.0),
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height,
-        ),
-        width: double.infinity,
-        child: Stack(
-          children: [
-            // GoogleMap
-            GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: location,
-                zoom: 15,
-              ),
-              myLocationButtonEnabled: false,
-              markers: {
-                Marker(
-                  markerId: const MarkerId('location'),
-                  position: location,
-                ),
-              },
-            ),
-            // Header Row
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                    ),
-                    const Spacer(),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   @override
   void initState() {
     super.initState();
@@ -257,6 +198,21 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
         "${endTime.year}-${endTime.month}-${endTime.day} ";
     enddate =
         "${endTime.year}-${endTime.month}-${endTime.day} ${endTime.hour}:${endTime.minute}:${endTime.second}";
+  }
+
+  String removeSeconds(String value) {
+    String original = "07:30:13 2025-04-15";
+    // First split into time and date parts
+    var parts = original.split(' ');
+    var timePart = parts[0];
+    var datePart = parts[1];
+
+    // Remove seconds from time
+    var timeWithoutSeconds = timePart.replaceFirst(RegExp(r':\d{2}$'), '');
+
+    // Combine date first then time
+    String modified = '$datePart $timeWithoutSeconds';
+    return modified;
   }
 
   @override
@@ -533,17 +489,22 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                                                 padding:
                                                     const EdgeInsets.all(8.0),
                                                 child: SectionBody(
-                                                    text: state.result[index]
-                                                        ["pointDt"]),
+                                                  text: removeSeconds(
+                                                    state.result[index]
+                                                        ["pointDt"],
+                                                  ).replaceAll(" ", "\n"),
+                                                ),
                                               ),
                                             ),
                                             TableCell(
                                               child: Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: SectionBody(
-                                                    text:
-                                                        '${state.result[index]["speed"]} ${localeState.value.languageCode == "en" ? 'km/h' : 'كم/ساعة'}'),
+                                                child: Center(
+                                                  child: SectionBody(
+                                                      text:
+                                                          '${state.result[index]["speed"]} ${localeState.value.languageCode == "en" ? 'km/h' : 'كم/ساعة'}'),
+                                                ),
                                               ),
                                             ),
                                             TableCell(
@@ -559,10 +520,15 @@ class _OverSpeedReportScreenState extends State<OverSpeedReportScreen> {
                                                             ["lon"]);
                                                     getAddressForPickupFromLatLng(
                                                         location);
-                                                    showMapModalSheet(
-                                                        context,
-                                                        localeState.value
-                                                            .languageCode);
+                                                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            LocationMapDetailScreen(
+                                                          location: location,
+                                                        ),
+                                                      ),
+                                                    );
                                                   },
                                                   icon: Icon(
                                                     Icons.location_on,

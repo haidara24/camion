@@ -377,6 +377,66 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                           color: Colors.white,
                         ),
                         InkWell(
+                          onTap: () {
+                            BlocProvider.of<TruckFixListBloc>(context)
+                                .add(TruckFixListLoad(null));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FixesListScreen(
+                                    truckId: truckId,
+                                  ),
+                                ));
+                            _scaffoldKey.currentState!.closeDrawer();
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/fixes.svg",
+                              height: 25.h,
+                              width: 25.h,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('my_fixes'),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.white,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ContactUsScreen(),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            leading: SvgPicture.asset(
+                              "assets/icons/orange/help_info.svg",
+                              height: 25.h,
+                              width: 25.h,
+                            ),
+                            title: Text(
+                              AppLocalizations.of(context)!
+                                  .translate('contact_us'),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                        const Divider(
+                          color: Colors.white,
+                        ),
+                        InkWell(
                           onTap: () async {
                             if (AppLocalizations.of(context)!.isEnLocale) {
                               BlocProvider.of<LocaleCubit>(context).toArabic();
@@ -448,66 +508,6 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                               localeState.value.languageCode != 'en'
                                   ? "English"
                                   : "العربية",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        const Divider(
-                          color: Colors.white,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            BlocProvider.of<TruckFixListBloc>(context)
-                                .add(TruckFixListLoad(null));
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => FixesListScreen(
-                                    truckId: truckId,
-                                  ),
-                                ));
-                            _scaffoldKey.currentState!.closeDrawer();
-                          },
-                          child: ListTile(
-                            leading: SvgPicture.asset(
-                              "assets/icons/fixes.svg",
-                              height: 25.h,
-                              width: 25.h,
-                            ),
-                            title: Text(
-                              AppLocalizations.of(context)!
-                                  .translate('my_fixes'),
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                        const Divider(
-                          color: Colors.white,
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ContactUsScreen(),
-                              ),
-                            );
-                          },
-                          child: ListTile(
-                            leading: SvgPicture.asset(
-                              "assets/icons/orange/help_info.svg",
-                              height: 25.h,
-                              width: 25.h,
-                            ),
-                            title: Text(
-                              AppLocalizations.of(context)!
-                                  .translate('contact_us'),
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16.sp,

@@ -102,7 +102,12 @@ class MapService {
 
     return Marker(
       markerId: MarkerId(id),
-      position: LatLng(double.parse(parts[0]), double.parse(parts[1])),
+      position: LatLng(
+        double.parse(parts[0]),
+        double.parse(
+          parts[1],
+        ),
+      ),
     );
   }
 

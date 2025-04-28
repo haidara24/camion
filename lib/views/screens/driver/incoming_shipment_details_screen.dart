@@ -64,7 +64,6 @@ class _IncomingShipmentDetailsScreenState
   TextEditingController extraTextController = TextEditingController();
   TextEditingController extraValueController = TextEditingController();
 
-  final GlobalKey<FormState> _acceptformKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _rejectformKey = GlobalKey<FormState>();
 
   String rejectText = "";
@@ -253,7 +252,7 @@ class _IncomingShipmentDetailsScreenState
     List<dynamic> coordinates = json.decode(jsonString);
     List<LatLng> latLngList = [];
     for (var coord in coordinates) {
-      latLngList.add(LatLng(coord[0], coord[1]));
+      latLngList.add(LatLng(coord["coordinates"][0], coord["coordinates"][1]));
     }
     return latLngList;
   }
