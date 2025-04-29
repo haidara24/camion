@@ -12,7 +12,7 @@ final class ShipmentMultiCreateInitial extends ShipmentMultiCreateState {}
 class ShippmentLoadingProgressState extends ShipmentMultiCreateState {}
 
 class ShipmentMultiCreateSuccessState extends ShipmentMultiCreateState {
-  final Shipmentv2 shipment;
+  final Shipmentv2? shipment;
 
   ShipmentMultiCreateSuccessState(this.shipment);
 }

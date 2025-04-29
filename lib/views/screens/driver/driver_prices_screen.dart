@@ -466,6 +466,7 @@ class _DriverPricesScreenState extends State<DriverPricesScreen> {
                                   : NoResultsWidget(
                                       text: AppLocalizations.of(context)!
                                           .translate("no_prices"),
+                                          height: MediaQuery.sizeOf(context).height*.6,
                                     ),
                               SizedBox(
                                 height: 4.h,

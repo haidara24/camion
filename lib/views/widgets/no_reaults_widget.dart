@@ -5,15 +5,17 @@ import 'package:lottie/lottie.dart';
 
 class NoResultsWidget extends StatelessWidget {
   final String text;
+  final double? height;
   const NoResultsWidget({
     Key? key,
     required this.text,
+     this.height,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * .7,
+      height:height?? MediaQuery.of(context).size.height * .7,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

@@ -439,14 +439,14 @@ class ShipmentRepository {
       var item = element.toJson();
       sub_shipments.add(item);
     }
-    var dataString = prefs.getString("userProfile");
-    UserModel userModel = UserModel.fromJson(jsonDecode(dataString!));
-
-    request.fields['merchant'] = userModel.merchant!.toString();
+    var merchant = prefs.getInt("merchant");
+    
+    request.fields['merchant'] = merchant.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);
     var response = await request.send();
     if (response.statusCode == 201) {
       final respStr = await response.stream.bytesToString();
+      print(respStr);
       var resString = jsonDecode(respStr);
       var res = Shipmentv2.fromJson(resString);
       return res;

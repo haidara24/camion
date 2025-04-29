@@ -933,7 +933,7 @@ class _CreateTruckForDriverScreenState
                                       ),
                                     ),
                                   ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 16),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
