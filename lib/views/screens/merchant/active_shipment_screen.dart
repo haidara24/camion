@@ -342,7 +342,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey[200],
-          border: Border(
+          border: const Border(
             top: BorderSide(
               color: Colors.grey,
               width: 1,
@@ -464,7 +464,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                                 Text('No: ${subshipments[index].id!}')
                               ],
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -670,26 +670,7 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
               return BlocConsumer<ActiveShipmentListBloc,
                   ActiveShipmentListState>(
                 listener: (context, state) {
-                  if (state is ActiveShipmentListLoadedSuccess) {
-                    if (state.shipments.isNotEmpty) {
-                      setState(() {
-                        shipmentList = state.shipments;
-                        selectedIndex = 0;
-                        selectedTruck = 0;
-                        subshipment = state.shipments[0];
-                        truckLocation = state.shipments[0].truck!.location_lat!;
-                        startTracking = false;
-                        lang = localeState.value.languageCode;
-                      });
-                      initMapbounds(state.shipments[0]);
-                      markers = {};
-                      createMarkerIcons(
-                        state.shipments,
-                        localeState.value.languageCode,
-                      );
-                      setState(() {});
-                    }
-                  }
+                  if (state is ActiveShipmentListLoadedSuccess) {}
                 },
                 builder: (context, state) {
                   if (state is ActiveShipmentListLoadedSuccess) {
@@ -711,18 +692,28 @@ class _ActiveShipmentScreenState extends State<ActiveShipmentScreen>
                               setState(() {
                                 _controller = controller;
                                 _controller.setMapStyle(_mapStyle);
-                                selectedIndex = 0;
-                                selectedTruck = 0;
                               });
-                              initMapbounds(subshipment!);
-                              markers = {};
 
-                              createMarkerIcons(
-                                state.shipments,
-                                localeState.value.languageCode,
-                              );
+                              if (state.shipments.isNotEmpty) {
+                                setState(() {
+                                  shipmentList = state.shipments;
+                                  startTracking = false;
+                                  selectedIndex = 0;
+                                  selectedTruck = 0;
+                                  subshipment = state.shipments[0];
+                                  truckLocation =
+                                      state.shipments[0].truck!.location_lat!;
+                                  startTracking = false;
+                                });
+                                initMapbounds(state.shipments[0]);
+                                markers = {};
+                                createMarkerIcons(
+                                  state.shipments,
+                                  localeState.value.languageCode,
+                                );
 
-                              setState(() {});
+                                setState(() {});
+                              }
                             },
                             zoomControlsEnabled: true,
                             mapToolbarEnabled: true,

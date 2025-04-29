@@ -464,6 +464,8 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
                         CompleteSubShipmentState>(
                       listener: (context, completestate) {
                         if (completestate is CompleteSubShipmentLoadedSuccess) {
+                          BlocProvider.of<DriverActiveShipmentBloc>(context)
+                              .add(DriverActiveShipmentLoadEvent("R"));
                           Navigator.pushAndRemoveUntil(
                               context,
                               MaterialPageRoute(
@@ -656,11 +658,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     var prefs = await SharedPreferences.getInstance();
     int truckId = prefs.getInt("truckId") ?? 0;
     String gpsId = prefs.getString("gpsId") ?? "";
-
-    print(gpsId);
-
     await _requestPermission();
-    print(gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN");
     if ((gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN") &&
         startTracking) {
       _positionStream = Geolocator.getPositionStream(
@@ -669,11 +667,8 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
           distanceFilter: 10, // Update when moving 10 meters
         ),
       ).listen((Position position) async {
-        print(position);
         if (_timer == null || !_timer!.isActive) {
           if (truckId != 0) {
-            print(position.latitude);
-
             var jwt = prefs.getString("token");
             var rs = await HttpHelper.get('$TRUCKS_ENDPOINT$truckId/',
                 apiToken: jwt);
@@ -703,7 +698,6 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     super.initState();
     truckiconload();
     timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      print("timer");
       _listenLocation();
     });
     rootBundle.loadString('assets/style/map_style.json').then((string) {
@@ -750,13 +744,7 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
             body: BlocConsumer<DriverActiveShipmentBloc,
                 DriverActiveShipmentState>(
               listener: (context, state) {
-                if (state is DriverActiveShipmentLoadedSuccess) {
-                  if (state.shipments.isNotEmpty) {
-                    truckLocation = state.shipments[0].truck!.location_lat!;
-                    createMarkerIcons(state.shipments[0]);
-                    setState(() {});
-                  }
-                }
+                if (state is DriverActiveShipmentLoadedSuccess) {}
               },
               builder: (context, state) {
                 if (state is DriverActiveShipmentLoadedSuccess) {
@@ -783,6 +771,9 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
 
                                 if (state.shipments.isNotEmpty) {
                                   initMapbounds(state.shipments[0]);
+                                  truckLocation =
+                                      state.shipments[0].truck!.location_lat!;
+                                  createMarkerIcons(state.shipments[0]);
                                 } else {
                                   var truckMarker = Marker(
                                     markerId: const MarkerId("truck"),

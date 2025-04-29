@@ -4,17 +4,15 @@ import 'dart:typed_data';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
-import 'package:camion/business_logic/bloc/requests/accept_request_for_driver_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
-import 'package:camion/business_logic/bloc/requests/reject_request_for_driver_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
-import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
@@ -31,6 +29,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart'
     show SystemChrome, SystemUiOverlayStyle, rootBundle;
 import 'package:intl/intl.dart' as intel;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class IncomingShipmentDetailsScreen extends StatefulWidget {
   final int objectId;
@@ -430,16 +429,30 @@ class _IncomingShipmentDetailsScreenState
                                         BlocConsumer<
                                             AcceptRequestForMerchantBloc,
                                             AcceptRequestForMerchantState>(
-                                          listener: (context, acceptstate) {
+                                          listener:
+                                              (context, acceptstate) async {
                                             if (acceptstate
                                                 is AcceptRequestForMerchantSuccessState) {
+                                              var prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              var usertype =
+                                                  prefs.getString("userType");
                                               Navigator.pop(context);
-                                              BlocProvider.of<
-                                                          DriverRequestsListBloc>(
-                                                      context)
-                                                  .add(
-                                                      const DriverRequestsListLoadEvent(
-                                                          null));
+                                              if (usertype == "Driver") {
+                                                BlocProvider.of<
+                                                            DriverRequestsListBloc>(
+                                                        context)
+                                                    .add(
+                                                        const DriverRequestsListLoadEvent(
+                                                            null));
+                                              } else if (usertype == "Owner") {
+                                                BlocProvider.of<
+                                                            OwnerIncomingShipmentsBloc>(
+                                                        context)
+                                                    .add(
+                                                        OwnerIncomingShipmentsLoadEvent());
+                                              }
                                             }
                                           },
                                           builder: (context, acceptstate) {
@@ -562,16 +575,30 @@ class _IncomingShipmentDetailsScreenState
                                         BlocConsumer<
                                             RejectRequestForMerchantBloc,
                                             RejectRequestForMerchantState>(
-                                          listener: (context, rejectstate) {
+                                          listener:
+                                              (context, rejectstate) async {
                                             if (rejectstate
                                                 is RejectRequestForMerchantSuccessState) {
+                                              var prefs =
+                                                  await SharedPreferences
+                                                      .getInstance();
+                                              var usertype =
+                                                  prefs.getString("userType");
                                               Navigator.pop(context);
-                                              BlocProvider.of<
-                                                          DriverRequestsListBloc>(
-                                                      context)
-                                                  .add(
-                                                      const DriverRequestsListLoadEvent(
-                                                          null));
+                                              if (usertype == "Driver") {
+                                                BlocProvider.of<
+                                                            DriverRequestsListBloc>(
+                                                        context)
+                                                    .add(
+                                                        const DriverRequestsListLoadEvent(
+                                                            null));
+                                              } else if (usertype == "Owner") {
+                                                BlocProvider.of<
+                                                            OwnerIncomingShipmentsBloc>(
+                                                        context)
+                                                    .add(
+                                                        OwnerIncomingShipmentsLoadEvent());
+                                              }
                                             }
                                           },
                                           builder: (context, rejectstate) {
@@ -741,6 +768,7 @@ class _IncomingShipmentDetailsScreenState
                                                                     rejectText,
                                                                   ),
                                                                 );
+
                                                                 Navigator.of(
                                                                         context)
                                                                     .pop();
