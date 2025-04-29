@@ -8,6 +8,7 @@ import 'package:camion/business_logic/bloc/instructions/read_payment_instruction
 import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
+import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
@@ -30,6 +31,7 @@ import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:flutter/services.dart' show SystemUiOverlayStyle, rootBundle;
 import 'package:intl/intl.dart' as intel;
 import 'package:shimmer/shimmer.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class ShipmentDetailsScreen extends StatefulWidget {
   final int shipment;
@@ -648,9 +650,145 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     List<dynamic> coordinates = json.decode(jsonString);
     List<LatLng> latLngList = [];
     for (var coord in coordinates) {
-      latLngList.add(LatLng(coord["coordinates"][0], coord["coordinates"][1]));
+      latLngList.add(LatLng(coord[0], coord[1]));
     }
     return latLngList;
+  }
+
+  List<Widget> _buildFilesImages(List<Docs> list) {
+    List<Widget> widlist = [];
+    if (list.isNotEmpty) {
+      for (var i = 0; i < list.length; i++) {
+        bool isPdf = list[i].file!.toLowerCase().endsWith('.pdf');
+        var elem = GestureDetector(
+          onTap: () {
+            showDialog<void>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return Dialog(
+                  insetPadding: EdgeInsets.zero, // Remove default padding
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width * .9,
+                    height: MediaQuery.of(context).size.height *
+                        .9, // Optional: full height
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Spacer(),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.close,
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Expanded(
+                          child: isPdf
+                              ? SfPdfViewer.network(
+                                  list[i].file!,
+                                )
+                              : CachedNetworkImage(
+                                  // height: MediaQuery.of(context).size.width * .23,
+                                  // width: 110.h,
+                                  fit: BoxFit.fill,
+                                  imageUrl: list[i].file!,
+                                  progressIndicatorBuilder:
+                                      (context, url, downloadProgress) =>
+                                          Shimmer.fromColors(
+                                    baseColor: (Colors.grey[300])!,
+                                    highlightColor: (Colors.grey[100])!,
+                                    enabled: true,
+                                    child: SizedBox(
+                                      height: 45.h,
+                                      width: 155.w,
+                                      child: SvgPicture.asset(
+                                          "assets/images/camion_loading.svg"),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      Container(
+                                    height: 45.h,
+                                    width: 155.w,
+                                    color: Colors.grey[300],
+                                    child: Center(
+                                      child: Text(AppLocalizations.of(context)!
+                                          .translate('image_load_error')),
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 6,
+              vertical: 8,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey,
+                width: 1,
+              ),
+            ),
+            width: MediaQuery.of(context).size.width * .23,
+            height: 110.h,
+            child: isPdf
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.picture_as_pdf, size: 50, color: Colors.red),
+                      SizedBox(height: 8),
+                      Text(
+                        'PDF',
+                        style: TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                    ],
+                  )
+                : CachedNetworkImage(
+                    height: MediaQuery.of(context).size.width * .23,
+                    width: 110.h,
+                    fit: BoxFit.fill,
+                    imageUrl: list[i].file!,
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Shimmer.fromColors(
+                      baseColor: (Colors.grey[300])!,
+                      highlightColor: (Colors.grey[100])!,
+                      enabled: true,
+                      child: SizedBox(
+                        height: 45.h,
+                        width: 155.w,
+                        child: SvgPicture.asset(
+                            "assets/images/camion_loading.svg"),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      height: 45.h,
+                      width: 155.w,
+                      color: Colors.grey[300],
+                      child: Center(
+                        child: Text(AppLocalizations.of(context)!
+                            .translate('image_load_error')),
+                      ),
+                    ),
+                  ),
+          ),
+        );
+        widlist.add(elem);
+      }
+    }
+    return widlist;
   }
 
   var count = 25;
@@ -814,38 +952,27 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                                 const Divider(
                                   height: 16,
                                 ),
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.start,
-                                //   children: [
-                                //     SectionTitle(
-                                //       text:
-                                //           "${AppLocalizations.of(context)!.translate("shipment_status")}: ",
-                                //     ),
-                                //     Padding(
-                                //       padding: const EdgeInsets.symmetric(
-                                //           horizontal: 4),
-                                //       child: getStatusImage(
-                                //         shipmentstate
-                                //             .shipment
-                                //             .subshipments![selectedIndex]
-                                //             .shipmentStatus!,
-                                //       ),
-                                //     ),
-                                //     SectionBody(
-                                //       text: getStatusName(
-                                //         shipmentstate
-                                //             .shipment
-                                //             .subshipments![selectedIndex]
-                                //             .shipmentStatus!,
-                                //         localeState.value.languageCode,
-                                //       ),
-                                //     ),
-                                //   ],
-                                // ),
-                                // const Divider(
-                                //   height: 16,
-                                // ),
+                                SectionTitle(
+                                  text: AppLocalizations.of(context)!
+                                      .translate("shipment_files"),
+                                ),
 
+                                const SizedBox(
+                                  height: 16,
+                                ),
+                                shipmentstate.shipment.docs!.isEmpty
+                                    ? SectionBody(
+                                        text: AppLocalizations.of(context)!
+                                            .translate("no_shipment_files"),
+                                      )
+                                    : Wrap(
+                                        alignment: WrapAlignment.start,
+                                        children: _buildFilesImages(
+                                            shipmentstate.shipment.docs!),
+                                      ),
+                                const Divider(
+                                  height: 16,
+                                ),
                                 SectionTitle(
                                   text: AppLocalizations.of(context)!
                                       .translate("shipment_route"),

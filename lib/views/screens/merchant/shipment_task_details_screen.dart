@@ -6,7 +6,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/instructions/instruction_create_bloc.dart';
 import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
-import 'package:camion/business_logic/bloc/core/package_type_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/instruction_model.dart';
@@ -15,7 +14,6 @@ import 'package:camion/data/providers/shipment_instructions_provider.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/formatter.dart';
-import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/screens/merchant/shipment_payment_screen.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
@@ -24,7 +22,6 @@ import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:ensure_visible_when_focused/ensure_visible_when_focused.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -122,42 +119,109 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
     List<Widget> widlist = [];
     if (list.isNotEmpty) {
       for (var i = 0; i < list.length; i++) {
-        var elem = Container(
-          margin: const EdgeInsets.symmetric(
-            horizontal: 6,
-            vertical: 8,
-          ),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey,
-              width: 1,
+        var elem = GestureDetector(
+          onTap: () {
+            showDialog<void>(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return Dialog(
+                  insetPadding: EdgeInsets.zero, // Remove default padding
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    width: MediaQuery.sizeOf(context).width * .9,
+                    height: MediaQuery.of(context).size.height *
+                        .9, // Optional: full height
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Spacer(),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.close,
+                              ),
+                              onPressed: () => Navigator.of(context).pop(),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Expanded(
+                          child: CachedNetworkImage(
+                            // height: MediaQuery.of(context).size.width * .23,
+                            // width: 110.h,
+                            fit: BoxFit.fill,
+                            imageUrl: list[i].file!,
+                            progressIndicatorBuilder:
+                                (context, url, downloadProgress) =>
+                                    Shimmer.fromColors(
+                              baseColor: (Colors.grey[300])!,
+                              highlightColor: (Colors.grey[100])!,
+                              enabled: true,
+                              child: SizedBox(
+                                height: 45.h,
+                                width: 155.w,
+                                child: SvgPicture.asset(
+                                    "assets/images/camion_loading.svg"),
+                              ),
+                            ),
+                            errorWidget: (context, url, error) => Container(
+                              height: 45.h,
+                              width: 155.w,
+                              color: Colors.grey[300],
+                              child: Center(
+                                child: Text(AppLocalizations.of(context)!
+                                    .translate('image_load_error')),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.symmetric(
+              horizontal: 6,
+              vertical: 8,
             ),
-          ),
-          width: MediaQuery.of(context).size.width * .23,
-          height: 110.h,
-          child: CachedNetworkImage(
-            height: MediaQuery.of(context).size.width * .23,
-            width: 110.h,
-            fit: BoxFit.fill,
-            imageUrl: list[i].file!,
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                Shimmer.fromColors(
-              baseColor: (Colors.grey[300])!,
-              highlightColor: (Colors.grey[100])!,
-              enabled: true,
-              child: SizedBox(
-                height: 45.h,
-                width: 155.w,
-                child: SvgPicture.asset("assets/images/camion_loading.svg"),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey,
+                width: 1,
               ),
             ),
-            errorWidget: (context, url, error) => Container(
-              height: 45.h,
-              width: 155.w,
-              color: Colors.grey[300],
-              child: Center(
-                child: Text(AppLocalizations.of(context)!
-                    .translate('image_load_error')),
+            width: MediaQuery.of(context).size.width * .23,
+            height: 110.h,
+            child: CachedNetworkImage(
+              height: MediaQuery.of(context).size.width * .23,
+              width: 110.h,
+              fit: BoxFit.fill,
+              imageUrl: list[i].file!,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Shimmer.fromColors(
+                baseColor: (Colors.grey[300])!,
+                highlightColor: (Colors.grey[100])!,
+                enabled: true,
+                child: SizedBox(
+                  height: 45.h,
+                  width: 155.w,
+                  child: SvgPicture.asset("assets/images/camion_loading.svg"),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: 45.h,
+                width: 155.w,
+                color: Colors.grey[300],
+                child: Center(
+                  child: Text(AppLocalizations.of(context)!
+                      .translate('image_load_error')),
+                ),
               ),
             ),
           ),
@@ -2099,97 +2163,6 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                             const SizedBox(
                                                               height: 16,
                                                             ),
-                                                            // TextFormField(
-                                                            //   controller:
-                                                            //       reciever_address_controller,
-                                                            //   onTap: () {
-                                                            //     reciever_address_controller
-                                                            //             .selection =
-                                                            //         TextSelection(
-                                                            //             baseOffset:
-                                                            //                 0,
-                                                            //             extentOffset: reciever_address_controller
-                                                            //                 .value
-                                                            //                 .text
-                                                            //                 .length);
-                                                            //   },
-                                                            //   // enabled: instructionProvider.subShipment!
-                                                            //   //         .shipmentinstructionv2 ==
-                                                            //   //     null,
-                                                            //   // scrollPadding: EdgeInsets.only(
-                                                            //   //     bottom: MediaQuery.of(
-                                                            //   //                 context)
-                                                            //   //             .viewInsets
-                                                            //   //             .bottom +
-                                                            //   //         20),
-                                                            //   textInputAction:
-                                                            //       TextInputAction
-                                                            //           .done,
-                                                            //   style:
-                                                            //       const TextStyle(
-                                                            //           fontSize:
-                                                            //               18),
-                                                            //   decoration:
-                                                            //       InputDecoration(
-                                                            //     labelText: AppLocalizations.of(
-                                                            //             context)!
-                                                            //         .translate(
-                                                            //             'reciever_address'),
-                                                            //     contentPadding:
-                                                            //         const EdgeInsets
-                                                            //             .symmetric(
-                                                            //             vertical:
-                                                            //                 11.0,
-                                                            //             horizontal:
-                                                            //                 9.0),
-                                                            //   ),
-                                                            //   onTapOutside:
-                                                            //       (event) {
-                                                            //     FocusManager
-                                                            //         .instance
-                                                            //         .primaryFocus
-                                                            //         ?.unfocus();
-                                                            //     // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                            //   },
-                                                            //   onEditingComplete:
-                                                            //       () {
-                                                            //     FocusManager
-                                                            //         .instance
-                                                            //         .primaryFocus
-                                                            //         ?.unfocus();
-
-                                                            //     // evaluatePrice();
-                                                            //   },
-                                                            //   onChanged:
-                                                            //       (value) {},
-                                                            //   autovalidateMode:
-                                                            //       AutovalidateMode
-                                                            //           .onUserInteraction,
-                                                            //   validator:
-                                                            //       (value) {
-                                                            //     if (value!
-                                                            //         .isEmpty) {
-                                                            //       return AppLocalizations.of(
-                                                            //               context)!
-                                                            //           .translate(
-                                                            //               'insert_value_validate');
-                                                            //     }
-                                                            //     return null;
-                                                            //   },
-                                                            //   onSaved:
-                                                            //       (newValue) {
-                                                            //     reciever_address_controller
-                                                            //             .text =
-                                                            //         newValue!;
-                                                            //   },
-                                                            //   // onFieldSubmitted: (value) {
-                                                            //   //   // FocusManager.instance.primaryFocus?.unfocus();
-                                                            //   //   // BlocProvider.of<BottomNavBarCubit>(context).emitShow();
-                                                            //   // },
-                                                            // ),
-                                                            // const SizedBox(
-                                                            //   height: 16,
-                                                            // ),
                                                             TextFormField(
                                                               controller:
                                                                   reciever_phone_controller,
@@ -2204,15 +2177,7 @@ class _ShipmentTaskDetailsScreenState extends State<ShipmentTaskDetailsScreen>
                                                                             .text
                                                                             .length);
                                                               },
-                                                              // enabled: instructionProvider.subShipment!
-                                                              //         .shipmentinstructionv2 ==
-                                                              //     null,
-                                                              // scrollPadding: EdgeInsets.only(
-                                                              //     bottom: MediaQuery.of(
-                                                              //                 context)
-                                                              //             .viewInsets
-                                                              //             .bottom +
-                                                              //         20),
+
                                                               textInputAction:
                                                                   TextInputAction
                                                                       .done,

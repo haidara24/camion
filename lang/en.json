@@ -163,6 +163,8 @@
     "add_truck":"add truck",
     "upload_files":"Upload Required Documents",
     "files":"Required Documents",
+    "shipment_files":"Shipment Files and Documents",
+    "no_shipment_files":"Shipment Files and Documents has not been uploaded by Admin",
     
     "truck":"Truck",
     "add_new_truck":"Add new Truck",

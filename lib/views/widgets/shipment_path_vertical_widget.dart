@@ -54,11 +54,11 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 28.h, // Match the size of your custom container
-                height: 28.h, // Ensure height matches as well
+                width: 30.h, // Match the size of your custom container
+                height: 30.h, // Ensure height matches as well
                 indicator: Container(
-                  height: 28.h,
-                  width: 28.h,
+                  height: 30.h,
+                  width: 30.h,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: AppColor.deepYellow,
@@ -67,6 +67,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(45),
                     color: AppColor.deepBlack,
                   ),
+                  padding: EdgeInsets.all(4.h),
                   child: Center(
                     child: Text(
                       "A",
@@ -118,11 +119,11 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 28.h, // Match the size of your custom container
-                height: 28.h, // Ensure height matches as well
+                width: 30.h, // Match the size of your custom container
+                height: 30.h, // Ensure height matches as well
                 indicator: Container(
-                  height: 28.h,
-                  width: 28.h,
+                  height: 30.h,
+                  width: 30.h,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: AppColor.deepYellow,
@@ -131,6 +132,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(45),
                     color: AppColor.deepBlack,
                   ),
+                  padding: EdgeInsets.all(4.h),
                   child: Center(
                     child: Text(
                       "$i",
@@ -179,11 +181,11 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                 color: AppColor.deepYellow,
               ),
               indicatorStyle: IndicatorStyle(
-                width: 28.h, // Match the size of your custom container
-                height: 28.h, // Ensure height matches as well
+                width: 30.h, // Match the size of your custom container
+                height: 30.h, // Ensure height matches as well
                 indicator: Container(
-                  height: 28.h,
-                  width: 28.h,
+                  // height: 30.h,
+                  // width: 30.h,
                   decoration: BoxDecoration(
                     border: Border.all(
                       color: AppColor.deepYellow,
@@ -192,6 +194,7 @@ class ShipmentPathVerticalWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(45),
                     color: AppColor.deepBlack,
                   ),
+                  padding: EdgeInsets.all(4.h),
                   child: Center(
                     child: Text(
                       "B",

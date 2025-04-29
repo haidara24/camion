@@ -1,5 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:camion/data/models/instruction_model.dart';
+
 class Shipmentv2 {
   int? id;
   int? merchant;
@@ -8,6 +10,7 @@ class Shipmentv2 {
   String? shipmentStatus;
   String? shipmentType;
   List<SubShipment>? subshipments;
+  List<Docs>? docs;
 
   Shipmentv2({
     this.id,
@@ -17,6 +20,7 @@ class Shipmentv2 {
     this.shipmentType,
     this.name,
     this.subshipments,
+    this.docs,
   });
 
   Shipmentv2.fromJson(Map<String, dynamic> json) {
@@ -31,6 +35,14 @@ class Shipmentv2 {
       json['subshipments'].forEach((v) {
         subshipments!.add(SubShipment.fromJson(v));
       });
+    }
+    if (json['docs'] != null) {
+      docs = <Docs>[];
+      json['docs'].forEach((v) {
+        docs!.add(Docs.fromJson(v));
+      });
+    } else {
+      docs = <Docs>[];
     }
   }
 

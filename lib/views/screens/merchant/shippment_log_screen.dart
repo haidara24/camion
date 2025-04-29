@@ -205,7 +205,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
     List<dynamic> coordinates = json.decode(jsonString);
     List<LatLng> latLngList = [];
     for (var coord in coordinates) {
-      latLngList.add(LatLng(coord["coordinates"][0], coord["coordinates"][1]));
+      latLngList.add(LatLng(coord[0], coord[1]));
     }
     return latLngList;
   }
