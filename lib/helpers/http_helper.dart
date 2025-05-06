@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
-const DOMAIN = 'https://matjari.app/';
+const DOMAIN = 'https://api.camionsy.com/';
 
 const OWNER_TRUCKS_GPS_LOCATION_ENDPOINT = '${DOMAIN}update-truck-locations/';
 const OWNER_TRUCKS_LIST_GPS_LOCATION_ENDPOINT = '${DOMAIN}get-truck-locations/';

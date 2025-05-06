@@ -782,23 +782,29 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                               ),
                                               gestureRecognizers: const {},
                                               markers: (shipmentProvider
-                                                      .stoppoints_controller
-                                                      .isNotEmpty)
+                                                      .pathConfirm)
                                                   ? shipmentProvider.stop_marker
                                                       .toSet()
                                                   : {},
-                                              polylines: {
-                                                Polyline(
-                                                  polylineId:
-                                                      const PolylineId("route"),
-                                                  points: deserializeLatLng(
-                                                    jsonEncode(shipmentProvider
-                                                        .pathes),
-                                                  ),
-                                                  color: AppColor.deepYellow,
-                                                  width: 7,
-                                                ),
-                                              },
+                                              polylines: (shipmentProvider
+                                                      .pathConfirm)
+                                                  ? {
+                                                      Polyline(
+                                                        polylineId:
+                                                            const PolylineId(
+                                                                "route"),
+                                                        points:
+                                                            deserializeLatLng(
+                                                          jsonEncode(
+                                                              shipmentProvider
+                                                                  .pathes),
+                                                        ),
+                                                        color:
+                                                            AppColor.deepYellow,
+                                                        width: 7,
+                                                      ),
+                                                    }
+                                                  : {},
                                             ),
                                           ),
                                         ),
@@ -1851,9 +1857,11 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                             ),
                                             onTap: () {
                                               if (shipmentProvider
-                                                      .stoppoints_location
-                                                      .length >
-                                                  1) {
+                                                          .stoppoints_location
+                                                          .length >
+                                                      1 &&
+                                                  shipmentProvider
+                                                      .pathConfirm) {
                                                 shipmentProvider
                                                     .setTruckConfirm(
                                                         false, selectedIndex);

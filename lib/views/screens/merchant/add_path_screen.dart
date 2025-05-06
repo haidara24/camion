@@ -179,10 +179,8 @@ class _AddPathScreenState extends State<AddPathScreen>
                           shipmentProvider
                               .initMapBounds(MediaQuery.sizeOf(context).height);
                         },
-                        // myLocationEnabled: true,
                         compassEnabled: true,
                         rotateGesturesEnabled: false,
-                        // mapType: controller.currentMapType,
                         mapToolbarEnabled: true,
                         polylines: shipmentProvider.pickMapMode
                             ? {}

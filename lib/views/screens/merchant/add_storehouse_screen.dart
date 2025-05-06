@@ -33,9 +33,8 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
     with TickerProviderStateMixin {
   // double topPosition = 0.0;
   double bottomPathStatisticPosition = -300.0;
-  double bottomPosition = 110;
+  double bottomPosition = 70;
   double toptextfeildPosition = 0;
-  bool pickMapMode = false;
 
   List<Map<String, dynamic>> cachedSearchResults = [];
 
@@ -59,48 +58,15 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
 
   void togglePosition(double height) {
     setState(() {
-      toptextfeildPosition = toptextfeildPosition == 0 ? -250 : 0;
-      bottomPathStatisticPosition =
-          pickMapMode ? -300 : (bottomPathStatisticPosition == 0 ? -300 : 0);
+      bottomPathStatisticPosition = bottomPathStatisticPosition == 0 ? -300 : 0;
 
-      bottomPosition = bottomPosition == 110 ? -height : 110;
+      bottomPosition = bottomPosition == 70 ? -height : 70;
     });
-  }
-
-  void toggleMapMode() {
-    pickMapMode = !pickMapMode;
-    if (pickMapMode) {
-      setState(() {
-        bottomPathStatisticPosition = -300;
-      });
-      if (selectedPosition != null) {
-        mapController.animateCamera(
-          CameraUpdate.newCameraPosition(
-            CameraPosition(target: selectedPosition!, zoom: 11),
-          ),
-        );
-      }
-    } else {
-      setState(() {
-        bottomPathStatisticPosition = 0;
-      });
-    }
-    setState(() {});
   }
 
   bool storeLoading = false;
 
   LatLng? selectedPosition;
-
-  late BitmapDescriptor storeicon;
-
-  createMarkerIcons() async {
-    storeicon = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(size: Size(30, 50)),
-        "assets/icons/location1.png");
-
-    setState(() {});
-  }
 
   Future<bool> _handleLocationPermission() async {
     bool serviceEnabled;
@@ -145,8 +111,12 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      createMarkerIcons();
-      // initlocation();
+      setState(() {
+        bottomPosition = -MediaQuery.sizeOf(context).height;
+        if (selectedPosition != null) {
+          newposition = selectedPosition!;
+        }
+      });
     });
     super.initState();
   }
@@ -203,33 +173,32 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                           zoomControlsEnabled: false,
                           myLocationButtonEnabled: false,
                           onCameraMove: (position) {
-                            if (pickMapMode) {
-                              setState(() {
-                                newposition = LatLng(position.target.latitude,
-                                    position.target.longitude);
-                              });
-                            }
+                            setState(() {
+                              newposition = LatLng(position.target.latitude,
+                                  position.target.longitude);
+                              selectedPosition = newposition;
+                            });
+                            print(selectedPosition);
+                            print(selectedPosition != null);
                           },
-                          markers: !pickMapMode
-                              ? (selectedPosition != null)
-                                  ? {
-                                      Marker(
-                                        markerId: MarkerId(
-                                            selectedPosition.toString()),
-                                        position: selectedPosition!,
-                                        // icon: widget.type == 0 ? pickupicon : deliveryicon,
-                                      )
-                                    }
-                                  : {}
-                              : {
+                          markers: selectedPosition != null
+                              ? {
                                   Marker(
-                                    markerId: MarkerId(newposition.toString()),
-                                    position: newposition,
+                                    markerId:
+                                        MarkerId(selectedPosition.toString()),
+                                    position: selectedPosition!,
                                     // icon: widget.type == 0 ? pickupicon : deliveryicon,
                                   )
-                                },
+                                }
+                              : {},
                           onMapCreated: (controller) {
                             mapController = controller;
+                          },
+                          onCameraIdle: () {
+                            setState(() {
+                              selectedPosition = newposition;
+                              bottomPathStatisticPosition = 0;
+                            });
                           },
                           // myLocationEnabled: true,
                           compassEnabled: true,
@@ -293,7 +262,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                                 backgroundColor: Colors.white,
                                                 title: Text(AppLocalizations.of(
                                                         context)!
-                                                    .translate('reject')),
+                                                    .translate('add_store')),
                                                 content: SingleChildScrollView(
                                                   child: Form(
                                                     key: _addressformKey,
@@ -438,7 +407,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                           // }
                         },
                         child: Container(
-                          height: 110,
+                          height: 70,
                           width: MediaQuery.sizeOf(context).width,
                           color: Colors.white,
                           child: Column(
@@ -464,7 +433,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                     },
                                     onTap: () {
                                       setState(() {
-                                        bottomPosition = 110;
+                                        bottomPosition = 70;
                                       });
                                     },
                                     onTapOutside: (event) {
@@ -481,120 +450,69 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                           .translate("search_location"),
                                       suffixIcon: locationLoading
                                           ? LoadingIndicator()
-                                          : null,
+                                          : InkWell(
+                                              onTap: () async {
+                                                if (!locationLoading) {
+                                                  setState(() {
+                                                    locationLoading = true;
+                                                  });
+                                                  setState(() {
+                                                    bottomPosition =
+                                                        -MediaQuery.sizeOf(
+                                                                context)
+                                                            .height;
+                                                  });
+
+                                                  final hasPermission =
+                                                      await _handleLocationPermission();
+
+                                                  if (!hasPermission) {
+                                                    locationLoading = false;
+                                                    return;
+                                                  }
+
+                                                  await Geolocator
+                                                          .getCurrentPosition(
+                                                              desiredAccuracy:
+                                                                  LocationAccuracy
+                                                                      .high)
+                                                      .then(
+                                                          (Position position) {
+                                                    setState(() {
+                                                      selectedPosition = LatLng(
+                                                          position.latitude,
+                                                          position.longitude);
+                                                      bottomPathStatisticPosition =
+                                                          0;
+                                                    });
+                                                    mapController.animateCamera(
+                                                      CameraUpdate
+                                                          .newCameraPosition(
+                                                        CameraPosition(
+                                                            target:
+                                                                selectedPosition!,
+                                                            zoom: 11),
+                                                      ),
+                                                    );
+                                                  }).catchError((e) {
+                                                    setState(() {
+                                                      locationLoading = false;
+                                                    });
+                                                  });
+                                                  setState(() {
+                                                    placesResult = [];
+                                                    _searchController.text = "";
+                                                    locationLoading = false;
+                                                  });
+                                                }
+                                              },
+                                              child: Icon(
+                                                Icons.location_on,
+                                                color: AppColor.deepYellow,
+                                              ),
+                                            ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    InkWell(
-                                      onTap: () async {
-                                        if (!locationLoading) {
-                                          setState(() {
-                                            locationLoading = true;
-                                          });
-                                          setState(() {
-                                            bottomPosition =
-                                                -MediaQuery.sizeOf(context)
-                                                    .height;
-                                          });
-
-                                          final hasPermission =
-                                              await _handleLocationPermission();
-
-                                          if (!hasPermission) {
-                                            locationLoading = false;
-                                            return;
-                                          }
-
-                                          await Geolocator.getCurrentPosition(
-                                                  desiredAccuracy:
-                                                      LocationAccuracy.high)
-                                              .then((Position position) {
-                                            selectedPosition = LatLng(
-                                                position.latitude,
-                                                position.longitude);
-                                            mapController.animateCamera(
-                                              CameraUpdate.newCameraPosition(
-                                                CameraPosition(
-                                                    target: selectedPosition!,
-                                                    zoom: 11),
-                                              ),
-                                            );
-                                            bottomPathStatisticPosition = 0;
-                                          }).catchError((e) {
-                                            locationLoading = false;
-                                          });
-                                          placesResult = [];
-                                          _searchController.text = "";
-                                          setState(() {
-                                            locationLoading = false;
-                                          });
-                                        }
-                                      },
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('pick_my_location'),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Icon(
-                                            Icons.location_on,
-                                            color: AppColor.deepYellow,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 30.h,
-                                      width: 16,
-                                      child: const VerticalDivider(
-                                        color: Colors.grey,
-                                        thickness: 1,
-                                        width: 1,
-                                      ),
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        toggleMapMode();
-                                        setState(() {
-                                          toptextfeildPosition =
-                                              toptextfeildPosition == 0
-                                                  ? -250
-                                                  : 0;
-
-                                          bottomPosition =
-                                              -MediaQuery.sizeOf(context)
-                                                  .height;
-                                          if (selectedPosition != null) {
-                                            newposition = selectedPosition!;
-                                          }
-                                        });
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            AppLocalizations.of(context)!
-                                                .translate('pick_from_map'),
-                                          ),
-                                          SizedBox(width: 6.w),
-                                          Icon(
-                                            Icons.map,
-                                            color: AppColor.deepYellow,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ),
                             ],
@@ -629,93 +547,29 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                   });
                                   if (placesResult[index].description ==
                                       "اللاذقية، Syria") {
-                                    selectedPosition = LatLng(
+                                    setState(() {
+                                      selectedPosition = LatLng(
                                         double.parse("35.525131"),
-                                        double.parse("35.791570"));
+                                        double.parse("35.791570"),
+                                      );
+                                    });
                                   } else {
                                     var value = await PlaceService.getPlace(
                                         placesResult[index].placeId);
-                                    selectedPosition = LatLng(
+                                    setState(() {
+                                      selectedPosition = LatLng(
                                         value.geometry.location.lat,
-                                        value.geometry.location.lng);
+                                        value.geometry.location.lng,
+                                      );
+                                    });
                                   }
-                                  mapController.animateCamera(
-                                    CameraUpdate.newCameraPosition(
-                                      CameraPosition(
-                                          target: selectedPosition!, zoom: 11),
-                                    ),
-                                  );
-                                  // togglePosition(
-                                  //     MediaQuery.sizeOf(context).height);
+
                                   setState(() {
-                                    // bottomPosition = bottomPosition == 110
-                                    //     ? -MediaQuery.sizeOf(context).height
-                                    //     : 110;
                                     placesResult = [];
                                     _searchController.text = "";
                                     locationLoading = false;
+                                    bottomPathStatisticPosition = 0;
                                   });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      AnimatedPositioned(
-                        duration: const Duration(
-                            milliseconds: 300), // Animation duration
-                        curve: Curves.easeInOut,
-                        bottom: pickMapMode ? 20.h : -60,
-                        child: CustomButton(
-                          onTap: () {
-                            toggleMapMode();
-
-                            setState(() {
-                              bottomPathStatisticPosition = 0;
-                              toptextfeildPosition =
-                                  toptextfeildPosition == 0 ? -250 : 0;
-
-                              selectedPosition = newposition;
-                            });
-                            mapController.animateCamera(
-                              CameraUpdate.newCameraPosition(
-                                CameraPosition(
-                                    target: selectedPosition!, zoom: 11),
-                              ),
-                            );
-                          },
-                          title: SizedBox(
-                            height: 50.h,
-                            width: MediaQuery.sizeOf(context).width * .9,
-                            child: Center(
-                              child: SectionBody(
-                                text: AppLocalizations.of(context)!
-                                    .translate("ok"),
-                              ),
-                            ),
-                          ),
-                          // isEnabled: selectedPosition != null,
-                        ),
-                      ),
-                      AnimatedPositioned(
-                        duration: const Duration(
-                            milliseconds: 300), // Animation duration
-                        curve: Curves.easeInOut,
-                        top: pickMapMode ? 0 : -160,
-
-                        child: Container(
-                          width: MediaQuery.sizeOf(context).width,
-                          height: kToolbarHeight,
-                          color: AppColor.deepBlack,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomButton(
-                                onTap: () {
-                                  toggleMapMode();
-                                  togglePosition(
-                                    MediaQuery.sizeOf(context).height,
-                                  );
                                   mapController.animateCamera(
                                     CameraUpdate.newCameraPosition(
                                       CameraPosition(
@@ -723,38 +577,40 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                     ),
                                   );
                                 },
-                                title: SizedBox(
-                                  height: 40.w,
-                                  width: 40.w,
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.arrow_back,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                hieght: 40,
-                                color: AppColor.deepBlack,
-                                bordercolor: AppColor.deepBlack,
                               ),
-                              const Spacer(),
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .translate("pick_from_map"),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const Spacer(),
-                              SizedBox(
-                                width: 35.w,
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
+                      // AnimatedPositioned(
+                      //   duration: const Duration(
+                      //       milliseconds: 300), // Animation duration
+                      //   curve: Curves.easeInOut,
+                      //   bottom: 20.h,
+                      //   child: CustomButton(
+                      //     onTap: () {
+                      //       // toggleMapMode();
+
+                      //       mapController.animateCamera(
+                      //         CameraUpdate.newCameraPosition(
+                      //           CameraPosition(
+                      //               target: selectedPosition!, zoom: 11),
+                      //         ),
+                      //       );
+                      //     },
+                      //     title: SizedBox(
+                      //       height: 50.h,
+                      //       width: MediaQuery.sizeOf(context).width * .9,
+                      //       child: Center(
+                      //         child: SectionBody(
+                      //           text: AppLocalizations.of(context)!
+                      //               .translate("ok"),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     // isEnabled: selectedPosition != null,
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
