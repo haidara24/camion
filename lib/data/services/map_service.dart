@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
-// import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'dart:ui' as ui;
@@ -122,19 +121,6 @@ class MapService {
     }
     return null;
   }
-
-  // static Future<void> getCurrentPosition(Function(LatLng) onSuccess) async {
-  //   // final hasPermission = await _handleLocationPermission();
-  //   // if (!hasPermission) return;
-
-  //   try {
-  //     Position position = await Geolocator.getCurrentPosition(
-  //         desiredAccuracy: LocationAccuracy.high);
-  //     onSuccess(LatLng(position.latitude, position.longitude));
-  //   } catch (e) {
-  //     print("Error getting location: \$e");
-  //   }
-  // }
 
   static int parseDurationToMinutes(String duration) {
     final regex = RegExp(r'(\d+)\s*(days?|hours?|minutes?|mins?)');

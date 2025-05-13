@@ -7,6 +7,7 @@ import 'package:camion/constants/text_constants.dart';
 import 'package:camion/data/models/place_model.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/models/truck_type_model.dart';
+import 'package:camion/data/services/location_service.dart';
 import 'package:camion/data/services/map_service.dart';
 import 'package:camion/data/services/places_service.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
@@ -1051,9 +1052,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     }
 
     try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
+      Position position = await LocationService.getCurrentPosition();
 
       // Directly assign to double variables
       double? lat = position.latitude;
@@ -1384,7 +1383,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     bool serviceEnabled;
     LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    serviceEnabled = await LocationService.isLocationServiceEnabled;
     if (!serviceEnabled) {
       showCustomSnackBar(
         context: context,
@@ -1392,9 +1391,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         message: 'خدمة تحديد الموقع غير مفعلة..',
       );
     }
-    permission = await Geolocator.checkPermission();
+    permission = await LocationService.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+      permission = await LocationService.requestPermission();
       if (permission == LocationPermission.denied) {
         showCustomSnackBar(
           context: context,
@@ -1440,18 +1439,18 @@ class AddMultiShipmentProvider extends ChangeNotifier {
       return;
     }
 
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
+    try {
+      final position = await LocationService.getCurrentPosition();
       _stoppoints_latlng[index] = LatLng(position.latitude, position.longitude);
       _stoppoints_position[index] = position;
       _stoppoints_location[index] =
           "${position.latitude},${position.longitude}";
       getAddressForStopFromLatLng(position, index, screenHeight);
-    }).catchError((e) {
+    } catch (e) {
       _stoppointstextLoading[index] = false;
       _stoppointsLoading[index] = false;
       notifyListeners();
-    });
+    }
   }
 
   Future<void> getAddressForStopFromLatLng(

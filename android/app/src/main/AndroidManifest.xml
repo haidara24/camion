@@ -56,13 +56,16 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />
-        <service
+        <meta-data
+            android:name="flutter_background_isolate"
+            android:value="false" />
+        <!-- <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
-        </service>
+        </service> -->
     
     </application>
     <queries>

@@ -12,6 +12,7 @@ import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/active_shipment_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
+import 'package:camion/data/services/location_service.dart';
 import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
@@ -643,9 +644,9 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
   }
 
   Future<void> _requestPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
+    LocationPermission permission = await LocationService.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+      permission = await LocationService.requestPermission();
       if (permission == LocationPermission.deniedForever) {
         // Handle case when user denies permission permanently
         print("Location permissions are permanently denied.");
@@ -661,12 +662,8 @@ class _TrackingShipmentScreenState extends State<TrackingShipmentScreen>
     await _requestPermission();
     if ((gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN") &&
         startTracking) {
-      _positionStream = Geolocator.getPositionStream(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 10, // Update when moving 10 meters
-        ),
-      ).listen((Position position) async {
+      _positionStream =
+          LocationService.getPositionStream().listen((Position position) async {
         if (_timer == null || !_timer!.isActive) {
           if (truckId != 0) {
             var jwt = prefs.getString("token");

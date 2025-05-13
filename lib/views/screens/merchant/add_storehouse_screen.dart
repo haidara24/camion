@@ -5,6 +5,7 @@ import 'package:camion/business_logic/bloc/store_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/place_model.dart';
 import 'package:camion/data/models/user_model.dart';
+import 'package:camion/data/services/location_service.dart';
 import 'package:camion/data/services/places_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
@@ -72,7 +73,7 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
     bool serviceEnabled;
     LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    serviceEnabled = await LocationService.isLocationServiceEnabled;
     if (!serviceEnabled) {
       showCustomSnackBar(
         context: context,
@@ -80,9 +81,9 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
         message: 'خدمة تحديد الموقع غير مفعلة..',
       );
     }
-    permission = await Geolocator.checkPermission();
+    permission = await LocationService.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+      permission = await LocationService.requestPermission();
       if (permission == LocationPermission.denied) {
         showCustomSnackBar(
           context: context,
@@ -471,13 +472,10 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                                     return;
                                                   }
 
-                                                  await Geolocator
-                                                          .getCurrentPosition(
-                                                              desiredAccuracy:
-                                                                  LocationAccuracy
-                                                                      .high)
-                                                      .then(
-                                                          (Position position) {
+                                                  try {
+                                                    Position position =
+                                                        await LocationService
+                                                            .getCurrentPosition();
                                                     setState(() {
                                                       selectedPosition = LatLng(
                                                           position.latitude,
@@ -494,11 +492,12 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                                             zoom: 11),
                                                       ),
                                                     );
-                                                  }).catchError((e) {
+                                                  } catch (e) {
                                                     setState(() {
                                                       locationLoading = false;
                                                     });
-                                                  });
+                                                  }
+
                                                   setState(() {
                                                     placesResult = [];
                                                     _searchController.text = "";

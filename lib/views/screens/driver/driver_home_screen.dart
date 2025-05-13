@@ -20,6 +20,7 @@ import 'package:camion/data/models/user_model.dart';
 import 'package:camion/data/providers/request_num_provider.dart';
 import 'package:camion/data/providers/user_provider.dart';
 import 'package:camion/data/repositories/gps_repository.dart';
+import 'package:camion/data/services/location_service.dart';
 import 'package:camion/data/services/users_services.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/helpers/http_helper.dart';
@@ -68,7 +69,7 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     bool serviceEnabled;
     LocationPermission permission;
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    serviceEnabled = await LocationService.isLocationServiceEnabled;
     if (!serviceEnabled) {
       showCustomSnackBar(
         context: context,
@@ -76,9 +77,9 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
         message: 'خدمة تحديد الموقع غير مفعلة..',
       );
     }
-    permission = await Geolocator.checkPermission();
+    permission = await LocationService.checkPermission();
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+      permission = await LocationService.requestPermission();
       if (permission == LocationPermission.denied) {
         showCustomSnackBar(
           context: context,
@@ -105,12 +106,8 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
     await _requestPermission();
     print(gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN");
     if (gpsId.isEmpty || gpsId.length < 8 || gpsId == "NaN") {
-      _locationSubscription = Geolocator.getPositionStream(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          distanceFilter: 10, // Update when moving 10 meters
-        ),
-      ).listen((Position position) async {
+      _locationSubscription =
+          LocationService.getPositionStream().listen((Position position) async {
         print(position);
         if (_timer == null || !_timer!.isActive) {
           if (truckId != 0) {
