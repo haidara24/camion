@@ -290,7 +290,7 @@ class KTruck {
     extraFees = json['extra_fees'];
     isOn = json['isOn'];
     gpsId = json['gpsId'];
-    carId = json['carId'];
+    carId = int.parse(json['carId']);
     private_price = json['private_price'] ?? 0;
     distance = (json['distance'] ?? 0.0).toInt() ?? 0.0;
     if (json['images'] != null) {
