@@ -44,6 +44,23 @@ class ShipmentRepository {
     }
   }
 
+  Future<bool> leaveShipmentPublic(int shipmentId) async {
+    var prefs = await SharedPreferences.getInstance();
+    var jwt = prefs.getString("token");
+    var response = await HttpHelper.patch(
+      "$SUB_SHIPPMENTSV2_ENDPOINT$shipmentId/reset_truck/",
+      {},
+      apiToken: jwt,
+    );
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Future<bool> reActiveShipment(int shipmentId) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
@@ -440,7 +457,7 @@ class ShipmentRepository {
       sub_shipments.add(item);
     }
     var merchant = prefs.getInt("merchant");
-    
+
     request.fields['merchant'] = merchant.toString();
     request.fields['subshipments'] = jsonEncode(sub_shipments);
     var response = await request.send();

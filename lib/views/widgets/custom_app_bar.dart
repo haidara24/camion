@@ -108,7 +108,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                   ));
                             },
                             icon: IconBadge(
-                              top: -5,
+                              top: -15,
                               right: -7,
                               count:
                                   notificationProvider.notreadednotifications,

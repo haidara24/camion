@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/order_truck_bloc.dart';
+import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/models/truck_model.dart';
 import 'package:camion/data/providers/add_multi_shipment_provider.dart';
@@ -530,7 +531,7 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                             SectionTitle(
                                               size: 22,
                                               text:
-                                                  '${f.format(widget.truck.private_price)} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
+                                                  '${f.format(calculatePrice(widget.distance, widget.weight))} ${localeState.value.languageCode == "en" ? "S.P" : "ل.س"}',
                                             ),
                                             const SizedBox(
                                               width: 8,
@@ -608,6 +609,11 @@ class _TruckDetailsScreenState extends State<TruckDetailsScreen> {
                                             listener: (context, updatestate) {
                                               if (updatestate
                                                   is OrderTruckSuccessState) {
+                                                BlocProvider.of<
+                                                            MerchantRequestsListBloc>(
+                                                        context)
+                                                    .add(
+                                                        MerchantRequestsListLoadEvent());
                                                 Navigator.pushAndRemoveUntil(
                                                   context,
                                                   MaterialPageRoute(

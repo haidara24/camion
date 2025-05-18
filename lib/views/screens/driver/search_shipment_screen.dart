@@ -98,63 +98,78 @@ class _SearchShippmentScreenState extends State<SearchShippmentScreen> {
             backgroundColor: Colors.grey[100],
             body: RefreshIndicator(
               onRefresh: onRefresh,
-              child: widget.truckId == 0
-                  ? Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: NoTruckProfileWidget(
-                        text: AppLocalizations.of(context)!
-                            .translate("no_shipments_no_truck_profile"),
-                      ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: BlocConsumer<UnassignedShipmentListBloc,
-                          UnassignedShipmentListState>(
-                        listener: (context, state) {
-                          print(state);
-                        },
-                        builder: (context, state) {
-                          if (state is UnassignedShipmentListLoadedSuccess) {
-                            return state.shipments.isEmpty
-                                ? NoResultsWidget(
-                                    text: AppLocalizations.of(context)!
-                                        .translate("no_shipments"),
-                                  )
-                                : ListView.builder(
-                                    itemCount: state.shipments.length,
-                                    shrinkWrap: true,
-                                    itemBuilder: (context, index) {
-                                      return SubShipmentCardWidget(
-                                        shipment: state.shipments[index],
-                                        languageCode:
-                                            localeState.value.languageCode,
-                                        onTap: () {
-                                          BlocProvider.of<
-                                                      SubShipmentDetailsBloc>(
-                                                  context)
-                                              .add(SubShipmentDetailsLoadEvent(
-                                                  state.shipments[index].id!));
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SearchShipmentDetailsScreen(
-                                                shipment:
-                                                    state.shipments[index],
-                                                userType: "Driver",
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                  );
-                          } else {
-                            return const ShimmerLoadingWidget();
-                          }
-                        },
-                      ),
-                    ),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    widget.truckId == 0
+                        ? Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: NoTruckProfileWidget(
+                              text: AppLocalizations.of(context)!
+                                  .translate("no_shipments_no_truck_profile"),
+                            ),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: BlocConsumer<UnassignedShipmentListBloc,
+                                UnassignedShipmentListState>(
+                              listener: (context, state) {
+                                print(state);
+                              },
+                              builder: (context, state) {
+                                if (state
+                                    is UnassignedShipmentListLoadedSuccess) {
+                                  return state.shipments.isEmpty
+                                      ? NoResultsWidget(
+                                          text: AppLocalizations.of(context)!
+                                              .translate("no_shipments"),
+                                        )
+                                      : ListView.builder(
+                                          itemCount: state.shipments.length,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemBuilder: (context, index) {
+                                            return SubShipmentCardWidget(
+                                              shipment: state.shipments[index],
+                                              languageCode: localeState
+                                                  .value.languageCode,
+                                              onTap: () {
+                                                BlocProvider.of<
+                                                            SubShipmentDetailsBloc>(
+                                                        context)
+                                                    .add(
+                                                        SubShipmentDetailsLoadEvent(
+                                                            state
+                                                                .shipments[
+                                                                    index]
+                                                                .id!));
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SearchShipmentDetailsScreen(
+                                                      shipment: state
+                                                          .shipments[index],
+                                                      userType: "Driver",
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        );
+                                } else {
+                                  return const ShimmerLoadingWidget();
+                                }
+                              },
+                            ),
+                          ),
+                  ],
+                ),
+              ),
             ),
           ),
         );

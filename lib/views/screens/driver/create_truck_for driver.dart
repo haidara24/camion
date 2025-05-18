@@ -296,6 +296,18 @@ class _CreateTruckForDriverScreenState
                                     ),
                                   ],
                                 ),
+                                CheckboxListTile(
+                                  controlAffinity:
+                                      ListTileControlAffinity.leading,
+                                  value: istruckOwner,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      istruckOwner = !istruckOwner;
+                                    });
+                                  },
+                                  title: Text(AppLocalizations.of(context)!
+                                      .translate('is_owner')),
+                                ),
                                 SizedBox(
                                   height: 4.h,
                                 ),
@@ -338,22 +350,7 @@ class _CreateTruckForDriverScreenState
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 4,
-                                ),
-                                CheckboxListTile(
-                                  controlAffinity:
-                                      ListTileControlAffinity.leading,
-                                  value: istruckOwner,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      istruckOwner = !istruckOwner;
-                                    });
-                                  },
-                                  title: Text(AppLocalizations.of(context)!
-                                      .translate('is_owner')),
-                                ),
-                                const SizedBox(
-                                  height: 8,
+                                  height: 16,
                                 ),
                                 BlocBuilder<TruckTypeBloc, TruckTypeState>(
                                   builder: (context, state2) {
@@ -1079,7 +1076,7 @@ class _CreateTruckForDriverScreenState
                                   children: [
                                     SectionTitle(
                                       text: AppLocalizations.of(context)!
-                                          .translate('upload_files'),
+                                          .translate('upload_images'),
                                     ),
                                   ],
                                 ),

@@ -623,9 +623,14 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                 const SizedBox(
                                   height: 12,
                                 ),
-                                SectionTitle(
-                                    text: AppLocalizations.of(context)!
-                                        .translate('governorate')),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SectionTitle(
+                                        text: AppLocalizations.of(context)!
+                                            .translate('governorate')),
+                                  ],
+                                ),
                                 BlocBuilder<GovernoratesListBloc,
                                     GovernoratesListState>(
                                   builder: (context, state) {
@@ -993,7 +998,7 @@ class _AddNewTruckScreenState extends State<AddNewTruckScreen> {
                                       children: [
                                         SectionTitle(
                                           text: AppLocalizations.of(context)!
-                                              .translate('upload_files'),
+                                              .translate('upload_images'),
                                         ),
                                       ],
                                     ),

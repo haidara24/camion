@@ -1,4 +1,5 @@
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/bloc/leave_shipment_public_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/cancel_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
@@ -209,30 +210,60 @@ class _ApprovalRequestDetailsScreenState
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  CustomButton(
-                    title: SizedBox(
-                      width: MediaQuery.of(context).size.width * .83,
-                      child: Center(
-                        child: Text(
-                          AppLocalizations.of(context)!
-                              .translate("leave_it_public"),
-                          style: const TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ControlView(),
-                        ),
-                        (route) => false,
-                      );
+                  BlocConsumer<LeaveShipmentPublicBloc,
+                      LeaveShipmentPublicState>(
+                    listener: (context, state) {
+                      if (state is LeaveShipmentPublicSuccessState) {
+                        BlocProvider.of<MerchantRequestsListBloc>(context)
+                            .add(MerchantRequestsListLoadEvent());
+                      }
                     },
-                    color: Colors.grey[200],
-                    bordercolor: Colors.grey[400],
+                    builder: (context, state) {
+                      if (state is LeaveShipmentPublicLoadingProgressState) {
+                        return CustomButton(
+                          title: SizedBox(
+                            width: MediaQuery.of(context).size.width * .83,
+                            child: Center(
+                              child: LoadingIndicator(),
+                            ),
+                          ),
+                          onTap: () {},
+                          color: Colors.grey[200],
+                          bordercolor: Colors.grey[400],
+                        );
+                      } else {
+                        return CustomButton(
+                          title: SizedBox(
+                            width: MediaQuery.of(context).size.width * .83,
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate("leave_it_public"),
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ),
+                          ),
+                          onTap: () {
+                            BlocProvider.of<LeaveShipmentPublicBloc>(context)
+                                .add(
+                              LeaveShipmentPublicButtonPressed(
+                                  request.subshipment!.id!),
+                            );
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ControlView(),
+                              ),
+                              (route) => false,
+                            );
+                          },
+                          color: Colors.grey[200],
+                          bordercolor: Colors.grey[400],
+                        );
+                      }
+                    },
                   ),
                 ],
               ),

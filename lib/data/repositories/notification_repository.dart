@@ -26,7 +26,7 @@ class NotificationRepository {
         notifications.add(NotificationModel.fromJson(element));
       }
     }
-    return notifications.reversed.toList();
+    return notifications.toList();
   }
 
   Future<List<NotificationModel>> getDriverNotificationsForOwner() async {

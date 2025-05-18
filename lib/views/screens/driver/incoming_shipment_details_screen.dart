@@ -3,11 +3,15 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
+import 'package:camion/business_logic/bloc/driver_shipments/unassigned_shipment_list_bloc.dart';
+import 'package:camion/business_logic/bloc/owner_shipments/owner_active_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/owner_incoming_shipments_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/reject_request_for_merchant_bloc.dart';
+import 'package:camion/business_logic/bloc/truck_active_status_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
@@ -446,12 +450,39 @@ class _IncomingShipmentDetailsScreenState
                                                     .add(
                                                         const DriverRequestsListLoadEvent(
                                                             null));
+                                                BlocProvider.of<
+                                                            TruckActiveStatusBloc>(
+                                                        context)
+                                                    .add(
+                                                  LoadTruckActiveStatusEvent(),
+                                                );
+                                                BlocProvider.of<
+                                                            UnassignedShipmentListBloc>(
+                                                        context)
+                                                    .add(
+                                                        UnassignedShipmentListLoadEvent());
+                                                BlocProvider.of<
+                                                            DriverActiveShipmentBloc>(
+                                                        context)
+                                                    .add(
+                                                        DriverActiveShipmentLoadEvent(
+                                                            "R"));
                                               } else if (usertype == "Owner") {
                                                 BlocProvider.of<
                                                             OwnerIncomingShipmentsBloc>(
                                                         context)
                                                     .add(
                                                         OwnerIncomingShipmentsLoadEvent());
+                                                BlocProvider.of<
+                                                            UnassignedShipmentListBloc>(
+                                                        context)
+                                                    .add(
+                                                        UnassignedShipmentListLoadEvent());
+                                                BlocProvider.of<
+                                                            OwnerActiveShipmentsBloc>(
+                                                        context)
+                                                    .add(
+                                                        OwnerActiveShipmentsLoadEvent());
                                               }
                                             }
                                           },

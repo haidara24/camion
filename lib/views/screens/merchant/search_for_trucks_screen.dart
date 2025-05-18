@@ -764,8 +764,8 @@ class _SearchForTrucksScreenState extends State<SearchForTrucksScreen> {
                                                 context)
                                             .add(
                                                 MerchantRequestsListLoadEvent());
-                                        shipmentProvider.initForm();
                                         Navigator.pop(context);
+                                        shipmentProvider.initForm();
                                       }
                                       if (state
                                           is ShipmentMultiCreateFailureState) {

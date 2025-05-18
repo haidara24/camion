@@ -107,7 +107,7 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
                               );
                             },
                             icon: IconBadge(
-                              top: -5,
+                              top: -15,
                               right: -7,
                               color: AppColor.deepYellow,
                               count:

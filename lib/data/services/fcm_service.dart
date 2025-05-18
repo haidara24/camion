@@ -53,12 +53,15 @@ class NotificationServices {
 
       if (notificationProvider != null) {
         print("Adding unread notification...");
-        notificationProvider!.addNotReadedNotification();
       } else {
         print("NotificationProvider is null");
       }
       // Handle foreground notifications
+      if (Platform.isAndroid) {
+        notificationProvider!.addNotReadedNotification();
+      }
       if (Platform.isIOS) {
+        notificationProvider!.addNotReadedNotification();
         forgroundMessage();
       }
 

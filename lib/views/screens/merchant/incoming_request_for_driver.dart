@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/accept_request_for_driver_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/accept_request_for_merchant_bloc.dart';
@@ -558,6 +559,9 @@ class _IncomingRequestForDriverScreenState
                                           listener: (context, rejectstate) {
                                             if (rejectstate
                                                 is RejectRequestForDriverSuccessState) {
+                                              BlocProvider.of<NotificationBloc>(
+                                                      context)
+                                                  .add(NotificationLoadEvent());
                                               Navigator.pushAndRemoveUntil(
                                                   context,
                                                   MaterialPageRoute(

@@ -782,6 +782,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                           ),
                                                           objectId: state
                                                               .requests[index]
+                                                              .approvalRequest!
                                                               .id!,
                                                         ),
                                                       ),

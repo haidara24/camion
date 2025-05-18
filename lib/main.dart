@@ -6,6 +6,7 @@ import 'package:camion/business_logic/bloc/bloc/car_gps_status_details_bloc.dart
 import 'package:camion/business_logic/bloc/bloc/delete_store_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/delete_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/get_owner_trucks_with_gps_locations_bloc.dart';
+import 'package:camion/business_logic/bloc/bloc/leave_shipment_public_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/truck_prices_list_bloc.dart';
 import 'package:camion/business_logic/bloc/bloc/update_truck_price_bloc.dart';
 import 'package:camion/business_logic/bloc/core/auth_bloc.dart';
@@ -480,6 +481,12 @@ class MyApp extends StatelessWidget {
                     ),
                     BlocProvider(
                       create: (context) => CancelShipmentBloc(
+                          shipmentRepository:
+                              RepositoryProvider.of<ShipmentRepository>(
+                                  context)),
+                    ),
+                    BlocProvider(
+                      create: (context) => LeaveShipmentPublicBloc(
                           shipmentRepository:
                               RepositoryProvider.of<ShipmentRepository>(
                                   context)),
