@@ -8,7 +8,7 @@ class RequestRepository {
   late SharedPreferences prefs;
   List<ApprovalRequest> approvalRequests = [];
   List<ApprovalRequest> ownerapprovalRequests = [];
-  List<ApprovalRequest> merchantapprovalRequests = [];
+  List<SubshipmentForRequest> merchantapprovalRequests = [];
 
   Future<List<ApprovalRequest>> getApprovalRequests(int? driverId) async {
     prefs = await SharedPreferences.getInstance();
@@ -18,10 +18,12 @@ class RequestRepository {
         '${APPROVAL_REQUESTS_ENDPOINT}list_for_driver/${driverId ?? driver}/',
         apiToken: jwt);
     approvalRequests = [];
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
       var result = jsonDecode(myDataString);
       for (var element in result) {
+        print(element);
         approvalRequests.add(ApprovalRequest.fromJson(element));
       }
     }
@@ -46,20 +48,21 @@ class RequestRepository {
     return ownerapprovalRequests;
   }
 
-  Future<List<ApprovalRequest>> getApprovalRequestsForMerchant() async {
+  Future<List<SubshipmentForRequest>> getApprovalRequestsForMerchant() async {
     prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var merchant = prefs.getInt("merchant");
+    // var merchant = prefs.getInt("merchant");
     var rs = await HttpHelper.get(
-        '${APPROVAL_REQUESTS_ENDPOINT}merchant/$merchant/',
+        '${SUB_SHIPPMENTSV2_ENDPOINT}pending_assignments/',
         apiToken: jwt);
     merchantapprovalRequests = [];
+    print(rs.statusCode);
     if (rs.statusCode == 200) {
       var myDataString = utf8.decode(rs.bodyBytes);
 
       var result = jsonDecode(myDataString);
       for (var element in result) {
-        merchantapprovalRequests.add(ApprovalRequest.fromJson(element));
+        merchantapprovalRequests.add(SubshipmentForRequest.fromJson(element));
       }
     }
 

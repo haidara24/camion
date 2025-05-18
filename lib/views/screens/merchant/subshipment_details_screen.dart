@@ -5,16 +5,11 @@ import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/sub_shipment_details_bloc.dart';
-import 'package:camion/business_logic/bloc/instructions/read_instruction_bloc.dart';
-import 'package:camion/business_logic/bloc/instructions/read_payment_instruction_bloc.dart';
-import 'package:camion/business_logic/bloc/shipments/shipment_details_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/constants/enums.dart';
 import 'package:camion/data/services/map_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/merchant/shipment_details_map_screen.dart';
-import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
-import 'package:camion/views/screens/merchant/shipment_payment_instruction_details_screeen.dart';
 import 'package:camion/views/screens/search_truck_screen.dart';
 import 'package:camion/views/widgets/commodity_info_widget.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
@@ -175,7 +170,7 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
         if (languageCode == "en") {
           return "Pending";
         } else {
-          return "معلقة";
+          return "منتظرة";
         }
       case "R":
         if (languageCode == "en") {
@@ -347,7 +342,8 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
   @override
   void initState() {
     super.initState();
-
+    BlocProvider.of<SubShipmentDetailsBloc>(context)
+        .add(SubShipmentDetailsLoadEvent(widget.shipment));
     rootBundle.loadString('assets/style/map_style.json').then((string) {
       _mapStyle = string;
     });
@@ -365,7 +361,9 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
       ),
     );
 
-    _controller.dispose();
+    if (_controller != null) {
+      _controller.dispose();
+    }
   }
 
   List<LatLng> deserializeLatLng(String jsonString) {
@@ -524,116 +522,129 @@ class _SubShipmentDetailsScreenState extends State<SubShipmentDetailsScreen> {
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  // crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Column(
-                                      children: [
-                                        Container(
-                                          height: 58.w,
-                                          width: 58.w,
-                                          decoration: BoxDecoration(
-                                            // color: AppColor.lightGoldenYellow,
-                                            borderRadius:
-                                                BorderRadius.circular(5),
+                                !widget.preview
+                                    ? const SizedBox.shrink()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        // crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Column(
+                                            children: [
+                                              Container(
+                                                height: 58.w,
+                                                width: 58.w,
+                                                decoration: BoxDecoration(
+                                                  // color: AppColor.lightGoldenYellow,
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                child: CircleAvatar(
+                                                  radius: 25.h,
+                                                  // backgroundColor: AppColor.deepBlue,
+                                                  child: Center(
+                                                    child: (shipmentstate
+                                                                .shipment
+                                                                .driver_image!
+                                                                .length >
+                                                            1)
+                                                        ? ClipRRect(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        180),
+                                                            child:
+                                                                Image.network(
+                                                              shipmentstate
+                                                                  .shipment
+                                                                  .driver_image!,
+                                                              height: 55.w,
+                                                              width: 55.w,
+                                                              fit: BoxFit.fill,
+                                                            ),
+                                                          )
+                                                        : Text(
+                                                            shipmentstate
+                                                                .shipment
+                                                                .driver_first_name!,
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 28.sp,
+                                                            ),
+                                                          ),
+                                                  ),
+                                                ),
+                                              ),
+                                              Text(
+                                                "${shipmentstate.shipment.driver_first_name!} ${shipmentstate.shipment.driver_last_name!}",
+                                                style: TextStyle(
+                                                  // color: AppColor.lightBlue,
+                                                  fontSize: 19.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          child: CircleAvatar(
-                                            radius: 25.h,
-                                            // backgroundColor: AppColor.deepBlue,
-                                            child: Center(
-                                              child: (shipmentstate
-                                                          .shipment
-                                                          .driver_image!
-                                                          .length >
-                                                      1)
-                                                  ? ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              180),
-                                                      child: Image.network(
-                                                        shipmentstate.shipment
-                                                            .driver_image!,
-                                                        height: 55.w,
-                                                        width: 55.w,
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    )
-                                                  : Text(
-                                                      shipmentstate.shipment
-                                                          .driver_first_name!,
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 28.sp,
-                                                      ),
+                                          Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 35.h,
+                                                width: 155.w,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: shipmentstate
+                                                      .shipment
+                                                      .truck!
+                                                      .truck_type_image!,
+                                                  progressIndicatorBuilder:
+                                                      (context, url,
+                                                              downloadProgress) =>
+                                                          Shimmer.fromColors(
+                                                    baseColor:
+                                                        (Colors.grey[300])!,
+                                                    highlightColor:
+                                                        (Colors.grey[100])!,
+                                                    enabled: true,
+                                                    child: Container(
+                                                      height: 25.h,
+                                                      color: Colors.white,
                                                     ),
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          "${shipmentstate.shipment.driver_first_name!} ${shipmentstate.shipment.driver_last_name!}",
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 19.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 35.h,
-                                          width: 155.w,
-                                          child: CachedNetworkImage(
-                                            imageUrl: shipmentstate.shipment
-                                                .truck!.truck_type_image!,
-                                            progressIndicatorBuilder: (context,
-                                                    url, downloadProgress) =>
-                                                Shimmer.fromColors(
-                                              baseColor: (Colors.grey[300])!,
-                                              highlightColor:
-                                                  (Colors.grey[100])!,
-                                              enabled: true,
-                                              child: Container(
-                                                height: 25.h,
-                                                color: Colors.white,
+                                                  ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Container(
+                                                    height: 35.h,
+                                                    width: 155.w,
+                                                    color: Colors.grey[300],
+                                                    child: Center(
+                                                      child: Text(AppLocalizations
+                                                              .of(context)!
+                                                          .translate(
+                                                              'image_load_error')),
+                                                    ),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    Container(
-                                              height: 35.h,
-                                              width: 155.w,
-                                              color: Colors.grey[300],
-                                              child: Center(
-                                                child: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate(
-                                                        'image_load_error')),
+                                              const SizedBox(
+                                                height: 8,
                                               ),
-                                            ),
+                                              Text(
+                                                "${localeState.value.languageCode == 'en' ? shipmentstate.shipment.truck!.truck_type! : shipmentstate.shipment.truck!.truck_typeAr!}  ",
+                                                style: TextStyle(
+                                                  // color: AppColor.lightBlue,
+                                                  fontSize: 19.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          "${localeState.value.languageCode == 'en' ? shipmentstate.shipment.truck!.truck_type! : shipmentstate.shipment.truck!.truck_typeAr!}  ",
-                                          style: TextStyle(
-                                            // color: AppColor.lightBlue,
-                                            fontSize: 19.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                const Divider(
-                                  height: 24,
-                                ),
+                                        ],
+                                      ),
+                                !widget.preview
+                                    ? const SizedBox.shrink()
+                                    : const Divider(
+                                        height: 24,
+                                      ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [

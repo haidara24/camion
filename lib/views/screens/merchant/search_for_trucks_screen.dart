@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camion/Localization/app_localizations.dart';
+import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_multi_create_bloc.dart';
 import 'package:camion/business_logic/bloc/truck/trucks_list_bloc.dart';
 import 'package:camion/business_logic/cubit/locale_cubit.dart';
@@ -731,12 +732,12 @@ class _SearchForTrucksScreenState extends State<SearchForTrucksScreen> {
                           bottom: 0,
                           child: Container(
                             height: 80.h,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white,
-                              border: Border(
-                                top: BorderSide(
-                                    color: AppColor.lightGrey, width: 2),
-                              ),
+                              // border: Border(
+                              //   top: BorderSide(
+                              //       color: AppColor.lightGrey, width: 2),
+                              // ),
                             ),
                             width: MediaQuery.of(context).size.width,
                             child: Padding(
@@ -758,15 +759,13 @@ class _SearchForTrucksScreenState extends State<SearchForTrucksScreen> {
                                               .translate(
                                                   'shipment_created_success'),
                                         );
+                                        BlocProvider.of<
+                                                    MerchantRequestsListBloc>(
+                                                context)
+                                            .add(
+                                                MerchantRequestsListLoadEvent());
                                         shipmentProvider.initForm();
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ControlView(),
-                                          ),
-                                          (route) => false,
-                                        );
+                                        Navigator.pop(context);
                                       }
                                       if (state
                                           is ShipmentMultiCreateFailureState) {

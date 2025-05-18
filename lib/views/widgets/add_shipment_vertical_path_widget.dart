@@ -3,6 +3,7 @@ import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/widgets/section_body_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class AddShipmentPathVerticalWidget extends StatelessWidget {
@@ -45,13 +46,14 @@ class AddShipmentPathVerticalWidget extends StatelessWidget {
                     color: AppColor.deepBlack,
                   ),
                   padding: EdgeInsets.all(4.h),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       "A",
-                      style: TextStyle(
-                        fontSize: 16, // Adjust font size as needed
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.tajawal(
+                        // Apply directly
                         color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
                       ),
                     ),
                   ),
@@ -94,13 +96,14 @@ class AddShipmentPathVerticalWidget extends StatelessWidget {
                     color: AppColor.deepBlack,
                   ),
                   padding: EdgeInsets.all(4.h),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       "B",
-                      style: TextStyle(
-                        fontSize: 16, // Adjust font size as needed
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.tajawal(
+                        // Apply directly
                         color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
                       ),
                     ),
                   ),
@@ -146,10 +149,11 @@ class AddShipmentPathVerticalWidget extends StatelessWidget {
                   child: Center(
                     child: Text(
                       "$i",
-                      style: const TextStyle(
-                        fontSize: 16, // Adjust font size as needed
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.tajawal(
+                        // Apply directly
                         color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.sp,
                       ),
                     ),
                   ),

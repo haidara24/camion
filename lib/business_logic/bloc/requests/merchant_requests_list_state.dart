@@ -12,7 +12,7 @@ final class MerchantRequestsListInitial extends MerchantRequestsListState {}
 class MerchantRequestsListLoadingProgress extends MerchantRequestsListState {}
 
 class MerchantRequestsListLoadedSuccess extends MerchantRequestsListState {
-  final List<ApprovalRequest> requests;
+  final List<SubshipmentForRequest> requests;
 
   const MerchantRequestsListLoadedSuccess(this.requests);
 }

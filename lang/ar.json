@@ -68,7 +68,7 @@
     "load\\unload_address":"نقطة تحميل/تفريغ",
     "enter_load\\unload_address":"أدخل عنوان نقطة تحميل/تفريغ",
     "pick_my_location":"اختر موقعي",
-    "pick_from_map":"اختر من الخريطة",
+    "pick_from_map":"الخريطة",
     "pick_store":"اختر مستودع",
     "search_location":"ابحث عن موقع",
     "no_result_found":"لم يتم العثور على نتائج",
@@ -138,7 +138,7 @@
     "extra_cost_value":"قيمة التكاليف الإضافية",
     "serve_shipment_confirm": "هل أنت متأكد أنك تريد تخديم هذه الشحنة.",
     
-    "pending":"المعلقة",
+    "pending":"المنتظرة",
     "inprogress":"قيد المعالجة",
     "running":"الجارية",
     "completed":"المكتملة",
@@ -264,7 +264,7 @@
     "truck_owner_phone":"رقم الجوال المالك",
 
     "order_truck":"اطلب المركبة",
-    "leave_it_public":"اترك الشحنة للعموم",
+    "leave_it_public":"اترك طلبك",
     "form_init":"تهيئة الفورم",
     "form_clear":"إعادة التهيئة",
     "form_init_confirm":"هل أنت متأكد من تهيئة الفورم؟",

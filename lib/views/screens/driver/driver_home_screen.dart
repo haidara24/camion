@@ -32,6 +32,7 @@ import 'package:camion/views/screens/driver/incoming_shipment_screen.dart';
 import 'package:camion/views/screens/driver/search_shipment_screen.dart';
 import 'package:camion/views/screens/main_screen.dart';
 import 'package:camion/views/screens/driver/tracking_shippment_screen.dart';
+import 'package:camion/views/widgets/Icon_badge.dart';
 import 'package:camion/views/widgets/driver_appbar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
@@ -660,107 +661,79 @@ class _DriverHomeScreenState extends State<DriverHomeScreen>
                                               state.requests.length);
                                         }
                                       },
-                                      child: Stack(
-                                        clipBehavior: Clip.none,
-                                        children: [
-                                          navigationValue == 1
-                                              ? Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/orange/my_shipments.svg",
-                                                      width: 28.w,
-                                                      height: 28.w,
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 4,
-                                                    ),
-                                                    FittedBox(
-                                                      fit: BoxFit.scaleDown,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 1,
-                                                        ),
-                                                        child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'incoming_orders'),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: TextStyle(
-                                                              color: AppColor
-                                                                  .deepYellow,
-                                                              fontSize: 12.sp),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                )
-                                              : Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    SvgPicture.asset(
-                                                      "assets/icons/white/my_shipments.svg",
-                                                      width: 28.w,
-                                                      height: 28.w,
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 4,
-                                                    ),
-                                                    FittedBox(
-                                                      fit: BoxFit.scaleDown,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                          horizontal: 1,
-                                                        ),
-                                                        child: Text(
-                                                          AppLocalizations.of(
-                                                                  context)!
-                                                              .translate(
-                                                                  'incoming_orders'),
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 12.sp),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),
-                                          value.requestNum > 0
-                                              ? Positioned(
-                                                  right: -2.w,
-                                                  top: -5.h,
-                                                  child: Container(
-                                                    height: 22.w,
-                                                    width: 22.w,
-                                                    decoration: BoxDecoration(
-                                                      color:
-                                                          AppColor.deepYellow,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              45),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                          value.requestNum
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
-                                                          )),
-                                                    ),
+                                      child: IconBadge(
+                                        top: -5,
+                                        left: 5,
+                                        count: value.requestNum,
+                                        color: AppColor.deepYellow,
+                                        icon: navigationValue == 1
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/orange/my_shipments.svg",
+                                                    width: 28.w,
+                                                    height: 28.w,
                                                   ),
-                                                )
-                                              : const SizedBox.shrink(),
-                                        ],
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 1,
+                                                      ),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'incoming_orders'),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: TextStyle(
+                                                            color: AppColor
+                                                                .deepYellow,
+                                                            fontSize: 12.sp),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
+                                            : Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    "assets/icons/white/my_shipments.svg",
+                                                    width: 28.w,
+                                                    height: 28.w,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 4,
+                                                  ),
+                                                  FittedBox(
+                                                    fit: BoxFit.scaleDown,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 1,
+                                                      ),
+                                                      child: Text(
+                                                        AppLocalizations.of(
+                                                                context)!
+                                                            .translate(
+                                                                'incoming_orders'),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 12.sp),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
                                       ),
                                     );
                                   }),

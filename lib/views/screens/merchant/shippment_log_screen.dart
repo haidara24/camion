@@ -17,6 +17,7 @@ import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dar
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/merchant/subshipment_details_screen.dart';
+import 'package:camion/views/widgets/Icon_badge.dart';
 import 'package:camion/views/widgets/no_reaults_widget.dart';
 import 'package:camion/views/widgets/section_title_widget.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
@@ -25,6 +26,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -412,25 +414,35 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(AppLocalizations.of(context)!
-                                            .translate('pending')),
+                                        Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('pending'),
+                                        ),
                                         const SizedBox(width: 4),
                                         value.requestNum > 0
                                             ? Container(
-                                                height: 25.w,
-                                                width: 25.w,
+                                                padding:
+                                                    const EdgeInsets.all(8),
                                                 decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
                                                   color: AppColor.deepYellow,
-                                                  borderRadius:
-                                                      BorderRadius.circular(45),
                                                 ),
-                                                child: Center(
-                                                  child: Text(
-                                                      value.requestNum
-                                                          .toString(),
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                      )),
+                                                alignment: Alignment.center,
+                                                child: Text(
+                                                  value.requestNum < 99
+                                                      ? value.requestNum
+                                                          .toString()
+                                                      : "+99",
+                                                  style: GoogleFonts
+                                                      .instrumentSans(
+                                                    // Apply directly
+                                                    color: Colors.white,
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                  textDirection:
+                                                      TextDirection.ltr,
                                                 ),
                                               )
                                             : const SizedBox.shrink(),
@@ -474,16 +486,16 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                   state.shipments[index].id!,
                                                 ));
                                                 Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          SubShipmentDetailsScreen(
-                                                        shipment: state
-                                                            .shipments[index]
-                                                            .id!,
-                                                        preview: false,
-                                                      ),
-                                                    ));
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SubShipmentDetailsScreen(
+                                                      shipment: state
+                                                          .shipments[index].id!,
+                                                      preview: false,
+                                                    ),
+                                                  ),
+                                                );
                                               },
                                               child: AbsorbPointer(
                                                 absorbing: false,
@@ -703,38 +715,89 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                             return InkWell(
                                               onTap: () {
                                                 if (state.requests[index]
-                                                        .requestOwner ==
-                                                    "T") {
+                                                        .approvalRequest ==
+                                                    null) {
+                                                  print("qweqwe");
                                                   Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
                                                       builder: (context) =>
-                                                          ApprovalRequestDetailsScreen(
-                                                        type: state
-                                                                .requests[index]
-                                                                .isApproved!
-                                                            ? "A"
-                                                            : "J",
-                                                        request: state
-                                                            .requests[index],
-                                                        objectId: state
+                                                          SubShipmentDetailsScreen(
+                                                        shipment: state
                                                             .requests[index]
                                                             .id!,
+                                                        preview: false,
                                                       ),
                                                     ),
                                                   );
                                                 } else {
-                                                  Navigator.push(
+                                                  if (state
+                                                          .requests[index]
+                                                          .approvalRequest!
+                                                          .requestOwner ==
+                                                      "T") {
+                                                    Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
                                                         builder: (context) =>
-                                                            IncomingRequestForDriverScreen(
+                                                            ApprovalRequestDetailsScreen(
+                                                          type: state
+                                                                  .requests[
+                                                                      index]
+                                                                  .approvalRequest!
+                                                                  .isApproved!
+                                                              ? "A"
+                                                              : "J",
+                                                          request:
+                                                              ApprovalRequest(
+                                                            id: state
+                                                                .requests[index]
+                                                                .approvalRequest!
+                                                                .id!,
+                                                            driver_firstname: state
+                                                                .requests[index]
+                                                                .approvalRequest!
+                                                                .driver_firstname,
+                                                            driver_lastname: state
+                                                                .requests[index]
+                                                                .approvalRequest!
+                                                                .driver_lastname,
+                                                            isApproved: state
+                                                                .requests[index]
+                                                                .approvalRequest!
+                                                                .isApproved,
+                                                            reason: state
+                                                                .requests[index]
+                                                                .approvalRequest!
+                                                                .reason,
+                                                            requestOwner: state
+                                                                .requests[index]
+                                                                .approvalRequest!
+                                                                .requestOwner,
+                                                            responseTurn: state
+                                                                .requests[index]
+                                                                .approvalRequest!
+                                                                .responseTurn,
+                                                            // subshipment:
+                                                          ),
                                                           objectId: state
                                                               .requests[index]
-                                                              .subshipment!
                                                               .id!,
                                                         ),
-                                                      ));
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              IncomingRequestForDriverScreen(
+                                                            objectId: state
+                                                                .requests[index]
+                                                                .id!,
+                                                          ),
+                                                        ));
+                                                  }
                                                 }
                                               },
                                               child: AbsorbPointer(
@@ -797,9 +860,41 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 child:
                                                                     SvgPicture
                                                                         .asset(
-                                                                  getIconSvg(state
-                                                                          .requests[
-                                                                      index]),
+                                                                  state.requests[index].approvalRequest ==
+                                                                          null
+                                                                      ? "assets/icons/grey/search.svg"
+                                                                      : getIconSvg(
+                                                                          ApprovalRequest(
+                                                                          id: state
+                                                                              .requests[index]
+                                                                              .approvalRequest!
+                                                                              .id!,
+                                                                          driver_firstname: state
+                                                                              .requests[index]
+                                                                              .approvalRequest!
+                                                                              .driver_firstname,
+                                                                          driver_lastname: state
+                                                                              .requests[index]
+                                                                              .approvalRequest!
+                                                                              .driver_lastname,
+                                                                          isApproved: state
+                                                                              .requests[index]
+                                                                              .approvalRequest!
+                                                                              .isApproved,
+                                                                          reason: state
+                                                                              .requests[index]
+                                                                              .approvalRequest!
+                                                                              .reason,
+                                                                          requestOwner: state
+                                                                              .requests[index]
+                                                                              .approvalRequest!
+                                                                              .requestOwner,
+                                                                          responseTurn: state
+                                                                              .requests[index]
+                                                                              .approvalRequest!
+                                                                              .responseTurn,
+                                                                          // subshipment:
+                                                                        )),
                                                                   height: 22.w,
                                                                   width: 22.w,
                                                                   fit: BoxFit
@@ -828,7 +923,7 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                                 child:
                                                                     SectionTitle(
                                                                   text:
-                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].subshipment!.id!}',
+                                                                      '${AppLocalizations.of(context)!.translate('shipment_number')}: SA-${state.requests[index].id!}',
                                                                 ),
                                                               ),
                                                             ],
@@ -838,15 +933,12 @@ class _ShippmentLogScreenState extends State<ShippmentLogScreen>
                                                       ShipmentPathVerticalWidget(
                                                         pathpoints: state
                                                             .requests[index]
-                                                            .subshipment!
                                                             .pathpoints!,
                                                         pickupDate: state
                                                             .requests[index]
-                                                            .subshipment!
                                                             .pickupDate!,
                                                         deliveryDate: state
                                                             .requests[index]
-                                                            .subshipment!
                                                             .pickupDate!,
                                                         langCode: localeState
                                                             .value.languageCode,

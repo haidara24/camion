@@ -5,6 +5,7 @@ import 'package:camion/business_logic/bloc/core/notification_bloc.dart';
 import 'package:camion/business_logic/bloc/driver_shipments/driver_active_shipment_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/driver_requests_list_bloc.dart';
 import 'package:camion/business_logic/bloc/requests/merchant_requests_list_bloc.dart';
+import 'package:camion/business_logic/bloc/shipments/active_shipment_list_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart';
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
@@ -276,6 +277,8 @@ class NotificationServices {
             .add(MerchantRequestsListLoadEvent());
         BlocProvider.of<ShipmentTaskListBloc>(context)
             .add(ShipmentTaskListLoadEvent());
+        BlocProvider.of<ActiveShipmentListBloc>(context)
+            .add(ActiveShipmentListLoadEvent());
       }
     } else if (message.data['notification_type'] == "O") {
       var prefs = await SharedPreferences.getInstance();
@@ -296,6 +299,8 @@ class NotificationServices {
           .add(MerchantRequestsListLoadEvent());
       BlocProvider.of<ShipmentTaskListBloc>(context)
           .add(ShipmentTaskListLoadEvent());
+      BlocProvider.of<ActiveShipmentListBloc>(context)
+          .add(ActiveShipmentListLoadEvent());
       var prefs = await SharedPreferences.getInstance();
       var userType = prefs.getString("userType");
       if (userType == "Driver") {

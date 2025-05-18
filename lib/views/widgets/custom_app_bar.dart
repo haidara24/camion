@@ -4,6 +4,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/notification_screen.dart';
+import 'package:camion/views/widgets/Icon_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -106,47 +107,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     builder: (context) => NotificationScreen(),
                                   ));
                             },
-                            icon: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                SizedBox(
-                                  height: 30.h,
-                                  width: 30.h,
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      "assets/icons/notification.svg",
-                                      height: 30.h,
-                                      width: 30.h,
-                                    ),
+                            icon: IconBadge(
+                              top: -5,
+                              right: -7,
+                              count:
+                                  notificationProvider.notreadednotifications,
+                              color: AppColor.deepYellow,
+                              icon: SizedBox(
+                                height: 30.h,
+                                width: 30.h,
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    "assets/icons/notification.svg",
+                                    height: 30.h,
+                                    width: 30.h,
                                   ),
                                 ),
-                                notificationProvider.notreadednotifications != 0
-                                    ? Positioned(
-                                        right: -7.w,
-                                        top: -10.h,
-                                        child: Container(
-                                          height: 20.h,
-                                          width: 20.h,
-                                          decoration: BoxDecoration(
-                                            color: AppColor.deepYellow,
-                                            borderRadius:
-                                                BorderRadius.circular(45),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              notificationProvider
-                                                  .notreadednotifications
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : const SizedBox.shrink()
-                              ],
+                              ),
                             ),
                           ),
                         );

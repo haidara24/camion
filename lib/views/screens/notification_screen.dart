@@ -5,7 +5,6 @@ import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
-import 'package:camion/views/screens/driver/search_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
 import 'package:camion/views/screens/merchant/shipment_instruction_details_screen.dart';
@@ -352,9 +351,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           height: 75.h,
                                           width: 50.w,
                                           decoration: BoxDecoration(
-                                              // color: Colors.red,
-                                              borderRadius:
-                                                  BorderRadius.circular(5)),
+                                            // color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(5),
+                                          ),
                                           child: Stack(
                                             clipBehavior: Clip.none,
                                             children: [
@@ -393,30 +393,31 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                 ),
                                               ),
                                               Positioned(
-                                                  bottom: -10,
-                                                  left: localeState.value
-                                                              .languageCode ==
-                                                          "en"
-                                                      ? null
-                                                      : -5,
-                                                  right: localeState.value
-                                                              .languageCode ==
-                                                          "en"
-                                                      ? -5
-                                                      : null,
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              45),
-                                                    ),
-                                                    child: getStatusImage(
-                                                        notificationProvider
-                                                            .notifications[
-                                                                index]!
-                                                            .noteficationType!),
-                                                  )),
+                                                bottom: -10,
+                                                left: localeState.value
+                                                            .languageCode ==
+                                                        "en"
+                                                    ? null
+                                                    : -5,
+                                                right: localeState.value
+                                                            .languageCode ==
+                                                        "en"
+                                                    ? -5
+                                                    : null,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            45),
+                                                  ),
+                                                  child: getStatusImage(
+                                                    notificationProvider
+                                                        .notifications[index]!
+                                                        .noteficationType!,
+                                                  ),
+                                                ),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -448,15 +449,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             SectionBody(
-                                                text: localeState.value
-                                                            .languageCode ==
-                                                        "en"
-                                                    ? notificationProvider
-                                                        .notifications[index]!
-                                                        .descriptionEn!
-                                                    : notificationProvider
-                                                        .notifications[index]!
-                                                        .description!),
+                                              text: localeState
+                                                          .value.languageCode ==
+                                                      "en"
+                                                  ? notificationProvider
+                                                      .notifications[index]!
+                                                      .descriptionEn!
+                                                  : notificationProvider
+                                                      .notifications[index]!
+                                                      .description!,
+                                            ),
                                           ],
                                         ),
                                         dense: true,

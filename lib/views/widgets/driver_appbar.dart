@@ -6,6 +6,7 @@ import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/providers/truck_active_status_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
 import 'package:camion/views/screens/notification_screen.dart';
+import 'package:camion/views/widgets/Icon_badge.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:camion/views/widgets/snackbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -95,53 +96,30 @@ class DriverAppBar extends StatelessWidget implements PreferredSizeWidget {
                           },
                           child: IconButton(
                             onPressed: () {
+                              notificationProvider.clearNotReadedNotification();
                               BlocProvider.of<NotificationBloc>(context)
                                   .add(NotificationLoadEvent());
-                              notificationProvider.clearNotReadedNotification();
                               Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => NotificationScreen(),
-                                  ));
-                            },
-                            icon: Stack(
-                              clipBehavior: Clip.none,
-                              children: [
-                                SizedBox(
-                                  height: 35.h,
-                                  width: 35.h,
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                        "assets/icons/notification.svg"),
-                                  ),
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NotificationScreen(),
                                 ),
-                                notificationProvider.notreadednotifications != 0
-                                    ? Positioned(
-                                        right: -7.w,
-                                        top: -10.h,
-                                        child: Container(
-                                          height: 20.h,
-                                          width: 20.h,
-                                          decoration: BoxDecoration(
-                                            color: AppColor.deepYellow,
-                                            borderRadius:
-                                                BorderRadius.circular(45),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              notificationProvider
-                                                  .notreadednotifications
-                                                  .toString(),
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    : const SizedBox.shrink()
-                              ],
+                              );
+                            },
+                            icon: IconBadge(
+                              top: -5,
+                              right: -7,
+                              color: AppColor.deepYellow,
+                              count:
+                                  notificationProvider.notreadednotifications,
+                              icon: SizedBox(
+                                height: 35.h,
+                                width: 35.h,
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                      "assets/icons/notification.svg"),
+                                ),
+                              ),
                             ),
                           ),
                         );

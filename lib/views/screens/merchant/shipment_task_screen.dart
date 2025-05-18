@@ -13,6 +13,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:camion/views/widgets/shipment_path_vertical_widget.dart';
@@ -36,7 +37,6 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
           Provider.of<ShipmentInstructionsProvider>(context, listen: false);
     });
   }
-
 
   String setLoadDate(DateTime date) {
     List months = [
@@ -182,7 +182,7 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                         child: AbsorbPointer(
                                           absorbing: false,
                                           child: Card(
-                                                  color:Colors.white,
+                                            color: Colors.white,
                                             elevation: 1,
                                             shape: const RoundedRectangleBorder(
                                               borderRadius: BorderRadius.all(
@@ -281,26 +281,31 @@ class _ShipmentTaskScreenState extends State<ShipmentTaskScreen>
                                                                               'en'
                                                                           ? null
                                                                           : 0,
+                                                                      top: -5,
                                                                       child:
                                                                           Container(
-                                                                        height:
-                                                                            20,
-                                                                        width:
-                                                                            20,
+                                                                        padding:
+                                                                            EdgeInsets.all(6),
                                                                         decoration:
                                                                             BoxDecoration(
+                                                                          shape:
+                                                                              BoxShape.circle,
                                                                           color:
                                                                               AppColor.deepYellow,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(45),
                                                                         ),
                                                                         child:
                                                                             Center(
-                                                                          child: Text(
-                                                                              getunfinishedTasks(state.shipments[index]).toString(),
-                                                                              style: const TextStyle(
-                                                                                color: Colors.white,
-                                                                              )),
+                                                                          child:
+                                                                              Text(
+                                                                            getunfinishedTasks(state.shipments[index]).toString(),
+                                                                            style:
+                                                                                GoogleFonts.instrumentSans(
+                                                                              // Apply directly
+                                                                              color: Colors.white,
+                                                                              fontSize: 16.sp,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     )

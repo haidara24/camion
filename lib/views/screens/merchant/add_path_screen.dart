@@ -19,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
@@ -255,15 +256,15 @@ class _AddPathScreenState extends State<AddPathScreen>
                                                   Container(
                                                     height: 30.h,
                                                     width: 30.h,
+                                                    // padding:
+                                                    //     const EdgeInsets.all(8),
                                                     decoration: BoxDecoration(
                                                       border: Border.all(
                                                         color:
                                                             AppColor.deepYellow,
                                                         width: 2,
                                                       ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              45),
+                                                      shape: BoxShape.circle,
                                                       color: AppColor.deepBlack,
                                                     ),
                                                     child: Center(
@@ -277,13 +278,14 @@ class _AddPathScreenState extends State<AddPathScreen>
                                                                         1
                                                                 ? "B"
                                                                 : "$index"),
-                                                        style: const TextStyle(
-                                                          fontSize:
-                                                              16, // Adjust font size as needed
+                                                        style:
+                                                            GoogleFonts.tajawal(
+                                                          color: Colors.white,
                                                           fontWeight:
                                                               FontWeight.bold,
-                                                          color: Colors.white,
+                                                          fontSize: 15.sp,
                                                         ),
+                                                        // textAlign: TextAlign.,
                                                       ),
                                                     ),
                                                   ),
@@ -648,23 +650,25 @@ class _AddPathScreenState extends State<AddPathScreen>
                                         shipmentProvider.setShowStores();
                                       }
                                     },
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('pick_my_location'),
-                                        ),
-                                        SizedBox(width: 6.w),
-                                        Icon(
-                                          Icons.location_on,
-                                          color: AppColor.deepYellow,
-                                        ),
-                                      ],
+                                    child: SizedBox(
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('pick_my_location'),
+                                          ),
+                                          SizedBox(width: 6.w),
+                                          Icon(
+                                            Icons.location_on,
+                                            color: AppColor.deepYellow,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(
                                     height: 30.h,
-                                    width: 16,
+                                    width: 8.w,
                                     child: const VerticalDivider(
                                       color: Colors.grey,
                                       thickness: 1,
@@ -699,7 +703,7 @@ class _AddPathScreenState extends State<AddPathScreen>
                                   ),
                                   SizedBox(
                                     height: 30.h,
-                                    width: 16,
+                                    width: 8.w,
                                     child: const VerticalDivider(
                                       color: Colors.grey,
                                       thickness: 1,

@@ -834,7 +834,7 @@ class _AddMultiShipmentScreenState extends State<AddMultiShipmentScreen>
                                         ),
                                       ],
                                     ),
-                                    shipmentProvider.distance != 0
+                                    shipmentProvider.pathConfirm
                                         ? Padding(
                                             padding: const EdgeInsets.symmetric(
                                               vertical: 7.5,

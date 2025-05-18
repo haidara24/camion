@@ -474,13 +474,13 @@ class _PhoneSignUpScreenState extends State<PhoneSignUpScreen> {
                                                     .white; // Unchecked color
                                               },
                                             ),
+
                                             onChanged: (value) {
                                               setState(() {
                                                 _isChecked = value ?? false;
                                               });
                                             },
                                           ),
-                                          const SizedBox(width: 8),
                                           const TermsOfUse(),
                                         ],
                                       ),

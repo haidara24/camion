@@ -261,17 +261,23 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                             builder: (BuildContext context) {
                                               return AlertDialog(
                                                 backgroundColor: Colors.white,
-                                                title: Text(AppLocalizations.of(
-                                                        context)!
-                                                    .translate('add_store')),
+                                                title: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate(
+                                                              'add_store'),
+                                                    ),
+                                                  ],
+                                                ),
                                                 content: SingleChildScrollView(
                                                   child: Form(
                                                     key: _addressformKey,
                                                     child: ListBody(
                                                       children: <Widget>[
-                                                        const SectionBody(
-                                                            text:
-                                                                "الرجاء أدخل اسم المستودع"),
                                                         TextFormField(
                                                           controller:
                                                               storeAddressController,
@@ -279,13 +285,13 @@ class _AddStoreHouseScreenState extends State<AddStoreHouseScreen>
                                                             storeAddressController
                                                                     .selection =
                                                                 TextSelection(
-                                                                    baseOffset:
-                                                                        0,
-                                                                    extentOffset:
-                                                                        storeAddressController
-                                                                            .value
-                                                                            .text
-                                                                            .length);
+                                                              baseOffset: 0,
+                                                              extentOffset:
+                                                                  storeAddressController
+                                                                      .value
+                                                                      .text
+                                                                      .length,
+                                                            );
                                                           },
                                                           style: TextStyle(
                                                               fontSize: 18.sp),

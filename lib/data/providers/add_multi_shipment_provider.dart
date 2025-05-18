@@ -75,8 +75,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
   List<String> get stoppoints_placeId => _stoppoints_placeId;
 
   List<TextEditingController> _stoppoints_controller = [
-    TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ"),
-    TextEditingController(text: "أضف عنوان نقطة تحميل/تفريغ")
+    TextEditingController(text: "ادخل عنوان التحميل"),
+    TextEditingController(text: "ادخل عنوان التفريغ")
   ];
   List<TextEditingController> get stoppoints_controller =>
       _stoppoints_controller;
@@ -373,7 +373,7 @@ class AddMultiShipmentProvider extends ChangeNotifier {
               CameraUpdate.newCameraPosition(
                 const CameraPosition(
                   target: LatLng(34.723142, 36.730519),
-                  zoom: 9,
+                  zoom: 7,
                 ),
               ),
             );
@@ -905,33 +905,50 @@ class AddMultiShipmentProvider extends ChangeNotifier {
     List<String> typesToCheck = [
       'route',
       'locality',
-      // 'administrative_area_level_2',
-      'administrative_area_level_1'
+      'administrative_area_level_1',
     ];
+
+    // Check if results exist
+    if (result["results"] == null || result["results"].isEmpty) return str;
+
+    // Try to find a result with 'route'
     for (var element in result["results"]) {
-      if (element['address_components'][0]['types'].contains('route')) {
+      if (element['address_components'] != null &&
+          element['address_components'].isNotEmpty &&
+          element['address_components'][0]['types'].contains('route')) {
         for (int i = element['address_components'].length - 1; i >= 0; i--) {
-          var element1 = element['address_components'][i];
-          if (typesToCheck.any((type) => element1['types'].contains(type)) &&
-              element1["long_name"] != null &&
-              element1["long_name"] != "طريق بدون اسم") {
-            str = str + ('${element1["long_name"]},');
+          var component = element['address_components'][i];
+          if (typesToCheck.any((type) => component['types'].contains(type)) &&
+              component["long_name"] != null &&
+              component["long_name"] != "طريق بدون اسم") {
+            str += '${component["long_name"]},';
           }
         }
         break;
       }
     }
+
+    // If nothing was added, try formatted_address of second result
     if (str.isEmpty) {
-      for (int i = result["results"]['address_components'].length - 1;
-          i >= 0;
-          i--) {
-        var element1 = result["results"]['address_components'][i];
-        if (typesToCheck.any((type) => element1['types'].contains(type))) {
-          str = str + ('${element1["long_name"] ?? ""},');
+      if (result["results"].length > 1 &&
+          result["results"][1]["formatted_address"] != null) {
+        return result["results"][1]["formatted_address"];
+      }
+      // Fallback: extract from first result's components
+      if (result["results"][0]["address_components"] != null) {
+        var components = result["results"][0]["address_components"];
+        for (int i = components.length - 1; i >= 0; i--) {
+          var component = components[i];
+          if (typesToCheck.any((type) => component['types'].contains(type)) &&
+              component["long_name"] != null) {
+            str += '${component["long_name"]},';
+          }
         }
       }
     }
-    return str.replaceRange(str.length - 1, null, ".");
+
+    // Final formatting
+    return str.isNotEmpty ? str.replaceRange(str.length - 1, null, ".") : "";
   }
 
   String getAdministrativeAreaName(dynamic result) {
@@ -1554,8 +1571,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         _subPathes.add([]);
         _subDistance.add(0);
         _subPeriod.add(0);
-        notifyListeners();
+        _pathConfirm = false;
         data["added"] = true;
+        notifyListeners();
         return data;
       } else {
         notifyListeners();
@@ -1585,9 +1603,9 @@ class AddMultiShipmentProvider extends ChangeNotifier {
           markerId: MarkerId("stop${_stop_marker.length}"),
         ),
       );
-      notifyListeners();
-
       data["added"] = true;
+      _pathConfirm = false;
+      notifyListeners();
       return data;
     }
   }
@@ -1623,6 +1641,8 @@ class AddMultiShipmentProvider extends ChangeNotifier {
         icon: BitmapDescriptor.bytes(markerIcon),
       );
     }
+    _pathConfirm = true;
+
     notifyListeners();
   }
 

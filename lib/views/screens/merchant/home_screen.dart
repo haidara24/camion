@@ -28,6 +28,7 @@ import 'package:camion/views/screens/merchant/merchant_profile_screen.dart';
 import 'package:camion/views/screens/merchant/shipment_task_screen.dart';
 import 'package:camion/views/screens/merchant/shippment_log_screen.dart';
 import 'package:camion/views/screens/merchant/storehouse_list_screen.dart';
+import 'package:camion/views/widgets/Icon_badge.dart';
 import 'package:camion/views/widgets/custom_app_bar.dart';
 import 'package:camion/views/widgets/loading_indicator.dart';
 import 'package:flutter/material.dart';
@@ -816,86 +817,57 @@ class _HomeScreenState extends State<HomeScreen>
                                             value.setTaskNum(taskNum);
                                           }
                                         },
-                                        child: Stack(
-                                          clipBehavior: Clip.none,
-                                          children: [
-                                            navigationValue == 4
-                                                ? Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        "assets/icons/orange/tasks.svg",
-                                                        width: 28.w,
-                                                        height: 28.w,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate('tasks'),
-                                                        style: TextStyle(
-                                                            color: AppColor
-                                                                .deepYellow,
-                                                            fontSize: 12.sp),
-                                                      )
-                                                    ],
-                                                  )
-                                                : Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      SvgPicture.asset(
-                                                        "assets/icons/white/tasks.svg",
-                                                        width: 28.w,
-                                                        height: 28.w,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 4,
-                                                      ),
-                                                      Text(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .translate('tasks'),
-                                                        style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontSize: 12.sp),
-                                                      )
-                                                    ],
-                                                  ),
-                                            value.taskNum > 0
-                                                ? Positioned(
-                                                    right: -7.w,
-                                                    top: -5.h,
-                                                    child: Container(
-                                                      height: 22.w,
-                                                      width: 22.w,
-                                                      decoration: BoxDecoration(
-                                                        color:
-                                                            AppColor.deepYellow,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(45),
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          value.taskNum
-                                                              .toString(),
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors.white,
-                                                            // fontSize: 15,
-                                                          ),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                        ),
-                                                      ),
+                                        child: IconBadge(
+                                          top: -5,
+                                          right: -7,
+                                          count: value.taskNum,
+                                          color: AppColor.deepYellow,
+                                          icon: navigationValue == 4
+                                              ? Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/orange/tasks.svg",
+                                                      width: 28.w,
+                                                      height: 28.w,
                                                     ),
-                                                  )
-                                                : const SizedBox.shrink(),
-                                          ],
+                                                    const SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate('tasks'),
+                                                      style: TextStyle(
+                                                          color: AppColor
+                                                              .deepYellow,
+                                                          fontSize: 12.sp),
+                                                    )
+                                                  ],
+                                                )
+                                              : Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      "assets/icons/white/tasks.svg",
+                                                      width: 28.w,
+                                                      height: 28.w,
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 4,
+                                                    ),
+                                                    Text(
+                                                      AppLocalizations.of(
+                                                              context)!
+                                                          .translate('tasks'),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12.sp),
+                                                    )
+                                                  ],
+                                                ),
                                         ),
                                       );
                                     },
