@@ -468,41 +468,89 @@ class _ApprovalRequestDetailsScreenState
                                                       MainAxisAlignment
                                                           .spaceAround,
                                                   children: [
-                                                    CustomButton(
-                                                      title: SizedBox(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width *
-                                                            .83,
-                                                        child: Center(
-                                                          child: Text(
-                                                            AppLocalizations.of(
-                                                                    context)!
-                                                                .translate(
-                                                                    "leave_it_public"),
-                                                            style:
-                                                                const TextStyle(
-                                                              color:
-                                                                  Colors.grey,
+                                                    BlocConsumer<
+                                                        LeaveShipmentPublicBloc,
+                                                        LeaveShipmentPublicState>(
+                                                      listener: (context,
+                                                          leavestate) {
+                                                        if (leavestate
+                                                            is LeaveShipmentPublicSuccessState) {
+                                                          BlocProvider.of<
+                                                                      MerchantRequestsListBloc>(
+                                                                  context)
+                                                              .add(
+                                                                  MerchantRequestsListLoadEvent());
+                                                          Navigator
+                                                              .pushAndRemoveUntil(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  const ControlView(),
                                                             ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      onTap: () {
-                                                        Navigator
-                                                            .pushAndRemoveUntil(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                ControlView(),
-                                                          ),
-                                                          (route) => false,
-                                                        );
+                                                            (route) => false,
+                                                          );
+                                                        }
                                                       },
-                                                      color: Colors.grey[200],
-                                                      bordercolor:
-                                                          Colors.grey[400],
+                                                      builder: (context,
+                                                          leavestate) {
+                                                        if (leavestate
+                                                            is LeaveShipmentPublicLoadingProgressState) {
+                                                          return CustomButton(
+                                                            title: SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  .83,
+                                                              child: Center(
+                                                                child:
+                                                                    LoadingIndicator(),
+                                                              ),
+                                                            ),
+                                                            onTap: () {},
+                                                            color: Colors
+                                                                .grey[200],
+                                                            bordercolor: Colors
+                                                                .grey[400],
+                                                          );
+                                                        } else {
+                                                          return CustomButton(
+                                                            title: SizedBox(
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width *
+                                                                  .83,
+                                                              child: Center(
+                                                                child: Text(
+                                                                  AppLocalizations.of(
+                                                                          context)!
+                                                                      .translate(
+                                                                          "leave_it_public"),
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            onTap: () {
+                                                              BlocProvider.of<
+                                                                          LeaveShipmentPublicBloc>(
+                                                                      context)
+                                                                  .add(LeaveShipmentPublicButtonPressed(state
+                                                                      .request
+                                                                      .subshipment!
+                                                                      .id!));
+                                                            },
+                                                            color: Colors
+                                                                .grey[200],
+                                                            bordercolor: Colors
+                                                                .grey[400],
+                                                          );
+                                                        }
+                                                      },
                                                     ),
                                                   ],
                                                 ),
