@@ -13,9 +13,9 @@ class NotificationProvider extends ChangeNotifier {
   int get notreadednotifications => _notreadednotifications;
 
   initNotifications(List<NotificationModel> noti) async {
-    // print(noti.length);
-    // _notifications = noti;
-    // print(_notifications.length);
+    print(noti.length);
+    _notifications = noti;
+    print(_notifications.length);
     // _notreadednotifications = 0;
     // for (var element in _notifications) {
     //   if (!element!.isread!) {

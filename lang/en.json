@@ -16,7 +16,7 @@
     "merchant":"Merchant",
     "ok":"Ok",
     "accept":"Accept",
-    "finish":"Shipment Completed",
+    "finish":"Discharge Shipment",
     "finish_confirm":"Is Shipment Discharged?",
     "serve":"Shipment Load",
     "serve_confirm":"Confirm Shipment Loading?",

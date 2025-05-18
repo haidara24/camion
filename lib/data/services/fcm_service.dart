@@ -10,6 +10,7 @@ import 'package:camion/business_logic/bloc/shipments/shipment_running_bloc.dart'
 import 'package:camion/business_logic/bloc/shipments/shipment_task_list_bloc.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/firebase_options.dart';
+import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/main.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
@@ -322,7 +323,7 @@ class NotificationServices {
   static Future<void> markNotificationasRead(int id) async {
     var prefs = await SharedPreferences.getInstance();
     var jwt = prefs.getString("token");
-    var url = 'https://matjari.app/noti/notifications/$id/';
+    var url = '${DOMAIN}noti/notifications/$id/';
     var response = await http.patch(
       Uri.parse(url),
       headers: {
@@ -334,5 +335,7 @@ class NotificationServices {
         {"isread": true},
       ),
     );
+    print("notification is read");
+    print(response.statusCode);
   }
 }

@@ -4,6 +4,7 @@ import 'package:camion/business_logic/cubit/locale_cubit.dart';
 import 'package:camion/data/providers/notification_provider.dart';
 import 'package:camion/data/services/fcm_service.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/driver/incoming_shipment_details_screen.dart';
 import 'package:camion/views/screens/merchant/approval_request_info_screen.dart';
 import 'package:camion/views/screens/merchant/incoming_request_for_driver.dart';
@@ -374,7 +375,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                                   .circular(
                                                                       180),
                                                           child: Image.network(
-                                                            'https://matjari.app/media/${notificationProvider.notifications[index]!.image!}',
+                                                            '${DOMAIN}media/${notificationProvider.notifications[index]!.image!}',
                                                             height: 55.h,
                                                             width: 55.w,
                                                             fit: BoxFit.fill,

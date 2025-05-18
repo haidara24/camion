@@ -10,6 +10,7 @@ import 'package:camion/data/models/instruction_model.dart';
 import 'package:camion/data/models/shipmentv2_model.dart';
 import 'package:camion/data/providers/task_num_provider.dart';
 import 'package:camion/helpers/color_constants.dart';
+import 'package:camion/helpers/http_helper.dart';
 import 'package:camion/views/screens/control_view.dart';
 import 'package:camion/views/screens/merchant/ecash_payment_checkout_screen.dart';
 import 'package:camion/views/widgets/custom_botton.dart';
@@ -623,7 +624,7 @@ class _ShipmentPaymentScreenState extends State<ShipmentPaymentScreen> {
                               .convert(utf8.encode(concatenatedString))
                               .toString();
                           String callbackUrl =
-                              "https://matjari.app/camion/callback/"; // Your callback URL
+                              "${DOMAIN}camion/callback/"; // Your callback URL
                           String encodedCallbackUrl =
                               Uri.encodeComponent(callbackUrl);
 
